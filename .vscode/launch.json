@@ -1,0 +1,34 @@
+{
+    "version": "0.2.0",
+    "configurations": [
+      {
+        "type": "node",
+        "request": "launch",
+        "name": "Launch Server",
+        "program": "server.js", 
+        "runtimeExecutable": "node server.js",
+        "restart": true, 
+        "outputCapture": "std",
+        "timeout": 60000,
+        "stopOnEntry": false,
+        "serverReadyAction": {
+          "action": "openExternally",
+          "pattern": "\\bListening on port 8081\\b",
+          "uriFormat": "http://localhost:8081"
+        }
+      },
+          {
+            "name": "Launch Chrome",
+            "type": "chrome",
+            "request": "launch",
+            "url": "http://localhost:3000", 
+            "webRoot": "${forumdiscussionapp/client}",
+            "sourceMaps": true,
+            "userDataDir": "${forumdiscussionapp/client}/.vscode/chrome",
+            "runtimeArgs": ["--disable-web-security"]
+          }
+        ]
+      }
+      
+    
+  
