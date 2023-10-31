@@ -1,32 +1,39 @@
 const mysql = require('mysql');
 
-const pool = mysql.createPool({
-  connectionLimit: 10, // Adjust as needed
+// Define the database connection configuration
+const dbConfig = {
   host: 'localhost',
   user: 'root',
   password: '',
   database: 'forumdiscussion',
-});
+};
 
-// Use the pool for database queries
-const query = (sql, values) => {
+const connection = mysql.createConnection(dbConfig);
+
+connection.connect((err) => {
+  if (err) {
+    console.error('Database connection error:', err);
+  } else {
+    console.log('Connected to the database');
+  }
+});
+                                                      
+// Custom query function that returns a promise
+function query(sql, values) {
   return new Promise((resolve, reject) => {
-    pool.getConnection((err, connection) => {
-      if (err) {
-        reject(err);
-        return;
-      }
-      connection.query(sql, values, (error, results) => {
-        connection.release(); // Release the connection back to the pool
-        if (error) {
-          console.error('Database query error:', error);
-          reject(error);
-        } else {
+    connection.query(sql, values, (error, results) => {
+      if (error) {
+        console.error('SQL Error:', error);
+        reject(error);
+      } else {
+        if (Array.isArray(results)) {
           resolve(results);
-        }
-      });
+        } else {
+          resolve([results]); 
+      }
+    }
     });
   });
-};
+}
 
 module.exports = { query };

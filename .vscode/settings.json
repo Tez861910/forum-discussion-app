@@ -3,16 +3,20 @@
         {
             "mysqlOptions": {
                 "authProtocol": "default",
-                "enableSsl": "Disabled"
+                "enableSsl": "disabled"
             },
             "previewLimit": 50,
-            "server": "localhost",
+            "server": "con1",
             "port": 3306,
             "driver": "MariaDB",
-            "name": "con1",
+            "name": "localhost",
             "database": "forumdiscussion",
             "username": "root",
             "password": ""
         }
-    ]
+    ],
+    "docify.commentService.programmingLanguage": "auto-detect",
+    "docify.commentService.sidePanelReviewMode": false,
+    "docify.commentService.inlineComments": true,
+    "docify.commentService.moreExpressiveComments": true
 }

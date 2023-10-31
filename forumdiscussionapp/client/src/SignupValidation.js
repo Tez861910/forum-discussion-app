@@ -22,6 +22,9 @@ function SignUpValidation(values) {
       errors[field] = `${label} should not be empty`;
     } else if (pattern && !pattern.test(values[field])) {
       errors[field] = message;
+    } else {
+      // Clear the error message if the field is valid
+      delete errors[field];
     }
   });
 

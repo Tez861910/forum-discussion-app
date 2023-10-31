@@ -1,8 +1,10 @@
-import React, { useState, useEffect } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
-import SignUpValidation from './SignupValidation';
+import React, { useState, useEffect, useCallback } from 'react';
 import axios from 'axios';
-import { useError } from './ErrorHandling';
+import RoleDropdown from './RoleDropdown';
+import CourseDropdown from './CourseDropdown';
+import SignUpValidation from './SignupValidation';
+import { Link, useNavigate } from 'react-router-dom';
+import './Signup.css';
 
 const Signup = () => {
   const [formData, setFormData] = useState({
@@ -13,133 +15,141 @@ const Signup = () => {
     roleId: '',
   });
 
-  const [roles, setRoles] = useState([]);
-  const [courses, setCourses] = useState([]);
   const navigate = useNavigate();
   const [errors, setErrors] = useState({});
-  const { setError } = useError();
+  const [successMessage, setSuccessMessage] = useState('');
+  const [roles, setRoles] = useState([]);
+  const [courses, setCourses] = useState([]);
 
-  useEffect(() => {
-    const fetchRoles = async () => {
-      try {
-        const response = await axios.get('http://localhost:8081/roles');
-        setRoles(response.data);
-      } catch (error) {
-        console.error('Error fetching roles:', error);
-      }
-    };
-
-    const fetchCourses = async () => {
-      try {
-        const response = await axios.get('http://localhost:8081/courses');
-        setCourses(response.data);
-      } catch (error) {
-        console.error('Error fetching courses:', error);
-      }
-    };
-
-    fetchRoles();
-    fetchCourses();
+  const handleInputChange = useCallback((event) => {
+    const { name, value } = event.target;
+    setFormData((prevFormData) => ({ ...prevFormData, [name]: value }));
   }, []);
 
-  const handleInputChange = (event) => {
-    const { name, value } = event.target;
-    setFormData({ ...formData, [name]: value });
-  };
+  const handleRoleChange = useCallback((event) => {
+    const roleId = Number(event.target.value);
+    setFormData((prevFormData) => ({ ...prevFormData, roleId }));
+  }, []);
 
-  const handleSubmit = async (event) => {
-    event.preventDefault();
-  
-    //Validate that a role is selected
-    if (!formData.roleId) {
-      setError('Please select a user role.');
-      return;
+  const handleCourseChange = useCallback((event) => {
+    const courseId = Number(event.target.value);
+    setFormData((prevFormData) => ({ ...prevFormData, courseId }));
+  }, []);
+
+  const fetchData = useCallback(async () => {
+    try {
+      const [rolesResponse, coursesResponse] = await Promise.all([
+        axios.get('http://localhost:8081/roles/roles/all'),
+        axios.get('http://localhost:8081/courses/courses/all')
+      ]);
+
+      const rolesData = rolesResponse.data.roles;
+      setRoles(rolesData);
+
+      const coursesData = coursesResponse.data.courses;
+      setCourses(coursesData);
+    } catch (error) {
+      console.error('Error fetching data:', error);
     }
-  
+  }, []);
+
+  useEffect(() => {
+    fetchData();
+  }, [fetchData]);
+
+  const handleSubmit = useCallback(async (event) => {
+    event.preventDefault();
     const validationErrors = SignUpValidation(formData);
     setErrors(validationErrors);
-  
+
     if (Object.keys(validationErrors).length === 0) {
       try {
-        await axios.post('http://localhost:8081/auth/signup', formData);
-        navigate('/');
+        const response = await axios.post('http://localhost:8081/signup/signup', formData);
+
+        if (response.status === 200) {
+          console.log('Signup successful');
+          setSuccessMessage('Signup successful');
+          navigate('/');
+          setFormData({
+            name: '',
+            email: '',
+            password: '',
+            courseId: '',
+            roleId: '',
+          });
+        } else {
+          console.error('Signup failed. Status:', response.status);
+          setErrors({ _error: 'Signup failed. Please try again.' });
+        }
       } catch (error) {
         console.error('Error signing up user:', error);
-        setError('Signup failed. Please try again.');
+        setErrors({ _error: 'Signup failed. Please try again.' });
       }
     }
-  };
-  
+  }, [formData, navigate]);
 
   return (
-    <div className="d-flex justify-content-center align-items-center bg-primary vh-100">
-      <div className="bg-white p-3 rounded w-25">
+    <div className="signup-page">
+      <div className="form">
         <h2>Sign-Up</h2>
         <form onSubmit={handleSubmit}>
-          {renderInput('name', 'User Name', 'text')}
-          {renderInput('email', 'User Email', 'email')}
-          {renderInput('password', 'Password', 'password')}
           <div className="mb-3">
-            <label htmlFor="roleId">Select User Role</label>
-            <select
-              name="roleId"
-              value={formData.roleId}
+            <label htmlFor="name">User Name</label>
+            <input
+              type="text"
+              name="name"
+              value={formData.name}
               onChange={handleInputChange}
-              className="form-control rounded-0"
-            >
-              <option value="">Select a Role</option>
-              {roles.map((role) => (
-                <option key={role.RoleID} value={role.RoleID}>
-                  {role.RoleName}
-                </option>
-              ))}
-            </select>
-            {errors.roleId && <span className="text-danger">{errors.roleId}</span>}
+              className="form-control"
+            />
+            {errors.name && <span className="text-danger">{errors.name}</span>}
           </div>
           <div className="mb-3">
-            <label htmlFor="courseId">Select User Course</label>
-            <select
-              name="courseId"
-              value={formData.courseId}
+            <label htmlFor="email">User Email</label>
+            <input
+              type="email"
+              name="email"
+              value={formData.email}
               onChange={handleInputChange}
-              className="form-control rounded-0"
-            >
-              <option value="">Select a Course</option>
-              {courses.map((course) => (
-                <option key={course.CourseID} value={course.CourseID}>
-                  {course.CourseName}
-                </option>
-              ))}
-            </select>
-            {errors.courseId && <span className="text-danger">{errors.courseId}</span>}
+              className="form-control"
+            />
+            {errors.email && <span className="text-danger">{errors.email}</span>}
           </div>
-          <button type="submit" className="btn btn-success w-100 rounded-0">
+          <div className="mb-3">
+            <label htmlFor="password">Password</label>
+            <input
+              type="password"
+              name="password"
+              value={formData.password}
+              onChange={handleInputChange}
+              className="form-control"
+            />
+            {errors.password && <span className="text-danger">{errors.password}</span>}
+          </div>
+          <RoleDropdown
+            roles={roles}
+            roleId={formData.roleId}
+            handleRoleChange={handleRoleChange}
+            errors={errors}
+          />
+          <CourseDropdown
+            courses={courses}
+            courseId={formData.courseId}
+            handleCourseChange={handleCourseChange}
+            errors={errors}
+          />
+          <button type="submit" className="btn btn-success w-100">
             Sign up
           </button>
+          {successMessage && <p className="success-message">{successMessage}</p>}
           <p>You agree to our terms and conditions</p>
-          <Link to="/" className="btn btn-default border w-100 bg-light rounded-0 text-decoration-none">
+          <Link to="/" className="btn btn-default w-100">
             Login
           </Link>
         </form>
       </div>
     </div>
   );
-
-  function renderInput(name, label, type) {
-    return (
-      <div className="mb-3">
-        <label htmlFor={name}>{label}</label>
-        <input
-          type={type}
-          name={name}
-          value={formData[name]}
-          onChange={handleInputChange}
-          className="form-control rounded-0"
-        />
-        {errors[name] && <span className="text-danger">{errors[name]}</span>}
-      </div>
-    );
-  }
 };
 
 export default Signup;

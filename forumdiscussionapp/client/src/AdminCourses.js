@@ -12,6 +12,7 @@ function AdminCourses() {
     axios.get('http://localhost:8081/admin/courses')
       .then((response) => {
         setCourses(response.data);
+        console.log('Courses fetched successfully');
       })
       .catch((error) => {
         console.error('Error fetching courses:', error);
@@ -24,6 +25,7 @@ function AdminCourses() {
       // Refresh the list of courses after creating a new one
       setNewCourseName('');
       fetchCourses();
+      console.log('Course created successfully');
     } catch (error) {
       console.error('Error creating course:', error);
     }
@@ -36,6 +38,7 @@ function AdminCourses() {
       setEditingcourseId(null);
       setUpdatedCourseName('');
       fetchCourses();
+      console.log('Course updated successfully');
     } catch (error) {
       console.error('Error updating course:', error);
     }
@@ -46,6 +49,7 @@ function AdminCourses() {
       await axios.delete(`http://localhost:8081/admin/courses/${courseId}`);
       // Refresh the list of courses after deleting
       fetchCourses();
+      console.log('Course deleted successfully');
     } catch (error) {
       console.error('Error deleting course:', error);
     }
@@ -55,6 +59,7 @@ function AdminCourses() {
     axios.get('http://localhost:8081/admin/courses')
       .then((response) => {
         setCourses(response.data);
+        console.log('Courses fetched successfully');
       })
       .catch((error) => {
         console.error('Error fetching courses:', error);

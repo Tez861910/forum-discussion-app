@@ -1,20 +1,18 @@
 import React from 'react';
 import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
-import Create from './Create';
-import Read from './Read';
-import Update from './Update';
+import TeacherDashboard from './TeacherDashboard';
 import Home from './Home';
-import Login from './login';
+import Login from './Login';
 import Signup from './Signup';
-import AdminPanel from './AdminPanel'; 
-import CommentSection from './CommentSection'; 
+import AdminPanel from './AdminPanel';
+import CommentSection from './CommentSection';
 import { ErrorProvider } from './ErrorHandling';
-
-import ManageCourses from './AdminCourses';
-import ManageThreads from './AdminThreads';
-import ManageComments from './AdminComments';
-import ManageUsers from './AdminUsers';
-
+import AdminCourses from './AdminCourses';
+import AdminThreads from './AdminThreads';
+import AdminComments from './AdminComments';
+import AdminUsers from './AdminUsers';
+import MCQForm from './MCQForm';
+import MCQAnswerForm from './MCQAnswerForm';
 
 const App = () => (
   <ErrorProvider>
@@ -23,33 +21,57 @@ const App = () => (
         <Route path="/" element={<Login />} />
         <Route path="/signup" element={<Signup />} />
         <Route path="/home" element={<Home />}>
-          <Route
-            index
-            element={
-              localStorage.getItem('role') === 'admin'
-                ? <Navigate to="../admin" /> // Updated route to navigate to parent route
-                : localStorage.getItem('role') === 'teacher'
-                ? <Navigate to="../create-thread" /> // Updated route to navigate to parent route
-                : <Navigate to="../comment-section" /> // Updated route to navigate to parent route
-            }
-          />
-          <Route path="admin" element={<AdminPanel />}>
-            {/* Nested routes under /home/admin */}
-            <Route index element={<AdminPanel />} />
-            <Route path="courses" element={<ManageCourses />} />
-            <Route path="threads" element={<ManageThreads />} />
-            <Route path="comments" element={<ManageComments />} />
-            <Route path="users" element={<ManageUsers />} />
-          </Route>
-          <Route path="create" element={<Create />} />
-          <Route path="create-thread" element={<Create />} />
-          <Route path="read/:id" element={<Read />} />
-          <Route path="update/:id" element={<Update />} />
-          <Route path="comment-section" element={<CommentSection />} />
+          <Route index element={<HomeContent />} />
+          <Route path="adminpanel" element={<AdminPanelContent />} />
+          <Route path="TeacherDashboard" element={<TeacherDashboard />} />
+          <Route path="commentsection" element={<CommentSection />} />
+          <Route path="mcqform" element={<MCQForm />} />
+          <Route path="mcqanswerform" element={<MCQAnswerForm />} />
         </Route>
       </Routes>
     </Router>
   </ErrorProvider>
+);
+
+const HomeContent = () => {
+  const roleId = localStorage.getItem('roleId');
+  console.log('User Role:', roleId);
+
+  if (roleId === '1') {
+    console.log('Navigating to admin panel');
+    return <Navigate to="adminpanel" />;
+  } else if (roleId === '2') {
+    console.log('Navigating to TeacherDashboard and mcqform');
+    return (
+      <>
+        <Navigate to="TeacherDashboard" />
+        <Navigate to="mcqform" />
+      </>
+    );
+  } else if (roleId === '3') {
+    console.log('Navigating to commentsection and mcqanswerform');
+    return (
+      <>
+        <Navigate to="commentsection" />
+        <Navigate to="mcqanswerform" />
+      </>
+    );
+  } else {
+    console.log('Navigating to TeacherDashboard (default)');
+    return <Navigate to="TeacherDashboard" />;
+  }
+};
+
+const AdminPanelContent = () => (
+  <AdminPanel>
+    <Routes>
+      <Route index element={<AdminPanel />} />
+      <Route path="courses" element={<AdminCourses />} />
+      <Route path="threads" element={<AdminThreads />} />
+      <Route path="comments" element={<AdminComments />} />
+      <Route path="users" element={<AdminUsers />} />
+    </Routes>
+  </AdminPanel>
 );
 
 export default App;

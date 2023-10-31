@@ -6,10 +6,11 @@ function AdminUsers() {
   const [newUser, setNewUser] = useState({ name: '', email: '' });
 
   useEffect(() => {
-    // Fetch the list of users from the server
+    // Fetch the list of users from the server (admin-specific endpoint)
     axios.get('http://localhost:8081/admin/users')
       .then((response) => {
-        setUsers(response.data);
+        setUsers(response.data.users);
+        console.log('Users fetched successfully');
       })
       .catch((error) => {
         console.error('Error fetching users:', error);
@@ -17,11 +18,12 @@ function AdminUsers() {
   }, []);
 
   const handleCreateUser = () => {
-    // Implement a function to create a new user
+    // Implement a function to create a new user by an admin
     axios.post('http://localhost:8081/admin/users', newUser)
       .then((response) => {
         setUsers([...users, response.data]);
         setNewUser({ name: '', email: '' });
+        console.log('User created successfully');
       })
       .catch((error) => {
         console.error('Error creating user:', error);
@@ -29,13 +31,14 @@ function AdminUsers() {
   };
 
   const handleUpdateUser = (userId, updatedUserData) => {
-    // Implement a function to update a user's data
+    // Implement a function to update a user's data by an admin
     axios.put(`http://localhost:8081/admin/users/${userId}`, updatedUserData)
       .then((response) => {
         const updatedUsers = users.map((user) =>
           user.id === userId ? response.data : user
         );
         setUsers(updatedUsers);
+        console.log('User updated successfully');
       })
       .catch((error) => {
         console.error('Error updating user:', error);
@@ -43,11 +46,12 @@ function AdminUsers() {
   };
 
   const handleDeleteUser = (userId) => {
-    // Implement a function to delete a user
+    // Implement a function to delete a user by an admin
     axios.delete(`http://localhost:8081/admin/users/${userId}`)
       .then(() => {
         const updatedUsers = users.filter((user) => user.id !== userId);
         setUsers(updatedUsers);
+        console.log('User deleted successfully');
       })
       .catch((error) => {
         console.error('Error deleting user:', error);
@@ -56,7 +60,7 @@ function AdminUsers() {
 
   return (
     <div>
-      <h2>Manage Users</h2>
+      <h2>Admin User Management</h2>
       <div>
         <h3>Create User</h3>
         <input

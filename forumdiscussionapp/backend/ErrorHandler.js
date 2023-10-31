@@ -1,13 +1,29 @@
+function handleError(err, req, res, next) {
+  console.error(err);
 
-const handleDatabaseError = (err, res) => {
-    console.error('Database error:', err);
-    res.json({ error: { code: 'E500', message: 'Database error' } });
-  };
+  if (res.headersSent) {
+    return next(err);
+  }
 
-  // Function to handle validation errors
-  const handleValidationErrors = (errors, res) => {
-    res.json({ error: { code: 'E422', message: 'Validation failed', details: errors.array() } });
-  };
-  
-  module.exports = { handleDatabaseError, handleValidationErrors };
-  
+  let statusCode = 500;
+  let message = 'Internal Server Error';
+
+  if (err instanceof CustomError) {
+    statusCode = err.statusCode;
+    message = err.message;
+  }
+
+  res.status(statusCode).json({ error: message });
+}
+
+class CustomError extends Error {
+  constructor(message, statusCode = 500) {
+    super(message);
+    this.statusCode = statusCode;
+  }
+}
+
+module.exports = {
+  handleError,
+  CustomError,
+};

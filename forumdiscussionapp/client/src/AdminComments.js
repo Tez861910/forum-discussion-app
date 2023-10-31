@@ -14,6 +14,7 @@ function AdminComments() {
     axios.get('http://localhost:8081/admin/comments')
       .then((response) => {
         setComments(response.data);
+        console.log('Comments fetched successfully');
       })
       .catch((error) => {
         console.error('Error fetching comments:', error);
@@ -26,6 +27,7 @@ function AdminComments() {
         // After creating a comment, refresh the list of comments
         fetchComments();
         setNewComment('');
+        console.log('Comment created successfully');
       })
       .catch((error) => {
         console.error('Error creating comment:', error);
@@ -38,6 +40,7 @@ function AdminComments() {
         // After updating a comment, refresh the list of comments
         fetchComments();
         setSelectedCommentId(null); // Clear the selection
+        console.log('Comment updated successfully');
       })
       .catch((error) => {
         console.error('Error updating comment:', error);
@@ -50,6 +53,7 @@ function AdminComments() {
         // After deleting a comment, refresh the list of comments
         fetchComments();
         setSelectedCommentId(null); // Clear the selection
+        console.log('Comment deleted successfully');
       })
       .catch((error) => {
         console.error('Error deleting comment:', error);
@@ -98,4 +102,3 @@ function AdminComments() {
 }
 
 export default AdminComments;
-

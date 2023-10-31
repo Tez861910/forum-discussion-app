@@ -16,6 +16,7 @@ function AdminThreads() {
     axios.get('http://localhost:8081/admin/threads')
       .then((response) => {
         setThreads(response.data);
+        console.log('Threads fetched successfully');
       })
       .catch((error) => {
         console.error('Error fetching threads:', error);
@@ -27,6 +28,7 @@ function AdminThreads() {
       .then(() => {
         // After creating a thread, refresh the list of threads
         fetchThreads();
+        console.log('Thread created successfully');
       })
       .catch((error) => {
         console.error('Error creating thread:', error);
@@ -38,6 +40,7 @@ function AdminThreads() {
       .then(() => {
         // After updating a thread, refresh the list of threads
         fetchThreads();
+        console.log('Thread updated successfully');
       })
       .catch((error) => {
         console.error('Error updating thread:', error);
@@ -49,6 +52,7 @@ function AdminThreads() {
       .then(() => {
         // After deleting a thread, refresh the list of threads
         fetchThreads();
+        console.log('Thread deleted successfully');
       })
       .catch((error) => {
         console.error('Error deleting thread:', error);

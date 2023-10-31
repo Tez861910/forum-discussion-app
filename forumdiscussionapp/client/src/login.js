@@ -1,64 +1,61 @@
 import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import axios from 'axios';
-import { useError } from './ErrorHandling';
+import './login.css';
 
 const Login = () => {
   const [values, setValues] = useState({
-    email: '',
-    password: '',
+    email:'',
+    password:'',
   });
 
   const [error, setError] = useState('');
+
   const navigate = useNavigate();
-  useError();
 
   const handleInput = (event) => {
     setValues({ ...values, [event.target.name]: event.target.value });
   };
 
-  // handleLoginSuccess function
-const handleLoginSuccess = (token) => {
-  localStorage.setItem('token', token);
-  axios.defaults.headers.common['Authorization'] = token;
-  console.log('JWT token set in local storage and as a default header.');
-  navigate('/Home');
-};
+  // Import necessary modules and components
+
+  const handleLoginSuccess = (token, userId,roleId,courseId) => {
+    
+    localStorage.setItem('token', token);
+    localStorage.setItem('userId', userId);
+    localStorage.setItem('roleId', roleId);
+    localStorage.setItem('courseId', courseId);
+
+
+    navigate('/Home');
+  };
+  
 
   const handleSubmit = async (event) => {
     event.preventDefault();
-    console.log('Submit button clicked');
-
     try {
-      const response = await axios.post('http://localhost:8081/auth/login', values);
-
+      const response = await axios.post('http://localhost:8081/Login/login', values);
+  
       if (response.data.success) {
-        handleLoginSuccess(response.data.token);
+        console.log('Response data:', response.data);
+        handleLoginSuccess(response.data.token, response.data.userId,response.data.roleId,response.data.courseId);
       } else {
         setError('Login failed. Please check your email and password.');
       }
     } catch (error) {
-      console.error('Error logging in:', error);
-
       if (error.response) {
         setError(error.response.data.error || 'Login failed. Please try again.');
-        console.log(error.response);
       } else {
         setError('Login failed. Please try again.');
       }
     }
   };
-
   return (
-    <div className='d-flex justify-content-center align-items-center bg-primary vh-100'>
-      <div className='bg-white p-3 rounded w-25'>
+    <div className='login-page'>
+      <div className='form'>
         <h2>Sign-In</h2>
 
-        {error && (
-          <div className='text-danger'>
-            <p>{error}</p>
-          </div>
-        )}
+        {error && <div className='message'>{error}</div>}
 
         <form onSubmit={handleSubmit}>
           <div className='mb-3'>
@@ -70,7 +67,6 @@ const handleLoginSuccess = (token) => {
               autoComplete='email'
               value={values.email}
               onChange={handleInput}
-              className='form-control rounded-0'
             />
           </div>
 
@@ -83,22 +79,14 @@ const handleLoginSuccess = (token) => {
               autoComplete='current-password'
               value={values.password}
               onChange={handleInput}
-              className='form-control rounded-0'
             />
           </div>
 
-          <button type='submit' className='btn btn-success w-100 rounded-0'>
-            Log in
-          </button>
+          <button type='submit'>Log in</button>
 
           <p>You agree to our terms and conditions</p>
 
-          <Link
-            to='/signup'
-            className='btn btn-default border w-100 bg-light rounded-0 text-decoration-none'
-          >
-            Create Account
-          </Link>
+          <Link to='/signup'>Create Account</Link>
         </form>
       </div>
     </div>

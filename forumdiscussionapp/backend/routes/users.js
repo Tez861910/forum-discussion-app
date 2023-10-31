@@ -1,95 +1,100 @@
 const express = require('express');
 const router = express.Router();
-const db = require('../db'); // Import the database connection
-const { hashPassword } = require('../authvalid'); // Import password functions
+const {query} = require('../db');
+const { createToken, hashPassword, verifyPassword } = require('../authvalid');
 
 // Create a new user
-router.post('/', async (req, res) => {
-  const { name, email, password, roleID, courseId } = req.body;
+router.post('/users', async (req, res) => {
+  const { name, email, password, roleId, courseId } = req.body;
 
   try {
-    if (!name || !email || !password || !roleID || !courseId) {
-      return res.status(400).json({ error: 'Missing user data' });
+    if (!name || !email || !password || !roleId || !courseId) {
+      console.log('Name, email, password, roleId, and courseId are required');
+      return res.status(400).json({ error: 'Name, email, password, roleId, and courseId are required' });
     }
 
-    // Hash the password using Argon2
+    // Hash the password using the hashPassword function
     const hashedPassword = await hashPassword(password);
 
+    // SQL query to insert the new user
     const sql = 'INSERT INTO users (UserName, UserEmail, UserPassword, RoleID, CourseID) VALUES (?, ?, ?, ?, ?)';
-    const values = [name, email, hashedPassword, roleID, courseId];
+    const [result] = await query(sql, [name, email, hashedPassword, roleId, courseId]);
 
-    await db.query(sql, values); // Use 'await' for async query execution
-
-    res.json({ message: 'User created successfully' });
-  } catch (err) {
-    console.error('Create user error:', err);
-    res.status(500).json({ error: 'User creation failed' });
+    if (result.affectedRows === 1) {
+      console.log('User created successfully');
+      res.json({ message: 'User created successfully' });
+    } else {
+      console.error('User creation failed');
+      res.status(500).json({ error: 'User creation failed' });
+    }
+  } catch (error) {
+    console.error('Error creating user:', error);
+    res.status(500).json({ error: 'User creation failed', details: error.message });
   }
 });
 
-// Update a user by ID
-router.put('/:id', async (req, res) => {
-  const userId = req.params.id;
-  const { name, email, password, roleID, courseId } = req.body;
+// Get all users
+router.get('/users', async (req, res) => {
+  try {
+    const sql = 'SELECT * FROM users';
+    const [results] = await query(sql);
+
+    console.log('Users fetched successfully');
+    res.json({ users: results });
+  } catch (error) {
+    console.error('Error fetching users:', error);
+    res.status(500).json({ error: 'User retrieval failed', details: error.message });
+  }
+});
+
+// Update a user
+router.put('/users/:id', async (req, res) => {
+  const { id } = req.params;
+  const { name, email, roleId, courseId } = req.body;
 
   try {
-    if (!name || !email || !roleID || !courseId) {
-      return res.status(400).json({ error: 'Missing user data' });
+    if (!name || !email || !roleId || !courseId) {
+      console.log('Name, email, roleId, and courseId are required');
+      return res.status(400).json({ error: 'Name, email, roleId, and courseId are required' });
     }
 
-    let hashedPassword;
-    if (password) {
-      // If a new password is provided, hash it
-      hashedPassword = await hashPassword(password);
-      const updateSql = 'UPDATE users SET UserName = ?, UserEmail = ?, UserPassword = ?, RoleID = ?, CourseID = ? WHERE UserID = ?';
-      const updateValues = [name, email, hashedPassword, roleID, courseId, userId];
-      await db.query(updateSql, updateValues);
+    // SQL query to update the user
+    const sql = 'UPDATE users SET UserName = ?, UserEmail = ?, RoleID = ?, CourseID = ? WHERE UserID = ?';
+    const [result] = await query(sql, [name, email, roleId, courseId, id]);
+
+    if (result.affectedRows === 1) {
+      console.log('User updated successfully');
+      res.json({ message: 'User updated successfully' });
     } else {
-      // If no new password is provided, update other fields
-      const updateSql = 'UPDATE users SET UserName = ?, UserEmail = ?, RoleID = ?, CourseID = ? WHERE UserID = ?';
-      const updateValues = [name, email, roleID, courseId, userId];
-      await db.query(updateSql, updateValues);
+      console.error('User update failed');
+      res.status(500).json({ error: 'User update failed' });
     }
-
-    res.json({ message: 'User updated successfully' });
-  } catch (err) {
-    console.error('Update user error:', err);
-    res.status(500).json({ error: 'User update failed' });
+  } catch (error) {
+    console.error('Error updating user:', error);
+    res.status(500).json({ error: 'User update failed', details: error.message });
   }
 });
 
-// Delete a user by ID
-router.delete('/:id', async (req, res) => {
-  const userId = req.params.id;
+// Delete a user
+router.delete('/users/:id', async (req, res) => {
+  const { id } = req.params;
 
-  const sql = 'DELETE FROM users WHERE UserID = ?';
+  try {
+    // SQL query to delete the user
+    const sql = 'DELETE FROM users WHERE UserID = ?';
+    const [result] = await query(sql, [id]);
 
-  db.query(sql, [userId])
-    .then(([result]) => {
-      if (result.affectedRows === 0) {
-        res.status(404).json({ error: 'User not found' });
-      } else {
-        res.json({ message: 'User deleted successfully' });
-      }
-    })
-    .catch((err) => {
-      console.error('Delete user error:', err);
+    if (result.affectedRows === 1) {
+      console.log('User deleted successfully');
+      res.json({ message: 'User deleted successfully' });
+    } else {
+      console.error('User deletion failed');
       res.status(500).json({ error: 'User deletion failed' });
-    });
-});
-
-// Get a list of all users
-router.get('/', async (req, res) => {
-  const sql = 'SELECT * FROM users';
-
-  db.query(sql)
-    .then(([results]) => {
-      res.json(results);
-    })
-    .catch((err) => {
-      console.error('Error fetching users:', err);
-      res.status(500).json({ error: 'Error fetching users' });
-    });
+    }
+  } catch (error) {
+    console.error('Error deleting user:', error);
+    res.status(500).json({ error: 'User deletion failed', details: error.message });
+  }
 });
 
 module.exports = router;
