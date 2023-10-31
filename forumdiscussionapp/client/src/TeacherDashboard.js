@@ -3,10 +3,9 @@ import axios from 'axios';
 
 function TeacherDashboard() {
   const [threads, setThreads] = useState([]);
-  const courseId = localStorage.getItem('courseId'); // Get the teacher's course ID
+  const courseId = localStorage.getItem('courseId'); 
 
   useEffect(() => {
-    // Fetch threads that belong to the teacher's course
     axios.get(`http://localhost:8081/threads?courseId=${courseId}`)
       .then((response) => {
         setThreads(response.data);
@@ -16,7 +15,7 @@ function TeacherDashboard() {
       });
   }, [courseId]);
 
-  // Render the threads in the component
+ 
   return (
     <div>
       <h2>Teacher Dashboard</h2>

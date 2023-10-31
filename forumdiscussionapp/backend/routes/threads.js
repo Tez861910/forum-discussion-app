@@ -3,6 +3,13 @@ const router = express.Router();
 const {query} = require('../db');
 
 
+app.get('/threads', (req, res) => {
+  const courseId = req.query.courseId;
+  const filteredThreads = threadsData.filter((thread) => thread.courseId === Number(courseId));
+  res.json(filteredThreads);
+});
+
+
 // Create a new thread
 router.post('/threads', async (req, res) => {
   const { title, content, courseId } = req.body;
@@ -53,8 +60,7 @@ router.put('/threads/:id',  async (req, res) => {
       return res.status(400).json({ error: 'Title, content, and courseId are required' });
     }
 
-    // Check the user's role and if the course matches the user's allotted course
-    // Implement your authorization logic here
+  
 
     const sql = 'UPDATE threads SET Title = ?, Content = ?, CourseID = ? WHERE ThreadID = ?';
     const [result] = await query(sql, [title, content, courseId, id]);
@@ -77,7 +83,7 @@ router.delete('/threads/:id', async (req, res) => {
   const { id } = req.params;
 
   try {
-    // Implement authorization logic to ensure the user can delete this thread
+   
 
     const sql = 'DELETE FROM threads WHERE ThreadID = ?';
     const [result] = await query(sql, [id]);
