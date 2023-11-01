@@ -1,8 +1,8 @@
 import React from 'react';
 import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
-import TeacherDashboard from './TeacherDashboard';
+import CreateThread from './CreateThread';
 import Home from './Home';
-import Login from './Login';
+import Login from './login';
 import Signup from './Signup';
 import AdminPanel from './AdminPanel';
 import CommentSection from './CommentSection';
@@ -23,7 +23,7 @@ const App = () => (
         <Route path="/home" element={<Home />}>
           <Route index element={<HomeContent />} />
           <Route path="adminpanel" element={<AdminPanelContent />} />
-          <Route path="TeacherDashboard" element={<TeacherDashboard />} />
+          <Route path="createthread" element={<CreateThread />} />
           <Route path="commentsection" element={<CommentSection />} />
           <Route path="mcqform" element={<MCQForm />} />
           <Route path="mcqanswerform" element={<MCQAnswerForm />} />
@@ -41,10 +41,10 @@ const HomeContent = () => {
     console.log('Navigating to admin panel');
     return <Navigate to="adminpanel" />;
   } else if (roleId === '2') {
-    console.log('Navigating to TeacherDashboard and mcqform');
+    console.log('Navigating to createthread and mcqform');
     return (
       <>
-        <Navigate to="TeacherDashboard" />
+        <Navigate to="createthread" />
         <Navigate to="mcqform" />
       </>
     );
@@ -57,8 +57,8 @@ const HomeContent = () => {
       </>
     );
   } else {
-    console.log('Navigating to TeacherDashboard (default)');
-    return <Navigate to="TeacherDashboard" />;
+    console.log('Navigating to HomePanel (default)');
+    return <Navigate to="Homepanel" />;
   }
 };
 

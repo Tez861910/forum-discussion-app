@@ -1,15 +1,18 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 
-function CommentSection({ roleId, courseId, threadId }) {
+function CommentSection({ roleId, threadId }) {
+
   const [comments, setComments] = useState([]);
   const [newComment, setNewComment] = useState('');
-  const userId = localStorage.getItem('userId'); 
+  const userId = localStorage.getItem('userId');
+  const courseId = localStorage.getItem('courseId'); 
+  //const threadId = localStorage.getItem('threadId');  
 
   useEffect(() => {
     const fetchComments = async () => {
       try {
-        const commentsResponse = await axios.get(`http://localhost:8081/threads/${threadId}/comments`);
+        const commentsResponse = await axios.get(`http://localhost:8081/threads/threads/${threadId}/comments`);
         setComments(commentsResponse.data.comments);
       } catch (commentsError) {
         console.error('Error fetching comments:', commentsError);

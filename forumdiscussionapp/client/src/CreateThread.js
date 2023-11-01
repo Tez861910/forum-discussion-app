@@ -1,12 +1,12 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 
-function TeacherDashboard() {
+function CreateThread() {
   const [threads, setThreads] = useState([]);
   const courseId = localStorage.getItem('courseId'); 
 
   useEffect(() => {
-    axios.get(`http://localhost:8081/threads?courseId=${courseId}`)
+    axios.get(`http://localhost:8081/threads/threads?courseId=${courseId}`)
       .then((response) => {
         setThreads(response.data);
       })
@@ -34,4 +34,4 @@ function TeacherDashboard() {
   );
 }
 
-export default TeacherDashboard;
+export default CreateThread;

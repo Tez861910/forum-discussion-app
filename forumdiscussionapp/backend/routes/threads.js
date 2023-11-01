@@ -3,7 +3,7 @@ const router = express.Router();
 const {query} = require('../db');
 
 
-app.get('/threads', (req, res) => {
+router.get('/threads', (req, res) => {
   const courseId = req.query.courseId;
   const filteredThreads = threadsData.filter((thread) => thread.courseId === Number(courseId));
   res.json(filteredThreads);
