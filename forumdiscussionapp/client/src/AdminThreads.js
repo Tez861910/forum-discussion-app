@@ -7,6 +7,7 @@ function AdminThreads() {
     title: '',
     content: '',
   });
+  
 
   useEffect(() => {
     fetchThreads();
