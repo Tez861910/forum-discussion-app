@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
+import './admincourse.css';
 
 function AdminCourses() {
   const [courses, setCourses] = useState([]);
@@ -8,8 +9,8 @@ function AdminCourses() {
   const [updatedCourseName, setUpdatedCourseName] = useState('');
 
   useEffect(() => {
-    // Fetch the list of courses from the server
-    axios.get('http://localhost:8081/admin/courses')
+    
+    axios.get('http://localhost:8081/courses/courses/get')
       .then((response) => {
         setCourses(response.data);
         console.log('Courses fetched successfully');
@@ -21,10 +22,9 @@ function AdminCourses() {
 
   const handleCreateCourse = async () => {
     try {
-      await axios.post('http://localhost:8081/admin/courses', { courseName: newCourseName });
-      // Refresh the list of courses after creating a new one
+      await axios.post('http://localhost:8081/courses/courses/create', { courseName: newCourseName });
+
       setNewCourseName('');
-      fetchCourses();
       console.log('Course created successfully');
     } catch (error) {
       console.error('Error creating course:', error);
@@ -33,11 +33,10 @@ function AdminCourses() {
 
   const handleEditCourse = async (courseId) => {
     try {
-      await axios.put(`http://localhost:8081/admin/courses/${courseId}`, { courseName: updatedCourseName });
-      // Refresh the list of courses after updating
+      await axios.put(`http://localhost:8081/courses/courses/update/:id${courseId}`, { courseName: updatedCourseName });
+
       setEditingcourseId(null);
       setUpdatedCourseName('');
-      fetchCourses();
       console.log('Course updated successfully');
     } catch (error) {
       console.error('Error updating course:', error);
@@ -46,24 +45,11 @@ function AdminCourses() {
 
   const handleDeleteCourse = async (courseId) => {
     try {
-      await axios.delete(`http://localhost:8081/admin/courses/${courseId}`);
-      // Refresh the list of courses after deleting
-      fetchCourses();
+      await axios.delete(`http://localhost:8081/courses/courses/delete/:id${courseId}`);
       console.log('Course deleted successfully');
     } catch (error) {
       console.error('Error deleting course:', error);
     }
-  };
-
-  const fetchCourses = () => {
-    axios.get('http://localhost:8081/admin/courses')
-      .then((response) => {
-        setCourses(response.data);
-        console.log('Courses fetched successfully');
-      })
-      .catch((error) => {
-        console.error('Error fetching courses:', error);
-      });
   };
 
   return (

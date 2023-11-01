@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
+import './admincomment.css';
 
 function AdminComments() {
   const [comments, setComments] = useState([]);
@@ -11,7 +12,7 @@ function AdminComments() {
   }, []);
 
   const fetchComments = () => {
-    axios.get('http://localhost:8081/admin/comments')
+    axios.get('http://localhost:8081/comments/comments/get')
       .then((response) => {
         setComments(response.data);
         console.log('Comments fetched successfully');
@@ -22,9 +23,9 @@ function AdminComments() {
   };
 
   const createComment = () => {
-    axios.post('http://localhost:8081/admin/comments', { content: newComment })
+    axios.post('http://localhost:8081/comments/comments/create', { content: newComment })
       .then(() => {
-        // After creating a comment, refresh the list of comments
+      
         fetchComments();
         setNewComment('');
         console.log('Comment created successfully');
@@ -35,11 +36,11 @@ function AdminComments() {
   };
 
   const updateComment = (commentId, updatedContent) => {
-    axios.put(`http://localhost:8081/admin/comments/${commentId}`, updatedContent)
+    axios.put(`http://localhost:8081/comments/comments/update/:id${commentId}`, updatedContent)
       .then(() => {
-        // After updating a comment, refresh the list of comments
+   
         fetchComments();
-        setSelectedCommentId(null); // Clear the selection
+        setSelectedCommentId(null); 
         console.log('Comment updated successfully');
       })
       .catch((error) => {
@@ -48,11 +49,11 @@ function AdminComments() {
   };
 
   const deleteComment = (commentId) => {
-    axios.delete(`http://localhost:8081/admin/comments/${commentId}`)
+    axios.delete(`http://localhost:8081/comments/comments/delete/:id${commentId}`)
       .then(() => {
-        // After deleting a comment, refresh the list of comments
+      
         fetchComments();
-        setSelectedCommentId(null); // Clear the selection
+        setSelectedCommentId(null);
         console.log('Comment deleted successfully');
       })
       .catch((error) => {

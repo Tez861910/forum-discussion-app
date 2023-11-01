@@ -1,77 +1,27 @@
 import React from 'react';
-import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
-import CreateThread from './CreateThread';
+import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import Home from './Home';
 import Login from './login';
 import Signup from './Signup';
-import AdminPanel from './AdminPanel';
-import CommentSection from './CommentSection';
 import { ErrorProvider } from './ErrorHandling';
-import AdminCourses from './AdminCourses';
-import AdminThreads from './AdminThreads';
-import AdminComments from './AdminComments';
-import AdminUsers from './AdminUsers';
-import MCQForm from './MCQForm';
-import MCQAnswerForm from './MCQAnswerForm';
+
+
+const AppRoutes = () => (
+  <Routes>
+    <Route path="/" element={<Login />} />
+    <Route path="/signup" element={<Signup />} />
+    <Route path="/home/*" element={<Home />}>
+    </Route>
+  </Routes>
+);
 
 const App = () => (
   <ErrorProvider>
     <Router>
-      <Routes>
-        <Route path="/" element={<Login />} />
-        <Route path="/signup" element={<Signup />} />
-        <Route path="/home" element={<Home />}>
-          <Route index element={<HomeContent />} />
-          <Route path="adminpanel" element={<AdminPanelContent />} />
-          <Route path="createthread" element={<CreateThread />} />
-          <Route path="commentsection" element={<CommentSection />} />
-          <Route path="mcqform" element={<MCQForm />} />
-          <Route path="mcqanswerform" element={<MCQAnswerForm />} />
-        </Route>
-      </Routes>
+      <AppRoutes />
     </Router>
   </ErrorProvider>
 );
 
-const HomeContent = () => {
-  const roleId = localStorage.getItem('roleId');
-  console.log('User Role:', roleId);
-
-  if (roleId === '1') {
-    console.log('Navigating to admin panel');
-    return <Navigate to="adminpanel" />;
-  } else if (roleId === '2') {
-    console.log('Navigating to createthread and mcqform');
-    return (
-      <>
-        <Navigate to="createthread" />
-        <Navigate to="mcqform" />
-      </>
-    );
-  } else if (roleId === '3') {
-    console.log('Navigating to commentsection and mcqanswerform');
-    return (
-      <>
-        <Navigate to="commentsection" />
-        <Navigate to="mcqanswerform" />
-      </>
-    );
-  } else {
-    console.log('Navigating to HomePanel (default)');
-    return <Navigate to="Homepanel" />;
-  }
-};
-
-const AdminPanelContent = () => (
-  <AdminPanel>
-    <Routes>
-      <Route index element={<AdminPanel />} />
-      <Route path="courses" element={<AdminCourses />} />
-      <Route path="threads" element={<AdminThreads />} />
-      <Route path="comments" element={<AdminComments />} />
-      <Route path="users" element={<AdminUsers />} />
-    </Routes>
-  </AdminPanel>
-);
 
 export default App;

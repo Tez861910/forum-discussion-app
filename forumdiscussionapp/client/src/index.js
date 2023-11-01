@@ -4,10 +4,12 @@ import App from './App';
 import reportWebVitals from './reportWebVitals';
 import 'bootstrap/dist/css/bootstrap.min.css';
 
+// Get the root element
 const rootElement = document.getElementById('root');
 
 if (rootElement) {
   try {
+    // Create a React root and render the app within a strict mode
     const root = ReactDOM.createRoot(rootElement);
     root.render(
       <React.StrictMode>
@@ -21,10 +23,7 @@ if (rootElement) {
   console.error("Root element 'root' not found in the document.");
 }
 
-// If you want to start measuring performance in your app, pass a function
-// to log results (for example: reportWebVitals(console.log))
-// or send to an analytics endpoint. Learn more: https://bit.ly/CRA-vitals
-
+// Report web vitals
 try {
   reportWebVitals(console.log);
 } catch (error) {

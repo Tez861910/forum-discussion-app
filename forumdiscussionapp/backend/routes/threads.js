@@ -3,15 +3,24 @@ const router = express.Router();
 const {query} = require('../db');
 
 
-router.get('/threads', (req, res) => {
-  const courseId = req.query.courseId;
-  const filteredThreads = threadsData.filter((thread) => thread.courseId === Number(courseId));
+const threadsData = [
+  { threadId: 1, title: 'Thread 1', content: 'Content for Thread 1' },
+  { threadId: 2, title: 'Thread 2', content: 'Content for Thread 2' },
+];
+
+app.use(express.json());
+
+// Endpoint to get threads for a specific course
+app.get('/threads/course', (req, res) => {
+  const courseId = req.query.courseId; // Get the courseId from the query parameters
+  const filteredThreads = threadsData.filter((thread) => thread.courseId === courseId);
+
   res.json(filteredThreads);
 });
 
 
 // Create a new thread
-router.post('/threads', async (req, res) => {
+router.post('/threads/create', async (req, res) => {
   const { title, content, courseId } = req.body;
 
   try {
@@ -36,7 +45,7 @@ router.post('/threads', async (req, res) => {
 });
 
 // Get all threads
-router.get('/threads', async (req, res) => {
+router.get('/threads/get', async (req, res) => {
   try {
     const sql = 'SELECT * FROM threads';
     const [results] = await query(sql);
@@ -50,7 +59,7 @@ router.get('/threads', async (req, res) => {
 });
 
 // Update a thread
-router.put('/threads/:id',  async (req, res) => {
+router.put('/threads/update/:id',  async (req, res) => {
   const { id } = req.params;
   const { title, content, courseId } = req.body;
 
@@ -79,7 +88,7 @@ router.put('/threads/:id',  async (req, res) => {
 });
 
 // Delete a thread
-router.delete('/threads/:id', async (req, res) => {
+router.delete('/threads/delete/:id', async (req, res) => {
   const { id } = req.params;
 
   try {

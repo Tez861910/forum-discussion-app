@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import './mcqform.css'; 
 
 const MCQForm = ({ onSave }) => {
   const [question, setQuestion] = useState('');
@@ -6,7 +7,6 @@ const MCQForm = ({ onSave }) => {
   const [correctAnswer, setCorrectAnswer] = useState('');
 
   const handleSave = () => {
-    
     if (question && options.every((opt) => opt !== '') && correctAnswer !== '') {
       onSave({ question, options, correctAnswer });
       setQuestion('');
@@ -16,7 +16,7 @@ const MCQForm = ({ onSave }) => {
   };
 
   return (
-    <div>
+    <div className="mcq-form-container">
       <h3>Create MCQ Question</h3>
       <label>Question: </label>
       <input type="text" value={question} onChange={(e) => setQuestion(e.target.value)} />

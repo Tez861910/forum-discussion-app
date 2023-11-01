@@ -1,5 +1,6 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
+import './adminpanel.css';
 
 function AdminPanel() {
   console.log('Admin Panel rendered'); 
@@ -8,16 +9,16 @@ function AdminPanel() {
       <h2>Admin Panel</h2>
       <ul>
         <li>
-          <Link to="/adminpanel/courses">Manage Courses</Link>
+          <Link to="/home/adminpanel/courses">Manage Courses</Link>
         </li>
         <li>
-          <Link to="/adminpanel/threads">Manage Threads</Link>
+          <Link to="/home/adminpanel/threads">Manage Threads</Link>
         </li>
         <li>
-          <Link to="/adminpanel/comments">Manage Comments</Link>
+          <Link to="/home/adminpanel/comments">Manage Comments</Link>
         </li>
         <li>
-          <Link to="/adminpanel/users">Manage Users</Link>
+          <Link to="/home/adminpanel/users">Manage Users</Link>
         </li>
       </ul>
     </div>

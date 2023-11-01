@@ -1,0 +1,57 @@
+/* Apply styles to your AdminCourses component */
+.admin-courses-container {
+    text-align: center;
+    margin: 20px;
+  }
+  
+  h2 {
+    font-size: 24px;
+  }
+  
+  h3 {
+    font-size: 20px;
+    margin-top: 20px;
+  }
+  
+  input[type="text"] {
+    margin: 10px;
+    padding: 10px;
+  }
+  
+  button {
+    background-color: #007bff;
+    color: #fff;
+    border: none;
+    padding: 10px 20px;
+    cursor: pointer;
+  }
+  
+  ul {
+    list-style-type: none;
+    padding: 0;
+  }
+  
+  li {
+    margin-top: 20px;
+    border: 1px solid #ccc;
+    padding: 10px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+  
+  input[type="text"].edit-input {
+    width: 60%;
+  }
+  
+  button.edit-button {
+    background-color: #28a745;
+  }
+  
+  button.delete-button {
+    background-color: #dc3545;
+    margin-left: 10px;
+  }
+  
+  /* Add any additional styles you need for AdminCourses here */
+  

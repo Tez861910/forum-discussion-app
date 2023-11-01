@@ -3,12 +3,12 @@ const router = express.Router();
 const { query } = require('../db');
 const { isUserAuthorized } = require('../authvalid');
 
-// Get comments for a specific thread
-router.get('/threads/:threadId/comments', async (req, res) => {
+
+router.get('/comments/comments/get', async (req, res) => {
   const { threadId } = req.params;
 
   try {
-    const sql = 'SELECT * FROM comments WHERE ThreadID = ?';
+    const sql = 'SELECT * FROM comments  = ?';
     const [results] = await query(sql, [threadId]);
 
     console.log('Comments fetched successfully');
@@ -19,14 +19,13 @@ router.get('/threads/:threadId/comments', async (req, res) => {
   }
 });
 
-// Create a new comment for a specific thread
-router.post('/threads/:threadId/comments', async (req, res) => {
+// Create a new comment 
+router.post('/comments/comments/create', async (req, res) => {
   const { threadId } = req.params;
   const { content, userId, courseId } = req.body;
 
   try {
-    // Implement permission checks based on roleId and courseId
-    // You can use the 'isUserAuthorized' function here
+ 
 
     if (!content) {
       console.log('Comment content is required');
@@ -50,7 +49,7 @@ router.post('/threads/:threadId/comments', async (req, res) => {
 });
 
 // Update a comment
-router.put('/comments/:id', async (req, res) => {
+router.put('/comments/update/:id', async (req, res) => {
   const { id } = req.params;
   const { content } = req.body;
 
@@ -77,7 +76,7 @@ router.put('/comments/:id', async (req, res) => {
 });
 
 // Delete a comment
-router.delete('/comments/:id', async (req, res) => {
+router.delete('/comments/delete/:id', async (req, res) => {
   const { id } = req.params;
 
   try {

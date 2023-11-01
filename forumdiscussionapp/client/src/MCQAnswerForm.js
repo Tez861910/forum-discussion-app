@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import './mcqanswerform.css'; 
 
 const MCQAnswerForm = ({ question, options, onAnswer }) => {
   const [selectedOption, setSelectedOption] = useState('');
@@ -10,7 +11,7 @@ const MCQAnswerForm = ({ question, options, onAnswer }) => {
   };
 
   return (
-    <div>
+    <div className="mcq-answer-form-container">
       <h3>MCQ Question</h3>
       <p>{question}</p>
       <form>

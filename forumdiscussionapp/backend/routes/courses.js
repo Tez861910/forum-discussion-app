@@ -7,7 +7,7 @@ app.use(express.json());
 app.use(cors());
 
 // Create a new course
-router.post('/courses', async (req, res) => {
+router.post('/courses/create', async (req, res) => {
   const { courseName } = req.body;
 
   try {
@@ -33,7 +33,7 @@ router.post('/courses', async (req, res) => {
 });
 
 // Get all courses
-router.get('/courses/all', async (req, res) => {
+router.get('/courses/get', async (req, res) => {
   try {
     const sql = 'SELECT * FROM courses';
     const results = await query(sql);
@@ -59,7 +59,7 @@ router.get('/courses/all', async (req, res) => {
 });
 
 // Get a course by ID
-router.get('/courses/:id', async (req, res) => {
+router.get('/courses/get/:id', async (req, res) => {
   const { id } = req.params;
 
   try {
@@ -80,7 +80,7 @@ router.get('/courses/:id', async (req, res) => {
 });
 
 // Update a course by ID
-router.put('/courses/:id', async (req, res) => {
+router.put('/courses/update/:id', async (req, res) => {
   const { id } = req.params;
   const { courseName } = req.body;
 
@@ -107,7 +107,7 @@ router.put('/courses/:id', async (req, res) => {
 });
 
 // Delete a course by ID
-router.delete('/courses/:id', async (req, res) => {
+router.delete('/courses/delete/:id', async (req, res) => {
   const { id } = req.params;
 
   try {

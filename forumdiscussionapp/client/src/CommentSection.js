@@ -1,13 +1,12 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
+import './commentsection.css'; 
 
 function CommentSection({ roleId, threadId }) {
-
   const [comments, setComments] = useState([]);
   const [newComment, setNewComment] = useState('');
   const userId = localStorage.getItem('userId');
   const courseId = localStorage.getItem('courseId'); 
-  //const threadId = localStorage.getItem('threadId');  
 
   useEffect(() => {
     const fetchComments = async () => {
@@ -25,7 +24,6 @@ function CommentSection({ roleId, threadId }) {
   const handleCommentSubmit = async (event) => {
     event.preventDefault();
 
-   
     if (roleId === 'student' && courseId !== threadId.courseId) {
       console.error('Only students assigned to this course can comment on this thread.');
       return;
@@ -35,7 +33,6 @@ function CommentSection({ roleId, threadId }) {
       await axios.post(`http://localhost:8081/threads/${threadId}/comments`, { content: newComment, userId, courseId });
       console.log('Comment added successfully'); 
 
-     
       const commentsResponse = await axios.get(`http://localhost:8081/threads/${threadId}/comments`);
       setComments(commentsResponse.data.comments);
 
@@ -46,11 +43,13 @@ function CommentSection({ roleId, threadId }) {
   };
 
   return (
-    <div>
+    <div className="comment-section-container">
       <h2>Comments</h2>
-      <ul>
+      <ul className="comment-list">
         {comments.map((comment) => (
-          <li key={comment.id}>{comment.content}</li>
+          <li key={comment.id} className="comment-item">
+            {comment.content}
+          </li>
         ))}
       </ul>
       {roleId === 'student' && courseId === threadId.courseId && (
@@ -59,8 +58,9 @@ function CommentSection({ roleId, threadId }) {
             value={newComment}
             onChange={(e) => setNewComment(e.target.value)}
             placeholder="Add a comment..."
+            className="comment-input"
           />
-          <button type="submit">Submit Comment</button>
+          <button type="submit" className="submit-button">Submit Comment</button>
         </form>
       )}
     </div>

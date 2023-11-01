@@ -1,13 +1,14 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
+import './adminuser.css';
 
 function AdminUsers() {
   const [users, setUsers] = useState([]);
   const [newUser, setNewUser] = useState({ name: '', email: '' });
 
   useEffect(() => {
-    // Fetch the list of users from the server (admin-specific endpoint)
-    axios.get('http://localhost:8081/admin/users')
+    
+    axios.get('http://localhost:8081/users/users/get')
       .then((response) => {
         setUsers(response.data.users);
         console.log('Users fetched successfully');
@@ -18,8 +19,8 @@ function AdminUsers() {
   }, []);
 
   const handleCreateUser = () => {
-    // Implement a function to create a new user by an admin
-    axios.post('http://localhost:8081/admin/users', newUser)
+  
+    axios.post('http://localhost:8081/users/users/create', newUser)
       .then((response) => {
         setUsers([...users, response.data]);
         setNewUser({ name: '', email: '' });
@@ -31,8 +32,8 @@ function AdminUsers() {
   };
 
   const handleUpdateUser = (userId, updatedUserData) => {
-    // Implement a function to update a user's data by an admin
-    axios.put(`http://localhost:8081/admin/users/${userId}`, updatedUserData)
+    
+    axios.put(`http://localhost:8081/users/users/update/:id`, updatedUserData)
       .then((response) => {
         const updatedUsers = users.map((user) =>
           user.id === userId ? response.data : user
@@ -46,8 +47,8 @@ function AdminUsers() {
   };
 
   const handleDeleteUser = (userId) => {
-    // Implement a function to delete a user by an admin
-    axios.delete(`http://localhost:8081/admin/users/${userId}`)
+    
+    axios.delete(`http://localhost:8081/users/users/delete/:id`) 
       .then(() => {
         const updatedUsers = users.filter((user) => user.id !== userId);
         setUsers(updatedUsers);
@@ -56,7 +57,7 @@ function AdminUsers() {
       .catch((error) => {
         console.error('Error deleting user:', error);
       });
-  };
+  }
 
   return (
     <div>

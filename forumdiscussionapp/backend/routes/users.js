@@ -4,7 +4,7 @@ const {query} = require('../db');
 const { createToken, hashPassword, verifyPassword } = require('../authvalid');
 
 // Create a new user
-router.post('/users', async (req, res) => {
+router.post('/users/create', async (req, res) => {
   const { name, email, password, roleId, courseId } = req.body;
 
   try {
@@ -34,7 +34,7 @@ router.post('/users', async (req, res) => {
 });
 
 // Get all users
-router.get('/users', async (req, res) => {
+router.get('/users/get', async (req, res) => {
   try {
     const sql = 'SELECT * FROM users';
     const [results] = await query(sql);
@@ -48,7 +48,7 @@ router.get('/users', async (req, res) => {
 });
 
 // Update a user
-router.put('/users/:id', async (req, res) => {
+router.put('/users/update/:id', async (req, res) => {
   const { id } = req.params;
   const { name, email, roleId, courseId } = req.body;
 
@@ -76,7 +76,7 @@ router.put('/users/:id', async (req, res) => {
 });
 
 // Delete a user
-router.delete('/users/:id', async (req, res) => {
+router.delete('/users/delete/:id', async (req, res) => {
   const { id } = req.params;
 
   try {

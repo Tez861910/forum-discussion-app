@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
+import './adminthread.css';
 
 function AdminThreads() {
   const [threads, setThreads] = useState([]);
@@ -14,7 +15,7 @@ function AdminThreads() {
   }, []);
 
   const fetchThreads = () => {
-    axios.get('http://localhost:8081/admin/threads')
+    axios.get('http://localhost:8081/threads/threads/get')
       .then((response) => {
         setThreads(response.data);
         console.log('Threads fetched successfully');
@@ -25,9 +26,9 @@ function AdminThreads() {
   };
 
   const createThread = () => {
-    axios.post('http://localhost:8081/admin/threads', newThread)
+    axios.post('http://localhost:8081/threads/threads/create', newThread)
       .then(() => {
-        // After creating a thread, refresh the list of threads
+        
         fetchThreads();
         console.log('Thread created successfully');
       })
@@ -37,9 +38,9 @@ function AdminThreads() {
   };
 
   const updateThread = (threadId, updatedData) => {
-    axios.put(`http://localhost:8081/admin/threads/${threadId}`, updatedData)
+    axios.put(`http://localhost:8081/threads/threads/update/:id${threadId}`, updatedData)
       .then(() => {
-        // After updating a thread, refresh the list of threads
+       
         fetchThreads();
         console.log('Thread updated successfully');
       })
@@ -49,9 +50,9 @@ function AdminThreads() {
   };
 
   const deleteThread = (threadId) => {
-    axios.delete(`http://localhost:8081/admin/threads/${threadId}`)
+    axios.delete(`http://localhost:8081/threads/threads/update/:id${threadId}`)
       .then(() => {
-        // After deleting a thread, refresh the list of threads
+       
         fetchThreads();
         console.log('Thread deleted successfully');
       })
