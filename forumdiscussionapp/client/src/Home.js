@@ -1,6 +1,6 @@
-// Home.js
+
 import React, { useState, useEffect } from 'react';
-import { useNavigate, Routes, Route } from 'react-router-dom';
+import { Link, Routes, Route } from 'react-router-dom';
 import CreateThread from './CreateThread';
 import CommentSection from './CommentSection';
 import MCQForm from './MCQForm';
@@ -9,7 +9,6 @@ import AdminPanel from './AdminPanel';
 
 function Home() {
   const [roleId, setRoleId] = useState('');
-  const navigate = useNavigate();
 
   useEffect(() => {
     const storedRoleId = localStorage.getItem('roleId');
@@ -20,28 +19,28 @@ function Home() {
     <div className="container">
       <h2>Home Panel</h2>
       {roleId === '1' && (
-        <button onClick={() => navigate('/home/adminpanel')} className="btn btn-success my-3">
+        <Link to="/home/adminpanel" className="btn btn-success my-3">
           Admin Panel
-        </button>
+        </Link>
       )}
       {roleId === '2' && (
         <>
-          <button onClick={() => navigate('/home/createthread')} className="btn btn-primary my-3">
+          <Link to="/home/createthread" className="btn btn-primary my-3">
             Create Thread
-          </button>
-          <button onClick={() => navigate('/home/mcqform')} className="btn btn-primary my-3">
+          </Link>
+          <Link to="/home/mcqform" className="btn btn-primary my-3">
             Create MCQ Question
-          </button>
+          </Link>
         </>
       )}
       {roleId === '3' && (
         <>
-          <button onClick={() => navigate('/home/commentsection')} className="btn btn-primary my-3">
+          <Link to="/home/commentsection" className="btn btn-primary my-3">
             Comment Section
-          </button>
-          <button onClick={() => navigate('/home/mcqanswerform')} className="btn btn-primary my-3">
+          </Link>
+          <Link to="/home/mcqanswerform" className="btn btn-primary my-3">
             Answer MCQ Question
-          </button>
+          </Link>
         </>
       )}
       <Routes>
