@@ -24,6 +24,8 @@ const loginRoutes = require('./routes/loginserver');
 const homeRoutes = require('./routes/homeserver');
 const signupRoutes = require('./routes/signup');
 const threadsRoutes = require('./routes/threads');
+const mcqformRoutes = require('./routes/mcqquestions');
+const mcqanswerformRoutes = require('./routes/mcqanswers');
 
 // Routes
 app.use('/users', usersRoutes);
@@ -33,6 +35,8 @@ app.use('/login', loginRoutes);
 app.use('/signup', signupRoutes);
 app.use('/threads', threadsRoutes);
 app.use('/home', homeRoutes);
+app.use('/mcqform', mcqformRoutes);
+app.use('/mcqanswerform', mcqanswerformRoutes);
 
 
 // Root route

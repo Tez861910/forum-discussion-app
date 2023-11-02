@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
-import './mcqform.css'; 
+import './mcqform.css';
+import axios from 'axios'; 
 
 const MCQForm = ({ onSave }) => {
   const [question, setQuestion] = useState('');
@@ -8,10 +9,25 @@ const MCQForm = ({ onSave }) => {
 
   const handleSave = () => {
     if (question && options.every((opt) => opt !== '') && correctAnswer !== '') {
-      onSave({ question, options, correctAnswer });
-      setQuestion('');
-      setOptions(['', '', '', '']);
-      setCorrectAnswer('');
+
+      const mcqData = {
+        question,
+        options,
+        correctAnswer,
+      };
+
+      
+      axios.post('/mcqform/mcqform/save', mcqData)
+        .then((_response) => {
+         
+          onSave(mcqData); 
+          setQuestion('');
+          setOptions(['', '', '', '']);
+          setCorrectAnswer('');
+        })
+        .catch((error) => {
+          console.error('Error saving MCQ data:', error);
+        });
     }
   };
 

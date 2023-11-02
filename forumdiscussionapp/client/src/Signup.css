@@ -1,4 +1,4 @@
-/* Signup.css */
+
 .signup-page {
     width: 360px;
     padding: 8% 0 0;
@@ -58,9 +58,7 @@
     color: #4CAF50;
     text-decoration: none;
   }
-  
-  /* Additional Signup-specific styling can be added here */
-  
+   
   .signup-page .success-message {
     color: #4CAF50;
     font-size: 16px;

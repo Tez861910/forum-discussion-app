@@ -4,7 +4,7 @@ const { query } = require('../db');
 const { isUserAuthorized } = require('../authvalid');
 
 
-router.get('/comments/comments/get', async (req, res) => {
+router.get('/comments/get', async (req, res) => {
   const { threadId } = req.params;
 
   try {
@@ -20,7 +20,7 @@ router.get('/comments/comments/get', async (req, res) => {
 });
 
 // Create a new comment 
-router.post('/comments/comments/create', async (req, res) => {
+router.post('/comments/create', async (req, res) => {
   const { threadId } = req.params;
   const { content, userId, courseId } = req.body;
 

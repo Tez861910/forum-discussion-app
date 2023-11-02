@@ -1,11 +1,11 @@
-
 import React, { useState, useEffect } from 'react';
 import { Link, Routes, Route } from 'react-router-dom';
 import CreateThread from './CreateThread';
 import CommentSection from './CommentSection';
 import MCQForm from './MCQForm';
 import MCQAnswerForm from './MCQAnswerForm';
-import AdminPanel from './AdminPanel'; 
+import AdminPanel from './AdminPanel';
+import './Home.css';
 
 function Home() {
   const [roleId, setRoleId] = useState('');
@@ -44,7 +44,7 @@ function Home() {
         </>
       )}
       <Routes>
-        <Route path="/home/adminpanel" element={<AdminPanel />} /> 
+        <Route path="/home/adminpanel" element={<AdminPanel />} />
         <Route path="/home/createthread" element={<CreateThread />} />
         <Route path="/home/commentsection" element={<CommentSection />} />
         <Route path="/home/mcqform" element={<MCQForm />} />

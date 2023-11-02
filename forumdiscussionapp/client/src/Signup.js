@@ -39,8 +39,8 @@ const Signup = () => {
   const fetchData = useCallback(async () => {
     try {
       const [rolesResponse, coursesResponse] = await Promise.all([
-        axios.get('http://localhost:8081/roles/roles/all'),
-        axios.get('http://localhost:8081/courses/courses/all')
+        axios.get('http://localhost:8081/roles/roles/get'),
+        axios.get('http://localhost:8081/courses/courses/get')
       ]);
 
       const rolesData = rolesResponse.data.roles;

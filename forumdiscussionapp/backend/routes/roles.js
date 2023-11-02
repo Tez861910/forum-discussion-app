@@ -7,7 +7,7 @@ app.use(express.json());
 app.use(cors());
 
 // Create a new role
-router.post('/roles', async (req, res) => {
+router.post('/roles/create', async (req, res) => {
   const { roleName } = req.body;
 
   try {
@@ -33,7 +33,7 @@ router.post('/roles', async (req, res) => {
 });
 
 // Get all roles
-router.get('/roles/all', async (req, res) => {
+router.get('/roles/get', async (req, res) => {
   try {
     const sql = 'SELECT * FROM roles';
     const results = await query(sql);
@@ -57,7 +57,7 @@ router.get('/roles/all', async (req, res) => {
 });
 
 // Get a role by ID
-router.get('/roles/:id', async (req, res) => {
+router.get('/roles/get/:id', async (req, res) => {
   const { id } = req.params;
 
   try {
@@ -78,7 +78,7 @@ router.get('/roles/:id', async (req, res) => {
 });
 
 // Update a role
-router.put('/roles/:id', async (req, res) => {
+router.put('/roles/update/:id', async (req, res) => {
   const { id } = req.params;
   const { roleName } = req.body;
 
@@ -105,7 +105,7 @@ router.put('/roles/:id', async (req, res) => {
 });
 
 // Delete a role
-router.delete('/roles/:id', async (req, res) => {
+router.delete('/roles/delete/:id', async (req, res) => {
   const { id } = req.params;
 
   try {
