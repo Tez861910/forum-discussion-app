@@ -1,17 +1,16 @@
 const express = require('express');
 const router = express.Router();
 const {query} = require('../db');
-router.use(express.json());
-
+router.use(express.json()); 
 
 const threadsData = [
-  { threadId: 1, title: 'Thread 1', content: 'Content for Thread 1' },
-  { threadId: 2, title: 'Thread 2', content: 'Content for Thread 2' },
+  { threadId: 1, title: 'Thread 1', content: 'Content for Thread 1',courseId: 1 },
+  { threadId: 2, title: 'Thread 2', content: 'Content for Thread 2',courseId: 2 },
 ];
 
 // Endpoint to get threads for a specific course
 router.get('/threads/course', (req, res) => {
-  const courseId = req.query.courseId; // Get the courseId from the query parameters
+  const courseId = req.query.courseId; 
   const filteredThreads = threadsData.filter((thread) => thread.courseId === courseId);
 
   res.json(filteredThreads);

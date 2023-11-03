@@ -24,8 +24,8 @@ const loginRoutes = require('./routes/loginserver');
 const homeRoutes = require('./routes/homeserver');
 const signupRoutes = require('./routes/signup');
 const threadsRoutes = require('./routes/threads');
-const mcqformRoutes = require('./routes/mcqquestions');
-const mcqanswerformRoutes = require('./routes/mcqanswers');
+const mcqformRoutes = require('./routes/mcqform');
+const mcqanswerformRoutes = require('./routes/mcqanswerform');
 
 // Routes
 app.use('/users', usersRoutes);

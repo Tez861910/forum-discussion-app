@@ -1,9 +1,9 @@
 /* Styles for the entire container */
 .container {
-  max-width: 600px; 
+  max-width: 200px; 
   margin: 0 auto;
   padding: 20px;
-  background-color: #ffffff; 
+  background-color: #ffffff;
   border: 1px solid #ddd;
   border-radius: 5px;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
@@ -17,7 +17,7 @@ h2 {
 
 /* Styles for buttons */
 .btn {
-  display: block; 
+  display: block;
   padding: 10px 20px;
   border: none;
   border-radius: 5px;
@@ -25,7 +25,9 @@ h2 {
   text-decoration: none;
   color: #fff;
   background-color: #4CAF50; 
-  margin: 10px 0; 
+  margin: 10px 0;
+  width: 100%; 
+  text-align: center; 
 }
 
 /* Apply styles to the table */

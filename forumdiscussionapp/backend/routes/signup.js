@@ -28,14 +28,23 @@ router.post('/signup', async (req, res) => {
       const [userCourseResult] = await query(sqlusercourse, [userId, courseId]);
 
       if (userCourseResult.affectedRows === 1) {
-        const payload = {
-          userId,
-          email,
-          roleId,
-        };
-        const token = createToken(payload);
-        console.log('User registered successfully for email: ' + email);
-        res.json({ message: 'User registered successfully', token });
+        // Insert a record into UserRoles to associate the user with the role
+        const sqluserroles = 'INSERT INTO userroles (UserID, RoleID) VALUES (?, ?)';
+        const [userRolesResult] = await query(sqluserroles, [userId, roleId]);
+
+        if (userRolesResult.affectedRows === 1) {
+          const payload = {
+            userId,
+            email,
+            roleId,
+          };
+          const token = createToken(payload);
+          console.log('User registered successfully for email: ' + email);
+          res.json({ message: 'User registered successfully', token });
+        } else {
+          console.log('User registration failed for email: ' + email);
+          res.status(500).json({ error: 'User registration failed' });
+        }
       } else {
         console.log('User registration failed for email: ' + email);
         res.status(500).json({ error: 'User registration failed' });
