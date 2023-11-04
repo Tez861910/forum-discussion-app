@@ -1,0 +1,45 @@
+/* EditUser.css */
+
+/* Style for the User Profile section */
+.user-profile {
+    border: 1px solid #ccc;
+    padding: 20px;
+    margin: 10px;
+    background-color: #f7f7f7;
+  }
+  
+  .user-profile h3 {
+    font-size: 1.5rem;
+    margin-bottom: 10px;
+  }
+  
+  .user-profile p {
+    font-size: 1rem;
+    margin: 5px 0;
+  }
+  
+  /* Style for the input fields in editing mode */
+  .user-profile input {
+    width: 100%;
+    padding: 10px;
+    margin: 5px 0;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+  }
+  
+  /* Style for the Save button */
+  .user-profile button {
+    background-color: #007bff;
+    color: #fff;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    margin-top: 10px;
+  }
+  
+  /* Style for the Edit button */
+  .user-profile button.edit-button {
+    background-color: #28a745;
+  }
+  

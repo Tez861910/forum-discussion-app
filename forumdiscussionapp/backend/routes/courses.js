@@ -1,5 +1,8 @@
-const express = require('express');
-const router = express.Router();
+import { handleCoursesGet } from './course-routes/handle-courses-get';
+import { handleCreate } from './course-routes/handle-create';
+
+export const express = require('express');
+export const router = express.Router();
 const { query } = require('../db');
 const cors = require('cors');
 const app = express();
@@ -7,56 +10,10 @@ app.use(express.json());
 app.use(cors());
 
 // Create a new course
-router.post('/courses/create', async (req, res) => {
-  const { courseName } = req.body;
-
-  try {
-    if (!courseName) {
-      console.log('Course name is required');
-      return res.status(400).json({ error: 'Course name is required' });
-    }
-
-    const sql = 'INSERT INTO courses (CourseName) VALUES (?)';
-    const [result] = await query(sql, [courseName]);
-
-    if (result.affectedRows === 1) {
-      console.log('Course created successfully');
-      res.json({ message: 'Course created successfully' });
-    } else {
-      console.error('Course creation failed');
-      res.status(500).json({ error: 'Course creation failed' });
-    }
-  } catch (error) {
-    console.error('Error creating course:', error);
-    res.status(500).json({ error: 'Course creation failed', details: error.message });
-  }
-});
+router.post('/courses/create', async (req, res) => handleCreate);
 
 // Get all courses
-router.get('/courses/get', async (req, res) => {
-  try {
-    const sql = 'SELECT * FROM courses';
-    const results = await query(sql);
-
-    console.log(results)
-
-    if (!results.length) {
-      // console.error('No courses found in the database');
-      return res.status(404).json({ error: 'No courses found' });
-    }
-
-    const courseData = results.map(row => ({
-      CourseID: row.CourseID,
-      CourseName: row.CourseName,
-    }));
-
-    console.log('Courses fetched successfully');
-    res.status(200).json({ courses: results });
-  } catch (error) {
-    console.error('Error fetching courses:', error);
-    res.status(500).json({ error: 'Course retrieval failed', details: error.message });
-  }
-});
+router.get('/courses/get', async (req, res) => handleCoursesGet);
 
 // Get a course by ID
 router.get('/courses/get/:id', async (req, res) => {

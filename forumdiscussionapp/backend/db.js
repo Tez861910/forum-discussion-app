@@ -24,16 +24,18 @@ function query(sql, values) {
     connection.query(sql, values, (error, results) => {
       if (error) {
         console.error('SQL Error:', error);
+        console.error('SQL Query:', sql); 
         reject(error);
       } else {
         if (Array.isArray(results)) {
           resolve(results);
         } else {
-          resolve([results]); 
+          resolve([results]);
+        }
       }
-    }
     });
   });
 }
+
 
 module.exports = { query };

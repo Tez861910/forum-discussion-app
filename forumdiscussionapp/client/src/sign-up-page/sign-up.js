@@ -1,10 +1,10 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import axios from 'axios';
-import RoleDropdown from './RoleDropdown';
-import CourseDropdown from './CourseDropdown';
-import SignUpValidation from './SignupValidation';
+import RoleDropdown from './role-dropdown';
+import CourseDropdown from './course-dropdown';
+import SignUpValidation from './sign-up-validation';
 import { Link, useNavigate } from 'react-router-dom';
-import './Signup.css';
+import './sign-up.css';
 
 const Signup = () => {
   const [formData, setFormData] = useState({

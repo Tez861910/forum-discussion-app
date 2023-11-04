@@ -47,8 +47,70 @@ router.get('/users/get', async (req, res) => {
   }
 });
 
+// Get a user by ID with CourseName and RoleName
+router.get('/users/get/:id', async (req, res) => {
+  const { id } = req.params;
+
+  try {
+    const sql = `
+      SELECT 
+        users.*,
+        courses.CourseName,
+        roles.RoleName
+      FROM users
+      JOIN courses ON users.CourseID = courses.CourseID
+      JOIN roles ON users.RoleID = roles.RoleID
+      WHERE users.UserID = ?
+    `;
+
+    const results = await query(sql, [id]);
+
+    if (results.length > 0) {
+      console.log('User fetched successfully');
+      res.json({ user: results[0] });
+    } else {
+      console.error('User not found');
+      res.status(404).json({ error: 'User not found' });
+    }
+  } catch (error) {
+    console.error('Error fetching user by ID:', error);
+    res.status(500).json({ error: 'User retrieval by ID failed', details: error.message });
+  }
+});
+
+
 // Update a user
 router.put('/users/update/:id', async (req, res) => {
+  const { id } = req.params;
+  const { name, email } = req.body; // Exclude roleId and courseId
+
+  try {
+    if (!name || !email) {
+      console.log('Name and email are required');
+      return res.status(400).json({ error: 'Name and email are required' });
+    }
+
+    // SQL query to update the user
+    const sql = 'UPDATE users SET UserName = ?, UserEmail = ? WHERE UserID = ?';
+    const [result] = await query(sql, [name, email, id]);
+
+    if (result.affectedRows === 1) {
+      console.log('User updated successfully');
+      res.json({ message: 'User updated successfully' });
+    } else {
+      console.error('User update failed');
+      res.status(500).json({ error: 'User update failed' });
+    }
+  } catch (error) {
+    console.error('Error updating user:', error);
+    res.status(500).json({ error: 'User update failed', details: error.message });
+  }
+});
+
+
+
+// Update a user
+router.put('/users/update/admin/:id', async (req, res) => {
   const { id } = req.params;
   const { name, email, roleId, courseId } = req.body;
 

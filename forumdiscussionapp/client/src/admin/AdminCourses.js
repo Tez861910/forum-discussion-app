@@ -33,7 +33,7 @@ function AdminCourses() {
 
   const handleEditCourse = async (courseId) => {
     try {
-      await axios.put(`http://localhost:8081/courses/courses/update/:id${courseId}`, { courseName: updatedCourseName });
+      await axios.put(`http://localhost:8081/courses/courses/update/${courseId}`, { courseName: updatedCourseName });
 
       setEditingcourseId(null);
       setUpdatedCourseName('');
@@ -45,7 +45,7 @@ function AdminCourses() {
 
   const handleDeleteCourse = async (courseId) => {
     try {
-      await axios.delete(`http://localhost:8081/courses/courses/delete/:id${courseId}`);
+      await axios.delete(`http://localhost:8081/courses/courses/delete/${courseId}`);
       console.log('Course deleted successfully');
     } catch (error) {
       console.error('Error deleting course:', error);

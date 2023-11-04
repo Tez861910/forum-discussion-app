@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import './mcqform.css';
+import './mcq-form.css';
 import axios from 'axios';
 
 const MCQForm = () => {

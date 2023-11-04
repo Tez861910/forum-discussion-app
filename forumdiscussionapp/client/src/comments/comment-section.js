@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
-import './commentsection.css'; 
+import './comment-section.css'; 
 
 function CommentSection({ roleId, threadId }) {
   const [comments, setComments] = useState([]);

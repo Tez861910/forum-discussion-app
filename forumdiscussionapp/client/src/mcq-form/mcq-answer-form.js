@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
-import './mcqanswerform.css';
+import './mcq-answer-form.css';
 import axios from 'axios';
-import MCQSummary from './MCQSummary'; 
+import MCQSummary from './mcq-summary';
 
 const MCQAnswerForm = () => {
   const [questions, setQuestions] = useState([]);

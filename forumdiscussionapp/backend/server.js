@@ -1,4 +1,4 @@
-const express = require('express');
+export const express = require('express');
 const cors = require('cors');
 const morgan = require('morgan');
 const { handleError } = require('./ErrorHandler');
@@ -25,7 +25,7 @@ const homeRoutes = require('./routes/homeserver');
 const signupRoutes = require('./routes/signup');
 const threadsRoutes = require('./routes/threads');
 const mcqformRoutes = require('./routes/mcqform');
-const mcqanswerformRoutes = require('./routes/mcqanswerform');
+const mcqanswerformRoutes = require('./routes/mcq-answer-form');
 
 // Routes
 app.use('/users', usersRoutes);

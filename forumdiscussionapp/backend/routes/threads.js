@@ -1,34 +1,39 @@
 const express = require('express');
 const router = express.Router();
-const {query} = require('../db');
-router.use(express.json()); 
+const { query } = require('../db');
 
-const threadsData = [
-  { threadId: 1, title: 'Thread 1', content: 'Content for Thread 1',courseId: 1 },
-  { threadId: 2, title: 'Thread 2', content: 'Content for Thread 2',courseId: 2 },
-];
+router.use(express.json());
 
 // Endpoint to get threads for a specific course
-router.get('/threads/course', (req, res) => {
-  const courseId = req.query.courseId; 
-  const filteredThreads = threadsData.filter((thread) => thread.courseId === courseId);
+router.get('/threads/course/:courseId', async (req, res) => {
+  const courseId = req.params.courseId;
+  console.log('Received courseId:', courseId);
+  
+  try {
+    const sql = 'SELECT * FROM Threads WHERE CourseID = ?';
+    const [results] = await query(sql, [courseId]);
+    console.log('Threads data:', results);
 
-  res.json(filteredThreads);
+    // Send threads as an array
+    res.json([results]);
+  } catch (error) {
+    console.error('Error fetching threads:', error);
+    res.status(500).json({ error: 'Thread retrieval failed', details: error.message });
+  }
 });
+
 
 
 // Create a new thread
 router.post('/threads/create', async (req, res) => {
-  const { title, content, courseId } = req.body;
-
+  const { title, content, courseId, userId } = req.body;
   try {
-    if (!title || !content || !courseId) {
-      console.log('Title, content, and courseId are required');
-      return res.status(400).json({ error: 'Title, content, and courseId are required' });
+    if (!title || !content || !courseId || !userId) {
+      console.log('Title, content, courseId, and userId are required');
+      return res.status(400).json({ error: 'Title, content, courseId, and userId are required' });
     }
-    const sql = 'INSERT INTO threads (Title, Content, CourseID) VALUES (?, ?, ?)';
-    const [result] = await query(sql, [title, content, courseId]);
-
+    const sql = 'INSERT INTO Threads (ThreadTitle, ThreadContent, CourseID, UserID) VALUES (?, ?, ?, ?)';
+    const [result] = await query(sql, [title, content, courseId, userId]);
     if (result.affectedRows === 1) {
       console.log('Thread created successfully');
       res.json({ message: 'Thread created successfully' });
@@ -42,36 +47,17 @@ router.post('/threads/create', async (req, res) => {
   }
 });
 
-// Get all threads
-router.get('/threads/get', async (req, res) => {
-  try {
-    const sql = 'SELECT * FROM threads';
-    const [results] = await query(sql);
-
-    console.log('Threads fetched successfully');
-    res.json({ threads: results });
-  } catch (error) {
-    console.error('Error fetching threads:', error);
-    res.status(500).json({ error: 'Thread retrieval failed', details: error.message });
-  }
-});
-
 // Update a thread
-router.put('/threads/update/:id',  async (req, res) => {
+router.put('/threads/update/:id', async (req, res) => {
   const { id } = req.params;
   const { title, content, courseId } = req.body;
-
   try {
-    if (!title || !content || !courseId) {
-      console.log('Title, content, and courseId are required');
-      return res.status(400).json({ error: 'Title, content, and courseId are required' });
+    if (!title || !content || !courseId ) {
+      console.log('Title, content, courseId, and userId are required');
+      return res.status(400).json({ error: 'Title, content, courseId, and userId are required' });
     }
-
-  
-
-    const sql = 'UPDATE threads SET Title = ?, Content = ?, CourseID = ? WHERE ThreadID = ?';
+    const sql = 'UPDATE Threads SET ThreadTitle = ?, ThreadContent = ?, CourseID = ?,  WHERE ThreadID = ?';
     const [result] = await query(sql, [title, content, courseId, id]);
-
     if (result.affectedRows === 1) {
       console.log('Thread updated successfully');
       res.json({ message: 'Thread updated successfully' });
@@ -88,13 +74,9 @@ router.put('/threads/update/:id',  async (req, res) => {
 // Delete a thread
 router.delete('/threads/delete/:id', async (req, res) => {
   const { id } = req.params;
-
   try {
-   
-
-    const sql = 'DELETE FROM threads WHERE ThreadID = ?';
+    const sql = 'DELETE FROM Threads WHERE ThreadID = ?';
     const [result] = await query(sql, [id]);
-
     if (result.affectedRows === 1) {
       console.log('Thread deleted successfully');
       res.json({ message: 'Thread deleted successfully' });
