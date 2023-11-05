@@ -1,5 +1,4 @@
-
- async function handleCreate(req, res) {
+ async function handleCoursesCreate(req, res) {
     {
         const { courseName } = req.body;
       

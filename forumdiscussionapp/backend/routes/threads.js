@@ -4,90 +4,18 @@ const { query } = require('../db');
 
 router.use(express.json());
 
+const { handleThreadsCreate } = require('./thread-routes/handle-threads-create');
+const { handleThreadsGetCourseId } = require('./thread-routes/handle-threads-get-courseid');
+const { handleThreadsUpdateId } = require('./thread-routes/handle-threads-update-id');
+const { handleThreadsDeleteId } = require('./thread-routes/handle-threads-delete-id');
+
 // Endpoint to get threads for a specific course
-router.get('/threads/course/:courseId', async (req, res) => {
-  const courseId = req.params.courseId;
-  console.log('Received courseId:', courseId);
-  
-  try {
-    const sql = 'SELECT * FROM Threads WHERE CourseID = ?';
-    const [results] = await query(sql, [courseId]);
-    console.log('Threads data:', results);
-
-    // Send threads as an array
-    res.json([results]);
-  } catch (error) {
-    console.error('Error fetching threads:', error);
-    res.status(500).json({ error: 'Thread retrieval failed', details: error.message });
-  }
-});
-
-
-
+router.get('/threads/get/:courseId', async (req, res) =>handleThreadsGetCourseId); 
 // Create a new thread
-router.post('/threads/create', async (req, res) => {
-  const { title, content, courseId, userId } = req.body;
-  try {
-    if (!title || !content || !courseId || !userId) {
-      console.log('Title, content, courseId, and userId are required');
-      return res.status(400).json({ error: 'Title, content, courseId, and userId are required' });
-    }
-    const sql = 'INSERT INTO Threads (ThreadTitle, ThreadContent, CourseID, UserID) VALUES (?, ?, ?, ?)';
-    const [result] = await query(sql, [title, content, courseId, userId]);
-    if (result.affectedRows === 1) {
-      console.log('Thread created successfully');
-      res.json({ message: 'Thread created successfully' });
-    } else {
-      console.error('Thread creation failed');
-      res.status(500).json({ error: 'Thread creation failed' });
-    }
-  } catch (error) {
-    console.error('Error creating thread:', error);
-    res.status(500).json({ error: 'Thread creation failed', details: error.message });
-  }
-});
-
+router.post('/threads/create', async (req, res) =>handleThreadsCreate);
 // Update a thread
-router.put('/threads/update/:id', async (req, res) => {
-  const { id } = req.params;
-  const { title, content, courseId } = req.body;
-  try {
-    if (!title || !content || !courseId ) {
-      console.log('Title, content, courseId, and userId are required');
-      return res.status(400).json({ error: 'Title, content, courseId, and userId are required' });
-    }
-    const sql = 'UPDATE Threads SET ThreadTitle = ?, ThreadContent = ?, CourseID = ?,  WHERE ThreadID = ?';
-    const [result] = await query(sql, [title, content, courseId, id]);
-    if (result.affectedRows === 1) {
-      console.log('Thread updated successfully');
-      res.json({ message: 'Thread updated successfully' });
-    } else {
-      console.error('Thread update failed');
-      res.status(500).json({ error: 'Thread update failed' });
-    }
-  } catch (error) {
-    console.error('Error updating thread:', error);
-    res.status(500).json({ error: 'Thread update failed', details: error.message });
-  }
-});
-
+router.put('/threads/update/:id', async (req, res) => handleThreadsUpdateId);
 // Delete a thread
-router.delete('/threads/delete/:id', async (req, res) => {
-  const { id } = req.params;
-  try {
-    const sql = 'DELETE FROM Threads WHERE ThreadID = ?';
-    const [result] = await query(sql, [id]);
-    if (result.affectedRows === 1) {
-      console.log('Thread deleted successfully');
-      res.json({ message: 'Thread deleted successfully' });
-    } else {
-      console.error('Thread deletion failed');
-      res.status(500).json({ error: 'Thread deletion failed' });
-    }
-  } catch (error) {
-    console.error('Error deleting thread:', error);
-    res.status(500).json({ error: 'Thread deletion failed', details: error.message });
-  }
-});
+router.delete('/threads/delete/:id', async (req, res) => handleThreadsDeleteId);
 
 module.exports = router;
