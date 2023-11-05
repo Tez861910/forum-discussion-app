@@ -79,8 +79,10 @@ function CreateThread() {
          <li key={thread.ThreadID} className="thread-item">
            <p className="thread-title">Title: {thread.ThreadTitle}</p>
            <p className="thread-content">Content: {thread.ThreadContent}</p>
+           <div className="flex justify-right">
            <button className="edit-button">Edit</button>
            <button className="delete-button">Delete</button>
+           </div>
          </li>
        ))}
      </ul>

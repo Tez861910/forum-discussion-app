@@ -17,7 +17,7 @@
         "type": "node",
         "request": "launch",
         "name": "Launch Server",
-        "program": "/forumdiscussionapp/backend/server.js", 
+        "program": "./forumdiscussionapp/backend/server.js", 
         "runtimeExecutable": "node",
         "restart": true, 
         "outputCapture": "std",

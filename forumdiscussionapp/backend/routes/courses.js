@@ -1,8 +1,8 @@
-import { handleCoursesGet } from './course-routes/handle-courses-get';
-import { handleCreate } from './course-routes/handle-create';
+const { handleCoursesGet } = require('./course-routes/handle-courses-get');
+const { handleCreate } = require('./course-routes/handle-create');
 
-export const express = require('express');
-export const router = express.Router();
+const express = require('express');
+const router = express.Router();
 const { query } = require('../db');
 const cors = require('cors');
 const app = express();

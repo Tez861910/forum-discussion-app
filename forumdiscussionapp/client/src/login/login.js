@@ -27,7 +27,7 @@ const Login = () => {
     localStorage.setItem('courseId', courseId);
 
 
-    navigate('/home-page/home');
+    navigate('/home');
   };
   
 

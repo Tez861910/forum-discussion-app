@@ -1,4 +1,4 @@
-export async function handleCoursesGet(req, res) {
+ async function handleCoursesGet(req, res) {
     {
         try {
           const sql = 'SELECT * FROM courses';

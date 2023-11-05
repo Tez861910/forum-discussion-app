@@ -1,5 +1,5 @@
 
-export async function handleCreate(req, res) {
+ async function handleCreate(req, res) {
     {
         const { courseName } = req.body;
       
