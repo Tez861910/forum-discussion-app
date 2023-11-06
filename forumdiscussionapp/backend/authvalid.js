@@ -20,9 +20,9 @@ async function verifyPassword(password, hashedPassword) {
   return isPasswordValid;
 }
 
-function createToken(userId, email, roleId,courseId) {
+function createToken(userId, email, roleId, courseId) {
   const token = jwt.sign(
-    { userId, email, roleId,courseId },
+    { userId, email, roleId, courseId },
     JWT_SECRET,
     { expiresIn: '1h' }
   );
@@ -51,49 +51,18 @@ function verifyJwt(req, res, next) {
         return res.status(500).json({ error: 'Internal server error' });
       }
     }
+    console.log('Decoded token:', decoded);
+
     req.roleId = decoded.roleId;
     req.courseId = decoded.courseId;
     req.userId = decoded.userId;
+    next();
   });
 }
-
-/* Define authorized roles as objects
-const authorizedRoles = {
-  admin: { name: 'Admin', description: 'Administrator Role' },
-  teacher: { name: 'Teacher', description: 'Teacher Role' },
-  student: { name: 'Student', description: 'Student Role' },
-};
-
-// Middleware for checking user authorization
-const checkAuthorization = (req, res, next) => {
-  if (authorizedRoles[req.roleId]) {
-    next(); 
-  } else {
-    res.status(403).json({ error: 'Entry Access denied' });
-  }
-};
-
-// Middleware for checking authorization and fetching additional data
-const checkAuthAndGetData = (req, res, next) => {
-  if (authorizedRoles[req.roleId]) {
-    const data = {
-      content: `${authorizedRoles[req.roleId].name} data`,
-      description: authorizedRoles[req.roleId].description,
-      roleId: req.roleId,
-    };
-    res.json(data);
-  } else {
-    res.status(403).json({ error: 'Access denied' });
-  }
-};*/
-
-// middleware/authMiddleware.js
 
 module.exports = {
   hashPassword,
   verifyPassword,
-  verifyJwt,
   createToken,
-  //checkAuthorization,
-  //checkAuthAndGetData,
+  verifyJwt,
 };

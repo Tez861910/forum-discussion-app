@@ -66,29 +66,33 @@ function AdminCourses() {
         <button onClick={handleCreateCourse}>Create</button>
       </div>
       <ul>
-        {courses.map((course) => (
-          <li key={course.courseId}>
-            {editingcourseId === course.courseId ? (
-              <>
-                <input
-                  type="text"
-                  value={updatedCourseName}
-                  onChange={(e) => setUpdatedCourseName(e.target.value)}
-                />
-                <button onClick={() => handleEditCourse(course.courseId)}>Save</button>
-              </>
-            ) : (
-              <>
-                {course.CourseName}
-                <button onClick={() => setEditingcourseId(course.courseId)}>Edit</button>
-                <button onClick={() => handleDeleteCourse(course.courseId)}>Delete</button>
-              </>
-            )}
-          </li>
-        ))}
+        {courses.length > 0 ? (
+          courses.map((course) => (
+            <li key={course.courseId}>
+              {editingcourseId === course.courseId ? (
+                <>
+                  <input
+                    type="text"
+                    value={updatedCourseName}
+                    onChange={(e) => setUpdatedCourseName(e.target.value)}
+                  />
+                  <button onClick={() => handleEditCourse(course.courseId)}>Save</button>
+                </>
+              ) : (
+                <>
+                  {course.CourseName}
+                  <button onClick={() => setEditingcourseId(course.courseId)}>Edit</button>
+                  <button onClick={() => handleDeleteCourse(course.courseId)}>Delete</button>
+                </>
+              )}
+            </li>
+          ))
+        ) : (
+          <li>No courses available</li>
+        )}
       </ul>
     </div>
   );
-}
+        }
 
 export default AdminCourses;
