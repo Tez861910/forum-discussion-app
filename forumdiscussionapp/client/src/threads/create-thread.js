@@ -13,35 +13,36 @@ function CreateThread() {
   const [editThread, setEditThread] = useState({ title: '', content: '', id: null });
   const [error, setError] = useState(null);
 
-  const fetchThreads = async () => {
+  useEffect(() => {
     const storedUserId = localStorage.getItem('userId');
-    const storedCourseId = localStorage.getItem('courseId');
     if (!storedUserId) {
       console.error('User ID not found in local storage');
-      return;
-    }
-    if (!storedCourseId) {
-      console.error('Course ID not found in local storage');
       return;
     }
 
     const userIdNumber = parseInt(storedUserId, 10);
     setUserId(userIdNumber);
 
+    const storedCourseId = localStorage.getItem('courseId');
+    if (!storedCourseId) {
+      console.error('Course ID not found in local storage');
+      return;
+    }
+
     const courseIdNumber = parseInt(storedCourseId, 10);
     setCourseId(courseIdNumber);
 
+    fetchThreads(courseIdNumber);
+  }, []);
+
+  const fetchThreads = async (courseId) => {
     try {
-      const response = await axios.get(`http://localhost:8081/threads/threads/get/${courseIdNumber}`);
-      setThreads(response.data);
+      const response = await axios.get(`http://localhost:8081/threads/threads/get/${courseId}`);
+      setThreads(response.data[0]);
     } catch (error) {
       setError('Error fetching threads. Please try again.');
     }
   };
-
-  useEffect(() => {
-    fetchThreads();
-  }, []);
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
@@ -50,15 +51,15 @@ function CreateThread() {
 
   const createNewThread = async () => {
     try {
-       await axios.post('http://localhost:8081/threads/threads/create', {
+      await axios.post('http://localhost:8081/threads/threads/create', {
         title: newThread.title,
         content: newThread.content,
         courseId: courseId,
         userId: userId,
       });
 
-      await fetchThreads();
-      setNewThread({ title: '', content: '' }); 
+      await fetchThreads(courseId);
+      setNewThread({ title: '', content: '' });
     } catch (error) {
       setError('Error creating thread. Please try again.');
     }
@@ -72,7 +73,6 @@ function CreateThread() {
       setError('Error fetching thread details for editing. Please try again.');
     }
   };
-  
 
   const updateThread = async () => {
     try {
@@ -81,15 +81,15 @@ function CreateThread() {
         return;
       }
 
-       await axios.put(`http://localhost:8081/threads/threads/update/${editThread.id}`, {
+      await axios.put(`http://localhost:8081/threads/threads/update/${editThread.id}`, {
         title: editThread.title,
         content: editThread.content,
         courseId: editThread.courseId,
         userId: editThread.userId,
       });
 
-      await fetchThreads();
-      setEditThread({ title: '', content: '', id: null }); 
+      await fetchThreads(courseId);
+      setEditThread({ title: '', content: '', id: null });
     } catch (error) {
       setError('Error updating thread. Please try again.');
     }
@@ -99,7 +99,7 @@ function CreateThread() {
     if (window.confirm('Are you sure you want to delete this thread?')) {
       try {
         await axios.delete(`http://localhost:8081/threads/threads/delete/${threadId}`);
-        await fetchThreads();
+        await fetchThreads(courseId);
       } catch (error) {
         setError('Error deleting thread. Please try again.');
       }
@@ -111,7 +111,6 @@ function CreateThread() {
       <h2>Create Thread</h2>
       <h3>Your Threads:</h3>
 
-      {/* Error message */}
       {error && <p className="error-message">{error}</p>}
 
       {Array.isArray(threads) && threads.length > 0 ? (
