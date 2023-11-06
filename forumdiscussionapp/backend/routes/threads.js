@@ -18,4 +18,5 @@ router.put('/threads/update/:id', async (req, res) => handleThreadsUpdateId(req,
 // Delete a thread
 router.delete('/threads/delete/:id', async (req, res) => handleThreadsDeleteId(req, res));
 
+
 module.exports = router;

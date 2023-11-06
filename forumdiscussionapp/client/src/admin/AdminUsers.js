@@ -7,7 +7,6 @@ function AdminUsers() {
   const [newUser, setNewUser] = useState({ name: '', email: '' });
 
   useEffect(() => {
-    
     axios.get('http://localhost:8081/users/users/get')
       .then((response) => {
         setUsers(response.data.users);
@@ -19,7 +18,6 @@ function AdminUsers() {
   }, []);
 
   const handleCreateUser = () => {
-  
     axios.post('http://localhost:8081/users/users/create', newUser)
       .then((response) => {
         setUsers([...users, response.data]);
@@ -32,7 +30,6 @@ function AdminUsers() {
   };
 
   const handleUpdateUser = (userId, updatedUserData) => {
-    
     axios.put(`http://localhost:8081/users/users/update/:id`, updatedUserData)
       .then((response) => {
         const updatedUsers = users.map((user) =>
@@ -47,8 +44,7 @@ function AdminUsers() {
   };
 
   const handleDeleteUser = (userId) => {
-    
-    axios.delete(`http://localhost:8081/users/users/delete/:id`) 
+    axios.delete(`http://localhost:8081/users/users/delete/:id`)
       .then(() => {
         const updatedUsers = users.filter((user) => user.id !== userId);
         setUsers(updatedUsers);
@@ -79,15 +75,16 @@ function AdminUsers() {
         <button onClick={handleCreateUser}>Create User</button>
       </div>
       <ul>
-        {users.map((user) => (
-          <li key={user.id}>
-            <span>Name: {user.name}</span>
-            <span>Email: {user.email}</span>
-            <button onClick={() => handleUpdateUser(user.id, { name: 'Updated Name' })}>Update</button>
-            <button onClick={() => handleDeleteUser(user.id)}>Delete</button>
-          </li>
-        ))}
-      </ul>
+  {Array.isArray(users) && users.map((user) => (
+    <li key={user.id}>
+      <span>Name: {user.name}</span>
+      <span>Email: {user.email}</span>
+      <button onClick={() => handleUpdateUser(user.id, { name: 'Updated Name' })}>Update</button>
+      <button onClick={() => handleDeleteUser(user.id)}>Delete</button>
+    </li>
+  ))}
+</ul>
+
     </div>
   );
 }

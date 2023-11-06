@@ -5,11 +5,10 @@ import './admincourse.css';
 function AdminCourses() {
   const [courses, setCourses] = useState([]);
   const [newCourseName, setNewCourseName] = useState('');
-  const [editingcourseId, setEditingcourseId] = useState(null);
+  const [editingCourseId, setEditingCourseId] = useState(null);
   const [updatedCourseName, setUpdatedCourseName] = useState('');
 
   useEffect(() => {
-    
     axios.get('http://localhost:8081/courses/courses/get')
       .then((response) => {
         setCourses(response.data);
@@ -24,6 +23,10 @@ function AdminCourses() {
     try {
       await axios.post('http://localhost:8081/courses/courses/create', { courseName: newCourseName });
 
+      // After creating the course, fetch the updated list of courses
+      const response = await axios.get('http://localhost:8081/courses/courses/get');
+      setCourses(response.data);
+
       setNewCourseName('');
       console.log('Course created successfully');
     } catch (error) {
@@ -35,7 +38,11 @@ function AdminCourses() {
     try {
       await axios.put(`http://localhost:8081/courses/courses/update/${courseId}`, { courseName: updatedCourseName });
 
-      setEditingcourseId(null);
+      // After updating the course, fetch the updated list of courses
+      const response = await axios.get('http://localhost:8081/courses/courses/get');
+      setCourses(response.data);
+
+      setEditingCourseId(null);
       setUpdatedCourseName('');
       console.log('Course updated successfully');
     } catch (error) {
@@ -46,6 +53,11 @@ function AdminCourses() {
   const handleDeleteCourse = async (courseId) => {
     try {
       await axios.delete(`http://localhost:8081/courses/courses/delete/${courseId}`);
+
+      // After deleting the course, fetch the updated list of courses
+      const response = await axios.get('http://localhost:8081/courses/courses/get');
+      setCourses(response.data);
+
       console.log('Course deleted successfully');
     } catch (error) {
       console.error('Error deleting course:', error);
@@ -69,7 +81,7 @@ function AdminCourses() {
         {courses.length > 0 ? (
           courses.map((course) => (
             <li key={course.courseId}>
-              {editingcourseId === course.courseId ? (
+              {editingCourseId === course.courseId ? (
                 <>
                   <input
                     type="text"
@@ -80,8 +92,8 @@ function AdminCourses() {
                 </>
               ) : (
                 <>
-                  {course.CourseName}
-                  <button onClick={() => setEditingcourseId(course.courseId)}>Edit</button>
+                  {course.courseName}
+                  <button onClick={() => setEditingCourseId(course.courseId)}>Edit</button>
                   <button onClick={() => handleDeleteCourse(course.courseId)}>Delete</button>
                 </>
               )}
@@ -93,6 +105,6 @@ function AdminCourses() {
       </ul>
     </div>
   );
-        }
+}
 
 export default AdminCourses;
