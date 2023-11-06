@@ -7,7 +7,7 @@ async function handleThreadsGetCourseId(req, res) {
     
     try {
       const sql = 'SELECT * FROM Threads WHERE CourseID = ?';
-      const [results] = await query(sql, [courseId]);
+      const results = await query(sql, [courseId]);
       console.log('Threads data:', results);
   
       // Send threads as an array
