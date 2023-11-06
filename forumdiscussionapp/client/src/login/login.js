@@ -3,6 +3,7 @@ import { Link, useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import './login.css';
 import { useCookies } from 'react-cookie';
+import { Button, Container, Grid, Typography, TextField,  } from '@mui/material';
 
 const Login = () => {
   const [values, setValues] = useState({ email: '', password: '' });
@@ -42,15 +43,21 @@ const Login = () => {
   };
 
   return (
-    <div className="login-page">
-      <div className="form">
-        <h2>Sign-In</h2>
+    <Container component="main" maxWidth="xs"style={{paddingTop:'200px', textAlign:'center'}}>
+      <div>
+        <Typography component="h2" variant="h5">
+          Sign-In
+        </Typography>
         {error && <div className="message">{error}</div>}
         <form onSubmit={handleSubmit}>
           {['email', 'password'].map((field) => (
-            <div className="mb-3" key={field}>
-              <label htmlFor={field}>{field === 'email' ? 'Email' : 'Password'}</label>
-              <input
+            <Grid item xs={12} key={field}>
+              <TextField
+                variant="outlined"
+                margin="normal"
+                fullWidth
+                id={field}
+                label={field === 'email' ? 'Email' : 'Password'}
                 type={field === 'email' ? 'email' : 'password'}
                 placeholder={`Enter ${field === 'email' ? 'Email' : 'Password'}`}
                 name={field}
@@ -58,15 +65,29 @@ const Login = () => {
                 value={values[field]}
                 onChange={handleInput}
               />
-            </div>
+            </Grid>
           ))}
-          <button type="submit">Log in</button>
-          <p>You agree to our terms and conditions</p>
-          <Link to="/sign-up">Create Account</Link>
+          <br/>
+          <Button
+            type="submit"
+            fullWidth
+            variant="contained"
+            color="primary"
+          >
+            Log in
+          </Button>
+          <br/>
+          <br/>
+          <Typography variant="body2" textAlign='center'>
+            You agree to our terms and conditions
+          </Typography>
+          
+          <Link href="/sign-up" variant="body2" textAlign='center'>
+            Create Account
+          </Link>
         </form>
       </div>
-    </div>
+    </Container>
   );
 };
-
 export default Login;
