@@ -15,7 +15,7 @@ const RoleDropdown = ({ roles, roleId, handleRoleChange, errors }) => {
         <option value="">Select a Role</option>
         {isRolesFetched && roles.map((role) => (
           <option key={role.roleId} value={role.roleId}>
-            {role.roleName} {/* Use "roleName" instead of "RoleName" */}
+            {role.roleName} 
           </option>
         ))}
       </select>

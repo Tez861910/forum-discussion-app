@@ -3,7 +3,7 @@ const router = express.Router();
 const { query } = require('../db');
 
 // Handle the creation of MCQ questions by teachers
-router.post('/mcq-form/save', async (req, res) => {
+router.post('/mcqform/save', async (req, res) => {
   const { question, options, correctAnswer, createdbyuserId, courseId } = req.body;
 
   try {

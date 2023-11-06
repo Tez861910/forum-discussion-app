@@ -86,7 +86,7 @@ const Login = () => {
 
           <p>You agree to our terms and conditions</p>
 
-          <Link to='/signup'>Create Account</Link>
+          <Link to='/sign-up'>Create Account</Link>
         </form>
       </div>
     </div>

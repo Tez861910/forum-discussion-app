@@ -26,12 +26,12 @@ export function Home() {
       )}
       {roleId === '2' && (
         <>
-        <div class="flex">
+        <div className="flex">
           <Link to="/home/create-thread" className="btn btn-primary my-3">
             Create Thread
           </Link>
           </div>
-          <div class="flex">
+          <div className="flex">
           <Link to="/home/mcq-form" className="btn btn-primary my-3">
             Create MCQ Question
           </Link>
