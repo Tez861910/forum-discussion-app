@@ -1,0 +1,23 @@
+.mcq-summary-container {
+    text-align: center;
+    margin: 20px;
+  }
+  
+  .mcq-summary-container h2 {
+    font-size: 24px;
+  }
+  
+  .mcq-summary-container ul {
+    list-style-type: none;
+    padding: 0;
+  }
+  
+  .mcq-summary-container li {
+    margin-bottom: 20px;
+  }
+  
+  .mcq-summary-container strong {
+    font-weight: bold;
+    margin-right: 10px;
+  }
+  

@@ -1,35 +1,21 @@
 import React, { useState, useEffect } from 'react';
-import './mcq-answer-form.css';
 import axios from 'axios';
 import MCQSummary from './mcq-summary';
+import { Typography, FormControl, RadioGroup, FormControlLabel, Radio, Button } from '@mui/material';
 
 const MCQAnswerForm = () => {
-  const [questions, setQuestions] = useState([]);
-  const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
-  const [selectedOption, setSelectedOption] = useState('');
   const [isLoading, setIsLoading] = useState(true);
+  const [questions, setQuestions] = useState([]);
+  const [answers, setAnswers] = useState([]);
+  const [selectedOption, setSelectedOption] = useState('');
+  const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
   const [allQuestionsAnswered, setAllQuestionsAnswered] = useState(false);
-  const [answers, setAnswers] = useState([]); 
-
-  const onAnswer = (answerData) => {
-    const updatedAnswers = [...answers];
-    updatedAnswers[currentQuestionIndex] = answerData.selectedOption;
-    setAnswers(updatedAnswers);
-  };
 
   useEffect(() => {
     const fetchQuestions = async () => {
       try {
-        const courseId = localStorage.getItem('courseId');
-        if (!courseId) {
-          console.error('Course ID not found in local storage');
-          return;
-        }
-
-        const response = await axios.get(`http://localhost:8081/mcqanswerform/mcqanswerform/questions/get/${courseId}`);
-        const mcqData = response.data;
-        console.log('API Response:', mcqData);
-        setQuestions(mcqData);
+        const response = await axios.get('http://localhost:8081/mcq/questions');
+        setQuestions(response.data);
         setIsLoading(false);
       } catch (error) {
         console.error('Error fetching MCQ questions:', error);
@@ -40,67 +26,59 @@ const MCQAnswerForm = () => {
   }, []);
 
   const handleAnswer = () => {
-    if (selectedOption !== '') {
-      const answerData = {
-        question: questions[currentQuestionIndex].Question,
-        selectedOption,
-        userId: localStorage.getItem('userId'),
-      };
+    const selectedQuestion = questions[currentQuestionIndex];
+    const isCorrect = selectedQuestion.CorrectAnswer === selectedOption;
 
-      axios
-        .post('http://localhost:8081/mcqanswerform/mcqanswerform/submitanswers', answerData)
-        .then(() => {
-          onAnswer(answerData);
-          if (currentQuestionIndex + 1 < questions.length) {
-            setCurrentQuestionIndex(currentQuestionIndex + 1);
-          } else {
-            setAllQuestionsAnswered(true);
-          }
-          setSelectedOption('');
-        })
-        .catch((error) => {
-          console.error('Error submitting MCQ answer:', error);
-        });
+    const answer = {
+      question: selectedQuestion.MCQQuestion,
+      selectedOption: selectedOption,
+      isCorrect: isCorrect,
+    };
+
+    setAnswers([...answers, answer]);
+
+    if (currentQuestionIndex === questions.length - 1) {
+      setAllQuestionsAnswered(true);
+    } else {
+      setCurrentQuestionIndex(currentQuestionIndex + 1);
+      setSelectedOption('');
     }
   };
 
-  if (isLoading) {
-    return <p>Loading...</p>;
-  }
-
-  if (allQuestionsAnswered) {
-    return <MCQSummary questions={questions} answers={answers} />;
-  }
-
-  if (questions.length > 0 && currentQuestionIndex < questions.length) {
-    const currentQuestion = questions[currentQuestionIndex];
-    return (
-      <div className="mcq-answer-form-container">
-        <p>{currentQuestion.Question}</p>
-        <form>
-          {currentQuestion.options && currentQuestion.options.length > 0 ? (
-            currentQuestion.options.map((option, index) => (
-              <label key={index}>
-                <input
-                  type="radio"
-                  name="mcqOption"
-                  value={option.MCQOption}
-                  checked={selectedOption === option.MCQOption}
-                  onChange={() => setSelectedOption(option.MCQOption)}
-                />
-                {option.MCQOption}
-              </label>
-            ))
-          ) : (
-            <p>No MCQ options available for this question.</p>
-          )}
-        </form>
-        <button onClick={handleAnswer}>Submit Answer</button>
-      </div>
-    );
-  } else {
-    return <p>No questions available or all questions answered.</p>;
-  }
+  return (
+    <div className="mcq-answer-form-container">
+      {isLoading ? (
+        <Typography>Loading...</Typography>
+      ) : allQuestionsAnswered ? (
+        <MCQSummary questions={questions} answers={answers} />
+      ) : questions.length > 0 && currentQuestionIndex < questions.length ? (
+        <div>
+          <Typography variant="h3">{questions[currentQuestionIndex].MCQQuestion}</Typography>
+          <FormControl component="fieldset">
+            <RadioGroup value={selectedOption} onChange={(e) => setSelectedOption(e.target.value)}>
+              {questions[currentQuestionIndex].MCQOptions && questions[currentQuestionIndex].MCQOptions.length > 0 ? (
+                questions[currentQuestionIndex].MCQOptions.map((option, index) => (
+                  <FormControlLabel
+                    key={index}
+                    value={option.MCQOption}
+                    control={<Radio />}
+                    label={option.MCQOption}
+                  />
+                ))
+              ) : (
+                <Typography>No MCQ options available for this question.</Typography>
+              )}
+            </RadioGroup>
+          </FormControl>
+          <Button variant="contained" color="primary" onClick={handleAnswer}>
+            Submit Answer
+          </Button>
+        </div>
+      ) : (
+        <Typography>No questions available or all questions answered.</Typography>
+      )}
+    </div>
+  );
 };
 
 export default MCQAnswerForm;

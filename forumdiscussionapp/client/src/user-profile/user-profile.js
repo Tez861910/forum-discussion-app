@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
+import { Typography, TextField, Button } from '@mui/material';
 
 function UserProfile({ userId }) {
   const [newName, setNewName] = useState('');
@@ -10,13 +11,11 @@ function UserProfile({ userId }) {
 
   useEffect(() => {
     const storedUserId = localStorage.getItem('userId');
-    
 
     if (storedUserId) {
       axios.get(`http://localhost:8081/users/users/get/${storedUserId}`)
         .then((response) => {
           setUserData(response.data.user);
-          // Initialize the state variables with user data
           setNewName(response.data.user.UserName || '');
           setNewEmail(response.data.user.UserEmail || '');
         })
@@ -31,7 +30,6 @@ function UserProfile({ userId }) {
   };
 
   const handleSave = () => {
-    // Make a PUT request to update the user's data
     axios.put(`http://localhost:8081/users/users/update/${userId}`, {
       name: newName,
       email: newEmail,
@@ -47,21 +45,21 @@ function UserProfile({ userId }) {
 
   return (
     <div>
-      <h3>User Profile</h3>
+      <Typography variant="h3">User Profile</Typography>
       {editing ? (
         <>
-          <input type="text" value={newName} onChange={(e) => setNewName(e.target.value)} />
-          <input type="text" value={newEmail} onChange={(e) => setNewEmail(e.target.value)} />
-          <input type="password" value={newPassword} onChange={(e) => setNewPassword(e.target.value)} />
-          <button onClick={handleSave}>Save</button>
+          <TextField label="Name" value={newName} onChange={(e) => setNewName(e.target.value)} />
+          <TextField label="Email" value={newEmail} onChange={(e) => setNewEmail(e.target.value)} />
+          <TextField label="Password" type="password" value={newPassword} onChange={(e) => setNewPassword(e.target.value)} />
+          <Button variant="contained" color="primary" onClick={handleSave}>Save</Button>
         </>
       ) : (
         <>
-          <p>Name: {userData ? userData.UserName : 'N/A'}</p>
-          <p>Email: {userData ? userData.UserEmail : 'N/A'}</p>
-          <p>Course: {userData ? userData.CourseName : 'N/A'}</p>
-          <p>Role: {userData ? userData.RoleName : 'N/A'}</p>
-          <button onClick={handleEdit}>Edit</button>
+          <Typography>Name: {userData ? userData.UserName : 'N/A'}</Typography>
+          <Typography>Email: {userData ? userData.UserEmail : 'N/A'}</Typography>
+          <Typography>Course: {userData ? userData.CourseName : 'N/A'}</Typography>
+          <Typography>Role: {userData ? userData.RoleName : 'N/A'}</Typography>
+          <Button variant="contained" color="primary" onClick={handleEdit}>Edit</Button>
         </>
       )}
     </div>

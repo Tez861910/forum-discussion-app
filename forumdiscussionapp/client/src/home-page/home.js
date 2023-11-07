@@ -1,9 +1,10 @@
 import React, { useState, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import './home.css';
+import { Container, Typography, Button } from '@mui/material';
 import UserProfile from '../user-profile/user-profile';
 import { useCookies } from 'react-cookie';
 import axios from 'axios';
+import './home.css';
 
 export function Home() {
   const [roleId, setRoleId] = useState('');
@@ -84,14 +85,14 @@ export function Home() {
   };
 
   return (
-    <div className="container">
-      <h2>Home Panel</h2>
+    <Container maxWidth="sm" className="container">
+      <Typography variant="h2">Home Panel</Typography>
       <UserProfile />
       {renderButtonsByRoleId()}
-      <button onClick={handleLogout} className="btn btn-danger">
+      <Button onClick={handleLogout} variant="contained" color="error">
         Logout
-      </button>
-    </div>
+      </Button>
+    </Container>
   );
 }
 

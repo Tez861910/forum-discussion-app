@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
-import './mcq-form.css';
 import axios from 'axios';
+import { Typography,  Button, TextField, List, ListItem, } from '@mui/material';
 
 const MCQForm = () => {
   const [question, setQuestion] = useState('');
@@ -46,35 +46,46 @@ const MCQForm = () => {
     }
   };
 
+  const handleOptionChange = (index, value) => {
+    const newOptions = [...options];
+    newOptions[index] = value;
+    setOptions(newOptions);
+  };
+
   return (
     <div className="mcq-form-container">
-      <h3>Create MCQ Question</h3>
-      <label>Question: </label>
-      <input type="text" value={question} onChange={(e) => setQuestion(e.target.value)} />
-      <br />
-      <label>Options:</label>
-      <ol>
+      <Typography variant="h3">Create MCQ Question</Typography>
+      <TextField
+        label="Question"
+        fullWidth
+        variant="outlined"
+        value={question}
+        onChange={(e) => setQuestion(e.target.value)}
+      />
+      <Typography variant="h6" gutterBottom>Options:</Typography>
+      <List>
         {options.map((opt, index) => (
-          <li key={index}>
-            <input
-              type="text"
+          <ListItem key={index}>
+            <TextField
+              label={`Option ${index + 1}`}
+              fullWidth
+              variant="outlined"
               value={opt}
-              onChange={(e) => {
-                const newOptions = [...options];
-                newOptions[index] = e.target.value;
-                setOptions(newOptions);
-              }}
+              onChange={(e) => handleOptionChange(index, e.target.value)}
             />
-          </li>
+          </ListItem>
         ))}
-      </ol>
-      <label>Correct Answer: </label>
-      <input
-        type="text"
+      </List>
+      <TextField
+        label="Correct Answer"
+        fullWidth
+        variant="outlined"
         value={correctAnswer}
         onChange={(e) => setCorrectAnswer(e.target.value)}
       />
-      <button onClick={handleSave}>Save</button>
+      <Button onClick={handleSave} variant="contained" color="primary">
+        Save
+      </Button>
     </div>
   );
 };

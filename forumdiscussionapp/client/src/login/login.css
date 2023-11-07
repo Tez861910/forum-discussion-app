@@ -1,65 +1,42 @@
-/* No need to import Google Fonts for Roboto since Material-UI uses it by default */
-
+/* Styles for the entire login container */
 .login-page {
   display: flex;
   justify-content: center;
   align-items: center;
   height: 100vh;
+  background-color: #76b852;
 }
 
-
+/* Styles for the login form */
 .form {
-  background: #ffffff;
+  background: #FFFFFF;
   max-width: 360px;
   padding: 45px;
   text-align: center;
   box-shadow: 0 0 20px 0 rgba(0, 0, 0, 0.2), 0 5px 5px 0 rgba(0, 0, 0, 0.24);
+  border-radius: 8px;
 }
 
-.form input {
+/* Styles for the login input fields */
+.form .MuiTextField-root {
+  margin: 15px 0;
   width: 100%;
-  margin: 0 0 15px;
-  padding: 15px;
-  border: 2px solid #ccc;
-  border-radius: 4px;
-  font-size: 14px;
-  background: #f2f2f2;
-  font-family: "Roboto", sans-serif;
 }
 
-.form button {
+/* Styles for the login button */
+.form .MuiButton-containedPrimary {
   width: 100%;
-  padding: 15px;
-  color: #FFFFFF;
-  font-size: 14px;
-  text-transform: uppercase;
-  background: #4CAF50;
-  border: 0;
-  outline: 0;
-  cursor: pointer;
-  transition: all 0.3s ease;
-  font-family: "Roboto", sans-serif;
+  margin: 10px 0;
 }
 
-.form button:hover,
-.form button:active,
-.form button:focus {
-  background: #43A047;
-}
-
-.form .message {
+/* Styles for error message */
+.message {
   margin: 15px 0 0;
   color: #b3b3b3;
   font-size: 12px;
 }
 
-.form .message a {
+.message a {
   color: #4CAF50;
   text-decoration: none;
 }
-
-.form .register-form {
-  display: none;
-}
-
-/* The container, info, and body styles can be removed as they are not used in the Material-UI component. */

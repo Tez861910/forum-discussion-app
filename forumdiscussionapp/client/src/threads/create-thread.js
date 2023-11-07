@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
-import './create-thread.css';
+import { Typography, TextField, Button } from '@mui/material';
 
 function CreateThread() {
   const [threads, setThreads] = useState([]);
@@ -108,80 +108,73 @@ function CreateThread() {
 
   return (
     <div className="create-thread-container">
-      <h2>Create Thread</h2>
-      <h3>Your Threads:</h3>
+      <Typography variant="h2">Create Thread</Typography>
+      <Typography variant="h3">Your Threads:</Typography>
 
-      {error && <p className="error-message">{error}</p>}
+      {error && <Typography className="error-message">{error}</Typography>}
 
       {Array.isArray(threads) && threads.length > 0 ? (
         <ul className="thread-list">
           {threads.map((thread) => (
             <li key={thread.ThreadID} className="thread-item">
-              <p className="thread-title">Title: {thread.ThreadTitle}</p>
-              <p className="thread-content">Content: {thread.ThreadContent}</p>
-              <div className="flex justify-right">
-                <button className="edit-button" onClick={() => handleEditClick(thread.ThreadID)}>
-                  Edit
-                </button>
-                <button className="delete-button" onClick={() => handleDeleteClick(thread.ThreadID)}>
-                  Delete
-                </button>
-              </div>
+              <Typography variant="h4">{thread.Title}</Typography>
+              <Typography>{thread.Content}</Typography>
+              <Button variant="contained" color="primary" onClick={() => handleEditClick(thread.ThreadID)}>
+                Edit
+              </Button>
+              <Button variant="contained" color="secondary" onClick={() => handleDeleteClick(thread.ThreadID)}>
+                Delete
+              </Button>
             </li>
           ))}
         </ul>
       ) : (
-        <p>No threads available.</p>
+        <Typography>No threads available.</Typography>
       )}
 
       {editThread.id && (
         <div className="edit-thread">
-          <h3>Edit Thread</h3>
-          <label>
-            Title:
-            <input
-              type="text"
-              name="title"
-              value={editThread.title}
-              onChange={(e) => setEditThread({ ...editThread, title: e.target.value })}
-            />
-          </label>
-          <label>
-            Content:
-            <textarea
-              name="content"
-              value={editThread.content}
-              onChange={(e) => setEditThread({ ...editThread, content: e.target.value })}
-            />
-          </label>
-          <button onClick={updateThread} className="update-button">
-            Update Thread
-          </button>
+          <Typography variant="h3">Edit Thread</Typography>
+          <TextField
+            label="Title"
+            name="title"
+            value={editThread.title}
+            onChange={(e) => setEditThread({ ...editThread, title: e.target.value })}
+          />
+          <TextField
+            label="Content"
+            name="content"
+            multiline
+            rows={4}
+            value={editThread.content}
+            onChange={(e) => setEditThread({ ...editThread, content: e.target.value })}
+          />
+          <Button variant="contained" color="primary" onClick={updateThread}>
+            Update
+          </Button>
         </div>
       )}
 
-      <form>
-        <label>
-          Title:
-          <input
-            type="text"
-            name="title"
-            value={newThread.title}
-            onChange={handleInputChange}
-          />
-        </label>
-        <label>
-          Content:
-          <textarea
-            name="content"
-            value={newThread.content}
-            onChange={handleInputChange}
-          />
-        </label>
-        <button onClick={createNewThread} className="create-button">
-          Create New Thread
-        </button>
-      </form>
+      <div className="create-new-thread">
+        <Typography variant="h3">Create New Thread</Typography>
+        <TextField
+          label="Title"
+          name="title"
+          value={newThread.title}
+          onChange={handleInputChange}
+        />
+        <TextField
+          label="Content"
+          name="content"
+          multiline
+          rows={4}
+          value={newThread.content}
+          onChange={handleInputChange}
+        />
+        <Button variant="contained" color="primary" onClick={createNewThread}>
+          Create Thread
+        </Button>
+      </div>
     </div>
   );
 }

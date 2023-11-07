@@ -4,6 +4,7 @@ import RoleDropdown from './role-dropdown';
 import CourseDropdown from './course-dropdown';
 import SignUpValidation from './sign-up-validation';
 import { Link, useNavigate } from 'react-router-dom';
+import { Container, TextField, Typography, Button } from '@mui/material';
 import './sign-up.css';
 
 const Signup = () => {
@@ -89,40 +90,43 @@ const Signup = () => {
   }, [formData, navigate]);
 
   return (
-    <div className="signup-page">
+    <Container maxWidth="sm" className="signup-page">
       <div className="form">
-        <h2>Sign-Up</h2>
+        <Typography variant="h2">Sign-Up</Typography>
         <form onSubmit={handleSubmit}>
           <div className="mb-3">
             <label htmlFor="name">User Name</label>
-            <input
+            <TextField
               type="text"
               name="name"
               value={formData.name}
               onChange={handleInputChange}
               className="form-control"
+              fullWidth
             />
             {errors.name && <span className="text-danger">{errors.name}</span>}
           </div>
           <div className="mb-3">
             <label htmlFor="email">User Email</label>
-            <input
+            <TextField
               type="email"
               name="email"
               value={formData.email}
               onChange={handleInputChange}
               className="form-control"
+              fullWidth
             />
             {errors.email && <span className="text-danger">{errors.email}</span>}
           </div>
           <div className="mb-3">
             <label htmlFor="password">Password</label>
-            <input
+            <TextField
               type="password"
               name="password"
               value={formData.password}
               onChange={handleInputChange}
               className="form-control"
+              fullWidth
             />
             {errors.password && <span className="text-danger">{errors.password}</span>}
           </div>
@@ -138,17 +142,17 @@ const Signup = () => {
             handleCourseChange={handleCourseChange}
             errors={errors}
           />
-          <button type="submit" className="btn btn-success w-100">
+          <Button type="submit" fullWidth variant="contained" color="success">
             Sign up
-          </button>
-          {successMessage && <p className="success-message">{successMessage}</p>}
-          <p>You agree to our terms and conditions</p>
-          <Link to="/" className="btn btn-default w-100">
+          </Button>
+          {successMessage && <Typography variant="body2" className="success-message">{successMessage}</Typography>}
+          <Typography variant="body2">You agree to our terms and conditions</Typography>
+          <Link to="/" variant="body2" className="btn btn-default w-100">
             Login
           </Link>
         </form>
       </div>
-    </div>
+    </Container>
   );
 };
 

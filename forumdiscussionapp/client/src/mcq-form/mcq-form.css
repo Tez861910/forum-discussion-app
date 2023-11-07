@@ -1,40 +1,38 @@
-/* Apply styles similar to your other components */
 .mcq-form-container {
-    text-align: center;
-    margin: 20px;
-  }
-  
-  h3 {
-    font-size: 24px;
-  }
-  
-  label {
-    display: block;
-    margin-top: 10px;
-  }
-  
-  input[type="text"],
-  input[type="number"] {
-    width: 100%;
-    padding: 10px;
-    margin-top: 5px;
-  }
-  
-  ol {
-    list-style-type: decimal;
-    padding-left: 20px;
-  }
-  
-  li {
-    margin-bottom: 10px;
-  }
-  
-  button {
-    background-color: #007bff;
-    color: #fff;
-    border: none;
-    padding: 10px 20px;
-    margin-top: 10px;
-    cursor: pointer;
-  }
-  
+  text-align: center;
+  margin: 20px;
+}
+
+.mcq-form-container h3 {
+  font-size: 24px;
+}
+
+.mcq-form-container label {
+  display: block;
+  margin-top: 10px;
+}
+
+.mcq-form-container input[type="text"],
+.mcq-form-container input[type="number"] {
+  width: 100%;
+  padding: 10px;
+  margin-top: 5px;
+}
+
+.mcq-form-container ol {
+  list-style-type: decimal;
+  padding-left: 20px;
+}
+
+.mcq-form-container li {
+  margin-bottom: 10px;
+}
+
+.mcq-form-container button {
+  background-color: #007bff;
+  color: #fff;
+  border: none;
+  padding: 10px 20px;
+  margin-top: 10px;
+  cursor: pointer;
+}

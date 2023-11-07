@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
-import './comment-section.css';
+import { Typography, TextareaAutosize, Button } from '@mui/material';
 
 function CommentSection({ roleId }) {
   const [threads, setThreads] = useState([]);
@@ -58,21 +58,21 @@ function CommentSection({ roleId }) {
 
   return (
     <div className="comment-section-container">
-      <h2>Comments</h2>
+      <Typography variant="h2">Comments</Typography>
       <div className="thread-selection">
         <ul>
           {threads.map((thread) => (
             <li key={thread.id}>
-              <button onClick={() => handleThreadSelection(thread.id)}>
+              <Button onClick={() => handleThreadSelection(thread.id)}>
                 {thread.title}
-              </button>
+              </Button>
             </li>
           ))}
         </ul>
       </div>
       {selectedThread && (
         <div>
-          <h3>Selected Thread: {threads.find((thread) => thread.id === selectedThread).title}</h3>
+          <Typography variant="h3">Selected Thread: {threads.find((thread) => thread.id === selectedThread).title}</Typography>
           <ul className="comment-list">
             {comments && comments.map((comment) => (
               <li key={comment.id} className="comment-item">
@@ -83,15 +83,15 @@ function CommentSection({ roleId }) {
 
           {roleId === 'student' && (
             <form onSubmit={handleCommentSubmit}>
-              <textarea
+              <TextareaAutosize
                 value={newComment}
                 onChange={(e) => setNewComment(e.target.value)}
                 placeholder="Add a comment..."
                 className="comment-input"
               />
-              <button type="submit" className="submit-button">
+              <Button type="submit" variant="contained" color="primary" className="submit-button">
                 Submit Comment
-              </button>
+              </Button>
             </form>
           )}
         </div>

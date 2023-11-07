@@ -1,26 +1,37 @@
 import React from 'react';
+import { List, ListItem, Typography } from '@mui/material';
+import './mcq-summary.css';
 
 const MCQSummary = ({ questions, answers }) => {
   return (
     <div className="mcq-summary-container">
-      <h2>Summary of Answers</h2>
-      <ul>
+      <Typography variant="h2">Summary of Answers</Typography>
+      <List>
         {questions.map((question, index) => (
-          <li key={index}>
-            <div className='flex'>
+          <ListItem key={index}>
             <div className="flex">
-            <strong>Question {index + 1}:</strong> {question.Question}
+              <div className="flex">
+                <Typography variant="strong">
+                  Question {index + 1}:
+                </Typography>
+                {question.Question}
+              </div>
+              <div className="flex">
+                <Typography variant="strong">
+                  Correct Answer:
+                </Typography>
+                {question.CorrectAnswer}
+              </div>
+              <div className="flex">
+                <Typography variant="strong">
+                  Your Answer:
+                </Typography>
+                {answers[index] || 'Not answered'}
+              </div>
             </div>
-            <div className="flex">
-            <strong>Correct Answer:</strong> {question.CorrectAnswer}
-            </div>
-            <div className="flex">
-            <strong>Your Answer:</strong> {answers[index] || 'Not answered'}
-            </div>
-            </div>
-          </li>
+          </ListItem>
         ))}
-      </ul>
+      </List>
     </div>
   );
 };
