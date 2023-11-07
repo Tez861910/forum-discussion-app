@@ -1,16 +1,35 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
-import { Typography, TextField, Button, List, ListItem, ListItemText, ListItemSecondaryAction, IconButton } from '@mui/material';
+import {
+  Typography,
+  TextField,
+  Button,
+  List,
+  ListItem,
+  ListItemText,
+  ListItemSecondaryAction,
+  IconButton,
+  Dialog,
+  DialogTitle,
+  DialogContent,
+  DialogActions,
+  Slide,
+} from '@mui/material';
 import DeleteIcon from '@mui/icons-material/Delete';
 import EditIcon from '@mui/icons-material/Edit';
 import SaveIcon from '@mui/icons-material/Save';
 import './admincourse.css';
+
+const Transition = React.forwardRef(function Transition(props, ref) {
+  return <Slide direction="up" ref={ref} {...props} />;
+});
 
 function AdminCourses() {
   const [courses, setCourses] = useState([]);
   const [newCourseName, setNewCourseName] = useState('');
   const [editingCourseId, setEditingCourseId] = useState(null);
   const [updatedCourseName, setUpdatedCourseName] = useState('');
+  const [deleteConfirmation, setDeleteConfirmation] = useState({ open: false, courseId: null });
 
   useEffect(() => {
     fetchCourses();
@@ -44,29 +63,43 @@ function AdminCourses() {
       console.error('Error creating course:', error);
     }
   };
-  
+
   const handleEditCourse = async (courseId) => {
     try {
-      const response = await axios.put(`http://localhost:8081/courses/courses/update/${courseId}`, { courseName: updatedCourseName });
+      const response = await axios.put(`http://localhost:8081/courses/courses/update/${courseId}`, {
+        courseName: updatedCourseName,
+      });
       console.log('Edit Course Response:', response.data);
       setEditingCourseId(null);
       setUpdatedCourseName('');
       console.log('Course updated successfully');
-      fetchCourses(); 
+      fetchCourses();
     } catch (error) {
       console.error('Error updating course:', error);
     }
   };
-  
+
   const handleDeleteCourse = async (courseId) => {
-    try {
-      const response = await axios.delete(`http://localhost:8081/courses/courses/delete/${courseId}`);
-      console.log('Delete Course Response:', response.data);
-      console.log('Course deleted successfully');
-      fetchCourses();
-    } catch (error) {
-      console.error('Error deleting course:', error);
-    }
+    setDeleteConfirmation({ open: true, courseId });
+  };
+
+  const confirmDelete = () => {
+    axios
+      .delete(`http://localhost:8081/courses/courses/delete/${deleteConfirmation.courseId}`)
+      .then(() => {
+        console.log('Course deleted successfully');
+        fetchCourses();
+      })
+      .catch((error) => {
+        console.error('Error deleting course:', error);
+      })
+      .finally(() => {
+        setDeleteConfirmation({ open: false, courseId: null });
+      });
+  };
+
+  const cancelDelete = () => {
+    setDeleteConfirmation({ open: false, courseId: null });
   };
 
   return (
@@ -126,6 +159,29 @@ function AdminCourses() {
           courses.length === 0 ? <ListItem>No courses available</ListItem> : null
         )}
       </List>
+      <Dialog
+        open={deleteConfirmation.open}
+        TransitionComponent={Transition}
+        keepMounted
+        onClose={cancelDelete}
+        aria-labelledby="alert-dialog-slide-title"
+        aria-describedby="alert-dialog-slide-description"
+      >
+        <DialogTitle id="alert-dialog-slide-title">Confirm Deletion</DialogTitle>
+        <DialogContent>
+          <Typography variant="body1" gutterBottom>
+            Are you sure you want to delete this course?
+          </Typography>
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={cancelDelete} color="primary">
+            Cancel
+          </Button>
+          <Button onClick={confirmDelete} color="secondary">
+            Delete
+          </Button>
+        </DialogActions>
+      </Dialog>
     </div>
   );
 }

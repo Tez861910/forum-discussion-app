@@ -4,6 +4,7 @@ import AdminCourses from './AdminCourses';
 import AdminThreads from './AdminThreads';
 import AdminComments from './AdminComments';
 import AdminUsers from './AdminUsers';
+import AdminRoles from './AdminRoles';
 
 function AdminPanel() {
   console.log('Admin Panel rendered');
@@ -23,6 +24,8 @@ function AdminPanel() {
         return <AdminComments />;
       case 'users':
         return <AdminUsers />;
+        case 'roles':
+          return <AdminRoles />;
       default:
         return <AdminCourses />;
     }
@@ -36,6 +39,7 @@ function AdminPanel() {
         <button onClick={() => handleViewChange('threads')}>Manage Threads</button>
         <button onClick={() => handleViewChange('comments')}>Manage Comments</button>
         <button onClick={() => handleViewChange('users')}>Manage Users</button>
+        <button onClick={() => handleViewChange('roles')}>Manage Roles</button>
       </div>
       <div className="admin-container">
         {renderActiveView()}

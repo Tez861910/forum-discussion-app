@@ -1,6 +1,17 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
-import './adminuser.css'; 
+import './adminuser.css';
+import {
+  Button,
+  Dialog,
+  DialogActions,
+  DialogContent,
+  DialogContentText,
+  DialogTitle,
+  TextField,
+  Select,
+  MenuItem,
+} from '@mui/material';
 
 function AdminUsers() {
   const [users, setUsers] = useState([]);
@@ -21,6 +32,7 @@ function AdminUsers() {
     CourseID: '',
     UserPassword: '',
   });
+  const [deleteConfirmation, setDeleteConfirmation] = useState({ open: false, userId: null });
 
   useEffect(() => {
     fetchUsers();
@@ -36,7 +48,7 @@ function AdminUsers() {
     } catch (error) {
       console.error('Error fetching users:', error);
     }
-  }
+  };
 
   const fetchRoles = async () => {
     try {
@@ -46,7 +58,7 @@ function AdminUsers() {
     } catch (error) {
       console.error('Error fetching roles:', error);
     }
-  }
+  };
 
   const fetchCourses = async () => {
     try {
@@ -113,21 +125,27 @@ function AdminUsers() {
   };
 
   const handleDeleteUser = (userId) => {
-    const confirmDelete = window.confirm('Are you sure you want to delete this user?');
-    if (!confirmDelete) {
-      return;
-    }
+    setDeleteConfirmation({ open: true, userId });
+  };
 
+  const confirmDelete = () => {
     axios
-      .delete(`http://localhost:8081/users/users/delete/${userId}`)
+      .delete(`http://localhost:8081/users/users/delete/${deleteConfirmation.userId}`)
       .then(() => {
-        const updatedUsers = users.filter((user) => user.UserID !== userId);
+        const updatedUsers = users.filter((user) => user.UserID !== deleteConfirmation.userId);
         setUsers(updatedUsers);
         console.log('User deleted successfully');
       })
       .catch((error) => {
         console.error('Error deleting user:', error);
+      })
+      .finally(() => {
+        setDeleteConfirmation({ open: false, userId: null });
       });
+  };
+
+  const cancelDelete = () => {
+    setDeleteConfirmation({ open: false, userId: null });
   };
 
   const handleInputChange = (key, value) => {
@@ -153,47 +171,55 @@ function AdminUsers() {
         <h1>Admin User Management</h1>
         <div>
           <h2>Create User</h2>
-          <input
+          <TextField
             type="text"
-            placeholder="Name"
+            label="Name"
             value={newUser.UserName}
             onChange={(e) => setNewUser({ ...newUser, UserName: e.target.value })}
           />
-          <input
+          <TextField
             type="email"
-            placeholder="Email"
+            label="Email"
             value={newUser.UserEmail}
             onChange={(e) => setNewUser({ ...newUser, UserEmail: e.target.value })}
           />
-          <select
+          <Select
+            label="Role"
             value={newUser.RoleID}
             onChange={(e) => setNewUser({ ...newUser, RoleID: e.target.value })}
           >
-            <option value="">Select Role</option>
+            <MenuItem value="">
+              <em>Select Role</em>
+            </MenuItem>
             {roles.map((role) => (
-              <option key={role.roleId} value={role.roleId}>
+              <MenuItem key={role.roleId} value={role.roleId}>
                 {role.roleName}
-              </option>
+              </MenuItem>
             ))}
-          </select>
-          <select
+          </Select>
+          <Select
+            label="Course"
             value={newUser.CourseID}
             onChange={(e) => setNewUser({ ...newUser, CourseID: e.target.value })}
           >
-            <option value="">Select Course</option>
+            <MenuItem value="">
+              <em>Select Course</em>
+            </MenuItem>
             {courses.map((course) => (
-              <option key={course.CourseID} value={course.CourseID}>
+              <MenuItem key={course.CourseID} value={course.CourseID}>
                 {course.CourseName}
-              </option>
+              </MenuItem>
             ))}
-          </select>
-          <input
+          </Select>
+          <TextField
             type="password"
-            placeholder="Password"
+            label="Password"
             value={newUser.UserPassword}
             onChange={(e) => setNewUser({ ...newUser, UserPassword: e.target.value })}
           />
-          <button onClick={handleCreateUser}>Create User</button>
+          <Button variant="contained" color="primary" onClick={handleCreateUser}>
+            Create User
+          </Button>
         </div>
         <ul>
           {Array.isArray(users) &&
@@ -201,48 +227,54 @@ function AdminUsers() {
               <li key={user.UserID}>
                 {editingUserId === user.UserID ? (
                   <div>
-                    <input
+                    <TextField
                       type="text"
-                      placeholder="Name"
+                      label="Name"
                       value={updatedUserData.UserName || user.UserName}
                       onChange={(e) => handleInputChange('UserName', e.target.value)}
                     />
-                    <input
+                    <TextField
                       type="email"
-                      placeholder="Email"
+                      label="Email"
                       value={updatedUserData.UserEmail || user.UserEmail}
                       onChange={(e) => handleInputChange('UserEmail', e.target.value)}
                     />
-                    <select
+                    <Select
+                      label="Role"
                       value={updatedUserData.RoleID || user.RoleID}
                       onChange={(e) => handleInputChange('RoleID', e.target.value)}
                     >
-                      <option value="">Select Role</option>
+                      <MenuItem value="">
+                        <em>Select Role</em>
+                      </MenuItem>
                       {roles.map((role) => (
-                        <option key={role.roleId} value={role.roleId}>
+                        <MenuItem key={role.roleId} value={role.roleId}>
                           {role.roleName}
-                        </option>
+                        </MenuItem>
                       ))}
-                    </select>
-                    <select
+                    </Select>
+                    <Select
+                      label="Course"
                       value={updatedUserData.CourseID || user.CourseID}
                       onChange={(e) => handleInputChange('CourseID', e.target.value)}
                     >
-                      <option value="">Select Course</option>
+                      <MenuItem value="">
+                        <em>Select Course</em>
+                      </MenuItem>
                       {courses.map((course) => (
-                        <option key={course.CourseID} value={course.CourseID}>
+                        <MenuItem key={course.CourseID} value={course.CourseID}>
                           {course.CourseName}
-                        </option>
+                        </MenuItem>
                       ))}
-                    </select>
-                    <input
+                    </Select>
+                    <TextField
                       type="password"
-                      placeholder="Password"
+                      label="Password"
                       value={updatedUserData.UserPassword || ''}
                       onChange={(e) => handleInputChange('UserPassword', e.target.value)}
                     />
-                    <button onClick={() => handleUpdateUser(user.UserID)}>Update</button>
-                    <button onClick={() => setEditingUserId(null)}>Cancel</button>
+                    <Button onClick={() => handleUpdateUser(user.UserID)}>Update</Button>
+                    <Button onClick={() => setEditingUserId(null)}>Cancel</Button>
                   </div>
                 ) : (
                   <div>
@@ -252,8 +284,8 @@ function AdminUsers() {
                     <p>Course: {getCourseName(user.CourseID)}</p>
                     <p>Password: {user.UserPassword}</p>
                     <div>
-                      <button onClick={() => setEditingUserId(user.UserID)}>Edit</button>
-                      <button onClick={() => handleDeleteUser(user.UserID)}>Delete</button>
+                      <Button onClick={() => setEditingUserId(user.UserID)}>Edit</Button>
+                      <Button onClick={() => handleDeleteUser(user.UserID)}>Delete</Button>
                     </div>
                   </div>
                 )}
@@ -261,6 +293,27 @@ function AdminUsers() {
             ))}
         </ul>
       </div>
+      <Dialog
+        open={deleteConfirmation.open}
+        onClose={cancelDelete}
+        aria-labelledby="alert-dialog-title"
+        aria-describedby="alert-dialog-description"
+      >
+        <DialogTitle id="alert-dialog-title">Confirm Deletion</DialogTitle>
+        <DialogContent>
+          <DialogContentText id="alert-dialog-description">
+            Are you sure you want to delete this user?
+          </DialogContentText>
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={cancelDelete} color="primary">
+            Cancel
+          </Button>
+          <Button onClick={confirmDelete} color="secondary">
+            Delete
+          </Button>
+        </DialogActions>
+      </Dialog>
     </div>
   );
 }
