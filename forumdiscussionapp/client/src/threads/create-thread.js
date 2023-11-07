@@ -10,7 +10,6 @@ function CreateThread() {
   });
   const [courseId, setCourseId] = useState(null);
   const [userId, setUserId] = useState(null);
-  const [editThread, setEditThread] = useState({ title: '', content: '', id: null });
   const [error, setError] = useState(null);
 
   useEffect(() => {
@@ -65,31 +64,27 @@ function CreateThread() {
     }
   };
 
-  const handleEditClick = async (threadId) => {
-    try {
-      const response = await axios.get(`http://localhost:8081/threads/threads/get/${threadId}`);
-      setEditThread({ ...response.data, id: threadId });
-    } catch (error) {
-      setError('Error fetching thread details for editing. Please try again.');
-    }
+  const toggleEdit = (threadId) => {
+    setThreads((prevThreads) =>
+      prevThreads.map((thread) => ({
+        ...thread,
+        isEditing: thread.ThreadID === threadId ? !thread.isEditing : thread.isEditing,
+      }))
+    );
   };
 
-  const updateThread = async () => {
-    try {
-      if (!editThread.id) {
-        setError('No thread selected for update.');
-        return;
-      }
+  const updateThread = async (threadId) => {
+    const threadToUpdate = threads.find((thread) => thread.ThreadID === threadId);
 
-      await axios.put(`http://localhost:8081/threads/threads/update/${editThread.id}`, {
-        title: editThread.title,
-        content: editThread.content,
-        courseId: editThread.courseId,
-        userId: editThread.userId,
+    try {
+      await axios.put(`http://localhost:8081/threads/threads/update/${threadId}`, {
+        title: threadToUpdate.ThreadTitle,
+        content: threadToUpdate.ThreadContent,
+        courseId: courseId,
+        userId: userId,
       });
 
       await fetchThreads(courseId);
-      setEditThread({ title: '', content: '', id: null });
     } catch (error) {
       setError('Error updating thread. Please try again.');
     }
@@ -114,46 +109,64 @@ function CreateThread() {
       {error && <Typography className="error-message">{error}</Typography>}
 
       {Array.isArray(threads) && threads.length > 0 ? (
-        <ul className="thread-list">
-          {threads.map((thread) => (
-            <li key={thread.ThreadID} className="thread-item">
-              <Typography variant="h4">{thread.Title}</Typography>
-              <Typography>{thread.Content}</Typography>
-              <Button variant="contained" color="primary" onClick={() => handleEditClick(thread.ThreadID)}>
-                Edit
-              </Button>
-              <Button variant="contained" color="secondary" onClick={() => handleDeleteClick(thread.ThreadID)}>
-                Delete
-              </Button>
-            </li>
-          ))}
-        </ul>
-      ) : (
-        <Typography>No threads available.</Typography>
-      )}
+  <ul className="thread-list">
+    {threads.map((thread) => (
+      <li key={thread.ThreadID} className="thread-item">
+        {thread.isEditing ? (
+          <div>
+            <TextField
+              label="Title"
+              name="title"
+              value={thread.ThreadTitle}
+              onChange={(e) => {
+                const updatedThreads = threads.map((t) =>
+                  t.ThreadID === thread.ThreadID ? { ...t, ThreadTitle: e.target.value } : t
+                );
+                setThreads(updatedThreads);
+              }}
+            />
+            <TextField
+              label="Content"
+              name="content"
+              multiline
+              rows={4}
+              value={thread.ThreadContent}
+              onChange={(e) => {
+                const updatedThreads = threads.map((t) =>
+                  t.ThreadID === thread.ThreadID ? { ...t, ThreadContent: e.target.value } : t
+                );
+                setThreads(updatedThreads);
+              }}
+            />
+            <Button variant="contained" color="primary" onClick={() => updateThread(thread.ThreadID)}>
+              Update
+            </Button>
+          </div>
+        ) : (
+          <div>
+            <div>
+              <Typography variant="h4">Title:</Typography>
+              <Typography>{thread.ThreadTitle}</Typography>
+            </div>
+            <div>
+              <Typography variant="h4">Content:</Typography>
+              <Typography>{thread.ThreadContent}</Typography>
+            </div>
+            <Button variant="contained" color="primary" onClick={() => toggleEdit(thread.ThreadID)}>
+              Edit
+            </Button>
+          </div>
+        )}
+        <Button variant="contained" color="secondary" onClick={() => handleDeleteClick(thread.ThreadID)}>
+          Delete
+        </Button>
+      </li>
+    ))}
+  </ul>
+) : (
+  <Typography>No threads available.</Typography>
+)}
 
-      {editThread.id && (
-        <div className="edit-thread">
-          <Typography variant="h3">Edit Thread</Typography>
-          <TextField
-            label="Title"
-            name="title"
-            value={editThread.title}
-            onChange={(e) => setEditThread({ ...editThread, title: e.target.value })}
-          />
-          <TextField
-            label="Content"
-            name="content"
-            multiline
-            rows={4}
-            value={editThread.content}
-            onChange={(e) => setEditThread({ ...editThread, content: e.target.value })}
-          />
-          <Button variant="contained" color="primary" onClick={updateThread}>
-            Update
-          </Button>
-        </div>
-      )}
 
       <div className="create-new-thread">
         <Typography variant="h3">Create New Thread</Typography>

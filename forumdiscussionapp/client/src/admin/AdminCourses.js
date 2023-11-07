@@ -1,5 +1,9 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
+import { Typography, TextField, Button, List, ListItem, ListItemText, ListItemSecondaryAction, IconButton } from '@mui/material';
+import DeleteIcon from '@mui/icons-material/Delete';
+import EditIcon from '@mui/icons-material/Edit';
+import SaveIcon from '@mui/icons-material/Save';
 import './admincourse.css';
 
 function AdminCourses() {
@@ -9,100 +13,119 @@ function AdminCourses() {
   const [updatedCourseName, setUpdatedCourseName] = useState('');
 
   useEffect(() => {
-    axios.get('http://localhost:8081/courses/courses/get')
-      .then((response) => {
-        setCourses(response.data);
-        console.log('Courses fetched successfully');
-      })
-      .catch((error) => {
-        console.error('Error fetching courses:', error);
-      });
+    fetchCourses();
   }, []);
+
+  const fetchCourses = async () => {
+    try {
+      const response = await axios.get('http://localhost:8081/courses/courses/get');
+      if (Array.isArray(response.data.courses)) {
+        const transformedCourses = response.data.courses.map((row) => ({
+          CourseID: row.CourseID,
+          CourseName: row.CourseName,
+        }));
+        setCourses(transformedCourses);
+      } else {
+        console.error('Invalid response data format:', response.data);
+      }
+    } catch (error) {
+      console.error('Error fetching courses:', error);
+    }
+  };
 
   const handleCreateCourse = async () => {
     try {
-      await axios.post('http://localhost:8081/courses/courses/create', { courseName: newCourseName });
-
-      // After creating the course, fetch the updated list of courses
-      const response = await axios.get('http://localhost:8081/courses/courses/get');
-      setCourses(response.data);
-
+      const response = await axios.post('http://localhost:8081/courses/courses/create', { courseName: newCourseName });
+      console.log('Create Course Response:', response.data);
       setNewCourseName('');
       console.log('Course created successfully');
+      fetchCourses();
     } catch (error) {
       console.error('Error creating course:', error);
     }
   };
-
+  
   const handleEditCourse = async (courseId) => {
     try {
-      await axios.put(`http://localhost:8081/courses/courses/update/${courseId}`, { courseName: updatedCourseName });
-
-      // After updating the course, fetch the updated list of courses
-      const response = await axios.get('http://localhost:8081/courses/courses/get');
-      setCourses(response.data);
-
+      const response = await axios.put(`http://localhost:8081/courses/courses/update/${courseId}`, { courseName: updatedCourseName });
+      console.log('Edit Course Response:', response.data);
       setEditingCourseId(null);
       setUpdatedCourseName('');
       console.log('Course updated successfully');
+      fetchCourses(); 
     } catch (error) {
       console.error('Error updating course:', error);
     }
   };
-
+  
   const handleDeleteCourse = async (courseId) => {
     try {
-      await axios.delete(`http://localhost:8081/courses/courses/delete/${courseId}`);
-
-      // After deleting the course, fetch the updated list of courses
-      const response = await axios.get('http://localhost:8081/courses/courses/get');
-      setCourses(response.data);
-
+      const response = await axios.delete(`http://localhost:8081/courses/courses/delete/${courseId}`);
+      console.log('Delete Course Response:', response.data);
       console.log('Course deleted successfully');
+      fetchCourses();
     } catch (error) {
       console.error('Error deleting course:', error);
     }
   };
 
   return (
-    <div>
-      <h2>Manage Courses</h2>
+    <div className="admin-courses-container">
+      <Typography variant="h4">Manage Courses</Typography>
       <div>
-        <h3>Create Course</h3>
-        <input
+        <Typography variant="h6">Create Course</Typography>
+        <TextField
           type="text"
-          placeholder="Course Name"
+          label="Course Name"
+          variant="outlined"
+          fullWidth
           value={newCourseName}
           onChange={(e) => setNewCourseName(e.target.value)}
         />
-        <button onClick={handleCreateCourse}>Create</button>
+        <Button variant="contained" color="primary" onClick={handleCreateCourse}>
+          Create
+        </Button>
       </div>
-      <ul>
+      <List>
         {courses.length > 0 ? (
           courses.map((course) => (
-            <li key={course.courseId}>
-              {editingCourseId === course.courseId ? (
+            <ListItem key={course.CourseID} divider>
+              {editingCourseId === course.CourseID ? (
                 <>
-                  <input
+                  <TextField
                     type="text"
                     value={updatedCourseName}
                     onChange={(e) => setUpdatedCourseName(e.target.value)}
+                    className="edit-input"
                   />
-                  <button onClick={() => handleEditCourse(course.courseId)}>Save</button>
+                  <Button
+                    variant="contained"
+                    color="primary"
+                    startIcon={<SaveIcon />}
+                    onClick={() => handleEditCourse(course.CourseID)}
+                  >
+                    Save
+                  </Button>
                 </>
               ) : (
                 <>
-                  {course.courseName}
-                  <button onClick={() => setEditingCourseId(course.courseId)}>Edit</button>
-                  <button onClick={() => handleDeleteCourse(course.courseId)}>Delete</button>
+                  <ListItemText primary={course.CourseName} />
+                  <ListItemSecondaryAction>
+                    <IconButton edge="end" aria-label="edit" onClick={() => setEditingCourseId(course.CourseID)}>
+                      <EditIcon />
+                    </IconButton>
+                    <IconButton edge="end" aria-label="delete" onClick={() => handleDeleteCourse(course.CourseID)}>
+                      <DeleteIcon />
+                    </IconButton>
+                  </ListItemSecondaryAction>
                 </>
               )}
-            </li>
+            </ListItem>
           ))
         ) : (
-          <li>No courses available</li>
+          courses.length === 0 ? <ListItem>No courses available</ListItem> : null
         )}
-      </ul>
+      </List>
     </div>
   );
 }

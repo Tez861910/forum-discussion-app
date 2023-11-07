@@ -12,9 +12,13 @@ const MCQAnswerForm = () => {
   const [allQuestionsAnswered, setAllQuestionsAnswered] = useState(false);
 
   useEffect(() => {
+    // Retrieve courseId from local storage
+    const courseId = localStorage.getItem('courseId');
+
     const fetchQuestions = async () => {
       try {
-        const response = await axios.get('http://localhost:8081/mcq/questions');
+        // Make an API request with courseId to get MCQ questions
+        const response = await axios.get(`http://localhost:8081/mcqanswerform/mcqanswerform/questions/get/${courseId}`);
         setQuestions(response.data);
         setIsLoading(false);
       } catch (error) {
@@ -30,7 +34,7 @@ const MCQAnswerForm = () => {
     const isCorrect = selectedQuestion.CorrectAnswer === selectedOption;
 
     const answer = {
-      question: selectedQuestion.MCQQuestion,
+      question: selectedQuestion.Question,
       selectedOption: selectedOption,
       isCorrect: isCorrect,
     };
@@ -53,16 +57,16 @@ const MCQAnswerForm = () => {
         <MCQSummary questions={questions} answers={answers} />
       ) : questions.length > 0 && currentQuestionIndex < questions.length ? (
         <div>
-          <Typography variant="h3">{questions[currentQuestionIndex].MCQQuestion}</Typography>
+          <Typography variant="h3">{questions[currentQuestionIndex].Question}</Typography>
           <FormControl component="fieldset">
             <RadioGroup value={selectedOption} onChange={(e) => setSelectedOption(e.target.value)}>
-              {questions[currentQuestionIndex].MCQOptions && questions[currentQuestionIndex].MCQOptions.length > 0 ? (
-                questions[currentQuestionIndex].MCQOptions.map((option, index) => (
+              {questions[currentQuestionIndex].options && questions[currentQuestionIndex].options.length > 0 ? (
+                questions[currentQuestionIndex].options.map((option, index) => (
                   <FormControlLabel
                     key={index}
-                    value={option.MCQOption}
+                    value={option.MCQOption} // Correct the key and value here
                     control={<Radio />}
-                    label={option.MCQOption}
+                    label={option.MCQOption} // Correct the label here
                   />
                 ))
               ) : (

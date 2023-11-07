@@ -1,55 +1,83 @@
-
+/* Styling for Admin Users Component */
 .admin-users-container {
-    text-align: center;
-    margin: 20px;
-  }
-  
-  h2 {
-    font-size: 24px;
-  }
-  
-  h3 {
-    font-size: 20px;
-    margin-top: 20px;
-  }
-  
-  input {
-    margin: 10px;
-    padding: 10px;
-  }
-  
-  button {
-    background-color: #007bff;
-    color: #fff;
-    border: none;
-    padding: 10px 20px;
-    cursor: pointer;
-  }
-  
-  ul {
-    list-style-type: none;
-    padding: 0;
-  }
-  
-  li {
-    margin-top: 20px;
-    border: 1px solid #ccc;
-    padding: 10px;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-  }
-  
-  span {
-    flex: 1;
-  }
-  
-  button.update-button {
-    background-color: #28a745;
-  }
-  
-  button.delete-button {
-    background-color: #dc3545;
-    margin-left: 10px;
-  }
-  
+  padding: 16px;
+  background-color: #f5f5f5;
+  border: 1px solid #ddd;
+  border-radius: 5px;
+  box-shadow: 0 0 5px rgba(0, 0, 0, 0.2);
+  margin: 16px;
+}
+
+.admin-users-container h1 {
+  font-size: 24px;
+}
+
+.admin-users-container h2 {
+  font-size: 20px;
+  margin-top: 16px;
+}
+
+/* Form input fields */
+.admin-users-container input[type="text"],
+.admin-users-container input[type="email"],
+.admin-users-container input[type="password"],
+.admin-users-container select {
+  width: 100%;
+  padding: 10px;
+  margin-top: 8px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+}
+
+/* Form buttons */
+.admin-users-container button {
+  background-color: #007bff;
+  color: #fff;
+  border: none;
+  border-radius: 5px;
+  padding: 10px 20px;
+  margin-top: 8px;
+  cursor: pointer;
+}
+
+.admin-users-container button:hover {
+  background-color: #0056b3;
+}
+
+/* List items */
+.admin-users-container ul {
+  list-style: none;
+  padding: 0;
+}
+
+.admin-users-container li {
+  background-color: #fff;
+  border: 1px solid #ddd;
+  border-radius: 5px;
+  margin-top: 16px;
+  padding: 16px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.admin-users-container p {
+  margin: 0;
+}
+
+/* Edit and Delete buttons */
+.admin-users-container button.edit-button,
+.admin-users-container button.delete-button {
+  background-color: transparent;
+  border: none;
+  margin-right: 8px;
+  cursor: pointer;
+}
+
+.admin-users-container button.edit-button:hover,
+.admin-users-container button.delete-button:hover {
+  color: #007bff;
+}
+
+/* User data section */
+.admin-users-container .user-data {
+  margin-top: 16px;
+}

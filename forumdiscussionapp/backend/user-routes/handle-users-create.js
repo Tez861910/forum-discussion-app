@@ -1,35 +1,59 @@
 const { query } = require('../db');
+const { createToken, hashPassword } = require('../authvalid');
                                     
 async function handleUsersCreate(req, res) {
-    {
-        const { name, email, password, roleId, courseId } = req.body;
-      
-        try {
-          if (!name || !email || !password || !roleId || !courseId) {
-            console.log('Name, email, password, roleId, and courseId are required');
-            return res.status(400).json({ error: 'Name, email, password, roleId, and courseId are required' });
-          }
-      
-          // Hash the password using the hashPassword function
-          const hashedPassword = await hashPassword(password);
-      
-          // SQL query to insert the new user
-          const sql = 'INSERT INTO users (UserName, UserEmail, UserPassword, RoleID, CourseID) VALUES (?, ?, ?, ?, ?)';
-          const [result] = await query(sql, [name, email, hashedPassword, roleId, courseId]);
-      
-          if (result.affectedRows === 1) {
-            console.log('User created successfully');
-            res.json({ message: 'User created successfully' });
-          } else {
-            console.error('User creation failed');
-            res.status(500).json({ error: 'User creation failed' });
-          }
-        } catch (error) {
-          console.error('Error creating user:', error);
-          res.status(500).json({ error: 'User creation failed', details: error.message });
+  const { name, email, password, roleId, courseId } = req.body;
+
+  try {
+    if (!name || !email || !password || !roleId || !courseId) {
+      console.log('Missing user data');
+      return res.status(400).json({ error: 'Missing user data' });
+    }
+
+    const hashedPassword = await hashPassword(password);
+
+    // First, insert the user's data into the Users table
+    const sqluser = 'INSERT INTO users (UserName, UserEmail, UserPassword, RoleID, CourseID) VALUES (?, ?, ?, ?, ?)';
+    const [userResult] = await query(sqluser, [name, email, hashedPassword, roleId, courseId]);
+
+    if (userResult.affectedRows === 1) {
+      const userId = userResult.insertId;
+
+      // Now, insert a record into UserCourses to associate the user with the course
+      const sqlusercourse = 'INSERT INTO usercourses (UserID, CourseID) VALUES (?, ?)';
+      const [userCourseResult] = await query(sqlusercourse, [userId, courseId]);
+
+      if (userCourseResult.affectedRows === 1) {
+        // Insert a record into UserRoles to associate the user with the role
+        const sqluserroles = 'INSERT INTO userroles (UserID, RoleID) VALUES (?, ?)';
+        const [userRolesResult] = await query(sqluserroles, [userId, roleId]);
+
+        if (userRolesResult.affectedRows === 1) {
+          const payload = {
+            userId,
+            email,
+            roleId,
+          };
+          const token = createToken(payload);
+          console.log('User registered successfully for email: ' + email);
+          res.json({ message: 'User registered successfully', token });
+        } else {
+          console.log('User registration failed for email: ' + email);
+          res.status(500).json({ error: 'User registration failed' });
         }
-      } 
-    };
+      } else {
+        console.log('User registration failed for email: ' + email);
+        res.status(500).json({ error: 'User registration failed' });
+      }
+    } else {
+      console.log('User registration failed for email: ' + email);
+      res.status(500).json({ error: 'User registration failed' });
+    }
+  } catch (error) {
+    console.error('Error during signup:', error);
+    res.status(500).json({ error: 'Signup failed', details: error.message });
+  }
+};
 
     module.exports = {
       handleUsersCreate,
