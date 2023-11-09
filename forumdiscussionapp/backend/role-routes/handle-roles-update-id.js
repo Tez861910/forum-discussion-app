@@ -12,7 +12,7 @@ async function handleRolesUpdateId(req, res) {
           }
       
           const sql = 'UPDATE roles SET RoleName = ? WHERE RoleID = ?';
-          const result = await query(sql, [roleName, id]);
+          const [result] = await query(sql, [roleName, id]);
       
           if (result.affectedRows === 1) {
             console.log('Role updated successfully');

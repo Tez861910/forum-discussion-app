@@ -1,9 +1,8 @@
 const { query } = require('../db');
 
 async function handleRolesCreate(req, res) {
-  {
-    const { roleName } = req.body;}
-    
+  const { roleName } = req.body;
+
   try {
     if (!roleName) {
       console.log('Role name is required');
@@ -15,15 +14,14 @@ async function handleRolesCreate(req, res) {
 
     if (result.affectedRows === 1) {
       console.log('Role created successfully');
-      return res.json({ message: 'Role created successfully' });
+      res.json({ message: 'Role created successfully' });
     } else {
       console.error('Role creation failed');
-      console.error('SQL Error:', result.message);
-      return res.status(500).json({ error: 'Role creation failed', details: result.message });
+      res.status(500).json({ error: 'Role creation failed' });
     }
   } catch (error) {
     console.error('Error creating role:', error);
-    return res.status(500).json({ error: 'Role creation failed', details: error.message });
+    res.status(500).json({ error: 'Role creation failed', details: error.message });
   }
 }
 

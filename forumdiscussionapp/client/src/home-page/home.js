@@ -86,10 +86,12 @@ export function Home() {
 
   return (
     <Container maxWidth="sm" className="container">
-      <Typography variant="h2">Home Panel</Typography>
+      <Typography variant="h2" className="heading">Home Panel</Typography>
       <UserProfile />
-      {renderButtonsByRoleId()}
-      <Button onClick={handleLogout} variant="contained" color="error">
+      <div className="button-container">
+        {renderButtonsByRoleId()}
+      </div>
+      <Button onClick={handleLogout} variant="contained" color="error" className="logout-button">
         Logout
       </Button>
     </Container>

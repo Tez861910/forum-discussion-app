@@ -1,10 +1,11 @@
 const { query } = require('../db');
+const { hashPassword } = require('../authvalid'); 
 
 async function handleUsersUpdateId(req, res) {
   const { id } = req.params;
   const userData = req.body;
-  const userCourseData = userData.usercourses; 
-  const userRoleData = userData.userroles; 
+  const userCourseData = userData.usercourses;
+  const userRoleData = userData.userroles;
 
   try {
     if (!userData.UserName || !userData.UserEmail) {
@@ -15,7 +16,7 @@ async function handleUsersUpdateId(req, res) {
     // Create an SQL query dynamically based on the provided user data
     const updateFields = [];
     const values = [];
-    
+
     for (const key in userData) {
       if (userData.hasOwnProperty(key) && key !== 'UserID') {
         updateFields.push(`${key} = ?`);
@@ -27,25 +28,36 @@ async function handleUsersUpdateId(req, res) {
       return res.status(400).json({ error: 'No valid fields provided for update' });
     }
 
-    const sql = `UPDATE users SET ${updateFields.join(', ')} WHERE UserID = ?`;
+    // Hash the password if provided
+    if (userData.UserPassword) {
+      const hashedPassword = await hashPassword(userData.UserPassword);
+      updateFields.push('UserPassword = ?');
+      values.push(hashedPassword);
+    }
+
     values.push(id);
+
+    const sql = `UPDATE users SET ${updateFields.join(', ')} WHERE UserID = ?`;
 
     const [result] = await query(sql, values);
 
     if (result.affectedRows === 1) {
       console.log('User updated successfully');
 
-      // Update usercourses and userroles tables
+      // Update usercourses table
       if (userCourseData && userCourseData.length > 0) {
-        
-        const userCoursesSql = 'UPDATE usercourses SET ... WHERE UserID = ?';
-        await query(userCoursesSql, [userCourseData, id]);
+        const userCoursesSql = 'UPDATE usercourses SET CourseID = ? WHERE UserID = ?';
+        for (const course of userCourseData) {
+          await query(userCoursesSql, [course.CourseID, id]);
+        }
       }
 
+      // Update userroles table
       if (userRoleData && userRoleData.length > 0) {
-        
-        const userRolesSql = 'UPDATE userroles SET ... WHERE UserID = ?';
-        await query(userRolesSql, [userRoleData, id]);
+        const userRolesSql = 'UPDATE userroles SET RoleID = ? WHERE UserID = ?';
+        for (const role of userRoleData) {
+          await query(userRolesSql, [role.RoleID, id]);
+        }
       }
 
       res.json({ message: 'User updated successfully' });

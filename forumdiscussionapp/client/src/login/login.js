@@ -9,6 +9,7 @@ const Login = () => {
   const [values, setValues] = useState({ email: '', password: '' });
   const [error, setError] = useState('');
   const navigate = useNavigate();
+  // eslint-disable-next-line no-unused-vars
   const [cookies, setCookie] = useCookies();
 
   const handleInput = (event) => {
@@ -68,7 +69,6 @@ const Login = () => {
                 />
               </Grid>
             ))}
-            <br />
             <Button
               type="submit"
               fullWidth
@@ -77,12 +77,9 @@ const Login = () => {
             >
               Log in
             </Button>
-            <br />
-            <br />
             <Typography variant="body2">
               You agree to our terms and conditions
             </Typography>
-
             <Link to="/sign-up" variant="body2">
               Create Account
             </Link>

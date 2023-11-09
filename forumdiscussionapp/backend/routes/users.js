@@ -7,8 +7,9 @@ const { handleUsersGet } = require('../user-routes/handle-users-get');
 const { handleUsersCreate } = require('../user-routes/handle-users-create');
 const { handleUsersGetId } = require('../user-routes/handle-users-get-id');
 const { handleUsersUpdateId } = require('../user-routes/handle-users-update-id');
-const { handleUsersUpdateAdminId } = require('../user-routes/handle-users-update-admin-id');
 const { handleUsersDeleteId } = require('../user-routes/handle-users-delete-id');
+const { handleUsersGetRoleId } = require('../user-routes/handle-users-get-role-id');
+const { handleUsersUpdateUsers } = require('../user-routes/handle-users-updates-users');
 
 // Create a new user
 router.post('/users/create', async (req, res) =>handleUsersCreate(req, res));
@@ -22,10 +23,14 @@ router.get('/users/get/:id', async (req, res) => handleUsersGetId(req, res));
 // Update a user
 router.put('/users/update/:id', async (req, res) =>handleUsersUpdateId(req, res));
 
-// Update a user admin
-router.put('/users/update/admin/:id', async (req, res) => handleUsersUpdateAdminId(req, res));
+// Update a user profile
+router.put('/users/update/users/:id', async (req, res) =>handleUsersUpdateUsers(req, res));
+
 
 // Delete a user
 router.delete('/users/delete/:id', async (req, res) => handleUsersDeleteId(req, res));
+
+// Get a user by RoleID
+router.get('/users/get/role/:roleId', async (req, res) => handleUsersGetRoleId(req, res));
 
 module.exports = router;

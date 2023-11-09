@@ -50,24 +50,24 @@
   cursor: pointer;
 }
 
-.edit-thread {
+.create-new-thread {
   margin-top: 20px;
   border: 1px solid #ccc;
   padding: 20px;
 }
 
-.edit-thread h3 {
+.create-new-thread h3 {
   font-size: 20px;
   margin-bottom: 20px;
 }
 
-.edit-thread label {
+.create-new-thread label {
   display: block;
   margin-bottom: 10px;
 }
 
-.edit-thread input,
-.edit-thread textarea {
+.create-new-thread input,
+.create-new-thread textarea {
   width: 100%;
   padding: 10px;
   margin-bottom: 10px;

@@ -27,6 +27,9 @@ function AdminRoles() {
   const [editingRoleId, setEditingRoleId] = useState(null);
   const [updatedRoleName, setUpdatedRoleName] = useState('');
   const [deleteConfirmation, setDeleteConfirmation] = useState({ open: false, roleId: null });
+  const [selectedRoleId, setSelectedRoleId] = useState(null);
+  const [roleUsers, setRoleUsers] = useState([]);
+  const [newUserName, setNewUserName] = useState('');
 
   useEffect(() => {
     fetchRoles();
@@ -35,7 +38,7 @@ function AdminRoles() {
   const fetchRoles = async () => {
     try {
       const response = await axios.get('http://localhost:8081/roles/roles/get');
-      console.log('API Response:', response.data);
+      console.log('API Response (Roles):', response.data);
 
       if (Array.isArray(response.data.roles)) {
         const transformedRoles = response.data.roles.map((row) => ({
@@ -45,10 +48,31 @@ function AdminRoles() {
         console.log('Transformed Roles:', transformedRoles);
         setRoles(transformedRoles);
       } else {
-        console.error('Invalid response data format:', response.data);
+        console.error('Invalid response data format for roles:', response.data);
       }
     } catch (error) {
       console.error('Error fetching roles:', error);
+    }
+  };
+
+  useEffect(() => {
+    if (selectedRoleId !== null) {
+      fetchRoleUsers(selectedRoleId);
+    }
+  }, [selectedRoleId]);
+
+  const fetchRoleUsers = async (roleId) => {
+    try {
+      const response = await axios.get(`http://localhost:8081/users/users/get/role/${roleId}`);
+      console.log('API Response (Role Users):', response.data);
+
+      if (Array.isArray(response.data.userNames)) {
+        setRoleUsers(response.data.userNames);
+      } else {
+        console.error('Invalid response data format for role users:', response.data);
+      }
+    } catch (error) {
+      console.error('Error fetching role users:', error);
     }
   };
 
@@ -58,7 +82,7 @@ function AdminRoles() {
       console.log('Create Role Response:', response.data);
       setNewRoleName('');
       console.log('Role created successfully');
-      fetchRoles(); // Refresh the list of roles
+      fetchRoles();
     } catch (error) {
       console.error('Error creating role:', error);
     }
@@ -74,7 +98,7 @@ function AdminRoles() {
       setEditingRoleId(null);
       setUpdatedRoleName('');
       console.log('Role updated successfully');
-      fetchRoles(); // Refresh the list of roles
+      fetchRoles(); 
     } catch (error) {
       console.error('Error updating role:', error);
     }
@@ -89,7 +113,7 @@ function AdminRoles() {
       const response = await axios.delete(`http://localhost:8081/roles/roles/delete/${deleteConfirmation.roleId}`);
       console.log('Delete Role Response:', response.data);
       console.log('Role deleted successfully');
-      fetchRoles(); // Refresh the list of roles
+      fetchRoles(); 
     } catch (error) {
       console.error('Error deleting role:', error);
     } finally {
@@ -99,6 +123,27 @@ function AdminRoles() {
 
   const cancelDelete = () => {
     setDeleteConfirmation({ open: false, roleId: null });
+  };
+
+  const handleAddUserToRole = async () => {
+    try {
+      const response = await axios.post(`http://localhost:8081/roles/${selectedRoleId}/users`, { userName: newUserName });
+      console.log('Add User Response:', response.data);
+      setNewUserName('');
+      fetchRoleUsers(selectedRoleId);
+    } catch (error) {
+      console.error('Error adding user to role:', error);
+    }
+  };
+
+  const handleRemoveUserFromRole = async (userId) => {
+    try {
+      const response = await axios.delete(`http://localhost:8081/roles/${selectedRoleId}/users/${userId}`);
+      console.log('Remove User Response:', response.data);
+      fetchRoleUsers(selectedRoleId);
+    } catch (error) {
+      console.error('Error removing user from role:', error);
+    }
   };
 
   return (
@@ -119,60 +164,89 @@ function AdminRoles() {
         </Button>
       </div>
       <List>
-        {roles.length > 0 ? (
-          roles.map((role) => (
-            <ListItem key={role.RoleID} divider>
-              {editingRoleId === role.RoleID ? (
-                <>
-                  <TextField
-                    type="text"
-                    value={updatedRoleName}
-                    onChange={(e) => setUpdatedRoleName(e.target.value)}
-                    className="edit-input"
-                  />
-                  <Button
-                    variant="contained"
-                    color="primary"
-                    startIcon={<SaveIcon />}
-                    onClick={() => handleEditRole(role.RoleID)}
-                  >
-                    Save
-                  </Button>
-                  <Button
-                    variant="contained"
-                    color="secondary"
-                    startIcon={<CancelIcon />}
-                    onClick={() => setEditingRoleId(null)}
-                  >
-                    Cancel
-                  </Button>
-                </>
-              ) : (
-                <>
-                  <ListItemText primary={role.RoleName} />
-                  <ListItemSecondaryAction>
-                    <IconButton edge="end" aria-label="edit" onClick={() => setEditingRoleId(role.RoleID)}>
-                      <EditIcon />
-                    </IconButton>
-                    <IconButton edge="end" aria-label="delete" onClick={() => handleDeleteRole(role.RoleID)}>
-                      <DeleteIcon />
-                    </IconButton>
-                  </ListItemSecondaryAction>
-                </>
-              )}
-            </ListItem>
-          ))
-        ) : (
-          roles.length === 0 ? <ListItem key="no-roles">No roles available</ListItem> : null
-        )}
+        {roles.map((role) => (
+          <ListItem key={role.RoleID} divider onClick={() => setSelectedRoleId(role.RoleID)}>
+            {editingRoleId === role.RoleID ? (
+              <>
+                <TextField
+                  type="text"
+                  value={updatedRoleName}
+                  onChange={(e) => setUpdatedRoleName(e.target.value)}
+                  className="edit-input"
+                />
+                <Button
+                  variant="contained"
+                  color="primary"
+                  startIcon={<SaveIcon />}
+                  onClick={() => handleEditRole(role.RoleID)}
+                >
+                  Save
+                </Button>
+                <Button
+                  variant="contained"
+                  color="secondary"
+                  startIcon={<CancelIcon />}
+                  onClick={() => setEditingRoleId(null)}
+                >
+                  Cancel
+                </Button>
+              </>
+            ) : (
+              <>
+                <ListItemText primary={role.RoleName} />
+                <ListItemSecondaryAction>
+                  <IconButton edge="end" aria-label="edit" onClick={() => setEditingRoleId(role.RoleID)}>
+                    <EditIcon />
+                  </IconButton>
+                  <IconButton edge="end" aria-label="delete" onClick={() => handleDeleteRole(role.RoleID)}>
+                    <DeleteIcon />
+                  </IconButton>
+                </ListItemSecondaryAction>
+              </>
+            )}
+            {selectedRoleId === role.RoleID && (
+              <>
+                {roleUsers ? (
+                  <List>
+                    {roleUsers.map((user, index) => (
+                      <ListItem key={index}>
+                        <ListItemText primary={user} />
+                        <ListItemSecondaryAction>
+                          <IconButton
+                            edge="end"
+                            aria-label="delete"
+                            onClick={() => handleRemoveUserFromRole(user.userId)}
+                          >
+                            <DeleteIcon />
+                          </IconButton>
+                        </ListItemSecondaryAction>
+                      </ListItem>
+                    ))}
+                    <ListItem>
+                      <TextField
+                        type="text"
+                        label="User Name"
+                        variant="outlined"
+                        fullWidth
+                        value={newUserName}
+                        onChange={(e) => setNewUserName(e.target.value)}
+                      />
+                      <Button variant="contained" color="primary" onClick={handleAddUserToRole}>
+                        Add User
+                      </Button>
+                    </ListItem>
+                  </List>
+                ) : null}
+              </>
+            )}
+          </ListItem>
+        ))}
       </List>
 
       <Dialog open={deleteConfirmation.open} onClose={cancelDelete}>
         <DialogTitle>Delete Role</DialogTitle>
         <DialogContent>
-          <DialogContentText>
-            Are you sure you want to delete this role?
-          </DialogContentText>
+          <DialogContentText>Are you sure you want to delete this role?</DialogContentText>
         </DialogContent>
         <DialogActions>
           <Button onClick={cancelDelete} color="primary">

@@ -7,15 +7,18 @@ function AdminThreads() {
   const [newThread, setNewThread] = useState({
     title: '',
     content: '',
+    courseId: 1, 
   });
-  
+
+  const [courses, setCourses] = useState([]);
 
   useEffect(() => {
     fetchThreads();
+    fetchCourses(); 
   }, []);
 
   const fetchThreads = () => {
-    axios.get('http://localhost:8081/threads/threads/get')
+    axios.get('http://localhost:8081/threads/threads/get/all')
       .then((response) => {
         setThreads(response.data);
         console.log('Threads fetched successfully');
@@ -25,10 +28,20 @@ function AdminThreads() {
       });
   };
 
+  const fetchCourses = () => {
+    axios.get('http://localhost:8081/courses/courses/get') 
+      .then((response) => {
+        setCourses(response.data);
+        console.log('Courses fetched successfully');
+      })
+      .catch((error) => {
+        console.error('Error fetching courses:', error);
+      });
+  };
+
   const createThread = () => {
     axios.post('http://localhost:8081/threads/threads/create', newThread)
       .then(() => {
-        
         fetchThreads();
         console.log('Thread created successfully');
       })
@@ -38,9 +51,8 @@ function AdminThreads() {
   };
 
   const updateThread = (threadId, updatedData) => {
-    axios.put(`http://localhost:8081/threads/threads/update/:id${threadId}`, updatedData)
+    axios.put(`http://localhost:8081/threads/threads/update/${threadId}`, updatedData)
       .then(() => {
-       
         fetchThreads();
         console.log('Thread updated successfully');
       })
@@ -50,9 +62,8 @@ function AdminThreads() {
   };
 
   const deleteThread = (threadId) => {
-    axios.delete(`http://localhost:8081/threads/threads/update/:id${threadId}`)
+    axios.delete(`http://localhost:8081/threads/threads/update/${threadId}`)
       .then(() => {
-       
         fetchThreads();
         console.log('Thread deleted successfully');
       })
@@ -62,19 +73,20 @@ function AdminThreads() {
   };
 
   return (
-    <div>
+    <div className="admin-thread-container">
       <h2>Manage Threads</h2>
-      <ul>
-        {threads.map((thread) => (
-          <li key={thread.id}>
-            <h3>{thread.title}</h3>
-            <p>{thread.content}</p>
-            <button onClick={() => updateThread(thread.id, { title: 'Updated Title' })}>Update</button>
-            <button onClick={() => deleteThread(thread.id)}>Delete</button>
-          </li>
-        ))}
-      </ul>
       <h3>Create New Thread</h3>
+      
+<select
+  value={newThread.courseId || ''}
+  onChange={(e) => setNewThread({ ...newThread, courseId: parseInt(e.target.value, 10) })}
+>
+  {Array.isArray(courses) && courses.length > 0 && courses.map((course) => (
+    <option key={course.CourseID} value={course.CourseID}>
+      {course.CourseName}
+    </option>
+  ))}
+</select>
       <input
         type="text"
         placeholder="Title"
@@ -87,6 +99,17 @@ function AdminThreads() {
         onChange={(e) => setNewThread({ ...newThread, content: e.target.value })}
       />
       <button onClick={createThread}>Create</button>
+
+      <ul>
+  {threads.map((thread) => (
+    <li key={thread.id}>
+      <h3>{thread.title}</h3>
+      <p>{thread.content}</p>
+      <button onClick={() => updateThread(thread.id, { title: 'Updated Title' })}>Update</button>
+      <button onClick={() => deleteThread(thread.id)}>Delete</button>
+    </li>
+  ))}
+</ul>
     </div>
   );
 }

@@ -30,7 +30,7 @@ function UserProfile({ userId }) {
   };
 
   const handleSave = () => {
-    axios.put(`http://localhost:8081/users/users/update/${userId}`, {
+    axios.put(`http://localhost:8081/users/users/update/users/${userId}`, {
       name: newName,
       email: newEmail,
       password: newPassword,

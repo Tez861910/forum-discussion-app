@@ -86,7 +86,7 @@ function AdminUsers() {
       })
       .then((response) => {
         const createdUser = response.data;
-        setUsers([...users, createdUser]);
+        setUsers((prevUsers) => [...prevUsers, createdUser]);
         setNewUser({
           UserName: '',
           UserEmail: '',
@@ -101,8 +101,19 @@ function AdminUsers() {
       });
   };
 
+  const handleEditUser = (user) => {
+    setEditingUserId(user.UserID);
+    setUpdatedUserData({
+      UserName: user.UserName,
+      UserEmail: user.UserEmail,
+      RoleID: user.RoleID,
+      CourseID: user.CourseID,
+      UserPassword: user.UserPassword,
+    });
+  };
+
   const handleUpdateUser = (userId) => {
-    if (Object.keys(updatedUserData).length === 0) {
+    if (!updatedUserData.UserName || !updatedUserData.UserEmail || updatedUserData.RoleID === '' || updatedUserData.CourseID === '') {
       setEditingUserId(null);
       return;
     }
@@ -116,7 +127,6 @@ function AdminUsers() {
         );
         setUsers(updatedUsers);
         setEditingUserId(null);
-        setUpdatedUserData({});
         console.log('User updated successfully');
       })
       .catch((error) => {
@@ -166,133 +176,109 @@ function AdminUsers() {
   };
 
   return (
-    <div>
-      <div className="admin-users-container">
-        <h1>Admin User Management</h1>
-        <div>
-          <h2>Create User</h2>
-          <TextField
-            type="text"
-            label="Name"
-            value={newUser.UserName}
-            onChange={(e) => setNewUser({ ...newUser, UserName: e.target.value })}
-          />
-          <TextField
-            type="email"
-            label="Email"
-            value={newUser.UserEmail}
-            onChange={(e) => setNewUser({ ...newUser, UserEmail: e.target.value })}
-          />
-          <Select
-            label="Role"
-            value={newUser.RoleID}
-            onChange={(e) => setNewUser({ ...newUser, RoleID: e.target.value })}
-          >
-            <MenuItem value="">
-              <em>Select Role</em>
-            </MenuItem>
-            {roles.map((role) => (
-              <MenuItem key={role.roleId} value={role.roleId}>
-                {role.roleName}
+    <div className="admin-users-container">
+      <h1>Admin User Management</h1>
+      <div className="create-user-form">
+        <h2>Create User</h2>
+        <div className="form-fields">
+          <div className="form-field">
+            <label htmlFor="name">Name</label>
+            <TextField
+              type="text"
+              id="name"
+              value={newUser.UserName}
+              onChange={(e) => setNewUser({ ...newUser, UserName: e.target.value })}
+            />
+          </div>
+          <div className="form-field">
+            <label htmlFor="email">Email</label>
+            <TextField
+              type="email"
+              id="email"
+              value={newUser.UserEmail}
+              onChange={(e) => setNewUser({ ...newUser, UserEmail: e.target.value })}
+            />
+          </div>
+          <div className="form-field">
+            <label htmlFor="password">Password</label>
+            <TextField
+              type="password"
+              id="password"
+              value={newUser.UserPassword}
+              onChange={(e) => setNewUser({ ...newUser, UserPassword: e.target.value })}
+            />
+          </div>
+          <div className="form-field">
+            <label htmlFor="role">Role</label>
+            <Select
+              label="Role"
+              id="role"
+              value={newUser.RoleID}
+              onChange={(e) => setNewUser({ ...newUser, RoleID: e.target.value })}
+            >
+              <MenuItem value="">
+                <em>Choose Role</em>
               </MenuItem>
-            ))}
-          </Select>
-          <Select
-            label="Course"
-            value={newUser.CourseID}
-            onChange={(e) => setNewUser({ ...newUser, CourseID: e.target.value })}
-          >
-            <MenuItem value="">
-              <em>Select Course</em>
-            </MenuItem>
-            {courses.map((course) => (
-              <MenuItem key={course.CourseID} value={course.CourseID}>
-                {course.CourseName}
+              {roles.map((role) => (
+                <MenuItem key={role.roleId} value={role.roleId}>
+                  {role.roleName}
+                </MenuItem>
+              ))}
+            </Select>
+          </div>
+          <div className="form-field">
+            <label htmlFor="course">Course</label>
+            <Select
+              label="Course"
+              id="course"
+              value={newUser.CourseID}
+              onChange={(e) => setNewUser({ ...newUser, CourseID: e.target.value })}
+            >
+              <MenuItem value="">
+                <em>Choose Course</em>
               </MenuItem>
-            ))}
-          </Select>
-          <TextField
-            type="password"
-            label="Password"
-            value={newUser.UserPassword}
-            onChange={(e) => setNewUser({ ...newUser, UserPassword: e.target.value })}
-          />
-          <Button variant="contained" color="primary" onClick={handleCreateUser}>
-            Create User
-          </Button>
+              {courses.map((course) => (
+                <MenuItem key={course.CourseID} value={course.CourseID}>
+                  {course.CourseName}
+                </MenuItem>
+              ))}
+            </Select>
+          </div>
         </div>
-        <ul>
+        <Button variant="contained" color="primary" onClick={handleCreateUser}>
+          Create User
+        </Button>
+      </div>
+      <table className="user-table">
+        <thead>
+          <tr>
+            <th>Name</th>
+            <th>Email</th>
+            <th>Role</th>
+            <th>Course</th>
+            <th>Password</th>
+            <th>Actions</th>
+          </tr>
+        </thead>
+        <tbody>
           {Array.isArray(users) &&
             users.map((user) => (
-              <li key={user.UserID}>
-                {editingUserId === user.UserID ? (
-                  <div>
-                    <TextField
-                      type="text"
-                      label="Name"
-                      value={updatedUserData.UserName || user.UserName}
-                      onChange={(e) => handleInputChange('UserName', e.target.value)}
-                    />
-                    <TextField
-                      type="email"
-                      label="Email"
-                      value={updatedUserData.UserEmail || user.UserEmail}
-                      onChange={(e) => handleInputChange('UserEmail', e.target.value)}
-                    />
-                    <Select
-                      label="Role"
-                      value={updatedUserData.RoleID || user.RoleID}
-                      onChange={(e) => handleInputChange('RoleID', e.target.value)}
-                    >
-                      <MenuItem value="">
-                        <em>Select Role</em>
-                      </MenuItem>
-                      {roles.map((role) => (
-                        <MenuItem key={role.roleId} value={role.roleId}>
-                          {role.roleName}
-                        </MenuItem>
-                      ))}
-                    </Select>
-                    <Select
-                      label="Course"
-                      value={updatedUserData.CourseID || user.CourseID}
-                      onChange={(e) => handleInputChange('CourseID', e.target.value)}
-                    >
-                      <MenuItem value="">
-                        <em>Select Course</em>
-                      </MenuItem>
-                      {courses.map((course) => (
-                        <MenuItem key={course.CourseID} value={course.CourseID}>
-                          {course.CourseName}
-                        </MenuItem>
-                      ))}
-                    </Select>
-                    <TextField
-                      type="password"
-                      label="Password"
-                      value={updatedUserData.UserPassword || ''}
-                      onChange={(e) => handleInputChange('UserPassword', e.target.value)}
-                    />
-                    <Button onClick={() => handleUpdateUser(user.UserID)}>Update</Button>
-                    <Button onClick={() => setEditingUserId(null)}>Cancel</Button>
+              <tr key={user.UserID}>
+                <td>{user.UserName}</td>
+                <td>{user.UserEmail}</td>
+                <td>{getRoleName(user.RoleID)}</td>
+                <td>{getCourseName(user.CourseID)}</td>
+                <td>{user.UserPassword}</td>
+                <td>
+                  <div className="user-actions">
+                    <Button onClick={() => handleEditUser(user)}>Edit</Button>
+                    <Button onClick={() => handleDeleteUser(user.UserID)}>Delete</Button>
                   </div>
-                ) : (
-                  <div>
-                    <p>Name: {user.UserName}</p>
-                    <p>Email: {user.UserEmail}</p>
-                    <p>Role: {getRoleName(user.RoleID)}</p>
-                    <p>Course: {getCourseName(user.CourseID)}</p>
-                    <p>Password: {user.UserPassword}</p>
-                    <div>
-                      <Button onClick={() => setEditingUserId(user.UserID)}>Edit</Button>
-                      <Button onClick={() => handleDeleteUser(user.UserID)}>Delete</Button>
-                    </div>
-                  </div>
-                )}
-              </li>
+                </td>
+              </tr>
             ))}
-        </ul>
-      </div>
+        </tbody>
+      </table>
       <Dialog
         open={deleteConfirmation.open}
         onClose={cancelDelete}
@@ -311,6 +297,88 @@ function AdminUsers() {
           </Button>
           <Button onClick={confirmDelete} color="secondary">
             Delete
+          </Button>
+        </DialogActions>
+      </Dialog>
+      <Dialog
+        open={editingUserId !== null}
+        onClose={() => setEditingUserId(null)}
+        aria-labelledby="edit-dialog-title"
+      >
+        <DialogTitle id="edit-dialog-title">Edit User</DialogTitle>
+        <DialogContent>
+          <div className="dialog-edit-user-form">
+            <div className="form-field">
+              <label htmlFor="edit-name">Name</label>
+              <TextField
+                type="text"
+                id="edit-name"
+                value={updatedUserData.UserName}
+                onChange={(e) => handleInputChange('UserName', e.target.value)}
+              />
+            </div>
+            <div className="form-field">
+              <label htmlFor="edit-email">Email</label>
+              <TextField
+                type="email"
+                id="edit-email"
+                value={updatedUserData.UserEmail}
+                onChange={(e) => handleInputChange('UserEmail', e.target.value)}
+              />
+            </div>
+            <div className="form-field">
+              <label htmlFor="edit-password">Password</label>
+              <TextField
+                type="password"
+                id="edit-password"
+                value={updatedUserData.UserPassword}
+                onChange={(e) => handleInputChange('UserPassword', e.target.value)}
+              />
+            </div>
+            <div className="form-field">
+              <label htmlFor="edit-role">Role</label>
+              <Select
+                label="Role"
+                id="edit-role"
+                value={updatedUserData.RoleID}
+                onChange={(e) => handleInputChange('RoleID', e.target.value)}
+              >
+                <MenuItem value="">
+                  <em>Choose Role</em>
+                </MenuItem>
+                {roles.map((role) => (
+                  <MenuItem key={role.roleId} value={role.roleId}>
+                    {role.roleName}
+                  </MenuItem>
+                ))}
+              </Select>
+            </div>
+            <div className="form-field">
+              <label htmlFor="edit-course">Course</label>
+              <Select
+                label="Course"
+                id="edit-course"
+                value={updatedUserData.CourseID}
+                onChange={(e) => handleInputChange('CourseID', e.target.value)}
+              >
+                <MenuItem value="">
+                  <em>Choose Course</em>
+                </MenuItem>
+                {courses.map((course) => (
+                  <MenuItem key={course.CourseID} value={course.CourseID}>
+                    {course.CourseName}
+                  </MenuItem>
+                ))}
+              </Select>
+            </div>
+          </div>
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={() => setEditingUserId(null)} color="primary">
+            Cancel
+          </Button>
+          <Button onClick={() => handleUpdateUser(editingUserId)} color="primary">
+            Update
           </Button>
         </DialogActions>
       </Dialog>

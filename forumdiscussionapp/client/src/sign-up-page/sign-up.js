@@ -94,42 +94,36 @@ const Signup = () => {
       <div className="form">
         <Typography variant="h2">Sign-Up</Typography>
         <form onSubmit={handleSubmit}>
-          <div className="mb-3">
-            <label htmlFor="name">User Name</label>
-            <TextField
-              type="text"
-              name="name"
-              value={formData.name}
-              onChange={handleInputChange}
-              className="form-control"
-              fullWidth
-            />
-            {errors.name && <span className="text-danger">{errors.name}</span>}
-          </div>
-          <div className="mb-3">
-            <label htmlFor="email">User Email</label>
-            <TextField
-              type="email"
-              name="email"
-              value={formData.email}
-              onChange={handleInputChange}
-              className="form-control"
-              fullWidth
-            />
-            {errors.email && <span className="text-danger">{errors.email}</span>}
-          </div>
-          <div className="mb-3">
-            <label htmlFor="password">Password</label>
-            <TextField
-              type="password"
-              name="password"
-              value={formData.password}
-              onChange={handleInputChange}
-              className="form-control"
-              fullWidth
-            />
-            {errors.password && <span className="text-danger">{errors.password}</span>}
-          </div>
+          <TextField
+            type="text"
+            name="name"
+            value={formData.name}
+            onChange={handleInputChange}
+            fullWidth
+            label="User Name"
+          />
+          {errors.name && <span className="text-danger">{errors.name}</span>}
+
+          <TextField
+            type="email"
+            name="email"
+            value={formData.email}
+            onChange={handleInputChange}
+            fullWidth
+            label="User Email"
+          />
+          {errors.email && <span className="text-danger">{errors.email}</span>}
+
+          <TextField
+            type="password"
+            name="password"
+            value={formData.password}
+            onChange={handleInputChange}
+            fullWidth
+            label="Password"
+          />
+          {errors.password && <span className="text-danger">{errors.password}</span>}
+
           <RoleDropdown
             roles={roles}
             roleId={formData.roleId}
@@ -142,6 +136,7 @@ const Signup = () => {
             handleCourseChange={handleCourseChange}
             errors={errors}
           />
+
           <Button type="submit" fullWidth variant="contained" color="success">
             Sign up
           </Button>
