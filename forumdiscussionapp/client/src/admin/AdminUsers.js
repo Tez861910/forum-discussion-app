@@ -19,7 +19,6 @@ function AdminUsers() {
     UserName: '',
     UserEmail: '',
     RoleID: '',
-    CourseID: '',
     UserPassword: '',
   });
   const [roles, setRoles] = useState([]);
@@ -29,7 +28,6 @@ function AdminUsers() {
     UserName: '',
     UserEmail: '',
     RoleID: '',
-    CourseID: '',
     UserPassword: '',
   });
   const [deleteConfirmation, setDeleteConfirmation] = useState({ open: false, userId: null });
@@ -71,8 +69,8 @@ function AdminUsers() {
   };
 
   const handleCreateUser = () => {
-    if (!newUser.UserName || !newUser.UserEmail || newUser.RoleID === '' || newUser.CourseID === '') {
-      console.error('Name, email, roleId, and courseId are required.');
+    if (!newUser.UserName || !newUser.UserEmail || newUser.RoleID === '') {
+      console.error('Name, email, and roleId are required.');
       return;
     }
 
@@ -82,7 +80,6 @@ function AdminUsers() {
         email: newUser.UserEmail,
         password: newUser.UserPassword,
         roleId: newUser.RoleID,
-        courseId: newUser.CourseID,
       })
       .then((response) => {
         const createdUser = response.data;
@@ -92,7 +89,6 @@ function AdminUsers() {
           UserEmail: '',
           UserPassword: '',
           RoleID: '',
-          CourseID: '',
         });
         console.log('User created successfully');
       })
@@ -222,24 +218,6 @@ function AdminUsers() {
               {roles.map((role) => (
                 <MenuItem key={role.roleId} value={role.roleId}>
                   {role.roleName}
-                </MenuItem>
-              ))}
-            </Select>
-          </div>
-          <div className="form-field">
-            <label htmlFor="course">Course</label>
-            <Select
-              label="Course"
-              id="course"
-              value={newUser.CourseID}
-              onChange={(e) => setNewUser({ ...newUser, CourseID: e.target.value })}
-            >
-              <MenuItem value="">
-                <em>Choose Course</em>
-              </MenuItem>
-              {courses.map((course) => (
-                <MenuItem key={course.CourseID} value={course.CourseID}>
-                  {course.CourseName}
                 </MenuItem>
               ))}
             </Select>

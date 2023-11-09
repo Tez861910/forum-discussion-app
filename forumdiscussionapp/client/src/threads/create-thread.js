@@ -1,7 +1,15 @@
 import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import axios from 'axios';
-import { Typography, TextField, Button, Dialog, DialogTitle, DialogContent, DialogActions } from '@mui/material';
+import {
+  Typography,
+  TextField,
+  Button,
+  Dialog,
+  DialogTitle,
+  DialogContent,
+  DialogActions,
+} from '@mui/material';
 import './create-thread.css';
 
 function CreateThread() {
@@ -13,8 +21,9 @@ function CreateThread() {
   const [courseId, setCourseId] = useState(null);
   const [userId, setUserId] = useState(null);
   const [error, setError] = useState(null);
+  const [courseIds, setCourseIds] = useState([]);
 
-  const [editThreadId, setEditThreadId] = useState(null); 
+  const [editThreadId, setEditThreadId] = useState(null);
   const [confirmationDialogOpen, setConfirmationDialogOpen] = useState(false);
   const [confirmationDialogMessage, setConfirmationDialogMessage] = useState('');
   const [deletionThreadID, setDeletionThreadID] = useState(null);
@@ -25,31 +34,49 @@ function CreateThread() {
       console.error('User ID not found in local storage');
       return;
     }
-
+  
     const userIdNumber = parseInt(storedUserId, 10);
     setUserId(userIdNumber);
-
-    const storedCourseId = localStorage.getItem('courseId');
-    if (!storedCourseId) {
-      console.error('Course ID not found in local storage');
-      return;
-    }
-
-    const courseIdNumber = parseInt(storedCourseId, 10);
-    setCourseId(courseIdNumber);
-
-    fetchThreads(courseIdNumber);
-  }, []);
-
-  const fetchThreads = async (courseId) => {
+  
+    let storedCourseIds;
     try {
-      const response = await axios.get(`http://localhost:8081/threads/threads/get/${courseId}`);
+      const storedCourseIdsString = localStorage.getItem('courseIds') || '[]';
+      storedCourseIds = JSON.parse(storedCourseIdsString);
+  
+      if (!Array.isArray(storedCourseIds)) {
+        throw new Error('Course IDs not an array');
+      }
+    } catch (error) {
+      console.error('Error parsing or retrieving course IDs from local storage:', error.message);
+      storedCourseIds = [];
+    }
+  
+    console.log('Stored Course IDs:', storedCourseIds);
+    setCourseIds(storedCourseIds);
+  
+    const courseIdNumber = storedCourseIds.length > 0 ? storedCourseIds[0] : null;
+    setCourseId(courseIdNumber);
+  
+    console.log('Fetching threads for courseIds:', storedCourseIds);
+    fetchThreads(storedCourseIds);
+  }, []);
+  
+  
+
+  const fetchThreads = async (courseIds) => {
+    try {
+      if (courseIds.length === 0) {
+        console.error('No course IDs available for fetching threads.');
+        return;
+      }
+  
+      const response = await axios.get(`http://localhost:8081/threads/threads/get/${courseIds.join(',')}`);
       setThreads(response.data[0]);
     } catch (error) {
       setError('Error fetching threads. Please try again.');
     }
   };
-
+  
   const handleInputChange = (e) => {
     const { name, value } = e.target;
     setNewThread({ ...newThread, [name]: value });
@@ -60,19 +87,20 @@ function CreateThread() {
       await axios.post('http://localhost:8081/threads/threads/create', {
         title: newThread.title,
         content: newThread.content,
-        courseId: courseId,
+        courseIds: [courseId], 
         userId: userId,
       });
-
-      await fetchThreads(courseId);
+  
+      await fetchThreads(courseIds);
       setNewThread({
-        title: 'New Thread Title', 
-        content: 'New Thread Content', 
+        title: 'New Thread Title',
+        content: 'New Thread Content',
       });
     } catch (error) {
       setError('Error creating thread. Please try again.');
     }
   };
+  
 
   const toggleEdit = (threadId) => {
     setEditThreadId(threadId);
@@ -85,28 +113,29 @@ function CreateThread() {
   const cancelThread = () => {
     setEditThreadId(null);
     setNewThread({
-      title: 'New Thread Title', // Reset to default value
-      content: 'New Thread Content', // Reset to default value
+      title: 'New Thread Title',
+      content: 'New Thread Content',
     });
   };
 
   const updateThread = async (threadId) => {
     const threadToUpdate = threads.find((thread) => thread.ThreadID === threadId);
-
+  
     try {
       await axios.put(`http://localhost:8081/threads/threads/update/${threadId}`, {
         title: threadToUpdate.ThreadTitle,
         content: threadToUpdate.ThreadContent,
-        courseId: courseId,
+        courseIds: [courseId], 
         userId: userId,
       });
-
-      await fetchThreads(courseId);
+  
+      await fetchThreads(courseIds);
       setEditThreadId(null);
     } catch (error) {
       setError('Error updating thread. Please try again.');
     }
   };
+  
 
   const confirmDelete = (threadId) => {
     setDeletionThreadID(threadId);
@@ -117,7 +146,7 @@ function CreateThread() {
   const handleDeleteClick = async () => {
     try {
       await axios.delete(`http://localhost:8081/threads/threads/delete/${deletionThreadID}`);
-      await fetchThreads(courseId);
+      await fetchThreads(courseIds);
       setConfirmationDialogOpen(false);
     } catch (error) {
       setError('Error deleting thread. Please try again.');

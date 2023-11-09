@@ -11,7 +11,7 @@ const { handleThreadsUpdateId } = require('../thread-routes/handle-threads-updat
 const { handleThreadsDeleteId } = require('../thread-routes/handle-threads-delete-id');
 
 // Endpoint to get threads for a specific course
-router.get('/threads/get/:courseId', async (req, res) =>handleThreadsGetCourseId(req, res));
+router.get('/threads/get/:courseIds', async (req, res) =>handleThreadsGetCourseId(req, res));
 // Endpoint to get all threads
 router.get('/threads/get/all', async (req, res) =>handleThreadsGetAll(req, res));  
 // Create a new thread

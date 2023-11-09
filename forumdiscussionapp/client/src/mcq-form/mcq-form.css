@@ -1,38 +1,36 @@
+/* mcqFormStyles.css */
+
 .mcq-form-container {
-  text-align: center;
-  margin: 20px;
+  max-width: 600px;
+  margin: auto;
+  padding: 20px;
 }
 
-.mcq-form-container h3 {
-  font-size: 24px;
+.heading {
+  font-size: 1.5rem;
+  margin-bottom: 20px;
 }
 
-.mcq-form-container label {
-  display: block;
-  margin-top: 10px;
-}
-
-.mcq-form-container input[type="text"],
-.mcq-form-container input[type="number"] {
-  width: 100%;
-  padding: 10px;
-  margin-top: 5px;
-}
-
-.mcq-form-container ol {
-  list-style-type: decimal;
-  padding-left: 20px;
-}
-
-.mcq-form-container li {
+.sub-heading {
+  font-size: 1.2rem;
+  margin-top: 20px;
   margin-bottom: 10px;
 }
 
-.mcq-form-container button {
-  background-color: #007bff;
-  color: #fff;
-  border: none;
-  padding: 10px 20px;
-  margin-top: 10px;
-  cursor: pointer;
+.input {
+  margin-bottom: 10px;
+}
+
+.list-item {
+  padding-left: 0;
+}
+
+.button-container {
+  margin-top: 20px;
+  display: flex;
+  justify-content: space-between;
+}
+
+.button {
+  width: 30%;
 }

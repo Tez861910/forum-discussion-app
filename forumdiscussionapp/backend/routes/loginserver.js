@@ -12,8 +12,14 @@ router.post('/login', async (req, res) => {
       return res.status(400).json({ error: 'Email and password are required' });
     }
 
-    const sql = 'SELECT * FROM users WHERE UserEmail = ?';
+    const sql = `
+      SELECT users.*
+      FROM users
+      WHERE users.UserEmail = ?
+    `;
+
     const queryResult = await query(sql, [email]);
+    console.log('Query Result:', queryResult);
 
     if (!Array.isArray(queryResult) || queryResult.length === 0) {
       console.log('No user found with this email: ' + email);
@@ -21,6 +27,8 @@ router.post('/login', async (req, res) => {
     }
 
     const userData = queryResult[0];
+
+    console.log('User Data:', userData);
 
     if (!userData || !userData.UserPassword) {
       console.log('User data is incomplete.');
@@ -37,7 +45,7 @@ router.post('/login', async (req, res) => {
     }
 
     const token = createToken(userData.UserID, userData.UserEmail, userData.RoleID);
-    
+
     console.log('Login successful for email: ' + email);
 
     res.json({

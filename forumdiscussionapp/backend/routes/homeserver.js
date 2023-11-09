@@ -1,11 +1,11 @@
 const express = require('express');
 const router = express.Router();
 const { query } = require('../db');
-const { accessToken,verifyJwt } = require('../authvalid'); 
+const { accessToken, verifyJwt } = require('../authvalid');
 
 router.post('/enroll-courses', verifyJwt, async (req, res) => {
   const { courses } = req.body;
-  const userId = req.userId; 
+  const userId = req.userId;
 
   if (!courses || !Array.isArray(courses) || courses.length === 0) {
     return res.status(400).json({ error: 'Invalid input data' });
@@ -28,18 +28,9 @@ router.post('/enroll-courses', verifyJwt, async (req, res) => {
   }
 });
 
-router.post('/refresh-token', async (req, res) => {
-  const refreshToken = req.body.refreshToken;
-  const accessToken = req.user.accessToken; 
-
+router.post('/refresh-token', verifyJwt, async (req, res) => {
   try {
-    const payload = verifyToken(refreshToken, 'refresh'); 
-
-    if (payload.accessToken !== accessToken) {
-      return res.status(401).json({ error: 'Invalid refresh token' });
-    }
-
-    const newAccessToken = createToken(payload, 'access'); 
+    const newAccessToken = accessToken(req.user); 
 
     res.json({ success: true, accessToken: newAccessToken });
   } catch (error) {
@@ -47,6 +38,5 @@ router.post('/refresh-token', async (req, res) => {
     res.status(401).json({ error: 'Token refresh failed' });
   }
 });
-
 
 module.exports = router;

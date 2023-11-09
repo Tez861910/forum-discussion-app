@@ -13,9 +13,31 @@ export function Home() {
   const navigate = useNavigate();
   const [isEnrollmentModalOpen, setEnrollmentModalOpen] = useState(false);
   const [coursesEnrolled, setCoursesEnrolled] = useState(false);
-  const [courses, setCourses] = useState([]); // Store the courses
+  const [courseIds, setCourseIds] = useState([]);
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
+
+  useEffect(() => {
+    // Retrieve roleId and userId from local storage
+    const storedRoleId = localStorage.getItem('roleId');
+
+    if (storedRoleId) {
+      setRoleId(storedRoleId);
+    }
+
+    // Check if the user is logged in
+    const token = cookies.token;
+
+    // If the user is logged in, handle token refresh
+    if (isLoggedIn && token) {
+      handleTokenRefresh();
+    }
+  }, [cookies.token, isLoggedIn]);
 
   const handleLogout = () => {
+    // Trigger token refresh during logout
+    handleTokenRefresh();
+
+    // Clear user data
     clearUserData();
   };
 
@@ -23,21 +45,49 @@ export function Home() {
     setCookie('token', '', { path: '/', expires: new Date(0) });
     localStorage.removeItem('userId');
     localStorage.removeItem('roleId');
-    localStorage.removeItem('courseId');
+    setIsLoggedIn(false);
     navigate('/');
   };
 
   const handleTokenRefresh = async () => {
     try {
-      const response = await axios.post('http://localhost:8081/home/refresh-token');
+      const response = await axios.post(
+        'http://localhost:8081/home/refresh-token',
+        {},
+        {
+          headers: {
+            Authorization: `Bearer ${cookies.token}`,
+          },
+        }
+      );
 
       if (response.data.success) {
         const newAccessToken = response.data.accessToken;
         setCookie('token', newAccessToken, { path: '/' });
-        setCourses(response.data.courses); // Store the courses in the state
-        // Check if there are available courses, then open the enrollment modal
-        if (courses && courses.length > 0) {
-          setEnrollmentModalOpen(true);
+
+        const storedRoleId = localStorage.getItem('roleId');
+
+        setRoleId(storedRoleId);
+
+        if (storedRoleId) {
+          if (storedRoleId === '1') {
+            // Render UserProfile directly for admin
+            setCoursesEnrolled(true);
+          } else if (storedRoleId === '2') {
+            // Teachers don't need to enroll, so set coursesEnrolled to true
+            setCoursesEnrolled(true);
+          } else if (storedRoleId === '3') {
+            // Students
+            if (!courseIds || courseIds.length === 0) {
+              // If the user doesn't have courseIds, open the enrollment modal
+              setEnrollmentModalOpen(true);
+            } else {
+              // Render UserProfile for students with available courses
+              setCoursesEnrolled(true);
+            }
+          }
+        } else {
+          console.log('User does not have a role.');
         }
       } else {
         clearUserData();
@@ -48,21 +98,8 @@ export function Home() {
     }
   };
 
-  useEffect(() => {
-    const storedRoleId = localStorage.getItem('roleId');
-    setRoleId(storedRoleId);
-
-    if (!cookies.token) {
-      handleTokenRefresh();
-    } else {
-      if (roleId && (roleId === '2' || roleId === '3')) {
-        setEnrollmentModalOpen(true);
-      }
-    }
-  }, [cookies.token, roleId]);
-
   const handleEnrollmentSuccess = (selectedCourses) => {
-    localStorage.setItem('courseId', JSON.stringify(selectedCourses));
+    localStorage.setItem('courseIds', JSON.stringify(selectedCourses));
     setCoursesEnrolled(true);
     setEnrollmentModalOpen(false);
   };
@@ -101,12 +138,28 @@ export function Home() {
     }
   };
 
+  const renderContent = () => {
+    return (
+      <div>
+        <Typography variant="h4" className="heading">
+          Welcome, {roleId === '1' ? 'Admin' : 'User'}
+        </Typography>
+        {roleId !== '1' && roleId !== '2' && (
+          <Button onClick={() => setEnrollmentModalOpen(true)} variant="contained" color="primary" className="enroll-button">
+            Enroll Now
+          </Button>
+        )}
+        <UserProfile />
+      </div>
+    );
+  };
+
   return (
     <Container maxWidth="sm" className="container">
       <Typography variant="h2" className="heading">
         Home Panel
       </Typography>
-      {coursesEnrolled && <UserProfile />}
+      {renderContent()}
       <div className="button-container">{renderButtonsByRoleId()}</div>
       <Button onClick={handleLogout} variant="contained" color="error" className="logout-button">
         Logout
@@ -116,7 +169,7 @@ export function Home() {
         isOpen={isEnrollmentModalOpen}
         onRequestClose={() => setEnrollmentModalOpen(false)}
         onEnrollSuccess={handleEnrollmentSuccess}
-        courses={courses} // Pass the courses to the modal
+        courses={courseIds} 
       />
     </Container>
   );

@@ -20,6 +20,7 @@ const Login = () => {
     setCookie('token', data.token, { path: '/' });
     localStorage.setItem('userId', data.userId);
     localStorage.setItem('roleId', data.roleId);
+
     navigate('/home');
   };
 

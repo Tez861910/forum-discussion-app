@@ -30,6 +30,9 @@ function AdminCourses() {
   const [editingCourseId, setEditingCourseId] = useState(null);
   const [updatedCourseName, setUpdatedCourseName] = useState('');
   const [deleteConfirmation, setDeleteConfirmation] = useState({ open: false, courseId: null });
+  const [selectedCourseId, setSelectedCourseId] = useState(null);
+  const [courseEnrollments, setCourseEnrollments] = useState([]);
+  const [newUserName, setNewUserName] = useState('');
 
   useEffect(() => {
     fetchCourses();
@@ -49,6 +52,27 @@ function AdminCourses() {
       }
     } catch (error) {
       console.error('Error fetching courses:', error);
+    }
+  };
+
+  useEffect(() => {
+    if (selectedCourseId !== null) {
+      fetchCourseEnrollments(selectedCourseId);
+    }
+  }, [selectedCourseId]);
+
+  const fetchCourseEnrollments = async (courseId) => {
+    try {
+      const response = await axios.get(`http://localhost:8081/courses/courses/enrollments/${courseId}`);
+      console.log('API Response (Course Enrollments):', response.data);
+
+      if (Array.isArray(response.data.enrollments)) {
+        setCourseEnrollments(response.data.enrollments);
+      } else {
+        console.error('Invalid response data format for course enrollments:', response.data);
+      }
+    } catch (error) {
+      console.error('Error fetching course enrollments:', error);
     }
   };
 
@@ -102,6 +126,27 @@ function AdminCourses() {
     setDeleteConfirmation({ open: false, courseId: null });
   };
 
+  const handleAddUserToCourse = async () => {
+    try {
+      const response = await axios.post(`http://localhost:8081/courses/courses/${selectedCourseId}/enroll`, { userName: newUserName });
+      console.log('Enroll User Response:', response.data);
+      setNewUserName('');
+      fetchCourseEnrollments(selectedCourseId);
+    } catch (error) {
+      console.error('Error enrolling user to course:', error);
+    }
+  };
+
+  const handleRemoveUserFromCourse = async (enrollmentId) => {
+    try {
+      const response = await axios.delete(`http://localhost:8081/courses/courses/${selectedCourseId}/enrollments/${enrollmentId}`);
+      console.log('Remove User Response:', response.data);
+      fetchCourseEnrollments(selectedCourseId);
+    } catch (error) {
+      console.error('Error removing user from course:', error);
+    }
+  };
+
   return (
     <div className="admin-courses-container">
       <Typography variant="h4">Manage Courses</Typography>
@@ -122,7 +167,7 @@ function AdminCourses() {
       <List>
         {courses.length > 0 ? (
           courses.map((course) => (
-            <ListItem key={course.CourseID} divider>
+            <ListItem key={course.CourseID} divider onClick={() => setSelectedCourseId(course.CourseID)}>
               {editingCourseId === course.CourseID ? (
                 <>
                   <TextField
@@ -151,6 +196,41 @@ function AdminCourses() {
                       <DeleteIcon />
                     </IconButton>
                   </ListItemSecondaryAction>
+                </>
+              )}
+              {selectedCourseId === course.CourseID && (
+                <>
+                  {courseEnrollments ? (
+                    <List>
+                      {courseEnrollments.map((enrollment) => (
+                        <ListItem key={enrollment.EnrollmentID}>
+                          <ListItemText primary={enrollment.UserName} />
+                          <ListItemSecondaryAction>
+                            <IconButton
+                              edge="end"
+                              aria-label="delete"
+                              onClick={() => handleRemoveUserFromCourse(enrollment.EnrollmentID)}
+                            >
+                              <DeleteIcon />
+                            </IconButton>
+                          </ListItemSecondaryAction>
+                        </ListItem>
+                      ))}
+                      <ListItem>
+                        <TextField
+                          type="text"
+                          label="User Name"
+                          variant="outlined"
+                          fullWidth
+                          value={newUserName}
+                          onChange={(e) => setNewUserName(e.target.value)}
+                        />
+                        <Button variant="contained" color="primary" onClick={handleAddUserToCourse}>
+                          Enroll User
+                        </Button>
+                      </ListItem>
+                    </List>
+                  ) : null}
                 </>
               )}
             </ListItem>

@@ -4,16 +4,40 @@ import axios from 'axios';
 
 Modal.setAppElement('#root');
 
-const CourseEnrollmentModal = ({ isOpen, onRequestClose, onEnrollSuccess, courses }) => {
+const CourseEnrollmentModal = ({ isOpen, onRequestClose, onEnrollSuccess }) => {
   const [selectedCourses, setSelectedCourses] = useState([]);
+  const [courses, setCourses] = useState([]);
+
+  useEffect(() => {
+    const fetchCourses = async () => {
+      try {
+        const response = await axios.get('http://localhost:8081/courses/courses/get');
+
+        if (response.status === 200) {
+          setCourses(response.data.courses);
+        } else {
+          console.error('Failed to fetch courses:', response.status);
+        }
+      } catch (error) {
+        console.error('Error fetching courses:', error);
+      }
+    };
+
+    if (isOpen) {
+      fetchCourses();
+    }
+  }, [isOpen]);
 
   const handleEnroll = async () => {
     try {
-      // Send a POST request to the backend to enroll the user in selected courses
-      const response = await axios.post('http://localhost:8081/homes/enroll-courses', {
-        courses: selectedCourses,
-      });
-
+      const response = await axios.post(
+        'http://localhost:8081/home/enroll-courses',
+        {
+          userId: localStorage.getItem('userId'),
+          courses: selectedCourses,
+        }
+      );
+  
       if (response.status === 200) {
         onEnrollSuccess(selectedCourses);
       } else {
@@ -52,6 +76,7 @@ const CourseEnrollmentModal = ({ isOpen, onRequestClose, onEnrollSuccess, course
         ))}
       </div>
       <button onClick={handleEnroll}>Enroll</button>
+      <button onClick={onRequestClose}>Cancel</button>
     </Modal>
   );
 };

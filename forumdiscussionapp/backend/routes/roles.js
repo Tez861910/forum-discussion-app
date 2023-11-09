@@ -15,8 +15,14 @@ const { handleRolesDeleteId } = require('../role-routes/handle-roles-delete-id')
 // Create a new role
 router.post('/roles/create', async (req, res) => handleRolesCreate(req, res));
 
+//Get course enrollments
+//router.get('/courses/enrollments/:courseId', async (req, res) =>
+
 // Get all roles
 router.get('/roles/get', async (req, res) =>handleRolesGet(req, res));
+
+// Enroll user in a course
+//router.post('/courses/:courseId/enroll', async (req, res) =>
 
 // Get a role by ID
 router.get('/roles/get/:id', async (req, res) => handleRolesGetId(req, res));
@@ -26,5 +32,8 @@ router.put('/roles/update/:id', async (req, res) => handleRolesUpdateId(req, res
 
 // Delete a role
 router.delete('/roles/delete/:id', async (req, res) =>handleRolesDeleteId(req, res));
+
+// Remove user from a course
+//router.delete('/courses/:courseId/enrollments/:enrollmentId', async (req, res) =>
 
 module.exports = router;
