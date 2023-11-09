@@ -1,8 +1,6 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import axios from 'axios';
 import RoleDropdown from './role-dropdown';
-import CourseDropdown from './course-dropdown';
-import SignUpValidation from './sign-up-validation';
 import { Link, useNavigate } from 'react-router-dom';
 import { Container, TextField, Typography, Button } from '@mui/material';
 import './sign-up.css';
@@ -12,43 +10,24 @@ const Signup = () => {
     name: '',
     email: '',
     password: '',
-    courseId: '',
     roleId: '',
   });
 
   const navigate = useNavigate();
   const [errors, setErrors] = useState({});
-  const [successMessage, setSuccessMessage] = useState('');
+  const [successMessage, setSuccessMessage] = useState([]);
   const [roles, setRoles] = useState([]);
-  const [courses, setCourses] = useState([]);
 
   const handleInputChange = useCallback((event) => {
     const { name, value } = event.target;
     setFormData((prevFormData) => ({ ...prevFormData, [name]: value }));
   }, []);
 
-  const handleRoleChange = useCallback((event) => {
-    const roleId = Number(event.target.value);
-    setFormData((prevFormData) => ({ ...prevFormData, roleId }));
-  }, []);
-
-  const handleCourseChange = useCallback((event) => {
-    const courseId = Number(event.target.value);
-    setFormData((prevFormData) => ({ ...prevFormData, courseId }));
-  }, []);
-
   const fetchData = useCallback(async () => {
     try {
-      const [rolesResponse, coursesResponse] = await Promise.all([
-        axios.get('http://localhost:8081/roles/roles/get'),
-        axios.get('http://localhost:8081/courses/courses/get')
-      ]);
-
+      const rolesResponse = await axios.get('http://localhost:8081/roles/roles/get');
       const rolesData = rolesResponse.data.roles;
       setRoles(rolesData);
-
-      const coursesData = coursesResponse.data.courses;
-      setCourses(coursesData);
     } catch (error) {
       console.error('Error fetching data:', error);
     }
@@ -60,7 +39,19 @@ const Signup = () => {
 
   const handleSubmit = useCallback(async (event) => {
     event.preventDefault();
-    const validationErrors = SignUpValidation(formData);
+    const validationErrors = {};
+    if (!formData.name) {
+      validationErrors.name = 'Name is required';
+    }
+    if (!formData.email) {
+      validationErrors.email = 'Email is required';
+    }
+    if (!formData.password) {
+      validationErrors.password = 'Password is required';
+    }
+    if (!formData.roleId) {
+      validationErrors.roleId = 'Role is required';
+    }
     setErrors(validationErrors);
 
     if (Object.keys(validationErrors).length === 0) {
@@ -69,13 +60,12 @@ const Signup = () => {
 
         if (response.status === 200) {
           console.log('Signup successful');
-          setSuccessMessage('Signup successful');
+          setSuccessMessage(['Signup successful']);
           navigate('/');
           setFormData({
             name: '',
             email: '',
             password: '',
-            courseId: '',
             roleId: '',
           });
         } else {
@@ -124,23 +114,16 @@ const Signup = () => {
           />
           {errors.password && <span className="text-danger">{errors.password}</span>}
 
-          <RoleDropdown
-            roles={roles}
-            roleId={formData.roleId}
-            handleRoleChange={handleRoleChange}
-            errors={errors}
-          />
-          <CourseDropdown
-            courses={courses}
-            courseId={formData.courseId}
-            handleCourseChange={handleCourseChange}
-            errors={errors}
-          />
+          <RoleDropdown roles={roles} roleId={formData.roleId} handleRoleChange={handleInputChange} errors={errors} />
 
           <Button type="submit" fullWidth variant="contained" color="success">
             Sign up
           </Button>
-          {successMessage && <Typography variant="body2" className="success-message">{successMessage}</Typography>}
+          {successMessage.map((message, index) => (
+            <Typography key={index} variant="body2" className="success-message">
+              {message}
+            </Typography>
+          ))}
           <Typography variant="body2">You agree to our terms and conditions</Typography>
           <Link to="/" variant="body2" className="btn btn-default w-100">
             Login

@@ -20,9 +20,9 @@ async function verifyPassword(password, hashedPassword) {
   return isPasswordValid;
 }
 
-function createToken(userId, email, roleId, courseId) {
+function createToken(userId, email, roleId) {
   const token = jwt.sign(
-    { userId, email, roleId, courseId },
+    { userId, email, roleId },
     JWT_SECRET,
     { expiresIn: '1h' }
   );
@@ -54,7 +54,6 @@ function verifyJwt(req, res, next) {
     console.log('Decoded token:', decoded);
 
     req.roleId = decoded.roleId;
-    req.courseId = decoded.courseId;
     req.userId = decoded.userId;
     next();
   });

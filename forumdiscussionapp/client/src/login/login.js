@@ -9,7 +9,6 @@ const Login = () => {
   const [values, setValues] = useState({ email: '', password: '' });
   const [error, setError] = useState('');
   const navigate = useNavigate();
-  // eslint-disable-next-line no-unused-vars
   const [cookies, setCookie] = useCookies();
 
   const handleInput = (event) => {
@@ -21,14 +20,16 @@ const Login = () => {
     setCookie('token', data.token, { path: '/' });
     localStorage.setItem('userId', data.userId);
     localStorage.setItem('roleId', data.roleId);
-    localStorage.setItem('courseId', data.courseId);
     navigate('/home');
   };
 
   const handleSubmit = async (event) => {
     event.preventDefault();
     try {
-      const response = await axios.post('http://localhost:8081/Login/login', values);
+      const response = await axios.post('http://localhost:8081/Login/login', {
+        email: values.email,
+        password: values.password,
+      });
       if (response.data.success) {
         handleLoginSuccess(response.data);
       } else {

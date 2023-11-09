@@ -4,15 +4,18 @@ import { Container, Typography, Button } from '@mui/material';
 import UserProfile from '../user-profile/user-profile';
 import { useCookies } from 'react-cookie';
 import axios from 'axios';
+import CourseEnrollmentModal from './course-enrollment-modal';
 import './home.css';
 
 export function Home() {
   const [roleId, setRoleId] = useState('');
   const [cookies, setCookie] = useCookies();
   const navigate = useNavigate();
+  const [isEnrollmentModalOpen, setEnrollmentModalOpen] = useState(false);
+  const [coursesEnrolled, setCoursesEnrolled] = useState(false);
+  const [courses, setCourses] = useState([]); // Store the courses
 
   const handleLogout = () => {
-    // Clear user data and log out
     clearUserData();
   };
 
@@ -26,11 +29,16 @@ export function Home() {
 
   const handleTokenRefresh = async () => {
     try {
-      const response = await axios.post('http://localhost:8081/Login/refresh-token');
+      const response = await axios.post('http://localhost:8081/home/refresh-token');
 
       if (response.data.success) {
         const newAccessToken = response.data.accessToken;
         setCookie('token', newAccessToken, { path: '/' });
+        setCourses(response.data.courses); // Store the courses in the state
+        // Check if there are available courses, then open the enrollment modal
+        if (courses && courses.length > 0) {
+          setEnrollmentModalOpen(true);
+        }
       } else {
         clearUserData();
       }
@@ -46,8 +54,18 @@ export function Home() {
 
     if (!cookies.token) {
       handleTokenRefresh();
+    } else {
+      if (roleId && (roleId === '2' || roleId === '3')) {
+        setEnrollmentModalOpen(true);
+      }
     }
-  }, [cookies.token]);
+  }, [cookies.token, roleId]);
+
+  const handleEnrollmentSuccess = (selectedCourses) => {
+    localStorage.setItem('courseId', JSON.stringify(selectedCourses));
+    setCoursesEnrolled(true);
+    setEnrollmentModalOpen(false);
+  };
 
   const renderButtonsByRoleId = () => {
     switch (roleId) {
@@ -77,8 +95,7 @@ export function Home() {
             <Link to="/home/mcqanswerform" className="btn btn-primary my-3">
               Answer MCQ Question
             </Link>
-          </>
-        );
+          </>);
       default:
         return null;
     }
@@ -86,14 +103,21 @@ export function Home() {
 
   return (
     <Container maxWidth="sm" className="container">
-      <Typography variant="h2" className="heading">Home Panel</Typography>
-      <UserProfile />
-      <div className="button-container">
-        {renderButtonsByRoleId()}
-      </div>
+      <Typography variant="h2" className="heading">
+        Home Panel
+      </Typography>
+      {coursesEnrolled && <UserProfile />}
+      <div className="button-container">{renderButtonsByRoleId()}</div>
       <Button onClick={handleLogout} variant="contained" color="error" className="logout-button">
         Logout
       </Button>
+
+      <CourseEnrollmentModal
+        isOpen={isEnrollmentModalOpen}
+        onRequestClose={() => setEnrollmentModalOpen(false)}
+        onEnrollSuccess={handleEnrollmentSuccess}
+        courses={courses} // Pass the courses to the modal
+      />
     </Container>
   );
 }
