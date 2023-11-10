@@ -1,13 +1,13 @@
 import React, { useState, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import { Container, Typography, Button } from '@mui/material';
-import UserProfile from '../user-profile/user-profile';
+import { Container, Typography, Grid } from '@mui/material';
+import Sidebar from './side-bar';
+import Navbar from './nav-bar';
 import { useCookies } from 'react-cookie';
 import axios from 'axios';
-import CourseEnrollmentModal from './course-enrollment-modal';
 import './home.css';
 
-export function Home() {
+const Home = () => {
   const [roleId, setRoleId] = useState('');
   const [cookies, setCookie] = useCookies();
   const navigate = useNavigate();
@@ -17,27 +17,20 @@ export function Home() {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
 
   useEffect(() => {
-    // Retrieve roleId and userId from local storage
     const storedRoleId = localStorage.getItem('roleId');
-
     if (storedRoleId) {
       setRoleId(storedRoleId);
     }
 
-    // Check if the user is logged in
     const token = cookies.token;
 
-    // If the user is logged in, handle token refresh
     if (isLoggedIn && token) {
       handleTokenRefresh();
     }
   }, [cookies.token, isLoggedIn]);
 
   const handleLogout = () => {
-    // Trigger token refresh during logout
     handleTokenRefresh();
-
-    // Clear user data
     clearUserData();
   };
 
@@ -61,41 +54,47 @@ export function Home() {
         }
       );
 
-      if (response.data.success) {
-        const newAccessToken = response.data.accessToken;
-        setCookie('token', newAccessToken, { path: '/' });
-
-        const storedRoleId = localStorage.getItem('roleId');
-
-        setRoleId(storedRoleId);
-
-        if (storedRoleId) {
-          if (storedRoleId === '1') {
-            // Render UserProfile directly for admin
-            setCoursesEnrolled(true);
-          } else if (storedRoleId === '2') {
-            // Teachers don't need to enroll, so set coursesEnrolled to true
-            setCoursesEnrolled(true);
-          } else if (storedRoleId === '3') {
-            // Students
-            if (!courseIds || courseIds.length === 0) {
-              // If the user doesn't have courseIds, open the enrollment modal
-              setEnrollmentModalOpen(true);
-            } else {
-              // Render UserProfile for students with available courses
-              setCoursesEnrolled(true);
-            }
-          }
-        } else {
-          console.log('User does not have a role.');
-        }
-      } else {
-        clearUserData();
-      }
+      response.data.success
+        ? handleTokenRefreshSuccess(response.data)
+        : handleTokenRefreshFailure();
     } catch (error) {
       console.error('Token refresh failed:', error);
-      clearUserData();
+      handleTokenRefreshFailure();
     }
+  };
+
+  const handleTokenRefreshSuccess = (data) => {
+    const newAccessToken = data.accessToken;
+    setCookie('token', newAccessToken, { path: '/' });
+
+    const storedRoleId = localStorage.getItem('roleId');
+    setRoleId(storedRoleId);
+
+    storedRoleId && handleRoleSpecificActions(storedRoleId);
+  };
+
+  const handleRoleSpecificActions = (roleId) => {
+    switch (roleId) {
+      case '1':
+      case '2':
+        setCoursesEnrolled(true);
+        break;
+      case '3':
+        handleStudentActions();
+        break;
+      default:
+        break;
+    }
+  };
+
+  const handleStudentActions = () => {
+    (!courseIds || courseIds.length === 0)
+      ? setEnrollmentModalOpen(true)
+      : setCoursesEnrolled(true);
+  };
+
+  const handleTokenRefreshFailure = () => {
+    clearUserData();
   };
 
   const handleEnrollmentSuccess = (selectedCourses) => {
@@ -104,7 +103,7 @@ export function Home() {
     setEnrollmentModalOpen(false);
   };
 
-  const renderButtonsByRoleId = () => {
+  const renderButtonsByRoleId = (roleId) => {
     switch (roleId) {
       case '1':
         return (
@@ -129,50 +128,51 @@ export function Home() {
             <Link to="/home/comment-section" className="btn btn-primary my-3">
               Comment Section
             </Link>
-            <Link to="/home/mcqanswerform" className="btn btn-primary my-3">
+            <Link to="/home/mcq-answer-form" className="btn btn-primary my-3">
               Answer MCQ Question
             </Link>
-          </>);
+          </>
+        );
       default:
         return null;
     }
   };
 
-  const renderContent = () => {
-    return (
-      <div>
-        <Typography variant="h4" className="heading">
-          Welcome, {roleId === '1' ? 'Admin' : 'User'}
-        </Typography>
-        {roleId !== '1' && roleId !== '2' && (
-          <Button onClick={() => setEnrollmentModalOpen(true)} variant="contained" color="primary" className="enroll-button">
-            Enroll Now
-          </Button>
-        )}
-        <UserProfile />
-      </div>
-    );
-  };
+  const renderContent = () => (
+    <Grid container className="content-container" spacing={3}>
+      <Grid item xs={3}>
+        <Sidebar
+          isEnrollmentModalOpen={isEnrollmentModalOpen}
+          setEnrollmentModalOpen={setEnrollmentModalOpen}
+          handleEnrollmentSuccess={handleEnrollmentSuccess}
+          courseIds={courseIds}
+          handleLogout={handleLogout}
+          userRole={roleId}
+        />
+      </Grid>
+      <Grid item xs={9}>
+        <div className="main-content">
+          <Typography variant="h4" className="heading">
+            Welcome, {roleId === '1' ? 'Admin' : roleId === '2' ? 'Teacher' : 'Student'}
+          </Typography>
+          <div className="button-container">
+            <Navbar renderButtonsByRoleId={renderButtonsByRoleId} onButtonClick={(path) => navigate(path)} />
+          </div>
+        </div>
+      </Grid>
+    </Grid>
+  );
 
   return (
-    <Container maxWidth="sm" className="container">
-      <Typography variant="h2" className="heading">
-        Home Panel
-      </Typography>
-      {renderContent()}
-      <div className="button-container">{renderButtonsByRoleId()}</div>
-      <Button onClick={handleLogout} variant="contained" color="error" className="logout-button">
-        Logout
-      </Button>
-
-      <CourseEnrollmentModal
-        isOpen={isEnrollmentModalOpen}
-        onRequestClose={() => setEnrollmentModalOpen(false)}
-        onEnrollSuccess={handleEnrollmentSuccess}
-        courses={courseIds} 
-      />
-    </Container>
+    <>
+      <Container className="home-container">
+        <Typography variant="h2" className="heading" style={{ textAlign: 'center' }}>
+          Home Panel
+        </Typography>
+        {renderContent()}
+      </Container>
+    </>
   );
-}
+};
 
-export default Home;
+export { Home };

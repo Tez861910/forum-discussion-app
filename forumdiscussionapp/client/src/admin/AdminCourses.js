@@ -14,6 +14,7 @@ import {
   DialogContent,
   DialogActions,
   Slide,
+  CircularProgress,
 } from '@mui/material';
 import DeleteIcon from '@mui/icons-material/Delete';
 import EditIcon from '@mui/icons-material/Edit';
@@ -33,12 +34,15 @@ function AdminCourses() {
   const [selectedCourseId, setSelectedCourseId] = useState(null);
   const [courseEnrollments, setCourseEnrollments] = useState([]);
   const [newUserName, setNewUserName] = useState('');
+  const [error, setError] = useState(null);
+  const [loading, setLoading] = useState(false);
 
   useEffect(() => {
     fetchCourses();
   }, []);
 
   const fetchCourses = async () => {
+    setLoading(true);
     try {
       const response = await axios.get('http://localhost:8081/courses/courses/get');
       if (Array.isArray(response.data.courses)) {
@@ -48,47 +52,53 @@ function AdminCourses() {
         }));
         setCourses(transformedCourses);
       } else {
-        console.error('Invalid response data format:', response.data);
+        console.error('Invalid response data format (Courses):', response.data);
       }
     } catch (error) {
       console.error('Error fetching courses:', error);
+      setError('Error fetching courses. Please try again.');
+    } finally {
+      setLoading(false);
     }
   };
-
-  useEffect(() => {
-    if (selectedCourseId !== null) {
-      fetchCourseEnrollments(selectedCourseId);
-    }
-  }, [selectedCourseId]);
 
   const fetchCourseEnrollments = async (courseId) => {
     try {
       const response = await axios.get(`http://localhost:8081/courses/courses/enrollments/${courseId}`);
-      console.log('API Response (Course Enrollments):', response.data);
+      if (response.status === 404) {
+        console.error('No enrollments found for the course:', response.data.error);
+        setCourseEnrollments([]);
+        return;
+      }
   
-      if (response.data && response.data.enrollments) {
+      // Check if the response has the expected structure
+      if (response.data && typeof response.data.enrollments === 'object') {
         const enrollmentsData = response.data.enrollments;
+        
+        // Flatten the object into an array of enrollments
+        const enrollmentsArray = Object.values(enrollmentsData).flatMap((enrollments) =>
+  enrollments.map((username) => ({ UserName: username, UserID: enrollmentsData[username] }))
+);
+
   
-        if (typeof enrollmentsData === 'object') {
-          // Convert the object into an array
-          const enrollmentsArray = Object.keys(enrollmentsData).map((username) => ({
-            UserName: enrollmentsData[username],
-            // Include additional properties if needed
-          }));
-  
-          setCourseEnrollments(enrollmentsArray);
-        } else {
-          console.error('Invalid response data format for course enrollments:', response.data);
-        }
+        setCourseEnrollments(enrollmentsArray);
       } else {
-        console.error('No enrollments found for the course:', response.data);
+        console.error('Invalid response data format for course enrollments:', response.data);
       }
     } catch (error) {
       console.error('Error fetching course enrollments:', error);
+      setError('Error fetching course enrollments');
     }
   };
   
-  
+
+  useEffect(() => {
+    if (selectedCourseId !== null) {
+      console.log('Fetching course enrollments for course ID:', selectedCourseId);
+      fetchCourseEnrollments(selectedCourseId);
+    }
+  }, [selectedCourseId]);
+
   const handleCreateCourse = async () => {
     try {
       const response = await axios.post('http://localhost:8081/courses/courses/create', { courseName: newCourseName });
@@ -98,6 +108,7 @@ function AdminCourses() {
       fetchCourses();
     } catch (error) {
       console.error('Error creating course:', error);
+      setError('Error creating course. Please try again.');
     }
   };
 
@@ -113,6 +124,7 @@ function AdminCourses() {
       fetchCourses();
     } catch (error) {
       console.error('Error updating course:', error);
+      setError('Error updating course. Please try again.');
     }
   };
 
@@ -129,6 +141,7 @@ function AdminCourses() {
       })
       .catch((error) => {
         console.error('Error deleting course:', error);
+        setError('Error deleting course');
       })
       .finally(() => {
         setDeleteConfirmation({ open: false, courseId: null });
@@ -147,22 +160,40 @@ function AdminCourses() {
       fetchCourseEnrollments(selectedCourseId);
     } catch (error) {
       console.error('Error enrolling user to course:', error);
+      setError('Error enrolling user to course');
     }
   };
 
-  const handleRemoveUserFromCourse = async (enrollmentId) => {
+  const handleRemoveUserFromCourse = async (enrollment) => {
     try {
-      const response = await axios.delete(`http://localhost:8081/courses/courses/${selectedCourseId}/enrollments/${enrollmentId}`);
+      const userId = enrollment.UserID;
+      if (!userId) {
+        console.error('UserID not found in the enrollment object:', enrollment);
+        return;
+      }
+  
+      const response = await axios.delete(
+        `http://localhost:8081/courses/courses/${selectedCourseId}/enrollments/${userId}`
+      );
       console.log('Remove User Response:', response.data);
       fetchCourseEnrollments(selectedCourseId);
     } catch (error) {
       console.error('Error removing user from course:', error);
+      setError('Error removing user from course');
     }
+  };
+  
+  const handleCourseSelection = async (courseId) => {
+    console.log('Selected Course ID:', courseId);
+    setSelectedCourseId(courseId);
+    await fetchCourseEnrollments(courseId);
   };
 
   return (
     <div className="admin-courses-container">
       <Typography variant="h4">Manage Courses</Typography>
+      {error && <Typography variant="body1" color="error">{error}</Typography>}
+      {loading && <CircularProgress />}
       <div>
         <Typography variant="h6">Create Course</Typography>
         <TextField
@@ -180,9 +211,9 @@ function AdminCourses() {
       <List>
         {courses.length > 0 ? (
           courses.map((course) => (
-            <ListItem key={course.CourseID} divider onClick={() => setSelectedCourseId(course.CourseID)}>
+            <ListItem key={course.CourseID} divider onClick={() => handleCourseSelection(course.CourseID)}>
               {editingCourseId === course.CourseID ? (
-                <>
+                <div className="edit-course-container">
                   <TextField
                     type="text"
                     value={updatedCourseName}
@@ -197,9 +228,9 @@ function AdminCourses() {
                   >
                     Save
                   </Button>
-                </>
+                </div>
               ) : (
-                <>
+                <div className="course-info-container">
                   <ListItemText primary={course.CourseName} />
                   <ListItemSecondaryAction>
                     <IconButton edge="end" aria-label="edit" onClick={() => setEditingCourseId(course.CourseID)}>
@@ -209,41 +240,45 @@ function AdminCourses() {
                       <DeleteIcon />
                     </IconButton>
                   </ListItemSecondaryAction>
-                </>
+                </div>
               )}
-              {selectedCourseId === course.CourseID && (
-                <>
-               <List>
-  {courseEnrollments.map((enrollment, index) => (
-    <ListItem key={`${enrollment.UserName}-${index}`}>
-      <ListItemText primary={enrollment.UserName} />
-      <ListItemSecondaryAction>
-        <IconButton
-          edge="end"
-          aria-label="delete"
-          onClick={() => handleRemoveUserFromCourse(enrollment.UserName)}
-        >
-          <DeleteIcon />
-        </IconButton>
-      </ListItemSecondaryAction>
-    </ListItem>
-  ))}
-  <ListItem>
-    <TextField
-      type="text"
-      label="User Name"
-      variant="outlined"
-      fullWidth
-      value={newUserName}
-      onChange={(e) => setNewUserName(e.target.value)}
-    />
-    <Button variant="contained" color="primary" onClick={handleAddUserToCourse}>
-      Enroll User
-    </Button>
-  </ListItem>
-</List>
-                </>
-              )}
+             {selectedCourseId === course.CourseID && (
+  <div className="enrollments-container">
+    <Typography variant="subtitle1" className="enrollments-header">
+      Enrollments
+    </Typography>
+    <List>
+      {courseEnrollments.map((enrollment, index) => (
+       <ListItem key={`${enrollment.UserName}-${index}`} className="enrollment-item">
+       <ListItemText primary={enrollment.UserName.UserName} /> 
+       <ListItemSecondaryAction>
+       <IconButton
+  edge="end"
+  aria-label="delete"
+  onClick={() => handleRemoveUserFromCourse(enrollment)}
+>
+  <DeleteIcon />
+</IconButton>
+       </ListItemSecondaryAction>
+     </ListItem>
+     
+      ))}
+      <ListItem className="add-user-container">
+        <TextField
+          type="text"
+          label="User Name"
+          variant="outlined"
+          fullWidth
+          value={newUserName}
+          onChange={(e) => setNewUserName(e.target.value)}
+        />
+        <Button variant="contained" color="primary" onClick={handleAddUserToCourse}>
+          Enroll User
+        </Button>
+      </ListItem>
+    </List>
+  </div>
+)}
             </ListItem>
           ))
         ) : (

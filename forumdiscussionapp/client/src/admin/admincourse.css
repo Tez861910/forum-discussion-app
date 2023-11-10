@@ -1,26 +1,27 @@
 .admin-courses-container {
   text-align: center;
   margin: 20px;
-  background-color:  #ffff; 
+  background-color: #ffffff;
   padding: 20px;
   border-radius: 8px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
 }
 
 .admin-courses-container h4 {
   font-size: 24px;
-  color: #fff; 
+  color: #333333;
   margin-bottom: 20px;
 }
 
 .admin-courses-container h6 {
   font-size: 20px;
-  color: #fff; 
+  color: #333;
   margin-top: 20px;
 }
 
 /* Styling for the list items */
 .admin-courses-container li {
-  background-color: #fff; 
+  background-color: #fff;
   border-radius: 8px;
   margin-top: 20px;
   padding: 20px;
@@ -41,4 +42,65 @@
 
 .MuiButton-root {
   margin-top: 10px;
+}
+
+/* Optional: Add some styling for loading indicator */
+.admin-courses-container .MuiCircularProgress-root {
+  margin-top: 20px;
+}
+
+/* Optional: Style for the confirmation dialog */
+.MuiDialog-paper {
+  width: 400px;
+}
+
+/* Optional: Style for the create course section */
+.admin-courses-container > div {
+  margin-bottom: 20px;
+}
+
+/* Optional: Style for the course list */
+.admin-courses-container .MuiList-root {
+  border: 1px solid #ccc;
+  border-radius: 4px;
+}
+
+/* Optional: Style for individual course items */
+.admin-courses-container .MuiListItem-root {
+  cursor: pointer;
+}
+
+/* Optional: Style for the course name in the list */
+.admin-courses-container .MuiListItemText-primary {
+  font-weight: bold;
+}
+
+/* Optional: Style for the enrollments list */
+.admin-courses-container .MuiList-root .MuiList-root {
+  margin-top: 10px;
+}
+
+/* Optional: Style for the user name input in enrollments */
+.admin-courses-container .MuiList-root .MuiListItem-root:last-child .MuiTextField-root {
+  margin-right: 10px;
+}
+
+/* Optional: Style for buttons */
+.admin-courses-container .MuiButton-root {
+  margin-top: 10px;
+}
+
+/* Optional: Style for error message */
+.admin-courses-container .MuiTypography-colorError {
+  margin-top: 10px;
+}
+
+/* Optional: Style for no courses available message */
+.admin-courses-container .MuiListItem-root {
+  font-style: italic;
+}
+
+/* Optional: Style for the confirmation dialog buttons */
+.MuiDialogActions-root {
+  padding: 16px;
 }

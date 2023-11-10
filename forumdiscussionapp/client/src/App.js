@@ -19,7 +19,7 @@ const AppRoutes = () => (
         <Route path="/home/create-thread" element={<CreateThread />} />
         <Route path="/home/comment-section" element={<CommentSection />} />
         <Route path="/home/mcq-form" element={<MCQForm />} />
-        <Route path="/home/mcqanswerform" element={<MCQAnswerForm />} />
+        <Route path="/home/mcq-answer-form" element={<MCQAnswerForm />} />
     <Route path="/home" element={<Home />}>
 
     </Route>
