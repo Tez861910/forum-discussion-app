@@ -65,17 +65,30 @@ function AdminCourses() {
     try {
       const response = await axios.get(`http://localhost:8081/courses/courses/enrollments/${courseId}`);
       console.log('API Response (Course Enrollments):', response.data);
-
-      if (Array.isArray(response.data.enrollments)) {
-        setCourseEnrollments(response.data.enrollments);
+  
+      if (response.data && response.data.enrollments) {
+        const enrollmentsData = response.data.enrollments;
+  
+        if (typeof enrollmentsData === 'object') {
+          // Convert the object into an array
+          const enrollmentsArray = Object.keys(enrollmentsData).map((username) => ({
+            UserName: enrollmentsData[username],
+            // Include additional properties if needed
+          }));
+  
+          setCourseEnrollments(enrollmentsArray);
+        } else {
+          console.error('Invalid response data format for course enrollments:', response.data);
+        }
       } else {
-        console.error('Invalid response data format for course enrollments:', response.data);
+        console.error('No enrollments found for the course:', response.data);
       }
     } catch (error) {
       console.error('Error fetching course enrollments:', error);
     }
   };
-
+  
+  
   const handleCreateCourse = async () => {
     try {
       const response = await axios.post('http://localhost:8081/courses/courses/create', { courseName: newCourseName });
@@ -200,37 +213,35 @@ function AdminCourses() {
               )}
               {selectedCourseId === course.CourseID && (
                 <>
-                  {courseEnrollments ? (
-                    <List>
-                      {courseEnrollments.map((enrollment) => (
-                        <ListItem key={enrollment.EnrollmentID}>
-                          <ListItemText primary={enrollment.UserName} />
-                          <ListItemSecondaryAction>
-                            <IconButton
-                              edge="end"
-                              aria-label="delete"
-                              onClick={() => handleRemoveUserFromCourse(enrollment.EnrollmentID)}
-                            >
-                              <DeleteIcon />
-                            </IconButton>
-                          </ListItemSecondaryAction>
-                        </ListItem>
-                      ))}
-                      <ListItem>
-                        <TextField
-                          type="text"
-                          label="User Name"
-                          variant="outlined"
-                          fullWidth
-                          value={newUserName}
-                          onChange={(e) => setNewUserName(e.target.value)}
-                        />
-                        <Button variant="contained" color="primary" onClick={handleAddUserToCourse}>
-                          Enroll User
-                        </Button>
-                      </ListItem>
-                    </List>
-                  ) : null}
+               <List>
+  {courseEnrollments.map((enrollment, index) => (
+    <ListItem key={`${enrollment.UserName}-${index}`}>
+      <ListItemText primary={enrollment.UserName} />
+      <ListItemSecondaryAction>
+        <IconButton
+          edge="end"
+          aria-label="delete"
+          onClick={() => handleRemoveUserFromCourse(enrollment.UserName)}
+        >
+          <DeleteIcon />
+        </IconButton>
+      </ListItemSecondaryAction>
+    </ListItem>
+  ))}
+  <ListItem>
+    <TextField
+      type="text"
+      label="User Name"
+      variant="outlined"
+      fullWidth
+      value={newUserName}
+      onChange={(e) => setNewUserName(e.target.value)}
+    />
+    <Button variant="contained" color="primary" onClick={handleAddUserToCourse}>
+      Enroll User
+    </Button>
+  </ListItem>
+</List>
                 </>
               )}
             </ListItem>
