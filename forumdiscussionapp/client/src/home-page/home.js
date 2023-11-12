@@ -1,20 +1,26 @@
 import React, { useState, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { Container, Typography, Grid } from '@mui/material';
-import Sidebar from './side-bar';
 import Navbar from './nav-bar';
 import { useCookies } from 'react-cookie';
 import axios from 'axios';
 import './home.css';
+import AdminCourses from '../admin/AdminCourses';
+import AdminUsers from '../admin/AdminUsers';
+import AdminRoles from '../admin/AdminRoles';
+import UserProfile from './user-profile/user-profile';
+import CourseEnrollmentModal from './course-enrollment-modal';
 
 const Home = () => {
   const [roleId, setRoleId] = useState('');
   const [cookies, setCookie] = useCookies();
   const navigate = useNavigate();
+  const [isUserProfileOpen, setUserProfileOpen] = useState(false);
   const [isEnrollmentModalOpen, setEnrollmentModalOpen] = useState(false);
   const [coursesEnrolled, setCoursesEnrolled] = useState(false);
   const [courseIds, setCourseIds] = useState([]);
   const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const [activeView, setActiveView] = useState('courses');
 
   useEffect(() => {
     const storedRoleId = localStorage.getItem('roleId');
@@ -29,9 +35,8 @@ const Home = () => {
     }
   }, [cookies.token, isLoggedIn]);
 
-  const handleLogout = () => {
-    handleTokenRefresh();
-    clearUserData();
+  const navigateToPath = (path) => {
+    navigate(path);
   };
 
   const clearUserData = () => {
@@ -103,13 +108,34 @@ const Home = () => {
     setEnrollmentModalOpen(false);
   };
 
+  const handleUserProfileClick = () => {
+    setUserProfileOpen(true);
+  };
+
+  const handleEnrollmentClick = () => {
+    setEnrollmentModalOpen(true);
+  };
+
+  const handleLogout = () => {
+    handleTokenRefresh();
+    clearUserData();
+  };
+
   const renderButtonsByRoleId = (roleId) => {
     switch (roleId) {
       case '1':
         return (
-          <Link to="/home/adminpanel" className="btn btn-success my-3">
-            Admin Panel
-          </Link>
+          <>
+            <button onClick={() => handleViewChange('courses')} className="btn btn-primary my-3">
+              Manage Courses
+            </button>
+            <button onClick={() => handleViewChange('users')} className="btn btn-primary my-3">
+              Manage Users
+            </button>
+            <button onClick={() => handleViewChange('roles')} className="btn btn-primary my-3">
+              Manage Roles
+            </button>
+          </>
         );
       case '2':
         return (
@@ -138,38 +164,84 @@ const Home = () => {
     }
   };
 
-  const renderContent = () => (
-    <Grid container className="content-container" spacing={3}>
-      <Grid item xs={3}>
-        <Sidebar
-          isEnrollmentModalOpen={isEnrollmentModalOpen}
-          setEnrollmentModalOpen={setEnrollmentModalOpen}
-          handleEnrollmentSuccess={handleEnrollmentSuccess}
-          courseIds={courseIds}
-          handleLogout={handleLogout}
-          userRole={roleId}
-        />
-      </Grid>
-      <Grid item xs={9}>
-        <div className="main-content">
-          <Typography variant="h4" className="heading">
-            Welcome, {roleId === '1' ? 'Admin' : roleId === '2' ? 'Teacher' : 'Student'}
-          </Typography>
-          <div className="button-container">
-            <Navbar renderButtonsByRoleId={renderButtonsByRoleId} onButtonClick={(path) => navigate(path)} />
-          </div>
-        </div>
-      </Grid>
-    </Grid>
-  );
+  const handleViewChange = (view) => {
+    setActiveView(view);
+  };
+
+  const renderActiveView = () => {
+    switch (activeView) {
+      case 'courses':
+        return <AdminCourses />;
+      case 'users':
+        return <AdminUsers />;
+      case 'roles':
+        return <AdminRoles />;
+      default:
+        return <AdminCourses />;
+    }
+  };
+
+  const getRoleHeaderText = (roleId) => {
+    switch (roleId) {
+      case '1':
+        return 'Admin Home Panel';
+      case '2':
+        return 'Teacher Home Panel';
+      case '3':
+        return 'Student Home Panel';
+      default:
+        return 'Home Panel';
+    }
+  };
 
   return (
     <>
       <Container className="home-container">
-        <Typography variant="h2" className="heading" style={{ textAlign: 'center' }}>
-          Home Panel
+        {/* Header for Admin, Teacher, and Student */}
+        <Typography variant="h2" className="heading" style={{ textAlign: 'center', marginBottom: '20px' }}>
+          {getRoleHeaderText(roleId)}
         </Typography>
-        {renderContent()}
+
+        {/* Main Content Layout */}
+        <Grid container className="main-container" spacing={3}>
+          {/* Main Content Area */}
+          <Grid item xs={12}>
+            <div className="main-content">
+              <Typography variant="h4" className="heading">
+                Welcome, {roleId === '1' ? 'Admin' : roleId === '2' ? 'Teacher' : 'Student'}
+              </Typography>
+
+              {/* Navbar */}
+              <div className="button-container">
+              <Navbar
+  renderButtonsByRoleId={renderButtonsByRoleId}
+  onButtonClick={navigateToPath}
+  roleId={roleId}
+  handleUserProfileClick={handleUserProfileClick}
+  handleEnrollmentClick={handleEnrollmentClick}
+  handleLogout={handleLogout}
+/>
+              </div>
+
+              {/* Admin-specific content */}
+              {roleId === '1' && (
+                <div className="admin-container">
+                  {renderActiveView()}
+                </div>
+              )}
+            </div>
+          </Grid>
+        </Grid>
+        {/* User Profile Modal */}
+        <UserProfile isOpen={isUserProfileOpen} onClose={() => setUserProfileOpen(false)} />
+
+        {/* Course Enrollment Modal */}
+        <CourseEnrollmentModal
+          isOpen={isEnrollmentModalOpen}
+          onRequestClose={() => setEnrollmentModalOpen(false)}
+          onEnrollSuccess={handleEnrollmentSuccess}
+          courses={courseIds}
+        />
       </Container>
     </>
   );

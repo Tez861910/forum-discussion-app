@@ -1,12 +1,15 @@
 import React, { useState, useEffect } from 'react';
 import Modal from 'react-modal';
 import axios from 'axios';
+import { InputAdornment, TextField, List, ListItem, Checkbox, Button } from '@mui/material';
+import SearchIcon from '@mui/icons-material/Search';
 
 Modal.setAppElement('#root');
 
 const CourseEnrollmentModal = ({ isOpen, onRequestClose, onEnrollSuccess }) => {
   const [selectedCourses, setSelectedCourses] = useState([]);
   const [courses, setCourses] = useState([]);
+  const [searchTerm, setSearchTerm] = useState('');
 
   useEffect(() => {
     const fetchCourses = async () => {
@@ -14,7 +17,12 @@ const CourseEnrollmentModal = ({ isOpen, onRequestClose, onEnrollSuccess }) => {
         const response = await axios.get('http://localhost:8081/courses/courses/get');
 
         if (response.status === 200) {
-          setCourses(response.data.courses);
+          // Filter out the courses that are already selected/enrolled
+          const filteredCourses = response.data.courses.filter(
+            (course) => !selectedCourses.includes(course.CourseID)
+          );
+
+          setCourses(filteredCourses);
         } else {
           console.error('Failed to fetch courses:', response.status);
         }
@@ -26,7 +34,7 @@ const CourseEnrollmentModal = ({ isOpen, onRequestClose, onEnrollSuccess }) => {
     if (isOpen) {
       fetchCourses();
     }
-  }, [isOpen]);
+  }, [isOpen, selectedCourses]);
 
   const handleEnroll = async () => {
     try {
@@ -37,7 +45,7 @@ const CourseEnrollmentModal = ({ isOpen, onRequestClose, onEnrollSuccess }) => {
           courses: selectedCourses,
         }
       );
-  
+
       if (response.status === 200) {
         onEnrollSuccess(selectedCourses);
       } else {
@@ -56,27 +64,55 @@ const CourseEnrollmentModal = ({ isOpen, onRequestClose, onEnrollSuccess }) => {
     }
   };
 
+  const filteredCourses = courses.filter(course =>
+    course.CourseName.toLowerCase().includes(searchTerm.toLowerCase())
+  );
+
   return (
     <Modal
       isOpen={isOpen}
       onRequestClose={onRequestClose}
       contentLabel="Course Enrollment Modal"
+      style={{
+        content: {
+          width: '400px', // Set the width as per your design
+          margin: 'auto', // Center the modal horizontally
+        },
+      }}
     >
       <h2>Enroll in Courses</h2>
-      <div>
-        {courses.map((course) => (
-          <label key={course.CourseID}>
-            <input
-              type="checkbox"
+      <TextField
+        fullWidth
+        variant="outlined"
+        placeholder="Search courses..."
+        value={searchTerm}
+        onChange={(e) => setSearchTerm(e.target.value)}
+        InputProps={{
+          startAdornment: (
+            <InputAdornment position="start">
+              <SearchIcon />
+            </InputAdornment>
+          ),
+        }}
+        sx={{ marginBottom: 2 }}
+      />
+      <List>
+        {filteredCourses.map((course) => (
+          <ListItem key={course.CourseID} disablePadding>
+            <Checkbox
               checked={selectedCourses.includes(course.CourseID)}
               onChange={() => handleCourseSelection(course.CourseID)}
             />
             {course.CourseName}
-          </label>
+          </ListItem>
         ))}
-      </div>
-      <button onClick={handleEnroll}>Enroll</button>
-      <button onClick={onRequestClose}>Cancel</button>
+      </List>
+      <Button variant="contained" onClick={handleEnroll} sx={{ marginRight: 2 }}>
+        Enroll
+      </Button>
+      <Button variant="outlined" onClick={onRequestClose}>
+        Cancel
+      </Button>
     </Modal>
   );
 };
