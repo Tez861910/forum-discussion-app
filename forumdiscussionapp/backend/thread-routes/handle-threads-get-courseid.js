@@ -1,15 +1,14 @@
 const { query } = require('../db');
 
-async function handleThreadsGetCourseIds(req, res) {
-  const courseIds = req.params.courseIds.split(',');
-  console.log('Received courseIds:', courseIds);
+async function handleThreadsGetCourseId(req, res) {
+  const courseId = req.params.courseId;  
+  console.log('Received courseId:', courseId);
 
   try {
-    const sql = 'SELECT * FROM threads WHERE CourseID IN (?)';
-    const results = await query(sql, [courseIds]);
+    const sql = 'SELECT * FROM threads WHERE CourseID = ?';
+    const results = await query(sql, [courseId]);
     console.log('Threads data:', results);
 
-    // Send threads as an array
     res.json([results]);
   } catch (error) {
     console.error('Error fetching threads:', error);
@@ -18,5 +17,5 @@ async function handleThreadsGetCourseIds(req, res) {
 }
 
 module.exports = {
-  handleThreadsGetCourseIds,
+  handleThreadsGetCourseId,
 };

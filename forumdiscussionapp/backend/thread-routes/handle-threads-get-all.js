@@ -7,7 +7,7 @@ async function handleThreadsGetAll(req, res) {
     console.log('All Threads data:', results);
 
     if (results && results.length > 0) {
-      // Send threads as an array
+      
       res.json(results);
     } else {
       res.status(404).json({ error: 'No threads found' });

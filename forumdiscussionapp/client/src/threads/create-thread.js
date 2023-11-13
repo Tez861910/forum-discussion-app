@@ -10,6 +10,7 @@ import {
   DialogContent,
   DialogActions,
 } from '@mui/material';
+import CommentSection from '../comments/comment-section';
 import './create-thread.css';
 
 function CreateThread() {
@@ -20,13 +21,13 @@ function CreateThread() {
   });
   const [courseId, setCourseId] = useState(null);
   const [userId, setUserId] = useState(null);
+  const [roleId, setRoleId] = useState(null);
   const [error, setError] = useState(null);
-  const [courseIds, setCourseIds] = useState([]);
-
   const [editThreadId, setEditThreadId] = useState(null);
   const [confirmationDialogOpen, setConfirmationDialogOpen] = useState(false);
   const [confirmationDialogMessage, setConfirmationDialogMessage] = useState('');
   const [deletionThreadID, setDeletionThreadID] = useState(null);
+  const [threadId, setThreadId] = useState(null);
 
   useEffect(() => {
     const storedUserId = localStorage.getItem('userId');
@@ -34,49 +35,55 @@ function CreateThread() {
       console.error('User ID not found in local storage');
       return;
     }
-  
+
+    const storedRoleId = localStorage.getItem('roleId');
+    if (!storedRoleId) {
+      console.error('Role ID not found in local storage');
+      return;
+    }
+
     const userIdNumber = parseInt(storedUserId, 10);
     setUserId(userIdNumber);
-  
+
+    const roleIdNumber = parseInt(storedRoleId, 10);
+    setRoleId(roleIdNumber);
+
     let storedCourseIds;
     try {
       const storedCourseIdsString = localStorage.getItem('courseIds') || '[]';
       storedCourseIds = JSON.parse(storedCourseIdsString);
-  
+
       if (!Array.isArray(storedCourseIds)) {
         throw new Error('Course IDs not an array');
       }
     } catch (error) {
-      console.error('Error parsing or retrieving course IDs from local storage:', error.message);
+      console.error(
+        'Error parsing or retrieving course IDs from local storage:',
+        error.message
+      );
       storedCourseIds = [];
     }
-  
-    console.log('Stored Course IDs:', storedCourseIds);
-    setCourseIds(storedCourseIds);
-  
-    const courseIdNumber = storedCourseIds.length > 0 ? storedCourseIds[0] : null;
-    setCourseId(courseIdNumber);
-  
-    console.log('Fetching threads for courseIds:', storedCourseIds);
-    fetchThreads(storedCourseIds);
-  }, []);
-  
-  
 
-  const fetchThreads = async (courseIds) => {
+    console.log('Fetching threads for courseId:', courseId);
+    fetchThreads(courseId);
+  }, []);
+
+  const fetchThreads = async (courseId) => {
     try {
-      if (courseIds.length === 0) {
-        console.error('No course IDs available for fetching threads.');
+      if (!courseId) {
+        console.error('No course ID available for fetching threads.');
         return;
       }
-  
-      const response = await axios.get(`http://localhost:8081/threads/threads/get/${courseIds.join(',')}`);
+
+      const response = await axios.get(
+        `http://localhost:8081/threads/threads/get/${courseId}`
+      );
       setThreads(response.data[0]);
     } catch (error) {
       setError('Error fetching threads. Please try again.');
     }
   };
-  
+
   const handleInputChange = (e) => {
     const { name, value } = e.target;
     setNewThread({ ...newThread, [name]: value });
@@ -87,11 +94,11 @@ function CreateThread() {
       await axios.post('http://localhost:8081/threads/threads/create', {
         title: newThread.title,
         content: newThread.content,
-        courseIds: [courseId], 
+        courseIds: [courseId],
         userId: userId,
       });
-  
-      await fetchThreads(courseIds);
+
+      await fetchThreads(courseId);
       setNewThread({
         title: 'New Thread Title',
         content: 'New Thread Content',
@@ -100,7 +107,6 @@ function CreateThread() {
       setError('Error creating thread. Please try again.');
     }
   };
-  
 
   const toggleEdit = (threadId) => {
     setEditThreadId(threadId);
@@ -119,34 +125,42 @@ function CreateThread() {
   };
 
   const updateThread = async (threadId) => {
-    const threadToUpdate = threads.find((thread) => thread.ThreadID === threadId);
-  
+    const threadToUpdate = threads.find(
+      (thread) => thread.threadId === threadId
+    );
+
     try {
-      await axios.put(`http://localhost:8081/threads/threads/update/${threadId}`, {
-        title: threadToUpdate.ThreadTitle,
-        content: threadToUpdate.ThreadContent,
-        courseIds: [courseId], 
-        userId: userId,
-      });
-  
-      await fetchThreads(courseIds);
+      await axios.put(
+        `http://localhost:8081/threads/threads/update/${threadId}`,
+        {
+          title: threadToUpdate.threadTitle,
+          content: threadToUpdate.threadContent,
+          courseIds: [courseId],
+          userId: userId,
+        }
+      );
+
+      await fetchThreads(courseId);
       setEditThreadId(null);
     } catch (error) {
       setError('Error updating thread. Please try again.');
     }
   };
-  
 
   const confirmDelete = (threadId) => {
     setDeletionThreadID(threadId);
-    setConfirmationDialogMessage('Are you sure you want to delete this thread?');
+    setConfirmationDialogMessage(
+      'Are you sure you want to delete this thread?'
+    );
     setConfirmationDialogOpen(true);
   };
 
   const handleDeleteClick = async () => {
     try {
-      await axios.delete(`http://localhost:8081/threads/threads/delete/${deletionThreadID}`);
-      await fetchThreads(courseIds);
+      await axios.delete(
+        `http://localhost:8081/threads/threads/delete/${deletionThreadID}`
+      );
+      await fetchThreads(courseId);
       setConfirmationDialogOpen(false);
     } catch (error) {
       setError('Error deleting thread. Please try again.');
@@ -160,7 +174,10 @@ function CreateThread() {
 
   return (
     <div className="create-thread-container">
-      <Link to="/home" style={{ textDecoration: 'none', color: 'blue', marginBottom: '10px' }}>
+      <Link
+        to="/home"
+        style={{ textDecoration: 'none', color: 'blue', marginBottom: '10px' }}
+      >
         Back to Home
       </Link>
       <Typography variant="h2">Create Thread</Typography>
@@ -171,16 +188,18 @@ function CreateThread() {
       {Array.isArray(threads) && threads.length > 0 ? (
         <ul className="thread-list">
           {threads.map((thread) => (
-            <li key={thread.ThreadID} className="thread-item">
-              {editThreadId === thread.ThreadID ? (
+            <li key={thread.threadId} className="thread-item">
+              {editThreadId === thread.threadId ? (
                 <div>
                   <TextField
                     label="Title"
                     name="title"
-                    value={thread.ThreadTitle}
+                    value={thread.threadTitle}
                     onChange={(e) => {
                       const updatedThreads = threads.map((t) =>
-                        t.ThreadID === thread.ThreadID ? { ...t, ThreadTitle: e.target.value } : t
+                        t.threadId === thread.threadId
+                          ? { ...t, threadTitle: e.target.value }
+                          : t
                       );
                       setThreads(updatedThreads);
                     }}
@@ -190,18 +209,28 @@ function CreateThread() {
                     name="content"
                     multiline
                     rows={4}
-                    value={thread.ThreadContent}
+                    value={thread.threadContent}
                     onChange={(e) => {
                       const updatedThreads = threads.map((t) =>
-                        t.ThreadID === thread.ThreadID ? { ...t, ThreadContent: e.target.value } : t
+                        t.threadId === thread.threadId
+                          ? { ...t, threadContent: e.target.value }
+                          : t
                       );
                       setThreads(updatedThreads);
                     }}
                   />
-                  <Button variant="contained" color="primary" onClick={() => updateThread(thread.ThreadID)}>
+                  <Button
+                    variant="contained"
+                    color="primary"
+                    onClick={() => updateThread(thread.threadId)}
+                  >
                     Update
                   </Button>
-                  <Button variant="contained" color="secondary" onClick={cancelEdit}>
+                  <Button
+                    variant="contained"
+                    color="secondary"
+                    onClick={cancelEdit}
+                  >
                     Cancel
                   </Button>
                 </div>
@@ -209,18 +238,26 @@ function CreateThread() {
                 <div>
                   <div>
                     <Typography variant="h4">Title:</Typography>
-                    <Typography>{thread.ThreadTitle}</Typography>
+                    <Typography>{thread.threadTitle}</Typography>
                   </div>
                   <div>
                     <Typography variant="h4">Content:</Typography>
-                    <Typography>{thread.ThreadContent}</Typography>
+                    <Typography>{thread.threadContent}</Typography>
                   </div>
-                  <Button variant="contained" color="primary" onClick={() => toggleEdit(thread.ThreadID)}>
+                  <Button
+                    variant="contained"
+                    color="primary"
+                    onClick={() => toggleEdit(thread.threadId)}
+                  >
                     Edit
                   </Button>
                 </div>
               )}
-              <Button variant="contained" color="secondary" onClick={() => confirmDelete(thread.ThreadID)}>
+              <Button
+                variant="contained"
+                color="secondary"
+                onClick={() => confirmDelete(thread.threadId)}
+              >
                 Delete
               </Button>
             </li>
@@ -232,7 +269,12 @@ function CreateThread() {
 
       <div className="create-new-thread">
         <Typography variant="h3">Create New Thread</Typography>
-        <TextField label="Title" name="title" value={newThread.title} onChange={handleInputChange} />
+        <TextField
+          label="Title"
+          name="title"
+          value={newThread.title}
+          onChange={handleInputChange}
+        />
         <TextField
           label="Content"
           name="content"
@@ -242,14 +284,26 @@ function CreateThread() {
           onChange={handleInputChange}
         />
         <div>
-          <Button variant="contained" color="primary" onClick={createNewThread}>
+          <Button
+            variant="contained"
+            color="primary"
+            onClick={createNewThread}
+          >
             Create Thread
           </Button>
-          <Button variant="contained" color="secondary" onClick={cancelThread}>
+          <Button
+            variant="contained"
+            color="secondary"
+            onClick={cancelThread}
+          >
             Cancel Thread
           </Button>
           {editThreadId === null ? null : (
-            <Button variant="contained" color="secondary" onClick={cancelEdit}>
+            <Button
+              variant="contained"
+              color="secondary"
+              onClick={cancelEdit}
+            >
               Cancel Edit
             </Button>
           )}
@@ -270,6 +324,9 @@ function CreateThread() {
           </Button>
         </DialogActions>
       </Dialog>
+
+      {/* Include the CommentSection component */}
+      <CommentSection roleId={roleId} courseId={courseId} threadId={threadId} />
     </div>
   );
 }

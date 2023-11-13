@@ -3,7 +3,10 @@ const router = express.Router();
 const {query} = require('../db');
 const { createToken, hashPassword, verifyPassword } = require('../authvalid');
 
+router.use(express.json());
+
 const { handleUsersGet } = require('../user-routes/handle-users-get');
+const { handleUserCoursesGet } = require('../user-routes/handle-user-courses-get');
 const { handleUsersCreate } = require('../user-routes/handle-users-create');
 const { handleUsersGetId } = require('../user-routes/handle-users-get-id');
 const { handleUsersUpdateId } = require('../user-routes/handle-users-update-id');
@@ -16,6 +19,9 @@ router.post('/users/create', async (req, res) =>handleUsersCreate(req, res));
 
 // Get all users
 router.get('/users/get', async (req, res) =>handleUsersGet(req, res));
+
+// Get all usercoures
+router.get('/usercourses/get', async (req, res) =>handleUserCoursesGet(req, res));
 
 // Get a user by ID with CourseName and RoleName
 router.get('/users/get/:id', async (req, res) => handleUsersGetId(req, res));

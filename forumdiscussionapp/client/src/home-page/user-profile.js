@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { Typography, TextField, Button, Modal, Box } from '@mui/material';
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
-import './user-profile.css';
+import './home.css'; 
 
 function UserProfile({ userId, isOpen, onClose }) {
   const [newName, setNewName] = useState('');

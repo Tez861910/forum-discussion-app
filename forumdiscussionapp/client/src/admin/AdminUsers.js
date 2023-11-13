@@ -28,6 +28,7 @@ function AdminUsers() {
     UserName: '',
     UserEmail: '',
     RoleID: '',
+    CourseID: '',
     UserPassword: '',
   });
   const [deleteConfirmation, setDeleteConfirmation] = useState({ open: false, userId: null });
@@ -35,8 +36,13 @@ function AdminUsers() {
   useEffect(() => {
     fetchUsers();
     fetchRoles();
-    fetchCourses();
   }, []);
+
+  useEffect(() => {
+    if (users.length > 0) {
+      fetchUserCourses(users.map((user) => user.UserID));
+    }
+  }, [users]);
 
   const fetchUsers = async () => {
     try {
@@ -58,13 +64,15 @@ function AdminUsers() {
     }
   };
 
-  const fetchCourses = async () => {
+  const fetchUserCourses = async (userIds) => {
     try {
-      const response = await axios.get('http://localhost:8081/courses/courses/get');
-      setCourses(response.data.courses);
-      console.log('Courses fetched successfully');
+      const response = await axios.post('http://localhost:8081/users/usercourses/get', {
+        userIds: userIds,
+      });
+      setCourses(response.data.userCourses);
+      console.log('User courses fetched successfully');
     } catch (error) {
-      console.error('Error fetching courses:', error);
+      console.error('Error fetching user courses:', error);
     }
   };
 
@@ -104,7 +112,7 @@ function AdminUsers() {
       UserEmail: user.UserEmail,
       RoleID: user.RoleID,
       CourseID: user.CourseID,
-      UserPassword: user.UserPassword,
+      UserPassword: '',
     });
   };
 
@@ -164,6 +172,11 @@ function AdminUsers() {
   const getCourseName = (courseID) => {
     const course = courses.find((c) => c.CourseID === courseID);
     return course ? course.CourseName : 'N/A';
+  };
+
+  const getCourseNamesForUser = (userID) => {
+    const userCourses = courses.filter((userCourse) => userCourse.UserID === userID);
+    return userCourses.map((userCourse) => getCourseName(userCourse.CourseID));
   };
 
   const getRoleName = (roleID) => {
@@ -233,8 +246,7 @@ function AdminUsers() {
             <th>Name</th>
             <th>Email</th>
             <th>Role</th>
-            <th>Course</th>
-            <th>Password</th>
+            <th>Courses</th>
             <th>Actions</th>
           </tr>
         </thead>
@@ -245,8 +257,7 @@ function AdminUsers() {
                 <td>{user.UserName}</td>
                 <td>{user.UserEmail}</td>
                 <td>{getRoleName(user.RoleID)}</td>
-                <td>{getCourseName(user.CourseID)}</td>
-                <td>{user.UserPassword}</td>
+                <td>{getCourseNamesForUser(user.UserID).join(', ')}</td>
                 <td>
                   <div className="user-actions">
                     <Button onClick={() => handleEditUser(user)}>Edit</Button>
@@ -302,15 +313,6 @@ function AdminUsers() {
                 id="edit-email"
                 value={updatedUserData.UserEmail}
                 onChange={(e) => handleInputChange('UserEmail', e.target.value)}
-              />
-            </div>
-            <div className="form-field">
-              <label htmlFor="edit-password">Password</label>
-              <TextField
-                type="password"
-                id="edit-password"
-                value={updatedUserData.UserPassword}
-                onChange={(e) => handleInputChange('UserPassword', e.target.value)}
               />
             </div>
             <div className="form-field">

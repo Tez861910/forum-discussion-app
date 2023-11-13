@@ -1,6 +1,6 @@
-import React, { useState, useEffect } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
-import { Container, Typography, Grid } from '@mui/material';
+import React, { useState, useEffect} from 'react';
+import { useNavigate ,Link} from 'react-router-dom';
+import { Container, Typography, Grid, Button } from '@mui/material';
 import Navbar from './nav-bar';
 import { useCookies } from 'react-cookie';
 import axios from 'axios';
@@ -8,19 +8,25 @@ import './home.css';
 import AdminCourses from '../admin/AdminCourses';
 import AdminUsers from '../admin/AdminUsers';
 import AdminRoles from '../admin/AdminRoles';
-import UserProfile from './user-profile/user-profile';
+import UserProfile from './user-profile';
 import CourseEnrollmentModal from './course-enrollment-modal';
+import Sidebar from './side-bar';
+import CommentSection from '../comments/comment-section';
+import CreateThread from '../threads/create-thread';
+
+const API_URL = 'http://localhost:8081/home/refresh-token';
 
 const Home = () => {
   const [roleId, setRoleId] = useState('');
   const [cookies, setCookie] = useCookies();
-  const navigate = useNavigate();
+  const [navigateToPathState, setNavigateToPath] = useState(null);
   const [isUserProfileOpen, setUserProfileOpen] = useState(false);
   const [isEnrollmentModalOpen, setEnrollmentModalOpen] = useState(false);
   const [coursesEnrolled, setCoursesEnrolled] = useState(false);
   const [courseIds, setCourseIds] = useState([]);
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [activeView, setActiveView] = useState('courses');
+  const navigate = useNavigate(); 
 
   useEffect(() => {
     const storedRoleId = localStorage.getItem('roleId');
@@ -35,9 +41,21 @@ const Home = () => {
     }
   }, [cookies.token, isLoggedIn]);
 
+  useEffect(() => {
+    if (navigateToPathState && roleId) {
+      navigate(navigateToPathState);
+      setNavigateToPath(null);
+    }
+  }, [navigateToPathState, roleId, navigate]);
+
   const navigateToPath = (path) => {
-    navigate(path);
+    if (!roleId) {
+      setNavigateToPath(path);
+    } else {
+      navigate(path);
+    }
   };
+
 
   const clearUserData = () => {
     setCookie('token', '', { path: '/', expires: new Date(0) });
@@ -50,7 +68,7 @@ const Home = () => {
   const handleTokenRefresh = async () => {
     try {
       const response = await axios.post(
-        'http://localhost:8081/home/refresh-token',
+        API_URL,
         {},
         {
           headers: {
@@ -93,9 +111,11 @@ const Home = () => {
   };
 
   const handleStudentActions = () => {
-    (!courseIds || courseIds.length === 0)
-      ? setEnrollmentModalOpen(true)
-      : setCoursesEnrolled(true);
+    if (!courseIds || courseIds.length === 0) {
+      setEnrollmentModalOpen(true);
+    } else {
+      setCoursesEnrolled(true);
+    }
   };
 
   const handleTokenRefreshFailure = () => {
@@ -108,13 +128,7 @@ const Home = () => {
     setEnrollmentModalOpen(false);
   };
 
-  const handleUserProfileClick = () => {
-    setUserProfileOpen(true);
-  };
-
-  const handleEnrollmentClick = () => {
-    setEnrollmentModalOpen(true);
-  };
+  
 
   const handleLogout = () => {
     handleTokenRefresh();
@@ -126,15 +140,15 @@ const Home = () => {
       case '1':
         return (
           <>
-            <button onClick={() => handleViewChange('courses')} className="btn btn-primary my-3">
+            <Button onClick={() => handleViewChange('courses')} variant="contained" className="btn btn-primary my-3">
               Manage Courses
-            </button>
-            <button onClick={() => handleViewChange('users')} className="btn btn-primary my-3">
+            </Button>
+            <Button onClick={() => handleViewChange('users')} variant="contained" className="btn btn-primary my-3">
               Manage Users
-            </button>
-            <button onClick={() => handleViewChange('roles')} className="btn btn-primary my-3">
+            </Button>
+            <Button onClick={() => handleViewChange('roles')} variant="contained" className="btn btn-primary my-3">
               Manage Roles
-            </button>
+            </Button>
           </>
         );
       case '2':
@@ -142,9 +156,6 @@ const Home = () => {
           <>
             <Link to="/home/create-thread" className="btn btn-primary my-3">
               Create Thread
-            </Link>
-            <Link to="/home/mcq-form" className="btn btn-primary my-3">
-              Create MCQ Question
             </Link>
           </>
         );
@@ -154,32 +165,52 @@ const Home = () => {
             <Link to="/home/comment-section" className="btn btn-primary my-3">
               Comment Section
             </Link>
-            <Link to="/home/mcq-answer-form" className="btn btn-primary my-3">
-              Answer MCQ Question
-            </Link>
           </>
         );
       default:
         return null;
     }
   };
+  
 
   const handleViewChange = (view) => {
     setActiveView(view);
   };
 
   const renderActiveView = () => {
-    switch (activeView) {
-      case 'courses':
-        return <AdminCourses />;
-      case 'users':
-        return <AdminUsers />;
-      case 'roles':
-        return <AdminRoles />;
-      default:
-        return <AdminCourses />;
+    if (roleId === '1') { 
+      switch (activeView) {
+        case 'courses':
+          return <AdminCourses />;
+        case 'users':
+          return <AdminUsers />;
+        case 'roles':
+          return <AdminRoles />;
+        case 'comments':
+          return <AdminCourses />;
+        default:
+          return <AdminCourses />;
+      }
+    } else if (roleId === '2') { 
+      switch (activeView) {
+        case 'create-thread':
+          return <CreateThread />;
+        default:
+          return <CreateThread />;
+      }
+    } else if (roleId === '3') { 
+      switch (activeView) {
+       
+        case 'Comment-Section':
+          return <CommentSection />; 
+        default:
+          return <CommentSection />;
+      }
+    } else {
+      return <UserProfile/>;
     }
   };
+  
 
   const getRoleHeaderText = (roleId) => {
     switch (roleId) {
@@ -204,8 +235,20 @@ const Home = () => {
 
         {/* Main Content Layout */}
         <Grid container className="main-container" spacing={3}>
+          {/* Sidebar */}
+          <Grid item xs={2}>
+            <Sidebar
+              isEnrollmentModalOpen={isEnrollmentModalOpen}
+              setEnrollmentModalOpen={setEnrollmentModalOpen}
+              handleEnrollmentSuccess={handleEnrollmentSuccess}
+              courseIds={courseIds}
+              handleLogout={handleLogout}
+              userRole={roleId}
+            />
+          </Grid>
+
           {/* Main Content Area */}
-          <Grid item xs={12}>
+          <Grid item xs={10}>
             <div className="main-content">
               <Typography variant="h4" className="heading">
                 Welcome, {roleId === '1' ? 'Admin' : roleId === '2' ? 'Teacher' : 'Student'}
@@ -213,25 +256,18 @@ const Home = () => {
 
               {/* Navbar */}
               <div className="button-container">
-              <Navbar
-  renderButtonsByRoleId={renderButtonsByRoleId}
-  onButtonClick={navigateToPath}
-  roleId={roleId}
-  handleUserProfileClick={handleUserProfileClick}
-  handleEnrollmentClick={handleEnrollmentClick}
-  handleLogout={handleLogout}
-/>
+                <Navbar
+                  renderButtonsByRoleId={renderButtonsByRoleId}
+                  onButtonClick={navigateToPath}
+                  roleId={roleId}
+                />
               </div>
 
-              {/* Admin-specific content */}
-              {roleId === '1' && (
-                <div className="admin-container">
-                  {renderActiveView()}
-                </div>
-              )}
+              {renderActiveView()}
             </div>
           </Grid>
         </Grid>
+
         {/* User Profile Modal */}
         <UserProfile isOpen={isUserProfileOpen} onClose={() => setUserProfileOpen(false)} />
 
