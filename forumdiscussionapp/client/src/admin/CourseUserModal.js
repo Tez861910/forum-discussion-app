@@ -39,6 +39,7 @@ function UsersModal({ onClose, selectedCourseId, open }) {
       if (Array.isArray(response.data.users)) {
         const users = response.data.users;
         setAllUsers(users);
+        console.log('Fetched Users:', users);
       } else {
         console.error('Invalid response data format (Users):', response.data);
       }
@@ -113,29 +114,29 @@ function UsersModal({ onClose, selectedCourseId, open }) {
             </List>
           </Grid>
           <Grid item xs={12}>
-            <Autocomplete
-              options={allUsers}
-              getOptionLabel={(option) => option.UserName}
-              renderInput={(params) => (
-                <TextField
-                  {...params}
-                  label="Search Users"
-                  variant="outlined"
-                  fullWidth
-                  onChange={(e) => setSearchTerm(e.target.value)}
-                  InputProps={{
-                    startAdornment: (
-                      <InputAdornment position="start">
-                        <SearchIcon />
-                      </InputAdornment>
-                    ),
-                  }}
-                  size="small"
-                />
-              )}
-              value={null}
-              onChange={(event, value) => setSelectedUsersToAdd(value)}
-            />
+          <Autocomplete
+  options={allUsers}
+  getOptionLabel={(option) => option.UserName}
+  renderInput={(params) => (
+    <TextField
+      {...params}
+      label="Search Users"
+      variant="outlined"
+      fullWidth
+      onChange={(e) => setSearchTerm(e.target.value)}
+      InputProps={{
+        startAdornment: (
+          <InputAdornment position="start">
+            <SearchIcon />
+          </InputAdornment>
+        ),
+      }}
+      size="small"
+    />
+  )}
+  value={selectedUsersToAdd}
+  onChange={(event, value) => setSelectedUsersToAdd(value)}
+/>
           </Grid>
         </Grid>
       </DialogContent>

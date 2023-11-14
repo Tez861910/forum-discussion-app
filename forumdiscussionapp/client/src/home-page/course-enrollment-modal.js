@@ -10,29 +10,64 @@ const CourseEnrollmentModal = ({ isOpen, onRequestClose, onEnrollSuccess }) => {
   const [selectedCourses, setSelectedCourses] = useState([]);
   const [courses, setCourses] = useState([]);
   const [searchTerm, setSearchTerm] = useState('');
+  const [userCourses, setUserCourses] = useState([]);
+
+  const fetchCourses = async () => {
+    try {
+      const response = await axios.get('http://localhost:8081/courses/courses/get');
+
+      if (response.status === 200) {
+        const filteredCourses = response.data.courses.filter(
+          (course) => !selectedCourses.includes(course.CourseID)
+        );
+
+        setCourses(filteredCourses);
+      } else {
+        console.error('Failed to fetch courses:', response.status);
+      }
+    } catch (error) {
+      console.error('Error fetching courses:', error);
+    }
+  };
+
+  const fetchUserCourses = async () => {
+    try {
+      const userId = localStorage.getItem('userId');
+
+      if (!userId) {
+        console.error('User ID not found in local storage');
+        return [];
+      }
+
+      const response = await axios.get('http://localhost:8081/users/usercourses/get', {
+        params: { userId: userId },
+      });
+
+      if (response.status === 200) {
+        return response.data.userCourses;
+      } else {
+        console.error('Failed to fetch user courses:', response.status);
+        return [];
+      }
+    } catch (error) {
+      console.error('Error fetching user courses:', error);
+      return [];
+    }
+  };
+
+  const fetchUserCoursesAndSetState = async () => {
+    const userCoursesData = await fetchUserCourses();
+    setUserCourses(userCoursesData);
+
+    // Set the initial state of selectedCourses based on user's enrolled courses
+    const enrolledCourseIds = userCoursesData.map((course) => course.CourseID);
+    setSelectedCourses(enrolledCourseIds);
+  };
 
   useEffect(() => {
-    const fetchCourses = async () => {
-      try {
-        const response = await axios.get('http://localhost:8081/courses/courses/get');
-
-        if (response.status === 200) {
-          // Filter out the courses that are already selected/enrolled
-          const filteredCourses = response.data.courses.filter(
-            (course) => !selectedCourses.includes(course.CourseID)
-          );
-
-          setCourses(filteredCourses);
-        } else {
-          console.error('Failed to fetch courses:', response.status);
-        }
-      } catch (error) {
-        console.error('Error fetching courses:', error);
-      }
-    };
-
     if (isOpen) {
       fetchCourses();
+      fetchUserCoursesAndSetState();
     }
   }, [isOpen, selectedCourses]);
 
@@ -64,7 +99,7 @@ const CourseEnrollmentModal = ({ isOpen, onRequestClose, onEnrollSuccess }) => {
     }
   };
 
-  const filteredCourses = courses.filter(course =>
+  const filteredCourses = courses.filter((course) =>
     course.CourseName.toLowerCase().includes(searchTerm.toLowerCase())
   );
 
@@ -75,8 +110,8 @@ const CourseEnrollmentModal = ({ isOpen, onRequestClose, onEnrollSuccess }) => {
       contentLabel="Course Enrollment Modal"
       style={{
         content: {
-          width: '400px', // Set the width as per your design
-          margin: 'auto', // Center the modal horizontally
+          width: '400px',
+          margin: 'auto',
         },
       }}
     >
@@ -110,9 +145,22 @@ const CourseEnrollmentModal = ({ isOpen, onRequestClose, onEnrollSuccess }) => {
       <Button variant="contained" onClick={handleEnroll} sx={{ marginRight: 2 }}>
         Enroll
       </Button>
-      <Button variant="outlined" onClick={onRequestClose}>
+      <Button variant="outlined" onClick={onRequestClose} sx={{ marginRight: 2 }}>
         Cancel
       </Button>
+      <Button variant="outlined" onClick={fetchUserCoursesAndSetState}>
+        Show Enrolled Courses
+      </Button>
+      {userCourses.length > 0 && (
+        <div>
+          <h3>Enrolled Courses:</h3>
+          <ul>
+            {userCourses.map((course) => (
+              <li key={course.CourseID}>{course.CourseName}</li>
+            ))}
+          </ul>
+        </div>
+      )}
     </Modal>
   );
 };

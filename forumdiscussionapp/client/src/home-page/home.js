@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { useNavigate,Link } from 'react-router-dom';
+import { useNavigate, Link } from 'react-router-dom';
 import { Container, Typography, Grid, Button } from '@mui/material';
 import Navbar from './nav-bar';
 import { useCookies } from 'react-cookie';
@@ -55,7 +55,6 @@ const Home = () => {
       navigate(path);
     }
   };
-
 
   const clearUserData = () => {
     setCookie('token', '', { path: '/', expires: new Date(0) });
@@ -128,8 +127,6 @@ const Home = () => {
     setEnrollmentModalOpen(false);
   };
 
-  
-
   const handleLogout = () => {
     handleTokenRefresh();
     clearUserData();
@@ -171,7 +168,6 @@ const Home = () => {
         return null;
     }
   };
-  
 
   const handleViewChange = (view) => {
     setActiveView(view);
@@ -210,7 +206,6 @@ const Home = () => {
       return <UserProfile/>;
     }
   };
-  
 
   const getRoleHeaderText = (roleId) => {
     switch (roleId) {
@@ -250,7 +245,7 @@ const Home = () => {
           {/* Main Content Area */}
           <Grid item xs={10}>
             <div className="main-content">
-              <Typography variant="h4" className="heading">
+              <Typography variant="h4" className="heading" style={{ marginBottom: '20px' }}>
                 Welcome, {roleId === '1' ? 'Admin' : roleId === '2' ? 'Teacher' : 'Student'}
               </Typography>
 
