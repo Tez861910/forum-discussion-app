@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
-import './adminuser.css';
 import {
   Button,
   Dialog,
@@ -11,7 +10,15 @@ import {
   TextField,
   Select,
   MenuItem,
+  Table,
+  TableBody,
+  TableCell,
+  TableContainer,
+  TableHead,
+  TableRow,
+  Paper,
 } from '@mui/material';
+import './adminuser.css';
 
 function AdminUsers() {
   const [users, setUsers] = useState([]);
@@ -22,27 +29,20 @@ function AdminUsers() {
     UserPassword: '',
   });
   const [roles, setRoles] = useState([]);
-  const [courses, setCourses] = useState([]);
   const [editingUserId, setEditingUserId] = useState(null);
   const [updatedUserData, setUpdatedUserData] = useState({
     UserName: '',
     UserEmail: '',
     RoleID: '',
-    CourseID: '',
     UserPassword: '',
   });
   const [deleteConfirmation, setDeleteConfirmation] = useState({ open: false, userId: null });
+  const [createUserModalOpen, setCreateUserModalOpen] = useState(false);
 
   useEffect(() => {
     fetchUsers();
     fetchRoles();
   }, []);
-
-  useEffect(() => {
-    if (users.length > 0) {
-      fetchUserCourses(users.map((user) => user.UserID));
-    }
-  }, [users]);
 
   const fetchUsers = async () => {
     try {
@@ -64,18 +64,6 @@ function AdminUsers() {
     }
   };
 
-  const fetchUserCourses = async (userIds) => {
-    try {
-      const response = await axios.post('http://localhost:8081/users/usercourses/get', {
-        userIds: userIds,
-      });
-      setCourses(response.data.userCourses);
-      console.log('User courses fetched successfully');
-    } catch (error) {
-      console.error('Error fetching user courses:', error);
-    }
-  };
-
   const handleCreateUser = () => {
     if (!newUser.UserName || !newUser.UserEmail || newUser.RoleID === '') {
       console.error('Name, email, and roleId are required.');
@@ -89,15 +77,15 @@ function AdminUsers() {
         password: newUser.UserPassword,
         roleId: newUser.RoleID,
       })
-      .then((response) => {
-        const createdUser = response.data;
-        setUsers((prevUsers) => [...prevUsers, createdUser]);
+      .then(() => {
+        fetchUsers(); // Fetch users after creating a new one
         setNewUser({
           UserName: '',
           UserEmail: '',
           UserPassword: '',
           RoleID: '',
         });
+        setCreateUserModalOpen(false);
         console.log('User created successfully');
       })
       .catch((error) => {
@@ -111,25 +99,20 @@ function AdminUsers() {
       UserName: user.UserName,
       UserEmail: user.UserEmail,
       RoleID: user.RoleID,
-      CourseID: user.CourseID,
       UserPassword: '',
     });
   };
 
   const handleUpdateUser = (userId) => {
-    if (!updatedUserData.UserName || !updatedUserData.UserEmail || updatedUserData.RoleID === '' || updatedUserData.CourseID === '') {
+    if (!updatedUserData.UserName || !updatedUserData.UserEmail || updatedUserData.RoleID === '') {
       setEditingUserId(null);
       return;
     }
 
     axios
       .put(`http://localhost:8081/users/users/update/${userId}`, updatedUserData)
-      .then((response) => {
-        const updatedUser = response.data;
-        const updatedUsers = users.map((user) =>
-          user.UserID === userId ? updatedUser : user
-        );
-        setUsers(updatedUsers);
+      .then(() => {
+        fetchUsers(); // Fetch users after updating
         setEditingUserId(null);
         console.log('User updated successfully');
       })
@@ -146,8 +129,7 @@ function AdminUsers() {
     axios
       .delete(`http://localhost:8081/users/users/delete/${deleteConfirmation.userId}`)
       .then(() => {
-        const updatedUsers = users.filter((user) => user.UserID !== deleteConfirmation.userId);
-        setUsers(updatedUsers);
+        fetchUsers(); // Fetch users after deleting
         console.log('User deleted successfully');
       })
       .catch((error) => {
@@ -169,16 +151,6 @@ function AdminUsers() {
     }));
   };
 
-  const getCourseName = (courseID) => {
-    const course = courses.find((c) => c.CourseID === courseID);
-    return course ? course.CourseName : 'N/A';
-  };
-
-  const getCourseNamesForUser = (userID) => {
-    const userCourses = courses.filter((userCourse) => userCourse.UserID === userID);
-    return userCourses.map((userCourse) => getCourseName(userCourse.CourseID));
-  };
-
   const getRoleName = (roleID) => {
     const role = roles.find((r) => r.roleId === roleID);
     return role ? role.roleName : 'N/A';
@@ -188,86 +160,100 @@ function AdminUsers() {
     <div className="admin-users-container">
       <h1>Admin User Management</h1>
       <div className="create-user-form">
-        <h2>Create User</h2>
-        <div className="form-fields">
-          <div className="form-field">
-            <label htmlFor="name">Name</label>
-            <TextField
-              type="text"
-              id="name"
-              value={newUser.UserName}
-              onChange={(e) => setNewUser({ ...newUser, UserName: e.target.value })}
-            />
-          </div>
-          <div className="form-field">
-            <label htmlFor="email">Email</label>
-            <TextField
-              type="email"
-              id="email"
-              value={newUser.UserEmail}
-              onChange={(e) => setNewUser({ ...newUser, UserEmail: e.target.value })}
-            />
-          </div>
-          <div className="form-field">
-            <label htmlFor="password">Password</label>
-            <TextField
-              type="password"
-              id="password"
-              value={newUser.UserPassword}
-              onChange={(e) => setNewUser({ ...newUser, UserPassword: e.target.value })}
-            />
-          </div>
-          <div className="form-field">
-            <label htmlFor="role">Role</label>
-            <Select
-              label="Role"
-              id="role"
-              value={newUser.RoleID}
-              onChange={(e) => setNewUser({ ...newUser, RoleID: e.target.value })}
-            >
-              <MenuItem value="">
-                <em>Choose Role</em>
-              </MenuItem>
-              {roles.map((role) => (
-                <MenuItem key={role.roleId} value={role.roleId}>
-                  {role.roleName}
-                </MenuItem>
-              ))}
-            </Select>
-          </div>
-        </div>
-        <Button variant="contained" color="primary" onClick={handleCreateUser}>
+        <Button variant="contained" color="primary" onClick={() => setCreateUserModalOpen(true)}>
           Create User
         </Button>
       </div>
-      <table className="user-table">
-        <thead>
-          <tr>
-            <th>Name</th>
-            <th>Email</th>
-            <th>Role</th>
-            <th>Courses</th>
-            <th>Actions</th>
-          </tr>
-        </thead>
-        <tbody>
-          {Array.isArray(users) &&
-            users.map((user) => (
-              <tr key={user.UserID}>
-                <td>{user.UserName}</td>
-                <td>{user.UserEmail}</td>
-                <td>{getRoleName(user.RoleID)}</td>
-                <td>{getCourseNamesForUser(user.UserID).join(', ')}</td>
-                <td>
-                  <div className="user-actions">
+      <TableContainer component={Paper}>
+        <Table>
+          <TableHead>
+            <TableRow>
+              <TableCell>Name</TableCell>
+              <TableCell>Email</TableCell>
+              <TableCell>Role</TableCell>
+              <TableCell>Actions</TableCell>
+            </TableRow>
+          </TableHead>
+          <TableBody>
+            {Array.isArray(users) &&
+              users.map((user) => (
+                <TableRow key={user.UserID}>
+                  <TableCell>{user.UserName}</TableCell>
+                  <TableCell>{user.UserEmail}</TableCell>
+                  <TableCell>{getRoleName(user.RoleID)}</TableCell>
+                  <TableCell>
                     <Button onClick={() => handleEditUser(user)}>Edit</Button>
                     <Button onClick={() => handleDeleteUser(user.UserID)}>Delete</Button>
-                  </div>
-                </td>
-              </tr>
-            ))}
-        </tbody>
-      </table>
+                  </TableCell>
+                </TableRow>
+              ))}
+          </TableBody>
+        </Table>
+      </TableContainer>
+      <Dialog
+        open={createUserModalOpen}
+        onClose={() => setCreateUserModalOpen(false)}
+        aria-labelledby="create-user-dialog-title"
+      >
+        <DialogTitle id="create-user-dialog-title">Create User</DialogTitle>
+        <DialogContent>
+          <div className="dialog-create-user-form">
+            <div className="form-field">
+              <label htmlFor="create-name">Name</label>
+              <TextField
+                type="text"
+                id="create-name"
+                value={newUser.UserName}
+                onChange={(e) => setNewUser({ ...newUser, UserName: e.target.value })}
+              />
+            </div>
+            <div className="form-field">
+              <label htmlFor="create-email">Email</label>
+              <TextField
+                type="email"
+                id="create-email"
+                value={newUser.UserEmail}
+                onChange={(e) => setNewUser({ ...newUser, UserEmail: e.target.value })}
+              />
+            </div>
+            <div className="form-field">
+              <label htmlFor="create-password">Password</label>
+              <TextField
+                type="password"
+                id="create-password"
+                value={newUser.UserPassword}
+                onChange={(e) => setNewUser({ ...newUser, UserPassword: e.target.value })}
+              />
+            </div>
+            <div className="form-field">
+              <label htmlFor="create-role">Role</label>
+              <Select
+                label="Role"
+                id="create-role"
+                value={newUser.RoleID}
+                onChange={(e) => setNewUser({ ...newUser, RoleID: e.target.value })}
+              >
+                <MenuItem value="">
+                  <em>Choose Role</em>
+                </MenuItem>
+                {roles.map((role) => (
+                  <MenuItem key={role.roleId} value={role.roleId}>
+                    {role.roleName}
+                  </MenuItem>
+                ))}
+              </Select>
+            </div>
+          </div>
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={() => setCreateUserModalOpen(false)} color="primary">
+            Cancel
+          </Button>
+          <Button onClick={handleCreateUser} color="primary">
+            Create
+          </Button>
+        </DialogActions>
+      </Dialog>
       <Dialog
         open={deleteConfirmation.open}
         onClose={cancelDelete}
@@ -333,23 +319,15 @@ function AdminUsers() {
                 ))}
               </Select>
             </div>
+            {/* Password Field */}
             <div className="form-field">
-              <label htmlFor="edit-course">Course</label>
-              <Select
-                label="Course"
-                id="edit-course"
-                value={updatedUserData.CourseID}
-                onChange={(e) => handleInputChange('CourseID', e.target.value)}
-              >
-                <MenuItem value="">
-                  <em>Choose Course</em>
-                </MenuItem>
-                {courses.map((course) => (
-                  <MenuItem key={course.CourseID} value={course.CourseID}>
-                    {course.CourseName}
-                  </MenuItem>
-                ))}
-              </Select>
+              <label htmlFor="edit-password">Password</label>
+              <TextField
+                type="password"
+                id="edit-password"
+                value={updatedUserData.UserPassword}
+                onChange={(e) => handleInputChange('UserPassword', e.target.value)}
+              />
             </div>
           </div>
         </DialogContent>

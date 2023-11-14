@@ -35,32 +35,24 @@
   margin-bottom: 16px;
 }
 
-.form-fields {
+.create-user-form .form-fields {
   display: flex;
   flex-wrap: wrap;
 }
 
-.form-field {
-  width: calc(50% - 16px); /* Adjust width as needed */
+.create-user-form .form-field {
+  width: calc(50% - 16px);
   margin-right: 16px;
   margin-bottom: 16px;
 }
 
-.form-field label {
-  font-weight: bold;
-  display: block;
-  margin-bottom: 8px;
-}
-
-/* Form input fields */
-.create-user-form input[type="text"],
-.create-user-form input[type="email"],
-.create-user-form input[type="password"],
+.create-user-form input,
 .create-user-form select {
   width: 100%;
   padding: 8px;
   border: 1px solid #ccc;
   border-radius: 5px;
+  margin-top: 4px;
 }
 
 /* Form buttons */
@@ -82,6 +74,7 @@
 .user-table {
   width: 100%;
   border-collapse: collapse;
+  margin-top: 16px;
 }
 
 .user-table th,
@@ -128,14 +121,18 @@
   font-weight: bold;
 }
 
-.dialog-edit-user-form input[type="text"],
-.dialog-edit-user-form input[type="email"],
-.dialog-edit-user-form input[type="password"],
+.dialog-edit-user-form .form-field {
+  width: 100%;
+  margin-right: 0;
+}
+
+.dialog-edit-user-form input,
 .dialog-edit-user-form select {
   width: 100%;
   padding: 10px;
   border: 1px solid #ccc;
   border-radius: 5px;
+  margin-top: 4px;
 }
 
 .dialog-edit-user-form button {

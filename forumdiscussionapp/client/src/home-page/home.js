@@ -1,5 +1,5 @@
-import React, { useState, useEffect} from 'react';
-import { useNavigate ,Link} from 'react-router-dom';
+import React, { useState, useEffect } from 'react';
+import { useNavigate,Link } from 'react-router-dom';
 import { Container, Typography, Grid, Button } from '@mui/material';
 import Navbar from './nav-bar';
 import { useCookies } from 'react-cookie';
@@ -26,7 +26,7 @@ const Home = () => {
   const [courseIds, setCourseIds] = useState([]);
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [activeView, setActiveView] = useState('courses');
-  const navigate = useNavigate(); 
+  const navigate = useNavigate();
 
   useEffect(() => {
     const storedRoleId = localStorage.getItem('roleId');
@@ -260,6 +260,7 @@ const Home = () => {
                   renderButtonsByRoleId={renderButtonsByRoleId}
                   onButtonClick={navigateToPath}
                   roleId={roleId}
+                  enrolledCourses={courseIds}
                 />
               </div>
 

@@ -15,10 +15,13 @@ import {
   DialogActions,
   Slide,
   CircularProgress,
+  Grid,
 } from '@mui/material';
 import DeleteIcon from '@mui/icons-material/Delete';
 import EditIcon from '@mui/icons-material/Edit';
 import SaveIcon from '@mui/icons-material/Save';
+import CloseIcon from '@mui/icons-material/Close';
+import UsersModal from './CourseUserModal.js';
 import './admincourse.css';
 
 const Transition = React.forwardRef(function Transition(props, ref) {
@@ -32,10 +35,9 @@ function AdminCourses() {
   const [updatedCourseName, setUpdatedCourseName] = useState('');
   const [deleteConfirmation, setDeleteConfirmation] = useState({ open: false, courseId: null });
   const [selectedCourseId, setSelectedCourseId] = useState(null);
-  const [courseEnrollments, setCourseEnrollments] = useState([]);
-  const [newUserName, setNewUserName] = useState('');
   const [error, setError] = useState(null);
   const [loading, setLoading] = useState(false);
+  const [userModalOpen, setUserModalOpen] = useState(false);
 
   useEffect(() => {
     fetchCourses();
@@ -53,6 +55,7 @@ function AdminCourses() {
         setCourses(transformedCourses);
       } else {
         console.error('Invalid response data format (Courses):', response.data);
+        setError('Invalid response format');
       }
     } catch (error) {
       console.error('Error fetching courses:', error);
@@ -62,49 +65,11 @@ function AdminCourses() {
     }
   };
 
-  const fetchCourseEnrollments = async (courseId) => {
-    try {
-      const response = await axios.get(`http://localhost:8081/courses/courses/enrollments/${courseId}`);
-      if (response.status === 404) {
-        console.error('No enrollments found for the course:', response.data.error);
-        setCourseEnrollments([]);
-        return;
-      }
-  
-      // Check if the response has the expected structure
-      if (response.data && typeof response.data.enrollments === 'object') {
-        const enrollmentsData = response.data.enrollments;
-        
-        // Flatten the object into an array of enrollments
-        const enrollmentsArray = Object.values(enrollmentsData).flatMap((enrollments) =>
-  enrollments.map((username) => ({ UserName: username, UserID: enrollmentsData[username] }))
-);
-
-  
-        setCourseEnrollments(enrollmentsArray);
-      } else {
-        console.error('Invalid response data format for course enrollments:', response.data);
-      }
-    } catch (error) {
-      console.error('Error fetching course enrollments:', error);
-      setError('Error fetching course enrollments');
-    }
-  };
-  
-
-  useEffect(() => {
-    if (selectedCourseId !== null) {
-      console.log('Fetching course enrollments for course ID:', selectedCourseId);
-      fetchCourseEnrollments(selectedCourseId);
-    }
-  }, [selectedCourseId]);
-
   const handleCreateCourse = async () => {
     try {
       const response = await axios.post('http://localhost:8081/courses/courses/create', { courseName: newCourseName });
       console.log('Create Course Response:', response.data);
       setNewCourseName('');
-      console.log('Course created successfully');
       fetchCourses();
     } catch (error) {
       console.error('Error creating course:', error);
@@ -120,7 +85,6 @@ function AdminCourses() {
       console.log('Edit Course Response:', response.data);
       setEditingCourseId(null);
       setUpdatedCourseName('');
-      console.log('Course updated successfully');
       fetchCourses();
     } catch (error) {
       console.error('Error updating course:', error);
@@ -132,70 +96,102 @@ function AdminCourses() {
     setDeleteConfirmation({ open: true, courseId });
   };
 
-  const confirmDelete = () => {
-    axios
-      .delete(`http://localhost:8081/courses/courses/delete/${deleteConfirmation.courseId}`)
-      .then(() => {
-        console.log('Course deleted successfully');
-        fetchCourses();
-      })
-      .catch((error) => {
-        console.error('Error deleting course:', error);
-        setError('Error deleting course');
-      })
-      .finally(() => {
-        setDeleteConfirmation({ open: false, courseId: null });
-      });
+  const confirmDelete = async () => {
+    try {
+      await axios.delete(`http://localhost:8081/courses/courses/delete/${deleteConfirmation.courseId}`);
+      console.log('Course deleted successfully');
+      fetchCourses();
+    } catch (error) {
+      console.error('Error deleting course:', error);
+      setError('Error deleting course. Please try again.');
+    } finally {
+      setDeleteConfirmation({ open: false, courseId: null });
+    }
   };
 
   const cancelDelete = () => {
     setDeleteConfirmation({ open: false, courseId: null });
   };
 
-  const handleAddUserToCourse = async () => {
-    try {
-      const response = await axios.post(`http://localhost:8081/courses/courses/${selectedCourseId}/enroll`, { userName: newUserName });
-      console.log('Enroll User Response:', response.data);
-      setNewUserName('');
-      fetchCourseEnrollments(selectedCourseId);
-    } catch (error) {
-      console.error('Error enrolling user to course:', error);
-      setError('Error enrolling user to course');
-    }
+  const handleCourseSelection = (courseId) => {
+    setSelectedCourseId(courseId);
+    setUserModalOpen(true);
   };
 
-  const handleRemoveUserFromCourse = async (enrollment) => {
-    try {
-      const userId = enrollment.UserID;
-      if (!userId) {
-        console.error('UserID not found in the enrollment object:', enrollment);
-        return;
-      }
-  
-      const response = await axios.delete(
-        `http://localhost:8081/courses/courses/${selectedCourseId}/enrollments/${userId}`
-      );
-      console.log('Remove User Response:', response.data);
-      fetchCourseEnrollments(selectedCourseId);
-    } catch (error) {
-      console.error('Error removing user from course:', error);
-      setError('Error removing user from course');
-    }
+  const handleCloseUserModal = () => {
+    setUserModalOpen(false);
   };
-  
-  const handleCourseSelection = async (courseId) => {
-    console.log('Selected Course ID:', courseId);
-    setSelectedCourseId(courseId);
-    await fetchCourseEnrollments(courseId);
+
+  const renderCourseListItem = (course) => {
+    const isEditing = editingCourseId === course.CourseID;
+
+    return (
+      <ListItem key={course.CourseID} divider>
+        <Grid container alignItems="center" spacing={2}>
+          <Grid item xs={isEditing ? 6 : 8} onClick={() => handleCourseSelection(course.CourseID)}>
+            {isEditing ? (
+              <TextField
+                type="text"
+                value={updatedCourseName}
+                onChange={(e) => setUpdatedCourseName(e.target.value)}
+                fullWidth
+                variant="outlined"
+                size="small"
+              />
+            ) : (
+              <ListItemText primary={course.CourseName} />
+            )}
+          </Grid>
+          <Grid item xs={isEditing ? 6 : 4}>
+            {isEditing ? (
+              <div>
+                <Button
+                  variant="contained"
+                  color="primary"
+                  startIcon={<SaveIcon />}
+                  onClick={() => handleEditCourse(course.CourseID)}
+                  size="small"
+                  style={{ marginRight: 8 }}
+                >
+                  Save
+                </Button>
+                <Button
+                  variant="contained"
+                  color="secondary"
+                  startIcon={<CloseIcon />}
+                  onClick={() => setEditingCourseId(null)}
+                  size="small"
+                >
+                  Cancel
+                </Button>
+              </div>
+            ) : (
+              <ListItemSecondaryAction>
+                <IconButton edge="end" aria-label="edit" onClick={() => setEditingCourseId(course.CourseID)} size="small">
+                  <EditIcon />
+                </IconButton>
+                <IconButton edge="end" aria-label="delete" onClick={() => handleDeleteCourse(course.CourseID)} size="small">
+                  <DeleteIcon />
+                </IconButton>
+              </ListItemSecondaryAction>
+            )}
+          </Grid>
+        </Grid>
+      </ListItem>
+    );
   };
 
   return (
     <div className="admin-courses-container">
-      <Typography variant="h4">Manage Courses</Typography>
-      {error && <Typography variant="body1" color="error">{error}</Typography>}
-      {loading && <CircularProgress />}
-      <div>
-        <Typography variant="h6">Create Course</Typography>
+      <Typography variant="h4" style={{ marginBottom: 16 }}>
+        Manage Courses
+      </Typography>
+      {error && <Typography variant="body1" color="error" style={{ marginBottom: 16 }}>{error}</Typography>}
+      {loading && <CircularProgress style={{ marginBottom: 16 }} />}
+      <div style={{ marginBottom: 16 }}>
+        <Typography variant="h6" style={{ marginBottom: 8 }}>
+          Create Course
+        </Typography>
         <TextField
           type="text"
           label="Course Name"
@@ -203,84 +199,22 @@ function AdminCourses() {
           fullWidth
           value={newCourseName}
           onChange={(e) => setNewCourseName(e.target.value)}
+          size="small"
+          style={{ marginBottom: 8 }}
         />
-        <Button variant="contained" color="primary" onClick={handleCreateCourse}>
+        <Button
+          variant="contained"
+          color="primary"
+          onClick={handleCreateCourse}
+          size="small"
+          style={{ marginLeft: 8 }}
+        >
           Create
         </Button>
       </div>
       <List>
         {courses.length > 0 ? (
-          courses.map((course) => (
-            <ListItem key={course.CourseID} divider onClick={() => handleCourseSelection(course.CourseID)}>
-              {editingCourseId === course.CourseID ? (
-                <div className="edit-course-container">
-                  <TextField
-                    type="text"
-                    value={updatedCourseName}
-                    onChange={(e) => setUpdatedCourseName(e.target.value)}
-                    className="edit-input"
-                  />
-                  <Button
-                    variant="contained"
-                    color="primary"
-                    startIcon={<SaveIcon />}
-                    onClick={() => handleEditCourse(course.CourseID)}
-                  >
-                    Save
-                  </Button>
-                </div>
-              ) : (
-                <div className="course-info-container">
-                  <ListItemText primary={course.CourseName} />
-                  <ListItemSecondaryAction>
-                    <IconButton edge="end" aria-label="edit" onClick={() => setEditingCourseId(course.CourseID)}>
-                      <EditIcon />
-                    </IconButton>
-                    <IconButton edge="end" aria-label="delete" onClick={() => handleDeleteCourse(course.CourseID)}>
-                      <DeleteIcon />
-                    </IconButton>
-                  </ListItemSecondaryAction>
-                </div>
-              )}
-             {selectedCourseId === course.CourseID && (
-  <div className="enrollments-container">
-    <Typography variant="subtitle1" className="enrollments-header">
-      Enrollments
-    </Typography>
-    <List>
-      {courseEnrollments.map((enrollment, index) => (
-       <ListItem key={`${enrollment.UserName}-${index}`} className="enrollment-item">
-       <ListItemText primary={enrollment.UserName.UserName} /> 
-       <ListItemSecondaryAction>
-       <IconButton
-  edge="end"
-  aria-label="delete"
-  onClick={() => handleRemoveUserFromCourse(enrollment)}
->
-  <DeleteIcon />
-</IconButton>
-       </ListItemSecondaryAction>
-     </ListItem>
-     
-      ))}
-      <ListItem className="add-user-container">
-        <TextField
-          type="text"
-          label="User Name"
-          variant="outlined"
-          fullWidth
-          value={newUserName}
-          onChange={(e) => setNewUserName(e.target.value)}
-        />
-        <Button variant="contained" color="primary" onClick={handleAddUserToCourse}>
-          Enroll User
-        </Button>
-      </ListItem>
-    </List>
-  </div>
-)}
-            </ListItem>
-          ))
+          courses.map((course) => renderCourseListItem(course))
         ) : (
           courses.length === 0 ? <ListItem>No courses available</ListItem> : null
         )}
@@ -300,14 +234,21 @@ function AdminCourses() {
           </Typography>
         </DialogContent>
         <DialogActions>
-          <Button onClick={cancelDelete} color="primary">
+          <Button onClick={cancelDelete} color="primary" size="small">
             Cancel
           </Button>
-          <Button onClick={confirmDelete} color="secondary">
+          <Button onClick={confirmDelete} color="secondary" size="small">
             Delete
           </Button>
         </DialogActions>
       </Dialog>
+      {userModalOpen && (
+        <UsersModal
+          onClose={handleCloseUserModal}
+          selectedCourseId={selectedCourseId}
+          open={userModalOpen}
+        />
+      )}
     </div>
   );
 }

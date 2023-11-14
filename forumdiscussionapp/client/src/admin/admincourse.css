@@ -1,7 +1,10 @@
+/* admincourse.css */
+
+/* Container styling */
 .admin-courses-container {
   text-align: center;
   margin: 20px;
-  background-color: #ffffff;
+  background-color: #f5f5f5;
   padding: 20px;
   border-radius: 8px;
   box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
@@ -21,7 +24,7 @@
 
 /* Styling for the list items */
 .admin-courses-container li {
-  background-color: #fff;
+  background-color: #ffffff;
   border-radius: 8px;
   margin-top: 20px;
   padding: 20px;
@@ -44,7 +47,7 @@
   margin-top: 10px;
 }
 
-/* Optional: Add some styling for loading indicator */
+/* Optional: Add some styling for the loading indicator */
 .admin-courses-container .MuiCircularProgress-root {
   margin-top: 20px;
 }
@@ -93,14 +96,53 @@
 /* Optional: Style for error message */
 .admin-courses-container .MuiTypography-colorError {
   margin-top: 10px;
+  color: red; /* Set the error message color to red */
 }
 
 /* Optional: Style for no courses available message */
 .admin-courses-container .MuiListItem-root {
   font-style: italic;
+  color: #777; /* Set the color for the italic message */
 }
 
 /* Optional: Style for the confirmation dialog buttons */
 .MuiDialogActions-root {
   padding: 16px;
+}
+
+/* Optional: Style for the Cancel button */
+.admin-courses-container .MuiButton-containedSecondary {
+  margin-left: 10px;
+  color: #fff; /* Set text color to white */
+  background-color: #888; /* Set background color for Cancel button */
+}
+
+/* Optional: Style for the Save button */
+.admin-courses-container .MuiButton-containedPrimary {
+  margin-left: 10px;
+}
+
+/* Optional: Style for the Close button */
+.admin-courses-container .MuiButton-text {
+  color: #888; /* Set text color for Close button */
+}
+
+/* Optional: Style for the input label */
+.MuiInputLabel-root {
+  color: #333; /* Set label text color */
+}
+
+/* Optional: Style for the input underline */
+.MuiInput-underline:before {
+  border-bottom: 2px solid #333; /* Set underline color */
+}
+
+/* Optional: Style for the input underline when focused */
+.MuiInput-underline:after {
+  border-bottom: 2px solid #888; /* Set focused underline color */
+}
+
+/* Optional: Style for the input when focused */
+.Mui-focused {
+  color: #888; /* Set focused text color */
 }
