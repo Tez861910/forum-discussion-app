@@ -1,43 +1,15 @@
-import React, { useEffect, useState } from 'react';
-import './home.css';
-import { useNavigate, Link } from 'react-router-dom';
-import axios from 'axios';
+import React from 'react';
+import PropTypes from 'prop-types';
+import { Link } from 'react-router-dom';
 
-const Navbar = ({ renderButtonsByRoleId, onButtonClick, roleId, enrolledCourses }) => {
-  const navigate = useNavigate();
-  const [userCourses, setUserCourses] = useState([]);
+const Navbar = ({ renderButtonsByRoleId, roleId, enrolledCourses, onCourseSelect }) => {
+  const handleCourseSelect = (courseId) => {
+    onCourseSelect(courseId);
+  };
 
-  useEffect(() => {
-    const fetchUserCourses = async () => {
-      try {
-        const userId = localStorage.getItem('userId');
-  
-        if (!userId) {
-          console.error('User ID not found in local storage');
-          return;
-        }
-  
-        const response = await axios.get('http://localhost:8081/users/usercourses/get', {
-          params: { userId: userId }, 
-        });
-  
-        if (response.status === 200) {
-          setUserCourses(response.data.userCourses);
-        } else {
-          console.error('Failed to fetch user courses:', response.status);
-        }
-      } catch (error) {
-        console.error('Error fetching user courses:', error);
-      }
-    };
-  
-    fetchUserCourses();
-  }, []);
-  
-  
   return (
     <nav className="navbar navbar-expand-sm navbar-dark bg-transparent">
-      <i className="navbar-brand bi bi-justify-left fs-4" onClick={() => onButtonClick('/')}></i>
+      <Link to="/" className="navbar-brand bi bi-justify-left fs-4"></Link>
       <button
         className="navbar-toggler d-lg-none"
         type="button"
@@ -53,33 +25,42 @@ const Navbar = ({ renderButtonsByRoleId, onButtonClick, roleId, enrolledCourses 
         <ul className="navbar-nav ms-auto mt-2 mt-lg-0">
           {renderButtonsByRoleId(roleId)}
 
-          {userCourses && userCourses.length > 0 && (
-            <>
-              <li className="nav-item dropdown">
-                <button
-                  className="nav-link dropdown-toggle"
-                  type="button"
-                  id="enrolledCoursesDropdown"
-                  data-bs-toggle="dropdown"
-                  aria-haspopup="true"
-                  aria-expanded="false"
-                >
-                  Enrolled Courses
-                </button>
-                <div className="dropdown-menu" aria-labelledby="enrolledCoursesDropdown">
-                  {userCourses.map((course) => (
-                    <Link key={course.CourseID} to={`/home/course/${course.CourseID}`} className="dropdown-item">
-                      Course {course.CourseID}
-                    </Link>
-                  ))}
-                </div>
-              </li>
-            </>
+          {roleId !== '1' && enrolledCourses.length > 0 && (
+            <li className="nav-item dropdown">
+              <button
+                className="btn btn-secondary dropdown-toggle"
+                type="button"
+                id="enrolledCoursesDropdown"
+                data-bs-toggle="dropdown"
+                aria-haspopup="true"
+                aria-expanded="false"
+              >
+                Enrolled Courses
+              </button>
+              <div className="dropdown-menu" aria-labelledby="enrolledCoursesDropdown">
+                {enrolledCourses.map((course) => (
+                  <button
+                    key={course.CourseID}
+                    className="dropdown-item"
+                    onClick={() => handleCourseSelect(course.CourseID)}
+                  >
+                    {course.CourseName}
+                  </button>
+                ))}
+              </div>
+            </li>
           )}
         </ul>
       </div>
     </nav>
   );
+};
+
+Navbar.propTypes = {
+  renderButtonsByRoleId: PropTypes.func.isRequired,
+  roleId: PropTypes.string.isRequired,
+  enrolledCourses: PropTypes.array.isRequired,
+  onCourseSelect: PropTypes.func.isRequired,
 };
 
 export default Navbar;

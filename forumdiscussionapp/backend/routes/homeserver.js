@@ -3,7 +3,7 @@ const router = express.Router();
 const { query } = require('../db');
 const { accessToken, verifyJwt } = require('../authvalid');
 
-router.post('/enroll-courses', verifyJwt, async (req, res) => {
+router.post('/enroll-courses',  async (req, res) => {
   const { courses } = req.body;
   const userId = req.userId;
 

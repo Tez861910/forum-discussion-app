@@ -7,6 +7,7 @@ router.use(express.json());
 
 const { handleUsersGet } = require('../user-routes/handle-users-get');
 const { handleUserCoursesGet } = require('../user-routes/handle-user-courses-get');
+const { handleUserCoursesGetId } = require('../user-routes/handle-user-courses-get-id');
 const { handleUsersCreate } = require('../user-routes/handle-users-create');
 const { handleUsersGetId } = require('../user-routes/handle-users-get-id');
 const { handleUsersUpdateId } = require('../user-routes/handle-users-update-id');
@@ -22,6 +23,9 @@ router.get('/users/get', async (req, res) =>handleUsersGet(req, res));
 
 // Get all usercoures
 router.get('/usercourses/get', async (req, res) =>handleUserCoursesGet(req, res));
+
+// Get all usercoures by userId
+router.get('/usercourses/get/id', async (req, res) =>handleUserCoursesGetId(req, res));
 
 // Get a user by ID with CourseName and RoleName
 router.get('/users/get/:id', async (req, res) => handleUsersGetId(req, res));

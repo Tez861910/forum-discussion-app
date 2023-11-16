@@ -6,10 +6,11 @@ import CourseEnrollmentModal from './course-enrollment-modal';
 import UserProfile from './user-profile'; 
 import './home.css';
 
-const Sidebar = ({ isEnrollmentModalOpen, setEnrollmentModalOpen, handleEnrollmentSuccess, courseIds, handleLogout, userRole }) => {
-  const [isUserProfileOpen, setUserProfileOpen] = useState(false);
+const Sidebar = ({ isEnrollmentModalOpen, setEnrollmentModalOpen, handleEnrollmentSuccess, courseIds, handleLogout, userRole, setUserProfileOpen }) => {
+  const [isUserProfileOpen, setLocalUserProfileOpen] = useState(false);
 
   const handleUserProfileClick = () => {
+    setLocalUserProfileOpen(true);
     setUserProfileOpen(true);
   };
 
@@ -52,7 +53,7 @@ const Sidebar = ({ isEnrollmentModalOpen, setEnrollmentModalOpen, handleEnrollme
         courses={courseIds}
       />
       {/* User Profile Modal */}
-      <UserProfile isOpen={isUserProfileOpen} onClose={() => setUserProfileOpen(false)} />
+      <UserProfile isOpen={isUserProfileOpen} onClose={() => setLocalUserProfileOpen(false)} />
     </div>
   );
 };

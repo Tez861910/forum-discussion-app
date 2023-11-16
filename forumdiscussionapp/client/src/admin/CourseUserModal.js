@@ -22,7 +22,7 @@ const Transition = React.forwardRef(function Transition(props, ref) {
   return <Slide direction="up" ref={ref} {...props} />;
 });
 
-function UsersModal({ onClose, selectedCourseId, open }) {
+function CourseUserModal({ onClose, selectedCourseId, open }) {
   const [selectedUsersToAdd, setSelectedUsersToAdd] = useState([]);
   const [enrolledUsers, setEnrolledUsers] = useState([]);
   const [allUsers, setAllUsers] = useState([]);
@@ -114,29 +114,29 @@ function UsersModal({ onClose, selectedCourseId, open }) {
             </List>
           </Grid>
           <Grid item xs={12}>
-          <Autocomplete
-  options={allUsers}
-  getOptionLabel={(option) => option.UserName}
-  renderInput={(params) => (
-    <TextField
-      {...params}
-      label="Search Users"
-      variant="outlined"
-      fullWidth
-      onChange={(e) => setSearchTerm(e.target.value)}
-      InputProps={{
-        startAdornment: (
-          <InputAdornment position="start">
-            <SearchIcon />
-          </InputAdornment>
-        ),
-      }}
-      size="small"
-    />
-  )}
-  value={selectedUsersToAdd}
-  onChange={(event, value) => setSelectedUsersToAdd(value)}
-/>
+            <Autocomplete
+              options={allUsers}
+              getOptionLabel={(option) => option.UserName}
+              renderInput={(params) => (
+                <TextField
+                  {...params}
+                  label="Search Users"
+                  variant="outlined"
+                  fullWidth
+                  onChange={(e) => setSearchTerm(e.target.value)}
+                  InputProps={{
+                    startAdornment: (
+                      <InputAdornment position="start">
+                        <SearchIcon />
+                      </InputAdornment>
+                    ),
+                  }}
+                  size="small"
+                />
+              )}
+              value={selectedUsersToAdd}
+              onChange={(event, value) => setSelectedUsersToAdd(value)}
+            />
           </Grid>
         </Grid>
       </DialogContent>
@@ -152,4 +152,4 @@ function UsersModal({ onClose, selectedCourseId, open }) {
   );
 }
 
-export default UsersModal;
+export default CourseUserModal;
