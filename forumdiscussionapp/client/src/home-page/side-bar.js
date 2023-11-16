@@ -1,12 +1,20 @@
 import React, { useState } from 'react';
-import { Button } from '@mui/material';
+import { Button, Modal } from '@mui/material';
 import LogoutIcon from '@mui/icons-material/Logout';
 import AddIcon from '@mui/icons-material/Add';
 import CourseEnrollmentModal from './course-enrollment-modal';
-import UserProfile from './user-profile'; 
+import UserProfile from './user-profile';
 import './home.css';
 
-const Sidebar = ({ isEnrollmentModalOpen, setEnrollmentModalOpen, handleEnrollmentSuccess, courseIds, handleLogout, userRole, setUserProfileOpen }) => {
+const Sidebar = ({
+  isEnrollmentModalOpen,
+  setEnrollmentModalOpen,
+  handleEnrollmentSuccess,
+  courseIds,
+  handleLogout,
+  userRole,
+  setUserProfileOpen,
+}) => {
   const [isUserProfileOpen, setLocalUserProfileOpen] = useState(false);
 
   const handleUserProfileClick = () => {
@@ -20,8 +28,8 @@ const Sidebar = ({ isEnrollmentModalOpen, setEnrollmentModalOpen, handleEnrollme
         <Button
           variant="contained"
           className="sidebar-button"
-          sx={{ mb: 2 }} 
-          onClick={handleUserProfileClick} 
+          sx={{ mb: 2 }}
+          onClick={handleUserProfileClick}
         >
           User Profile
         </Button>
@@ -31,7 +39,7 @@ const Sidebar = ({ isEnrollmentModalOpen, setEnrollmentModalOpen, handleEnrollme
             variant="contained"
             className="sidebar-button"
             startIcon={<AddIcon />}
-            sx={{ mb: 2 }} 
+            sx={{ mb: 2 }}
           >
             Enroll Now
           </Button>
@@ -41,7 +49,7 @@ const Sidebar = ({ isEnrollmentModalOpen, setEnrollmentModalOpen, handleEnrollme
           variant="contained"
           className="sidebar-button"
           startIcon={<LogoutIcon />}
-          sx={{ mb: 2 }} 
+          sx={{ mb: 2 }}
         >
           Logout
         </Button>
@@ -53,7 +61,9 @@ const Sidebar = ({ isEnrollmentModalOpen, setEnrollmentModalOpen, handleEnrollme
         courses={courseIds}
       />
       {/* User Profile Modal */}
-      <UserProfile isOpen={isUserProfileOpen} onClose={() => setLocalUserProfileOpen(false)} />
+      <Modal open={isUserProfileOpen} onClose={() => setLocalUserProfileOpen(false)}>
+        <UserProfile onClose={() => setLocalUserProfileOpen(false)} />
+      </Modal>
     </div>
   );
 };

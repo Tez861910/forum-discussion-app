@@ -9,6 +9,7 @@ import {
   Checkbox,
   Button,
   Typography,
+  Box,
 } from '@mui/material';
 import SearchIcon from '@mui/icons-material/Search';
 
@@ -69,7 +70,7 @@ const CourseEnrollmentModal = ({ isOpen, onRequestClose, onEnrollSuccess }) => {
     } catch (error) {
       console.error('Error fetching user courses:', error);
     }
-  }, []);
+  }, [fetchUserCourses]);
 
   useEffect(() => {
     const fetchCoursesAndUserCourses = async () => {
@@ -190,12 +191,14 @@ const CourseEnrollmentModal = ({ isOpen, onRequestClose, onEnrollSuccess }) => {
           </Typography>
         )}
       </List>
-      <Button variant="contained" onClick={handleEnroll} sx={{ marginRight: 2 }}>
-        Enroll
-      </Button>
-      <Button variant="outlined" onClick={onRequestClose} sx={{ marginRight: 2 }}>
-        Cancel
-      </Button>
+      <Box sx={{ display: 'flex', justifyContent: 'flex-end', marginTop: 2 }}>
+        <Button variant="contained" onClick={handleEnroll} sx={{ marginRight: 2 }}>
+          Enroll
+        </Button>
+        <Button variant="outlined" onClick={onRequestClose}>
+          Cancel
+        </Button>
+      </Box>
       {enrolledCoursesList.length > 0 && (
         <div>
           <Typography variant="h6" sx={{ marginTop: 2 }}>

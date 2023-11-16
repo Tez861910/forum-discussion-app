@@ -1,10 +1,29 @@
+import { Link } from 'react-router-dom'
 import React from 'react';
 import PropTypes from 'prop-types';
-import { Link } from 'react-router-dom';
+import Button from '@mui/material/Button';
+import Menu from '@mui/material/Menu';
+import MenuItem from '@mui/material/MenuItem';
 
-const Navbar = ({ renderButtonsByRoleId, roleId, enrolledCourses, onCourseSelect }) => {
+const Navbar = ({ renderButtonsByRoleId, roleId, enrolledCourses, onCourseSelect, fetchUserCourses }) => {
+  const [anchorEl, setAnchorEl] = React.useState(null);
+
+  const handleClick = (event) => {
+    setAnchorEl(event.currentTarget);
+  };
+
+  const handleClose = () => {
+    setAnchorEl(null);
+  };
+
   const handleCourseSelect = (courseId) => {
     onCourseSelect(courseId);
+    handleClose();
+  };
+
+  const handleEnrolledCoursesClick = async () => {
+    await fetchUserCourses();
+    handleClick();
   };
 
   return (
@@ -26,28 +45,26 @@ const Navbar = ({ renderButtonsByRoleId, roleId, enrolledCourses, onCourseSelect
           {renderButtonsByRoleId(roleId)}
 
           {roleId !== '1' && enrolledCourses.length > 0 && (
-            <li className="nav-item dropdown">
-              <button
-                className="btn btn-secondary dropdown-toggle"
-                type="button"
-                id="enrolledCoursesDropdown"
-                data-bs-toggle="dropdown"
-                aria-haspopup="true"
-                aria-expanded="false"
+            <li className="nav-item">
+              <Button
+                onClick={handleEnrolledCoursesClick}
+                color="secondary"
+                variant="outlined"
               >
                 Enrolled Courses
-              </button>
-              <div className="dropdown-menu" aria-labelledby="enrolledCoursesDropdown">
+              </Button>
+              <Menu
+                id="enrolled-courses-menu"
+                anchorEl={anchorEl}
+                open={Boolean(anchorEl)}
+                onClose={handleClose}
+              >
                 {enrolledCourses.map((course) => (
-                  <button
-                    key={course.CourseID}
-                    className="dropdown-item"
-                    onClick={() => handleCourseSelect(course.CourseID)}
-                  >
+                  <MenuItem key={course.CourseID} onClick={() => handleCourseSelect(course.CourseID)}>
                     {course.CourseName}
-                  </button>
+                  </MenuItem>
                 ))}
-              </div>
+              </Menu>
             </li>
           )}
         </ul>
@@ -61,6 +78,7 @@ Navbar.propTypes = {
   roleId: PropTypes.string.isRequired,
   enrolledCourses: PropTypes.array.isRequired,
   onCourseSelect: PropTypes.func.isRequired,
+  fetchUserCourses: PropTypes.func.isRequired,
 };
 
 export default Navbar;

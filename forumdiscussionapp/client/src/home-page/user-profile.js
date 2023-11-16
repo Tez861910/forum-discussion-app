@@ -42,21 +42,20 @@ const UserProfile = ({ isOpen, onClose }) => {
     setEditing(true);
   };
 
-  const handleSave = () => {
+  const handleSave = async () => {
     const userId = localStorage.getItem('userId');
 
-    axios
-      .put(`http://localhost:8081/users/users/update/users/${userId}`, {
+    try {
+      await axios.put(`http://localhost:8081/users/users/update/users/${userId}`, {
         name: newName,
         email: newEmail,
         password: newPassword,
-      })
-      .then(() => {
-        setEditing(false);
-      })
-      .catch((error) => {
-        console.error('Error updating user data:', error);
       });
+
+      setEditing(false);
+    } catch (error) {
+      console.error('Error updating user data:', error);
+    }
   };
 
   const handleCancel = () => {
@@ -64,19 +63,19 @@ const UserProfile = ({ isOpen, onClose }) => {
   };
 
   const handleNavigateBack = () => {
-    onClose();
+    onClose(); // Close the modal first
   };
 
   return (
-    <Modal open={isOpen} onClose={onClose}>
-      <Box className="user-profile" p={3}>
+    <Modal open={isOpen} onClose={() => { onClose(); setEditing(false); }}>
+      <Box className="user-profile" sx={{ p: 3, width: 400, mx: 'auto' }}>
         <Typography variant="h6" mb={2}>
           User Profile
         </Typography>
         {editing ? (
           <>
-            <TextField fullWidth label="Name" value={newName} onChange={(e) => setNewName(e.target.value)} />
-            <TextField fullWidth label="Email" value={newEmail} onChange={(e) => setNewEmail(e.target.value)} />
+            <TextField fullWidth label="Name" value={newName} onChange={(e) => setNewName(e.target.value)} mb={2} />
+            <TextField fullWidth label="Email" value={newEmail} onChange={(e) => setNewEmail(e.target.value)} mb={2} />
             <TextField
               fullWidth
               label="Password"
@@ -85,25 +84,29 @@ const UserProfile = ({ isOpen, onClose }) => {
               onChange={(e) => setNewPassword(e.target.value)}
               mb={2}
             />
-            <Button variant="contained" color="primary" onClick={handleSave} mr={2}>
-              Save
-            </Button>
-            <Button variant="contained" onClick={handleCancel}>
-              Cancel
-            </Button>
+            <Box sx={{ display: 'flex', justifyContent: 'flex-end', mt: 2 }}>
+              <Button variant="contained" color="primary" onClick={handleSave} sx={{ mr: 2 }}>
+                Save
+              </Button>
+              <Button variant="contained" onClick={handleCancel}>
+                Cancel
+              </Button>
+            </Box>
           </>
         ) : (
           <>
             <Typography>Name: {userData.UserName}</Typography>
             <Typography>Email: {userData.UserEmail}</Typography>
             <Typography>Role: {userData.RoleName}</Typography>
-            <Button variant="contained" color="primary" onClick={handleEdit} mb={2}>
-              Edit
-            </Button>
-            <Button variant="contained" onClick={handleNavigateBack} className="back-button">
-              <ArrowBackIcon />
-              Back
-            </Button>
+            <Box sx={{ display: 'flex', justifyContent: 'flex-end', mt: 2 }}>
+              <Button variant="contained" color="primary" onClick={handleEdit} sx={{ mr: 2 }}>
+                Edit
+              </Button>
+              <Button variant="contained" onClick={handleNavigateBack}>
+                <ArrowBackIcon />
+                Cancel
+              </Button>
+            </Box>
           </>
         )}
       </Box>

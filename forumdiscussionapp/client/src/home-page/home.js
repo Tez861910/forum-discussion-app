@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Container, Typography, Grid, Button } from '@mui/material';
+import { Container, Typography, Grid, Button, Menu, MenuItem } from '@mui/material';
 import Navbar from './nav-bar';
 import { useCookies } from 'react-cookie';
 import axios from 'axios';
@@ -25,7 +25,21 @@ const Home = () => {
   const [enrolledCourses, setEnrolledCourses] = useState([]);
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [activeView, setActiveView] = useState('courses');
+  const [anchorEl, setAnchorEl] = useState(null);
   const navigate = useNavigate();
+
+  const handleEnrollmentButtonOpen = (event) => {
+    setAnchorEl(event.currentTarget);
+  };
+
+  const handleEnrollmentButtonClose = () => {
+    setAnchorEl(null);
+  };
+
+  const handleEnrollmentButtonClick = (courseId) => {
+    handleEnrollmentButtonClose();
+    handleViewChange(`create-thread/${courseId}`);
+  };
 
   const fetchUserAndEnrolledCourses = async () => {
     try {
@@ -213,21 +227,21 @@ const Home = () => {
             <Button
               onClick={() => handleViewChange('courses')}
               variant="contained"
-              className="btn btn-primary my-3"
+              sx={{ my: 3 }}
             >
               Manage Courses
             </Button>
             <Button
               onClick={() => handleViewChange('users')}
               variant="contained"
-              className="btn btn-primary my-3"
+              sx={{ my: 3 }}
             >
               Manage Users
             </Button>
             <Button
               onClick={() => handleViewChange('roles')}
               variant="contained"
-              className="btn btn-primary my-3"
+              sx={{ my: 3 }}
             >
               Manage Roles
             </Button>
@@ -237,19 +251,27 @@ const Home = () => {
       case '3':
         return (
           <>
-            <div className="dropdown">
-              <button className="btn btn-primary my-3 dropbtn">Enrolled Courses</button>
-              <div className="dropdown-content">
-                {enrolledCourses.map((course) => (
-                  <button
-                    key={course.CourseID}
-                    onClick={() => handleViewChange(`create-thread/${course.CourseID}`)}
-                  >
-                    {course.CourseName}
-                  </button>
-                ))}
-              </div>
-            </div>
+            <Button
+              onClick={handleEnrollmentButtonOpen}
+              variant="contained"
+              sx={{ my: 3 }}
+            >
+              Enrolled Courses
+            </Button>
+            <Menu
+              anchorEl={anchorEl}
+              open={Boolean(anchorEl)}
+              onClose={handleEnrollmentButtonClose}
+            >
+              {enrolledCourses.map((course) => (
+                <MenuItem
+                  key={course.CourseID}
+                  onClick={() => handleEnrollmentButtonClick(course.CourseID)}
+                >
+                  {course.CourseName}
+                </MenuItem>
+              ))}
+            </Menu>
           </>
         );
       default:
@@ -278,7 +300,7 @@ const Home = () => {
         return <CreateThread />;
       } else {
         return (
-          <Typography variant="h6" className="heading">
+          <Typography variant="h6" sx={{ my: 3 }}>
             Please enroll in courses to access this feature.
           </Typography>
         );
@@ -304,7 +326,7 @@ const Home = () => {
   return (
     <>
       <Container className="home-container">
-        <Typography variant="h2" className="heading" style={{ textAlign: 'center', marginBottom: '20px' }}>
+        <Typography variant="h2" sx={{ textAlign: 'center', my: 3 }}>
           {getRoleHeaderText(roleId)}
         </Typography>
 
@@ -323,7 +345,7 @@ const Home = () => {
 
           <Grid item xs={10}>
             <div className="main-content">
-              <Typography variant="h4" className="heading">
+              <Typography variant="h4" sx={{ my: 3 }}>
                 Welcome, {roleId === '1' ? 'Admin' : roleId === '2' ? 'Teacher' : 'Student'}
               </Typography>
 
