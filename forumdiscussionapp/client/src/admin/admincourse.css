@@ -146,3 +146,39 @@
 .Mui-focused {
   color: #888; /* Set focused text color */
 }
+
+/* Style for Autocomplete */
+.MuiAutocomplete-root {
+  width: 100%;
+}
+
+/* Style for TextField inside Autocomplete */
+.MuiTextField-root {
+  width: 100%;
+}
+
+/* Style for dropdown indicator */
+.MuiAutocomplete-popupIndicator {
+  cursor: pointer;
+}
+
+/* Style for Autocomplete options (dropdown list) */
+.MuiAutocomplete-option {
+  padding: 8px 16px;
+  font-size: 14px;
+  color: #333;
+}
+
+/* Style for selected option in Autocomplete */
+.MuiAutocomplete-tag {
+  background-color: #888;
+  color: #fff;
+  margin: 4px;
+  padding: 4px 8px;
+  border-radius: 4px;
+}
+
+/* Style for focused option in Autocomplete */
+.MuiAutocomplete-option[data-focus="true"] {
+  background-color: #eee;
+}

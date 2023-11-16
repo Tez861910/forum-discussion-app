@@ -5,7 +5,6 @@ const handleCIDEnrollmentsEID = async (req, res) => {
     const courseId = req.params.courseId;
     const userId = req.params.userId; 
 
-    // Remove the user from the course
     const deleteSql = 'DELETE FROM usercourses WHERE UserID = ? AND CourseID = ?';
     const deleteResult = await query(deleteSql, [userId, courseId]);
 

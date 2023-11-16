@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import axios from 'axios';
 import {
   Dialog,
@@ -9,14 +9,13 @@ import {
   Button,
   Slide,
   Autocomplete,
-  InputAdornment,
   List,
   ListItem,
   ListItemText,
   Grid,
 } from '@mui/material';
-import SearchIcon from '@mui/icons-material/Search';
 import CloseIcon from '@mui/icons-material/Close';
+import ArrowDropDownIcon from '@mui/icons-material/ArrowDropDown';
 
 const Transition = React.forwardRef(function Transition(props, ref) {
   return <Slide direction="up" ref={ref} {...props} />;
@@ -26,20 +25,19 @@ function CourseUserModal({ onClose, selectedCourseId, open }) {
   const [selectedUsersToAdd, setSelectedUsersToAdd] = useState([]);
   const [enrolledUsers, setEnrolledUsers] = useState([]);
   const [allUsers, setAllUsers] = useState([]);
-  const [searchTerm, setSearchTerm] = useState('');
+  const fetchTimeoutRef = useRef(null);
 
   useEffect(() => {
-    fetchAllUsers();
     fetchCourseEnrollments();
+    fetchAllUsers();
   }, [selectedCourseId]);
 
   const fetchAllUsers = async () => {
     try {
       const response = await axios.get('http://localhost:8081/users/users/get');
-      if (Array.isArray(response.data.users)) {
-        const users = response.data.users;
-        setAllUsers(users);
-        console.log('Fetched Users:', users);
+      if (response.data && Array.isArray(response.data.users)) {
+        const filteredUsers = response.data.users;
+        setAllUsers(filteredUsers);
       } else {
         console.error('Invalid response data format (Users):', response.data);
       }
@@ -50,7 +48,9 @@ function CourseUserModal({ onClose, selectedCourseId, open }) {
 
   const fetchCourseEnrollments = async () => {
     try {
-      const response = await axios.get(`http://localhost:8081/courses/courses/enrollments/${selectedCourseId}`);
+      const response = await axios.get(
+        `http://localhost:8081/courses/courses/enrollments/${selectedCourseId}`
+      );
       if (response.status === 404) {
         console.error('No enrollments found for the course:', response.data.error);
         setEnrolledUsers([]);
@@ -74,9 +74,19 @@ function CourseUserModal({ onClose, selectedCourseId, open }) {
 
   const handleAddUserToCourse = async () => {
     try {
-      const response = await axios.post(`http://localhost:8081/courses/courses/${selectedCourseId}/enroll`, {
-        users: selectedUsersToAdd.map((user) => user.UserID),
-      });
+      if (!selectedUsersToAdd || selectedUsersToAdd.length === 0 || !selectedUsersToAdd[0].UserID) {
+        console.error('Invalid user selected');
+        return;
+      }
+
+      const response = await axios.post(
+        `http://localhost:8081/courses/courses/${selectedCourseId}/enroll`,
+        {
+          courseId: selectedCourseId,
+          userName: selectedUsersToAdd[0].UserName,
+        }
+      );
+
       console.log('Enroll Users Response:', response.data);
       fetchCourseEnrollments();
     } catch (error) {
@@ -84,10 +94,33 @@ function CourseUserModal({ onClose, selectedCourseId, open }) {
     }
   };
 
-  const handleRemoveUserFromList = (user) => {
-    const updatedUsers = selectedUsersToAdd.filter((u) => u.UserID !== user.UserID);
-    setSelectedUsersToAdd(updatedUsers);
-  };
+  const handleRemoveUserFromList = async () => {
+    try {
+      console.log('selectedUsersToAdd:', selectedUsersToAdd);
+  
+      if (!selectedUsersToAdd || selectedUsersToAdd.length === 0 || !selectedUsersToAdd[0]?.UserID) {
+        console.error('Invalid user selected');
+        return;
+      }
+  
+      const userId = selectedUsersToAdd[0].UserID;
+  
+      const response = await axios.delete(
+        `http://localhost:8081/courses/courses/${selectedCourseId}/enroll/${userId}`
+      );
+  
+      console.log('Delete User Response:', response.data);
+      fetchCourseEnrollments();
+    } catch (error) {
+      console.error('Error removing user from course:', error);
+    }
+  };  
+
+  const DropdownIndicator = ({ isOpen }) => (
+    <div style={{ display: 'flex', alignItems: 'center', paddingRight: '8px' }}>
+      <ArrowDropDownIcon color={isOpen ? 'primary' : 'action'} />
+    </div>
+  );
 
   return (
     <Dialog
@@ -114,29 +147,28 @@ function CourseUserModal({ onClose, selectedCourseId, open }) {
             </List>
           </Grid>
           <Grid item xs={12}>
-            <Autocomplete
-              options={allUsers}
-              getOptionLabel={(option) => option.UserName}
-              renderInput={(params) => (
-                <TextField
-                  {...params}
-                  label="Search Users"
-                  variant="outlined"
-                  fullWidth
-                  onChange={(e) => setSearchTerm(e.target.value)}
-                  InputProps={{
-                    startAdornment: (
-                      <InputAdornment position="start">
-                        <SearchIcon />
-                      </InputAdornment>
-                    ),
-                  }}
-                  size="small"
-                />
-              )}
-              value={selectedUsersToAdd}
-              onChange={(event, value) => setSelectedUsersToAdd(value)}
-            />
+          <Autocomplete
+  options={allUsers || []}
+  getOptionLabel={(option) => (option?.UserName) || ''}
+  isOptionEqualToValue={(option, value) => option?.UserID === value?.UserID}
+  onChange={(event, value) => setSelectedUsersToAdd(value)}
+  renderInput={(params) => (
+    <TextField
+      {...params}
+      label="Add Users"
+      variant="outlined"
+      fullWidth
+      size="small"
+    />
+  )}
+  value={selectedUsersToAdd}
+  multiple
+  renderOption={(props, option) => (
+    <li {...props}>
+      <div>{option?.UserName}</div>
+    </li>
+  )}
+/>
           </Grid>
         </Grid>
       </DialogContent>
@@ -144,7 +176,12 @@ function CourseUserModal({ onClose, selectedCourseId, open }) {
         <Button onClick={onClose} color="primary" size="small">
           <CloseIcon />
         </Button>
-        <Button variant="contained" color="primary" onClick={handleAddUserToCourse} size="small">
+        <Button
+          variant="contained"
+          color="primary"
+          onClick={handleAddUserToCourse}
+          size="small"
+        >
           Enroll Users
         </Button>
       </DialogActions>

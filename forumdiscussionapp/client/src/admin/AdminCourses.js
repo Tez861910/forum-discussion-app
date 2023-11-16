@@ -21,7 +21,7 @@ import DeleteIcon from '@mui/icons-material/Delete';
 import EditIcon from '@mui/icons-material/Edit';
 import SaveIcon from '@mui/icons-material/Save';
 import CloseIcon from '@mui/icons-material/Close';
-import UsersModal from './CourseUserModal.js';
+import CourseUserModal from './CourseUserModal';
 import './admincourse.css';
 
 const Transition = React.forwardRef(function Transition(props, ref) {
@@ -167,7 +167,7 @@ function AdminCourses() {
               </div>
             ) : (
               <ListItemSecondaryAction>
-                <IconButton edge="end" aria-label="edit" onClick={() => setEditingCourseId(course.CourseID)} size="small">
+                <IconButton edge="end" aria-label="edit" onClick={() => handleCourseSelection(course.CourseID)} size="small">
                   <EditIcon />
                 </IconButton>
                 <IconButton edge="end" aria-label="delete" onClick={() => handleDeleteCourse(course.CourseID)} size="small">
@@ -242,11 +242,11 @@ function AdminCourses() {
           </Button>
         </DialogActions>
       </Dialog>
-      {userModalOpen && (
-        <UsersModal
+      {userModalOpen && selectedCourseId !== null && (
+        <CourseUserModal
           onClose={handleCloseUserModal}
           selectedCourseId={selectedCourseId}
-          open={userModalOpen}
+          open={true}
         />
       )}
     </div>
