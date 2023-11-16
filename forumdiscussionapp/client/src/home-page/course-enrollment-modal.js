@@ -130,9 +130,13 @@ const CourseEnrollmentModal = ({ isOpen, onRequestClose, onEnrollSuccess }) => {
 
     if (enrolledCourse) {
       return (
-        <li key={enrolledCourse.CourseID}>
-          <Typography variant="body1">{enrolledCourse.CourseName}</Typography>
-        </li>
+        <ListItem key={enrolledCourse.CourseID} disablePadding>
+          <Checkbox
+            checked={selectedCourses.includes(enrolledCourse.CourseID)}
+            onChange={() => handleCourseSelection(enrolledCourse.CourseID)}
+          />
+          {enrolledCourse.CourseName}
+        </ListItem>
       );
     } else {
       return null;
@@ -194,10 +198,10 @@ const CourseEnrollmentModal = ({ isOpen, onRequestClose, onEnrollSuccess }) => {
       </Button>
       {enrolledCoursesList.length > 0 && (
         <div>
-          <Typography variant="h6" gutterBottom>
-            Enrolled Courses:
+          <Typography variant="h6" sx={{ marginTop: 2 }}>
+            Enrolled Courses
           </Typography>
-          <ul>{enrolledCoursesList}</ul>
+          <List>{enrolledCoursesList}</List>
         </div>
       )}
     </Modal>

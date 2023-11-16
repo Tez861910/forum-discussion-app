@@ -3,7 +3,7 @@ import axios from 'axios';
 import MCQSummary from './mcq-summary';
 import { Typography, FormControl, RadioGroup, FormControlLabel, Radio, Button } from '@mui/material';
 
-const MCQAnswerForm = () => {
+const MCQAnswerForm = ({ courseId }) => {
   const [isLoading, setIsLoading] = useState(true);
   const [questions, setQuestions] = useState([]);
   const [answers, setAnswers] = useState([]);
@@ -12,12 +12,8 @@ const MCQAnswerForm = () => {
   const [allQuestionsAnswered, setAllQuestionsAnswered] = useState(false);
 
   useEffect(() => {
-    // Retrieve courseId from local storage
-    const courseId = localStorage.getItem('courseId');
-
     const fetchQuestions = async () => {
       try {
-        // Make an API request with courseId to get MCQ questions
         const response = await axios.get(`http://localhost:8081/mcqanswerform/mcqanswerform/questions/get/${courseId}`);
         setQuestions(response.data);
         setIsLoading(false);
@@ -27,7 +23,7 @@ const MCQAnswerForm = () => {
     };
 
     fetchQuestions();
-  }, []);
+  }, [courseId]);
 
   const handleAnswer = () => {
     const selectedQuestion = questions[currentQuestionIndex];
@@ -64,9 +60,9 @@ const MCQAnswerForm = () => {
                 questions[currentQuestionIndex].options.map((option, index) => (
                   <FormControlLabel
                     key={index}
-                    value={option.MCQOption} // Correct the key and value here
+                    value={option.MCQOption}
                     control={<Radio />}
-                    label={option.MCQOption} // Correct the label here
+                    label={option.MCQOption}
                   />
                 ))
               ) : (

@@ -1,49 +1,42 @@
 import React, { useState } from 'react';
 import axios from 'axios';
-import { Typography, Button, TextField, List, ListItem } from '@mui/material';
+import { Typography, Button, TextField, List, ListItem, FormControl, RadioGroup, FormControlLabel, Radio } from '@mui/material';
 import { useNavigate } from 'react-router-dom';
-import './mcq-form.css'; 
+import './mcq-form.css';
 
-const MCQForm = () => {
+const MCQForm = ({ courseId }) => {
+  const navigate = useNavigate();
   const [question, setQuestion] = useState('');
   const [options, setOptions] = useState(['', '', '', '']);
   const [correctAnswer, setCorrectAnswer] = useState('');
 
-  const courseId = localStorage.getItem('courseId');
-  const createdbyuserId = localStorage.getItem('userId');
-
-  const navigate = useNavigate();
-
   const onSave = (mcqData) => {
     console.log('MCQ Data Saved:', mcqData);
+    // You can perform additional actions after saving, if needed
   };
 
-  const handleSave = () => {
+  const handleSave = async () => {
     if (question && options.every((opt) => opt !== '') && correctAnswer !== '') {
       const mcqData = {
         question,
         options,
         correctAnswer,
         courseId,
-        createdbyuserId,
       };
 
-      axios
-        .post('http://localhost:8081/mcqform/mcqform/save', mcqData)
-        .then((response) => {
-          if (response.data.success) {
-            onSave(mcqData);
+      try {
+        const response = await axios.post('http://localhost:8081/mcqform/mcqform/save', mcqData);
 
-            setQuestion('');
-            setOptions(['', '', '', '']);
-            setCorrectAnswer('');
-          } else {
-            console.error('Error saving MCQ data:', response.data.error);
-          }
-        })
-        .catch((error) => {
-          console.error('Error saving MCQ data:', error);
-        });
+        if (response.data.success) {
+          onSave(mcqData);
+          // Assuming there's a route to the created MCQ, you can redirect there
+          navigate(`/mcq/${response.data.mcqId}`);
+        } else {
+          console.error('Error saving MCQ data:', response.data.error);
+        }
+      } catch (error) {
+        console.error('Error saving MCQ data:', error);
+      }
     }
   };
 
@@ -57,10 +50,6 @@ const MCQForm = () => {
     const newOptions = [...options];
     newOptions[index] = value;
     setOptions(newOptions);
-  };
-
-  const handleBack = () => {
-    navigate('/home');
   };
 
   return (
@@ -93,23 +82,31 @@ const MCQForm = () => {
           </ListItem>
         ))}
       </List>
-      <TextField
-        label="Correct Answer"
-        fullWidth
-        variant="outlined"
-        value={correctAnswer}
-        onChange={(e) => setCorrectAnswer(e.target.value)}
-        className="input"
-      />
+      <FormControl component="fieldset" className="form-control">
+        <Typography variant="h6" gutterBottom className="sub-heading">
+          Correct Answer:
+        </Typography>
+        <RadioGroup
+          value={correctAnswer}
+          onChange={(e) => setCorrectAnswer(e.target.value)}
+          row
+        >
+          {options.map((opt, index) => (
+            <FormControlLabel
+              key={index}
+              value={opt}
+              control={<Radio />}
+              label={`Option ${index + 1}`}
+            />
+          ))}
+        </RadioGroup>
+      </FormControl>
       <div className="button-container">
-        <Button onClick={handleSave} className="button">
+        <Button onClick={handleSave} className="button" variant="contained" color="primary">
           Save
         </Button>
-        <Button onClick={handleCancel} className="button">
+        <Button onClick={handleCancel} className="button" variant="contained" color="secondary">
           Cancel
-        </Button>
-        <Button onClick={handleBack} className="button">
-          Back to Home
         </Button>
       </div>
     </div>

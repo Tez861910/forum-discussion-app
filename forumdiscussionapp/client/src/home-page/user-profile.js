@@ -2,9 +2,8 @@ import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { Typography, TextField, Button, Modal, Box } from '@mui/material';
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
-import './home.css'; 
 
-function UserProfile({ userId, isOpen, onClose }) {
+const UserProfile = ({ isOpen, onClose }) => {
   const [newName, setNewName] = useState('');
   const [newEmail, setNewEmail] = useState('');
   const [newPassword, setNewPassword] = useState('');
@@ -44,6 +43,8 @@ function UserProfile({ userId, isOpen, onClose }) {
   };
 
   const handleSave = () => {
+    const userId = localStorage.getItem('userId');
+
     axios
       .put(`http://localhost:8081/users/users/update/users/${userId}`, {
         name: newName,
@@ -108,6 +109,6 @@ function UserProfile({ userId, isOpen, onClose }) {
       </Box>
     </Modal>
   );
-}
+};
 
 export default UserProfile;

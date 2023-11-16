@@ -13,13 +13,12 @@ import {
 import CommentSection from '../comments/comment-section';
 import './create-thread.css';
 
-function CreateThread() {
+function CreateThread({ courseId }) {
   const [threads, setThreads] = useState([]);
   const [newThread, setNewThread] = useState({
     title: 'New Thread Title',
     content: 'New Thread Content',
   });
-  const [courseId, setCourseId] = useState(null);
   const [userId, setUserId] = useState(null);
   const [roleId, setRoleId] = useState(null);
   const [error, setError] = useState(null);
@@ -48,25 +47,9 @@ function CreateThread() {
     const roleIdNumber = parseInt(storedRoleId, 10);
     setRoleId(roleIdNumber);
 
-    let storedCourseIds;
-    try {
-      const storedCourseIdsString = localStorage.getItem('courseIds') || '[]';
-      storedCourseIds = JSON.parse(storedCourseIdsString);
-
-      if (!Array.isArray(storedCourseIds)) {
-        throw new Error('Course IDs not an array');
-      }
-    } catch (error) {
-      console.error(
-        'Error parsing or retrieving course IDs from local storage:',
-        error.message
-      );
-      storedCourseIds = [];
-    }
-
     console.log('Fetching threads for courseId:', courseId);
     fetchThreads(courseId);
-  }, []);
+  }, [courseId]);
 
   const fetchThreads = async (courseId) => {
     try {
