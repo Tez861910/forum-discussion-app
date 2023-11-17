@@ -94,19 +94,22 @@ function AdminRoles() {
 
   const confirmDelete = async () => {
     try {
-      await axios.patch(`http://localhost:8081/roles/roles/update/${deleteConfirmation.roleId}`, {
-        IsDeleted: true,
-      });
-      console.log('Role deleted successfully');
-      fetchRoles();
+      const response = await axios.patch(`http://localhost:8081/roles/roles/delete/${deleteConfirmation.roleId}`);
+      if (response.data.message === 'Role soft-deleted successfully') {
+        console.log('Role soft-deleted successfully');
+        fetchRoles();
+      } else {
+        console.error('Role soft-deletion failed');
+        setError('Role soft-deletion failed');
+      }
     } catch (error) {
-      console.error('Error deleting role:', error);
-      setError('Error deleting role. Please try again.');
+      console.error('Error soft-deleting role:', error);
+      setError('Error soft-deleting role. Please try again.');
     } finally {
       setDeleteConfirmation({ open: false, roleId: null });
     }
   };
-
+  
   const cancelDelete = () => {
     setDeleteConfirmation({ open: false, roleId: null });
   };
@@ -117,7 +120,7 @@ function AdminRoles() {
 
   const handleRoleUserModal = (roleId) => {
     setUserModalOpen(true);
-    setSelectedRoleId(roleId); 
+    setSelectedRoleId(roleId);
   };
 
   const renderRoleListItem = (role) => {
@@ -137,7 +140,9 @@ function AdminRoles() {
                 size="small"
               />
             ) : (
-              <ListItemText primary={role.roleName} />
+              <ListItemText primary={role.roleName}
+              onClick={() => handleRoleUserModal(role.roleId)} 
+               />
             )}
           </Grid>
           <Grid item xs={isEditing ? 6 : 4}>
@@ -165,7 +170,12 @@ function AdminRoles() {
               </div>
             ) : (
               <ListItemSecondaryAction>
-                <IconButton edge="end" aria-label="edit" onClick={() => handleEditRoleModal(role.roleId)} size="small">
+                <IconButton
+                  edge="end"
+                  aria-label="edit"
+                  onClick={() => handleEditRoleModal(role.roleId)}
+                  size="small"
+                >
                   <EditIcon />
                 </IconButton>
                 <IconButton
@@ -179,7 +189,7 @@ function AdminRoles() {
                 <IconButton
                   edge="end"
                   aria-label="users"
-                  onClick={() => handleRoleUserModal(role.roleId)}
+                  onClick={() => handleRoleUserModal(role.roleId)}  
                   size="small"
                 >
                   {/* Add appropriate icon for managing users in the role */}

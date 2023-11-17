@@ -55,9 +55,9 @@ function RoleUserModal({ open, onClose, selectedRoleId }) {
 
   const fetchRoleUsers = async () => {
     try {
-      const response = await axios.get(`http://localhost:8081/roles/${selectedRoleId}/users`);
-      if (response.data && Array.isArray(response.data.users)) {
-        const roleUsersData = response.data.users;
+      const response = await axios.get(`http://localhost:8081/roles/roles/enrollments/${selectedRoleId}`);
+      if (response.data && response.data.enrollments) {
+        const roleUsersData = response.data.enrollments[selectedRoleId] || [];
         setEnrolledUsers(roleUsersData);
       } else {
         console.error('Invalid response data format (Role Users):', response.data);
@@ -65,7 +65,7 @@ function RoleUserModal({ open, onClose, selectedRoleId }) {
     } catch (error) {
       console.error('Error fetching role users:', error);
     }
-  };
+  };  
 
   const handleAddUserToRole = async () => {
     try {
@@ -76,7 +76,7 @@ function RoleUserModal({ open, onClose, selectedRoleId }) {
 
       const userId = selectedUsersToAdd[0].userId;
 
-      const response = await axios.post(`http://localhost:8081/roles/${selectedRoleId}/users`, {
+      const response = await axios.post(`http://localhost:8081/roles/roles/${selectedRoleId}/enroll`, {
         userId: userId,
       });
 
@@ -100,7 +100,7 @@ function RoleUserModal({ open, onClose, selectedRoleId }) {
 
       const userId = removeConfirmation.user.userId;
 
-      const response = await axios.delete(`http://localhost:8081/roles/${selectedRoleId}/users/${userId}`);
+      const response = await axios.delete(`http://localhost:8081/roles/roles/${selectedRoleId}/enrollments/${userId}`);
       console.log('Delete User Response:', response.data);
       fetchRoleUsers();
     } catch (error) {
@@ -133,42 +133,44 @@ function RoleUserModal({ open, onClose, selectedRoleId }) {
       <DialogContent>
         <Grid container spacing={2}>
           <Grid item xs={12}>
-            <List>
-              {enrolledUsers.map((user) => (
-                <ListItem key={user.userId}>
-                  <ListItemText primary={user.userName} />
-                  <ListItemSecondaryAction>
-                    <IconButton onClick={() => handleRemoveUserConfirmation(user)}>
-                      <DeleteIcon />
-                    </IconButton>
-                  </ListItemSecondaryAction>
-                </ListItem>
-              ))}
-            </List>
+          <List>
+  {enrolledUsers.map((user) => (
+    <ListItem key={user.UserID}>
+      <ListItemText primary={user.UserName} />
+      <ListItemSecondaryAction>
+        <IconButton onClick={() => handleRemoveUserConfirmation(user)}>
+          <DeleteIcon />
+        </IconButton>
+      </ListItemSecondaryAction>
+    </ListItem>
+  ))}
+</List>
+
           </Grid>
           <Grid item xs={12}>
-            <Autocomplete
-              options={allUsers || []}
-              getOptionLabel={(option) => (option?.userName) || ''}
-              isOptionEqualToValue={(option, value) => option?.userId === value?.userId}
-              onChange={(event, value) => setSelectedUsersToAdd(value)}
-              renderInput={(params) => (
-                <TextField
-                  {...params}
-                  label="Add Users"
-                  variant="outlined"
-                  fullWidth
-                  size="small"
-                />
-              )}
-              value={selectedUsersToAdd}
-              multiple
-              renderOption={(props, option) => (
-                <li {...props}>
-                  <div>{option?.userName}</div>
-                </li>
-              )}
-            />
+          <Autocomplete
+  options={allUsers || []}
+  getOptionLabel={(option) => (option?.UserName) || ''}
+  isOptionEqualToValue={(option, value) => option?.UserID === value?.UserID}
+  onChange={(event, value) => setSelectedUsersToAdd(value)}
+  renderInput={(params) => (
+    <TextField
+      {...params}
+      label="Add Users"
+      variant="outlined"
+      fullWidth
+      size="small"
+    />
+  )}
+  value={selectedUsersToAdd}
+  multiple
+  renderOption={(props, option) => (
+    <li {...props}>
+      <div>{option?.UserName}</div>
+    </li>
+  )}
+/>
+
           </Grid>
         </Grid>
       </DialogContent>

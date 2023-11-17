@@ -11,6 +11,11 @@ const { handleRolesCreate } = require('../role-routes/handle-roles-create');
 const { handleRolesGetId } = require('../role-routes/handle-roles-get-id');
 const { handleRolesUpdateId } = require('../role-routes/handle-roles-update-id');
 const { handleRolesPatchId } = require('../role-routes/handle-roles-patch-id');
+const { handleRolesEnrollmentsId } = require('../role-routes/handle-roles-enrollments-id');
+const { handleRolesIdEnroll } = require('../role-routes/handle-roles-id-enroll');
+const { handleRIDEnrollmentsUID } = require('../role-routes/handle-roles-rid-enrollments-uid');
+
+
 
 // Create a new role
 router.post('/roles/create', async (req, res) => handleRolesCreate(req, res));
@@ -25,7 +30,15 @@ router.get('/roles/get/:id', async (req, res) => handleRolesGetId(req, res));
 router.put('/roles/update/:id', async (req, res) => handleRolesUpdateId(req, res));
 
 // Patch (soft delete) a role
-router.patch('/roles/update/:id', async (req, res) => handleRolesPatchId(req, res));
+router.patch('/roles/delete/:id', async (req, res) => handleRolesPatchId(req, res));
 
+// Get role enrollments
+router.get('/roles/enrollments/:roleId', async (req, res) => handleRolesEnrollmentsId(req, res));
+
+// Enroll user in a role
+router.post('/roles/:roleId/enroll', async (req, res) => handleRolesIdEnroll(req, res));
+
+// Patch (soft delete) removing user from a role
+router.patch('/roles/:roleId/enrollments/:userId', async (req, res) => handleRIDEnrollmentsUID(req, res));
 
 module.exports = router;

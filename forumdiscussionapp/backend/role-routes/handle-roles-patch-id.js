@@ -1,29 +1,22 @@
 const { query } = require('../db');
 
 async function handleRolesPatchId(req, res) {
-  const { id } = req.params;
-
   try {
-    const { IsDeleted } = req.body;
+    const { id } = req.params;
 
-    if (IsDeleted === undefined || typeof IsDeleted !== 'boolean') {
-      console.error('Invalid IsDeleted value provided');
-      return res.status(400).json({ error: 'Invalid IsDeleted value' });
-    }
-
-    const sql = 'UPDATE roles SET IsDeleted = ? WHERE RoleID = ?';
-    const [result] = await query(sql, [IsDeleted, id]);
+    const updateSql = 'UPDATE roles SET IsDeleted = TRUE WHERE RoleID = ?';
+    const [result] = await query(updateSql, [id]);
 
     if (result.affectedRows === 1) {
-      console.log('Role updated successfully');
-      return res.status(200).json({ message: 'Role updated successfully' });
+      console.log('Role soft-deleted successfully');
+      res.json({ message: 'Role soft-deleted successfully' });
     } else {
-      console.error('Role update failed');
-      return res.status(404).json({ error: 'Role not found' });
+      console.error('Role soft-deletion failed');
+      res.status(500).json({ error: 'Role soft-deletion failed' });
     }
   } catch (error) {
-    console.error('Error updating role:', error);
-    return res.status(500).json({ error: 'Role update failed', details: error.message });
+    console.error('Error soft-deleting role:', error);
+    res.status(500).json({ error: 'Role soft-deletion failed', details: error.message });
   }
 }
 
