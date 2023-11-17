@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Container, Typography, Grid, Button, Menu, MenuItem } from '@mui/material';
+import { Container, Typography, Grid, Button } from '@mui/material';
 import Navbar from './nav-bar';
 import { useCookies } from 'react-cookie';
 import axios from 'axios';
@@ -25,59 +25,14 @@ const Home = () => {
   const [enrolledCourses, setEnrolledCourses] = useState([]);
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [activeView, setActiveView] = useState('courses');
-  const [anchorEl, setAnchorEl] = useState(null);
   const navigate = useNavigate();
 
-  const handleEnrollmentButtonOpen = (event) => {
-    setAnchorEl(event.currentTarget);
-  };
-
-  const handleEnrollmentButtonClose = () => {
-    setAnchorEl(null);
-  };
-
-  const handleEnrollmentButtonClick = (courseId) => {
-    handleEnrollmentButtonClose();
-    handleViewChange(`create-thread/${courseId}`);
-  };
-
-  const fetchUserAndEnrolledCourses = async () => {
-    try {
-      const userId = localStorage.getItem('userId');
-      if (!userId) {
-        console.error('User ID not found in local storage');
-        return;
-      }
-
-      const userCoursesData = await fetchUserCourses();
-
-      const enrolledCourseIds = userCoursesData.map((course) => course.CourseID);
-
-      setEnrolledCourses(enrolledCourseIds);
-    } catch (error) {
-      console.error('Error fetching enrolled courses:', error);
-    }
-  };
-
-  const handleTokenRefresh = async () => {
-    try {
-      const response = await axios.post(
-        API_URL,
-        {},
-        {
-          headers: {
-            Authorization: `Bearer ${cookies.token}`,
-          },
-        }
-      );
-
-      response.data.success
-        ? handleTokenRefreshSuccess(response.data)
-        : handleTokenRefreshFailure();
-    } catch (error) {
-      console.error('Token refresh failed:', error);
-      handleTokenRefreshFailure();
-    }
+  const clearUserData = () => {
+    setCookie('token', '', { path: '/', expires: new Date(0) });
+    localStorage.removeItem('userId');
+    localStorage.removeItem('roleId');
+    setIsLoggedIn(false);
+    navigate('/');
   };
 
   const handleTokenRefreshSuccess = (data) => {
@@ -112,8 +67,47 @@ const Home = () => {
     }
   };
 
+  const handleTokenRefresh = async () => {
+    try {
+      const response = await axios.post(
+        API_URL,
+        {},
+        {
+          headers: {
+            Authorization: `Bearer ${cookies.token}`,
+          },
+        }
+      );
+
+      response.data.success
+        ? handleTokenRefreshSuccess(response.data)
+        : handleTokenRefreshFailure();
+    } catch (error) {
+      console.error('Token refresh failed:', error);
+      handleTokenRefreshFailure();
+    }
+  };
+
   const handleTokenRefreshFailure = () => {
     clearUserData();
+  };
+
+  const fetchUserAndEnrolledCourses = async () => {
+    try {
+      const userId = localStorage.getItem('userId');
+      if (!userId) {
+        console.error('User ID not found in local storage');
+        return;
+      }
+
+      const userCoursesData = await fetchUserCourses();
+
+      const enrolledCourseIds = userCoursesData.map((course) => course.CourseID);
+
+      setEnrolledCourses(enrolledCourseIds);
+    } catch (error) {
+      console.error('Error fetching enrolled courses:', error);
+    }
   };
 
   useEffect(() => {
@@ -145,38 +139,6 @@ const Home = () => {
       }
     };
 
-    const handleTokenRefreshSuccess = (data) => {
-      const newAccessToken = data.accessToken;
-      setCookie('token', newAccessToken, { path: '/' });
-
-      const storedRoleId = localStorage.getItem('roleId');
-      setRoleId(storedRoleId);
-
-      storedRoleId && handleRoleSpecificActions(storedRoleId);
-    };
-
-    const handleRoleSpecificActions = (roleId) => {
-      switch (roleId) {
-        case '1':
-        case '2':
-          setCoursesEnrolled(true);
-          break;
-        case '3':
-          handleStudentActions();
-          break;
-        default:
-          break;
-      }
-    };
-
-    const handleStudentActions = () => {
-      if (!enrolledCourses || enrolledCourses.length === 0) {
-        setEnrollmentModalOpen(true);
-      } else {
-        setCoursesEnrolled(true);
-      }
-    };
-
     const handleTokenRefreshFailure = () => {
       clearUserData();
     };
@@ -200,14 +162,6 @@ const Home = () => {
     }
   };
 
-  const clearUserData = () => {
-    setCookie('token', '', { path: '/', expires: new Date(0) });
-    localStorage.removeItem('userId');
-    localStorage.removeItem('roleId');
-    setIsLoggedIn(false);
-    navigate('/');
-  };
-
   const handleEnrollmentSuccess = (selectedCourses) => {
     localStorage.setItem('courseIds', JSON.stringify(selectedCourses));
     setCoursesEnrolled(true);
@@ -219,6 +173,14 @@ const Home = () => {
     clearUserData();
   };
 
+  const handleCourseButtonClick = (courseId) => {
+    if (roleId === '2') {
+      navigateToPath(`create-thread/${courseId}`);
+    } else if (roleId === '3') {
+      navigateToPath(`create-thread/${courseId}`);
+    }
+  };
+
   const renderButtonsByRoleId = (roleId) => {
     switch (roleId) {
       case '1':
@@ -227,21 +189,21 @@ const Home = () => {
             <Button
               onClick={() => handleViewChange('courses')}
               variant="contained"
-              sx={{ my: 3 }}
+              sx={{ my: 3, width: '100%' }}
             >
               Manage Courses
             </Button>
             <Button
               onClick={() => handleViewChange('users')}
               variant="contained"
-              sx={{ my: 3 }}
+              sx={{ my: 3, width: '100%' }}
             >
               Manage Users
             </Button>
             <Button
               onClick={() => handleViewChange('roles')}
               variant="contained"
-              sx={{ my: 3 }}
+              sx={{ my: 3, width: '100%' }}
             >
               Manage Roles
             </Button>
@@ -252,26 +214,13 @@ const Home = () => {
         return (
           <>
             <Button
-              onClick={handleEnrollmentButtonOpen}
+              onClick={() => handleCourseButtonClick()}  
               variant="contained"
-              sx={{ my: 3 }}
+              sx={{ my: 3, width: '100%' }}
             >
               Enrolled Courses
             </Button>
-            <Menu
-              anchorEl={anchorEl}
-              open={Boolean(anchorEl)}
-              onClose={handleEnrollmentButtonClose}
-            >
-              {enrolledCourses.map((course) => (
-                <MenuItem
-                  key={course.CourseID}
-                  onClick={() => handleEnrollmentButtonClick(course.CourseID)}
-                >
-                  {course.CourseName}
-                </MenuItem>
-              ))}
-            </Menu>
+            {renderCourseButtons()}
           </>
         );
       default:
@@ -323,6 +272,19 @@ const Home = () => {
     }
   };
 
+  const renderCourseButtons = () => {
+    return enrolledCourses.map((course) => (
+      <Button
+        key={course.CourseID}
+        variant="contained"
+        onClick={() => handleCourseButtonClick(course.CourseID)}
+        sx={{ my: 3, width: '100%' }}
+      >
+        {course.CourseName}
+      </Button>
+    ));
+  };
+
   return (
     <>
       <Container className="home-container">
@@ -352,9 +314,10 @@ const Home = () => {
               <div className="button-container">
                 <Navbar
                   renderButtonsByRoleId={renderButtonsByRoleId}
-                  onCourseSelect={(courseId) => console.log('Course Selected:', courseId)}
+                  onCourseSelect={(courseId) => handleCourseButtonClick(courseId)}
                   roleId={roleId}
                   enrolledCourses={enrolledCourses}
+                  fetchUserCourses={fetchUserCourses}
                 />
               </div>
 

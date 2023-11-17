@@ -10,16 +10,31 @@ const Sidebar = ({
   isEnrollmentModalOpen,
   setEnrollmentModalOpen,
   handleEnrollmentSuccess,
-  courseIds,
+  enrolledCourses,
   handleLogout,
   userRole,
   setUserProfileOpen,
+  handleCourseButtonClick,
 }) => {
   const [isUserProfileOpen, setLocalUserProfileOpen] = useState(false);
 
   const handleUserProfileClick = () => {
     setLocalUserProfileOpen(true);
     setUserProfileOpen(true);
+  };
+
+  const renderCourseButtons = () => {
+    return enrolledCourses.map((course) => (
+      <Button
+        key={course.CourseID}
+        variant="contained"
+        className="sidebar-button"
+        onClick={() => handleCourseButtonClick(course.CourseID)}
+        sx={{ mb: 2 }}
+      >
+        {course.CourseName}
+      </Button>
+    ));
   };
 
   return (
@@ -34,15 +49,18 @@ const Sidebar = ({
           User Profile
         </Button>
         {userRole === '3' && (
-          <Button
-            onClick={() => setEnrollmentModalOpen(true)}
-            variant="contained"
-            className="sidebar-button"
-            startIcon={<AddIcon />}
-            sx={{ mb: 2 }}
-          >
-            Enroll Now
-          </Button>
+          <>
+            <Button
+              onClick={() => setEnrollmentModalOpen(true)}
+              variant="contained"
+              className="sidebar-button"
+              startIcon={<AddIcon />}
+              sx={{ mb: 2 }}
+            >
+              Enroll Now
+            </Button>
+            {renderCourseButtons()}
+          </>
         )}
         <Button
           onClick={handleLogout}
@@ -58,7 +76,6 @@ const Sidebar = ({
         isOpen={isEnrollmentModalOpen}
         onRequestClose={() => setEnrollmentModalOpen(false)}
         onEnrollSuccess={handleEnrollmentSuccess}
-        courses={courseIds}
       />
       {/* User Profile Modal */}
       <Modal open={isUserProfileOpen} onClose={() => setLocalUserProfileOpen(false)}>
