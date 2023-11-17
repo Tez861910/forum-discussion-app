@@ -78,7 +78,7 @@ function AdminUsers() {
         roleId: newUser.RoleID,
       })
       .then(() => {
-        fetchUsers(); // Fetch users after creating a new one
+        fetchUsers(); 
         setNewUser({
           UserName: '',
           UserEmail: '',

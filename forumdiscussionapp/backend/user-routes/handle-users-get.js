@@ -2,7 +2,7 @@ const { query } = require('../db');
 
 async function handleUsersGet(req, res) {
   try {
-    const sql = 'SELECT * FROM users';
+    const sql = 'SELECT * FROM users WHERE IsDeleted = FALSE';
     const results = await query(sql);
 
     console.log('Users fetched successfully');

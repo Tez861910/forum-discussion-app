@@ -1,5 +1,5 @@
 const { query } = require('../db');
-const { hashPassword } = require('../authvalid'); 
+const { hashPassword } = require('../authvalid');
 
 async function handleUsersUpdateId(req, res) {
   const { id } = req.params;
@@ -37,7 +37,8 @@ async function handleUsersUpdateId(req, res) {
 
     values.push(id);
 
-    const sql = `UPDATE users SET ${updateFields.join(', ')} WHERE UserID = ?`;
+    // Update the user and associated records only if not soft deleted
+    const sql = `UPDATE users SET ${updateFields.join(', ')} WHERE UserID = ? AND IsDeleted = FALSE`;
 
     const [result] = await query(sql, values);
 
@@ -46,7 +47,7 @@ async function handleUsersUpdateId(req, res) {
 
       // Update usercourses table
       if (userCourseData && userCourseData.length > 0) {
-        const userCoursesSql = 'UPDATE usercourses SET CourseID = ? WHERE UserID = ?';
+        const userCoursesSql = 'UPDATE usercourses SET CourseID = ? WHERE UserID = ? AND IsDeleted = FALSE';
         for (const course of userCourseData) {
           await query(userCoursesSql, [course.CourseID, id]);
         }
@@ -54,7 +55,7 @@ async function handleUsersUpdateId(req, res) {
 
       // Update userroles table
       if (userRoleData && userRoleData.length > 0) {
-        const userRolesSql = 'UPDATE userroles SET RoleID = ? WHERE UserID = ?';
+        const userRolesSql = 'UPDATE userroles SET RoleID = ? WHERE UserID = ? AND IsDeleted = FALSE';
         for (const role of userRoleData) {
           await query(userRolesSql, [role.RoleID, id]);
         }
@@ -66,7 +67,7 @@ async function handleUsersUpdateId(req, res) {
       res.status(500).json({ error: 'User update failed' });
     }
   } catch (error) {
-    console.error('Error updating user:', error);
+    console.error('Error updating user and associated records:', error);
     res.status(500).json({ error: 'User update failed', details: error.message });
   }
 }
