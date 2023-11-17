@@ -5,7 +5,7 @@ async function handleCoursesGetId(req, res) {
     const { id } = req.params;
   
     try {
-      const sql = 'SELECT * FROM courses WHERE CourseID = ?';
+      const sql = 'SELECT * FROM courses WHERE CourseID = ? AND IsDeleted = FALSE';
       const [result] = await query(sql, [id]);
   
       if (result.length === 1) {

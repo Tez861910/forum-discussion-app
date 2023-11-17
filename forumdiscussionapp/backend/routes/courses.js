@@ -33,9 +33,9 @@ router.get('/courses/get/:id', async (req, res) =>handleCoursesGetId(req, res));
 router.put('/courses/update/:id', async (req, res) =>handleCoursesUpdateId(req, res));
 
 // Delete a course by ID
-router.delete('/courses/delete/:id', async (req, res) => handleCoursesDeleteId(req, res));
+router.put('/courses/delete/:id', async (req, res) => handleCoursesDeleteId(req, res));
 
 // Remove user from a course
-router.delete('/courses/:courseId/enrollments/:enrollmentId', async (req, res) =>handleCIDEnrollmentsEID(req, res));
+router.put('/courses/:courseId/enrollments/:userId', async (req, res) => handleCIDEnrollmentsEID(req, res));
 
 module.exports = router;

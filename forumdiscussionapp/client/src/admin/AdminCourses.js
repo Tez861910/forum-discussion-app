@@ -98,7 +98,7 @@ function AdminCourses() {
 
   const confirmDelete = async () => {
     try {
-      await axios.delete(`http://localhost:8081/courses/courses/delete/${deleteConfirmation.courseId}`);
+      await axios.put(`http://localhost:8081/courses/courses/delete/${deleteConfirmation.courseId}`);
       console.log('Course deleted successfully');
       fetchCourses();
     } catch (error) {

@@ -3,13 +3,12 @@ const { query } = require('../db');
  async function handleCoursesGet(req, res) {
     {
         try {
-          const sql = 'SELECT * FROM courses';
+          const sql = 'SELECT * FROM courses WHERE IsDeleted = FALSE';
           const results = await query(sql);
       
           console.log(results)
       
           if (!results.length) {
-            // console.error('No courses found in the database');
             return res.status(404).json({ error: 'No courses found' });
           }
       

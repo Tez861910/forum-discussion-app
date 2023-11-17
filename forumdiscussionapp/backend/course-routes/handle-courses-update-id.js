@@ -11,7 +11,7 @@ async function handleCoursesUpdateId(req, res) {
         return res.status(400).json({ error: 'Course name is required' });
       }
   
-      const sql = 'UPDATE courses SET CourseName = ? WHERE CourseID = ?';
+      const sql = 'UPDATE courses SET CourseName = ? WHERE CourseID = ? AND IsDeleted = FALSE';
       const [result] = await query(sql, [courseName, id]);
   
       if (result.affectedRows === 1) {

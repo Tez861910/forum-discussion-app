@@ -13,6 +13,7 @@ import {
   ListItem,
   ListItemText,
   Grid,
+  Typography,
 } from '@mui/material';
 import CloseIcon from '@mui/icons-material/Close';
 import ArrowDropDownIcon from '@mui/icons-material/ArrowDropDown';
@@ -25,6 +26,7 @@ function CourseUserModal({ onClose, selectedCourseId, open }) {
   const [selectedUsersToAdd, setSelectedUsersToAdd] = useState([]);
   const [enrolledUsers, setEnrolledUsers] = useState([]);
   const [allUsers, setAllUsers] = useState([]);
+  const [removeConfirmation, setRemoveConfirmation] = useState({ open: false, user: null });
   const fetchTimeoutRef = useRef(null);
 
   useEffect(() => {
@@ -74,16 +76,18 @@ function CourseUserModal({ onClose, selectedCourseId, open }) {
 
   const handleAddUserToCourse = async () => {
     try {
-      if (!selectedUsersToAdd || selectedUsersToAdd.length === 0 || !selectedUsersToAdd[0].UserID) {
+      if (!selectedUsersToAdd || selectedUsersToAdd.length === 0 || !selectedUsersToAdd[0]?.UserID) {
         console.error('Invalid user selected');
         return;
       }
+
+      const userId = selectedUsersToAdd[0].UserID;
 
       const response = await axios.post(
         `http://localhost:8081/courses/courses/${selectedCourseId}/enroll`,
         {
           courseId: selectedCourseId,
-          userName: selectedUsersToAdd[0].UserName,
+          userId: userId,
         }
       );
 
@@ -94,27 +98,35 @@ function CourseUserModal({ onClose, selectedCourseId, open }) {
     }
   };
 
-  const handleRemoveUserFromList = async () => {
+  const handleRemoveUserConfirmation = (user) => {
+    setRemoveConfirmation({ open: true, user });
+  };
+
+  const confirmRemoveUser = async () => {
     try {
-      console.log('selectedUsersToAdd:', selectedUsersToAdd);
-  
-      if (!selectedUsersToAdd || selectedUsersToAdd.length === 0 || !selectedUsersToAdd[0]?.UserID) {
-        console.error('Invalid user selected');
+      if (!removeConfirmation.user || !removeConfirmation.user.UserID) {
+        console.error('Invalid user selected for removal');
         return;
       }
-  
-      const userId = selectedUsersToAdd[0].UserID;
-  
-      const response = await axios.delete(
-        `http://localhost:8081/courses/courses/${selectedCourseId}/enroll/${userId}`
+
+      const userId = removeConfirmation.user.UserID;
+
+      const response = await axios.put(
+        `http://localhost:8081/courses/courses/${selectedCourseId}/enrollments/${userId}`
       );
-  
+
       console.log('Delete User Response:', response.data);
       fetchCourseEnrollments();
     } catch (error) {
       console.error('Error removing user from course:', error);
+    } finally {
+      setRemoveConfirmation({ open: false, user: null });
     }
-  };  
+  };
+
+  const cancelRemoveUser = () => {
+    setRemoveConfirmation({ open: false, user: null });
+  };
 
   const DropdownIndicator = ({ isOpen }) => (
     <div style={{ display: 'flex', alignItems: 'center', paddingRight: '8px' }}>
@@ -139,7 +151,7 @@ function CourseUserModal({ onClose, selectedCourseId, open }) {
               {enrolledUsers.map((user) => (
                 <ListItem key={user.UserID}>
                   <ListItemText primary={user.UserName} />
-                  <Button onClick={() => handleRemoveUserFromList(user)}>
+                  <Button onClick={() => handleRemoveUserConfirmation(user)}>
                     <CloseIcon />
                   </Button>
                 </ListItem>
@@ -147,28 +159,28 @@ function CourseUserModal({ onClose, selectedCourseId, open }) {
             </List>
           </Grid>
           <Grid item xs={12}>
-          <Autocomplete
-  options={allUsers || []}
-  getOptionLabel={(option) => (option?.UserName) || ''}
-  isOptionEqualToValue={(option, value) => option?.UserID === value?.UserID}
-  onChange={(event, value) => setSelectedUsersToAdd(value)}
-  renderInput={(params) => (
-    <TextField
-      {...params}
-      label="Add Users"
-      variant="outlined"
-      fullWidth
-      size="small"
-    />
-  )}
-  value={selectedUsersToAdd}
-  multiple
-  renderOption={(props, option) => (
-    <li {...props}>
-      <div>{option?.UserName}</div>
-    </li>
-  )}
-/>
+            <Autocomplete
+              options={allUsers || []}
+              getOptionLabel={(option) => (option?.UserName) || ''}
+              isOptionEqualToValue={(option, value) => option?.UserID === value?.UserID}
+              onChange={(event, value) => setSelectedUsersToAdd(value)}
+              renderInput={(params) => (
+                <TextField
+                  {...params}
+                  label="Add Users"
+                  variant="outlined"
+                  fullWidth
+                  size="small"
+                />
+              )}
+              value={selectedUsersToAdd}
+              multiple
+              renderOption={(props, option) => (
+                <li {...props}>
+                  <div>{option?.UserName}</div>
+                </li>
+              )}
+            />
           </Grid>
         </Grid>
       </DialogContent>
@@ -185,6 +197,30 @@ function CourseUserModal({ onClose, selectedCourseId, open }) {
           Enroll Users
         </Button>
       </DialogActions>
+
+      <Dialog
+        open={removeConfirmation.open}
+        TransitionComponent={Transition}
+        keepMounted
+        onClose={cancelRemoveUser}
+        aria-labelledby="alert-dialog-slide-title"
+        aria-describedby="alert-dialog-slide-description"
+      >
+        <DialogTitle id="alert-dialog-slide-title">Confirm Removal</DialogTitle>
+        <DialogContent>
+          <Typography variant="body1" gutterBottom>
+            Are you sure you want to remove this user from the course?
+          </Typography>
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={cancelRemoveUser} color="primary" size="small">
+            Cancel
+          </Button>
+          <Button onClick={confirmRemoveUser} color="secondary" size="small">
+            Remove
+          </Button>
+        </DialogActions>
+      </Dialog>
     </Dialog>
   );
 }

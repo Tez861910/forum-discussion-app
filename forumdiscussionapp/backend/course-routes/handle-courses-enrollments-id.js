@@ -18,7 +18,7 @@ const handleCoursesEnrollmentsId = async (req, res) => {
       JOIN
         usercourses ON users.UserID = usercourses.UserID
       WHERE
-        usercourses.CourseID = ?;
+        usercourses.CourseID = ? AND usercourses.IsDeleted = FALSE;
     `;
     console.log('SQL Query:', sql);
 
@@ -30,7 +30,6 @@ const handleCoursesEnrollmentsId = async (req, res) => {
       return res.status(404).json({ error: 'No enrollments found for the course' });
     }
 
-    // Organize the data into an object
     const enrollmentsResult = {};
     rows.forEach(row => {
       const { UserID, UserName } = row;
