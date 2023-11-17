@@ -111,7 +111,7 @@ function CourseUserModal({ onClose, selectedCourseId, open }) {
 
       const userId = removeConfirmation.user.UserID;
 
-      const response = await axios.put(
+      const response = await axios.patch(
         `http://localhost:8081/courses/courses/${selectedCourseId}/enrollments/${userId}`
       );
 

@@ -1,6 +1,6 @@
 const { query } = require('../db');
 
-async function handleCoursesDeleteId(req, res) {
+async function handleCoursesPatchId(req, res) {
   try {
     const { id } = req.params;
 
@@ -21,5 +21,5 @@ async function handleCoursesDeleteId(req, res) {
 }
 
 module.exports = {
-  handleCoursesDeleteId,
+  handleCoursesPatchId,
 };

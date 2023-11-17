@@ -1,6 +1,6 @@
 const { query } = require('../db');
 
-const handleCIDEnrollmentsEID = async (req, res) => {
+async function handleCIDEnrollmentsEID(req, res) {
   try {
     const courseId = req.params.courseId;
     const userId = req.params.userId;
@@ -19,7 +19,7 @@ const handleCIDEnrollmentsEID = async (req, res) => {
     console.error('Error removing user from course:', error);
     res.status(500).json({ error: 'Internal Server Error' });
   }
-};
+}
 
 module.exports = {
   handleCIDEnrollmentsEID,

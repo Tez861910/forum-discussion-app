@@ -11,7 +11,7 @@ async function handleRolesUpdateId(req, res) {
             return res.status(400).json({ error: 'Role name is required' });
           }
       
-          const sql = 'UPDATE roles SET RoleName = ? WHERE RoleID = ?';
+          const sql = 'UPDATE roles SET RoleName = ?, IsDeleted = false WHERE RoleID = ?';
           const [result] = await query(sql, [roleName, id]);
       
           if (result.affectedRows === 1) {

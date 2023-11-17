@@ -1,22 +1,9 @@
 const { query } = require('../db');
 
-const handleCoursesIdEnroll = async (req, res) => {
-
+async function handleCoursesIdEnroll(req, res) {
   try {
-    const { userName } = req.body;
+    const userId = req.body.userId; 
     const courseId = req.params.courseId;
-
-    // Check if the user exists
-    const userSql = 'SELECT UserID FROM users WHERE UserName = ?';
-    const userResult = await query(userSql, [userName]);
-    console.log('User Result:', userResult);
-
-    if (!userResult || userResult.length === 0 || !userResult[0] || !userResult[0].UserID) {
-      return res.status(404).json({ error: 'User not found' });
-    }
-    
-
-    const userId = userResult[0].UserID;
 
     // Check if the user is already enrolled in the course
     const existingEnrollmentSql = 'SELECT UserCourseID FROM usercourses WHERE UserID = ? AND CourseID = ?';
@@ -36,7 +23,7 @@ const handleCoursesIdEnroll = async (req, res) => {
     console.error('Error enrolling user in course:', error);
     res.status(500).json({ error: 'Internal Server Error', details: error.message });
   }
-};
+}
 
 module.exports = {
   handleCoursesIdEnroll,

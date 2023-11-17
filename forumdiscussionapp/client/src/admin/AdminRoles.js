@@ -10,10 +10,10 @@ import {
   ListItemSecondaryAction,
   IconButton,
   Dialog,
-  DialogActions,
-  DialogContent,
-  DialogContentText,
   DialogTitle,
+  DialogContent,
+  DialogActions,
+  Slide,
   CircularProgress,
   Grid,
 } from '@mui/material';
@@ -21,7 +21,12 @@ import DeleteIcon from '@mui/icons-material/Delete';
 import EditIcon from '@mui/icons-material/Edit';
 import SaveIcon from '@mui/icons-material/Save';
 import CancelIcon from '@mui/icons-material/Cancel';
+import RoleUserModal from './RolesUserModal';
 import './adminrole.css';
+
+const Transition = React.forwardRef(function Transition(props, ref) {
+  return <Slide direction="up" ref={ref} {...props} />;
+});
 
 function AdminRoles() {
   const [roles, setRoles] = useState([]);
@@ -31,6 +36,8 @@ function AdminRoles() {
   const [deleteConfirmation, setDeleteConfirmation] = useState({ open: false, roleId: null });
   const [error, setError] = useState(null);
   const [loading, setLoading] = useState(false);
+  const [userModalOpen, setUserModalOpen] = useState(false);
+  const [selectedRoleId, setSelectedRoleId] = useState(null);
 
   useEffect(() => {
     fetchRoles();
@@ -87,7 +94,9 @@ function AdminRoles() {
 
   const confirmDelete = async () => {
     try {
-      await axios.delete(`http://localhost:8081/roles/roles/delete/${deleteConfirmation.roleId}`);
+      await axios.patch(`http://localhost:8081/roles/roles/update/${deleteConfirmation.roleId}`, {
+        IsDeleted: true,
+      });
       console.log('Role deleted successfully');
       fetchRoles();
     } catch (error) {
@@ -104,6 +113,11 @@ function AdminRoles() {
 
   const handleEditRoleModal = (roleId) => {
     setEditingRoleId(roleId);
+  };
+
+  const handleRoleUserModal = (roleId) => {
+    setUserModalOpen(true);
+    setSelectedRoleId(roleId); 
   };
 
   const renderRoleListItem = (role) => {
@@ -162,6 +176,14 @@ function AdminRoles() {
                 >
                   <DeleteIcon />
                 </IconButton>
+                <IconButton
+                  edge="end"
+                  aria-label="users"
+                  onClick={() => handleRoleUserModal(role.roleId)}
+                  size="small"
+                >
+                  {/* Add appropriate icon for managing users in the role */}
+                </IconButton>
               </ListItemSecondaryAction>
             )}
           </Grid>
@@ -207,32 +229,36 @@ function AdminRoles() {
           roles.length === 0 ? <ListItem>No roles available</ListItem> : null
         )}
       </List>
-      <Dialog open={deleteConfirmation.open} onClose={cancelDelete}>
-        <DialogTitle>Delete Role</DialogTitle>
+      <Dialog
+        open={deleteConfirmation.open}
+        TransitionComponent={Transition}
+        keepMounted
+        onClose={cancelDelete}
+        aria-labelledby="alert-dialog-slide-title"
+        aria-describedby="alert-dialog-slide-description"
+      >
+        <DialogTitle id="alert-dialog-slide-title">Confirm Deletion</DialogTitle>
         <DialogContent>
-          <DialogContentText>
-            Are you sure you want to delete this role? This action cannot be undone.
-          </DialogContentText>
+          <Typography variant="body1" gutterBottom>
+            Are you sure you want to delete this role?
+          </Typography>
         </DialogContent>
         <DialogActions>
-          <Button
-            variant="contained"
-            color="primary"
-            onClick={cancelDelete}
-            size="small"
-          >
+          <Button onClick={cancelDelete} color="primary">
             Cancel
           </Button>
-          <Button
-            variant="contained"
-            color="secondary"
-            onClick={confirmDelete}
-            size="small"
-          >
-            Delete
+          <Button onClick={confirmDelete} color="primary">
+            Confirm
           </Button>
         </DialogActions>
       </Dialog>
+      {userModalOpen && (
+        <RoleUserModal
+          onClose={() => setUserModalOpen(false)}
+          selectedRoleId={selectedRoleId}
+          open={userModalOpen}
+        />
+      )}
     </div>
   );
 }

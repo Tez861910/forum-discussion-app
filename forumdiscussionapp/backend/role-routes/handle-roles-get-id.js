@@ -5,7 +5,7 @@ async function handleRolesGetId(req, res) {
     const { id } = req.params;
   
     try {
-      const sql = 'SELECT * FROM roles WHERE RoleID = ?';
+      const sql = 'SELECT * FROM roles WHERE RoleID = ? AND IsDeleted = false';
       const result = await query(sql, [id]);
   
       if (result.length === 1) {
