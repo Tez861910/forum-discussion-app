@@ -1,5 +1,7 @@
+// side-bar.js
+
 import React, { useState } from 'react';
-import { Button, Modal } from '@mui/material';
+import { Button, Modal, List, ListItem, Checkbox } from '@mui/material';
 import LogoutIcon from '@mui/icons-material/Logout';
 import AddIcon from '@mui/icons-material/Add';
 import CourseEnrollmentModal from './course-enrollment-modal';
@@ -8,11 +10,10 @@ import './home.css';
 
 const Sidebar = ({
   isEnrollmentModalOpen,
+  enrolledCourses,
   setEnrollmentModalOpen,
   handleEnrollmentSuccess,
-  enrolledCourses,
   handleLogout,
-  userRole,
   setUserProfileOpen,
   handleCourseButtonClick,
 }) => {
@@ -48,20 +49,16 @@ const Sidebar = ({
         >
           User Profile
         </Button>
-        {userRole === '3' && (
-          <>
-            <Button
-              onClick={() => setEnrollmentModalOpen(true)}
-              variant="contained"
-              className="sidebar-button"
-              startIcon={<AddIcon />}
-              sx={{ mb: 2 }}
-            >
-              Enroll Now
-            </Button>
-            {renderCourseButtons()}
-          </>
-        )}
+        <Button
+          onClick={() => setEnrollmentModalOpen(true)}
+          variant="contained"
+          className="sidebar-button"
+          startIcon={<AddIcon />}
+          sx={{ mb: 2 }}
+        >
+          Enroll Now
+        </Button>
+        {enrolledCourses.length > 0 && renderCourseButtons()}
         <Button
           onClick={handleLogout}
           variant="contained"
@@ -76,6 +73,7 @@ const Sidebar = ({
         isOpen={isEnrollmentModalOpen}
         onRequestClose={() => setEnrollmentModalOpen(false)}
         onEnrollSuccess={handleEnrollmentSuccess}
+        enrolledCourses={enrolledCourses}
       />
       {/* User Profile Modal */}
       <Modal open={isUserProfileOpen} onClose={() => setLocalUserProfileOpen(false)}>

@@ -46,16 +46,10 @@ const Home = () => {
   };
 
   const handleRoleSpecificActions = (roleId) => {
-    switch (roleId) {
-      case '1':
-      case '2':
-        setCoursesEnrolled(true);
-        break;
-      case '3':
-        handleStudentActions();
-        break;
-      default:
-        break;
+    if (['1', '2'].includes(roleId)) {
+      setCoursesEnrolled(true);
+    } else if (roleId === '3') {
+      handleStudentActions();
     }
   };
 
@@ -118,40 +112,19 @@ const Home = () => {
 
     const token = cookies.token;
 
-    const handleTokenRefresh = async () => {
-      try {
-        const response = await axios.post(
-          API_URL,
-          {},
-          {
-            headers: {
-              Authorization: `Bearer ${cookies.token}`,
-            },
-          }
-        );
+    const handleTokenRefreshAndFetch = async () => {
+      if (isLoggedIn && token) {
+        await handleTokenRefresh();
+        fetchUserAndEnrolledCourses();
+      }
 
-        response.data.success
-          ? handleTokenRefreshSuccess(response.data)
-          : handleTokenRefreshFailure();
-      } catch (error) {
-        console.error('Token refresh failed:', error);
-        handleTokenRefreshFailure();
+      if (navigateToPathState && roleId) {
+        navigate(navigateToPathState);
+        setNavigateToPath(null);
       }
     };
 
-    const handleTokenRefreshFailure = () => {
-      clearUserData();
-    };
-
-    if (isLoggedIn && token) {
-      handleTokenRefresh();
-      fetchUserAndEnrolledCourses();
-    }
-
-    if (navigateToPathState && roleId) {
-      navigate(navigateToPathState);
-      setNavigateToPath(null);
-    }
+    handleTokenRefreshAndFetch();
   }, [cookies.token, isLoggedIn, navigateToPathState, roleId, setCookie, enrolledCourses, navigate]);
 
   const navigateToPath = (path) => {
@@ -162,8 +135,7 @@ const Home = () => {
     }
   };
 
-  const handleEnrollmentSuccess = (selectedCourses) => {
-    localStorage.setItem('courseIds', JSON.stringify(selectedCourses));
+  const handleEnrollmentSuccess = () => {
     setCoursesEnrolled(true);
     setEnrollmentModalOpen(false);
   };
@@ -174,11 +146,7 @@ const Home = () => {
   };
 
   const handleCourseButtonClick = (courseId) => {
-    if (roleId === '2') {
-      navigateToPath(`create-thread/${courseId}`);
-    } else if (roleId === '3') {
-      navigateToPath(`create-thread/${courseId}`);
-    }
+    navigateToPath(`create-thread/${courseId}`);
   };
 
   const renderButtonsByRoleId = (roleId) => {
@@ -214,7 +182,7 @@ const Home = () => {
         return (
           <>
             <Button
-              onClick={() => handleCourseButtonClick()}  
+              onClick={() => handleCourseButtonClick()}
               variant="contained"
               sx={{ my: 3, width: '100%' }}
             >
@@ -340,3 +308,4 @@ const Home = () => {
 };
 
 export { Home };
+
