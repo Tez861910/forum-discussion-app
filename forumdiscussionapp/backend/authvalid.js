@@ -30,15 +30,22 @@ function createToken(userId, email, roleId) {
   return token;
 }
 
+function accessToken(userId, email, roleId) {
+  return jwt.sign({ userId, email, roleId }, JWT_SECRET, { expiresIn: '1h' });
+}
+
 function verifyJwt(req, res, next) {
   const token = req.headers['authorization'];
+  console.log('Received token:', token);
 
-  if (!token) {
-    console.log('Token not provided');
-    return res.status(401).json({ error: 'Token not provided' });
+  if (!token || !token.startsWith('Bearer ')) {
+    console.log('Invalid token format');
+    return res.status(401).json({ error: 'Invalid token format' });
   }
 
-  jwt.verify(token, JWT_SECRET, (err, decoded) => {
+  const tokenWithoutBearer = token.slice('Bearer '.length);
+
+  jwt.verify(tokenWithoutBearer, JWT_SECRET, (err, decoded) => {
     if (err) {
       if (err.name === 'TokenExpiredError') {
         console.log('Token expired');
@@ -51,7 +58,11 @@ function verifyJwt(req, res, next) {
         return res.status(500).json({ error: 'Internal server error' });
       }
     }
-    console.log('Decoded token:', decoded);
+
+    if (!decoded || !decoded.userId || !decoded.roleId) {
+      console.log('Invalid token contents');
+      return res.status(401).json({ error: 'Invalid token contents' });
+    }
 
     req.roleId = decoded.roleId;
     req.userId = decoded.userId;
@@ -64,4 +75,5 @@ module.exports = {
   verifyPassword,
   createToken,
   verifyJwt,
+  accessToken,
 };

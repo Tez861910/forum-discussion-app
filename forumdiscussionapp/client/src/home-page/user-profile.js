@@ -63,7 +63,7 @@ const UserProfile = ({ isOpen, onClose }) => {
   };
 
   const handleNavigateBack = () => {
-    onClose(); // Close the modal first
+    onClose(); 
   };
 
   return (

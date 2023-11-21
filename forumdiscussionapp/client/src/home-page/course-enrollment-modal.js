@@ -15,31 +15,6 @@ import SearchIcon from '@mui/icons-material/Search';
 
 Modal.setAppElement('#root');
 
-export const fetchUserCourses = async () => {
-  try {
-    const userId = localStorage.getItem('userId');
-
-    if (!userId) {
-      console.error('User ID not found in local storage');
-      return [];
-    }
-
-    const response = await axios.get('http://localhost:8081/users/usercourses/get/id', {
-      params: { userId: userId },
-    });
-
-    if (response.status === 200) {
-      return response.data.userCourses;
-    } else {
-      console.error('Failed to fetch user courses:', response.status);
-      return [];
-    }
-  } catch (error) {
-    console.error('Error fetching user courses:', error);
-    return [];
-  }
-};
-
 const CourseEnrollmentModal = ({ isOpen, onRequestClose, onEnrollSuccess }) => {
   const [selectedCourses, setSelectedCourses] = useState([]);
   const [courses, setCourses] = useState([]);
@@ -57,6 +32,31 @@ const CourseEnrollmentModal = ({ isOpen, onRequestClose, onEnrollSuccess }) => {
       }
     } catch (error) {
       console.error('Error fetching courses:', error);
+    }
+  }, []);
+
+  const fetchUserCourses = useCallback(async () => {
+    try {
+      const userId = localStorage.getItem('userId');
+
+      if (!userId) {
+        console.error('User ID not found in local storage');
+        return [];
+      }
+
+      const response = await axios.get('http://localhost:8081/users/usercourses/get/id', {
+        params: { userId: userId },
+      });
+
+      if (response.status === 200) {
+        return response.data.userCourses;
+      } else {
+        console.error('Failed to fetch user courses:', response.status);
+        return [];
+      }
+    } catch (error) {
+      console.error('Error fetching user courses:', error);
+      return [];
     }
   }, []);
 
@@ -82,6 +82,14 @@ const CourseEnrollmentModal = ({ isOpen, onRequestClose, onEnrollSuccess }) => {
     }
   }, [isOpen, fetchCourses, fetchUserCoursesAndSetState]);
 
+  const handleCourseSelection = (courseId) => {
+    if (selectedCourses.includes(courseId)) {
+      setSelectedCourses(selectedCourses.filter((id) => id !== courseId));
+    } else {
+      setSelectedCourses([...selectedCourses, courseId]);
+    }
+  };
+
   const handleEnroll = async () => {
     try {
       const userId = localStorage.getItem('userId');
@@ -91,40 +99,33 @@ const CourseEnrollmentModal = ({ isOpen, onRequestClose, onEnrollSuccess }) => {
         return;
       }
 
-      const response = await axios.post(
-        'http://localhost:8081/home/enroll-courses',
-        {
-          userId: userId,
-          courses: selectedCourses,
-        }
+      // Filter out already enrolled courses
+      const nonEnrolledCourses = selectedCourses.filter(
+        (courseId) => !userCourses.some((userCourse) => userCourse.CourseID === courseId)
       );
 
-      if (response.status === 200) {
-        onEnrollSuccess(selectedCourses);
-        fetchUserCoursesAndSetState();
-      } else {
-        console.error('Enrollment failed:', response.status);
-        // Handle enrollment failure
+      // Iterate over nonEnrolledCourses and send individual requests for each course
+      for (const courseId of nonEnrolledCourses) {
+        const response = await axios.post(
+          `http://localhost:8081/courses/courses/${courseId}/enroll`,
+          {
+            userId: userId,
+          }
+        );
+
+        if (response.status !== 200) {
+          console.error(`Enrollment failed for course ${courseId}:`, response.status);
+          return;
+        }
       }
+
+      // If all enrollments are successful
+      onEnrollSuccess(nonEnrolledCourses);
+      fetchUserCoursesAndSetState();
     } catch (error) {
       console.error('Error enrolling in courses:', error);
-      // Handle error during enrollment
     }
   };
-
-  const handleCourseSelection = (courseId) => {
-    if (selectedCourses.includes(courseId)) {
-      setSelectedCourses(selectedCourses.filter((id) => id !== courseId));
-    } else {
-      setSelectedCourses([...selectedCourses, courseId]);
-    }
-  };
-
-  const filteredCourses = courses.filter(
-    (course) =>
-      !selectedCourses.includes(course.CourseID) &&
-      course.CourseName.toLowerCase().includes(searchTerm.toLowerCase())
-  );
 
   const enrolledCoursesList = userCourses.map((userCourse) => {
     const enrolledCourse = courses.find((course) => course.CourseID === userCourse.CourseID);
@@ -132,10 +133,6 @@ const CourseEnrollmentModal = ({ isOpen, onRequestClose, onEnrollSuccess }) => {
     if (enrolledCourse) {
       return (
         <ListItem key={enrolledCourse.CourseID} disablePadding>
-          <Checkbox
-            checked={selectedCourses.includes(enrolledCourse.CourseID)}
-            onChange={() => handleCourseSelection(enrolledCourse.CourseID)}
-          />
           {enrolledCourse.CourseName}
         </ListItem>
       );
@@ -143,6 +140,19 @@ const CourseEnrollmentModal = ({ isOpen, onRequestClose, onEnrollSuccess }) => {
       return null;
     }
   });
+
+  const selectableCoursesList = courses
+    .filter((course) => !selectedCourses.includes(course.CourseID))
+    .filter((course) => course.CourseName.toLowerCase().includes(searchTerm.toLowerCase()))
+    .map((course) => (
+      <ListItem key={course.CourseID} disablePadding>
+        <Checkbox
+          checked={selectedCourses.includes(course.CourseID)}
+          onChange={() => handleCourseSelection(course.CourseID)}
+        />
+        {course.CourseName}
+      </ListItem>
+    ));
 
   return (
     <Modal
@@ -159,6 +169,14 @@ const CourseEnrollmentModal = ({ isOpen, onRequestClose, onEnrollSuccess }) => {
       <Typography variant="h5" gutterBottom>
         Enroll in Courses
       </Typography>
+
+      {enrolledCoursesList.length > 0 && (
+        <div>
+          <Typography variant="h6">Enrolled Courses</Typography>
+          <List>{enrolledCoursesList}</List>
+        </div>
+      )}
+
       <TextField
         fullWidth
         variant="outlined"
@@ -174,23 +192,17 @@ const CourseEnrollmentModal = ({ isOpen, onRequestClose, onEnrollSuccess }) => {
         }}
         sx={{ marginBottom: 2 }}
       />
+
       <List>
-        {filteredCourses.length > 0 ? (
-          filteredCourses.map((course) => (
-            <ListItem key={course.CourseID} disablePadding>
-              <Checkbox
-                checked={selectedCourses.includes(course.CourseID)}
-                onChange={() => handleCourseSelection(course.CourseID)}
-              />
-              {course.CourseName}
-            </ListItem>
-          ))
+        {selectableCoursesList.length > 0 ? (
+          selectableCoursesList
         ) : (
           <Typography variant="body2" color="textSecondary">
             No available courses for enrollment.
           </Typography>
         )}
       </List>
+
       <Box sx={{ display: 'flex', justifyContent: 'flex-end', marginTop: 2 }}>
         <Button variant="contained" onClick={handleEnroll} sx={{ marginRight: 2 }}>
           Enroll
@@ -199,14 +211,6 @@ const CourseEnrollmentModal = ({ isOpen, onRequestClose, onEnrollSuccess }) => {
           Cancel
         </Button>
       </Box>
-      {enrolledCoursesList.length > 0 && (
-        <div>
-          <Typography variant="h6" sx={{ marginTop: 2 }}>
-            Enrolled Courses
-          </Typography>
-          <List>{enrolledCoursesList}</List>
-        </div>
-      )}
     </Modal>
   );
 };
