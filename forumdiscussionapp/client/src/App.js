@@ -1,7 +1,6 @@
 import React from 'react';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
-import Login from './login/login';
-import Signup from './sign-up-page/sign-up';
+import { ThemeProvider, CssBaseline } from '@mui/material';
 import { ErrorProvider } from './error-handling';
 import AdminPanel from './admin/AdminPanel';
 import ForumDiscussion from './threads/Forumdiscussion';
@@ -9,9 +8,37 @@ import CommentSection from './threads/comment-section';
 import MCQForm from './mcq-form/mcq-form';
 import MCQAnswerForm from './mcq-form/mcq-answer-form';
 import { Home } from './home-page/home';
-import { ThemeProvider } from '@mui/system';
-import CssBaseline from '@mui/material/CssBaseline';
 import theme from './Theme';
+import Login from './login/login';
+import Signup from './sign-up-page/sign-up';
+
+class ErrorBoundary extends React.Component {
+  constructor(props) {
+    super(props);
+    this.state = { hasError: false };
+  }
+
+  static getDerivedStateFromError(error) {
+    return { hasError: true };
+  }
+
+  componentDidCatch(error, errorInfo) {
+    logErrorToMyService(error, errorInfo);
+  }
+
+  render() {
+    if (this.state.hasError) {
+      return <h1>Something went wrong.</h1>;
+    }
+
+    return this.props.children;
+  }
+}
+
+function logErrorToMyService(error, errorInfo) {
+  // log the error to your error tracking service
+  console.error("Error captured by error boundary:", error, errorInfo);
+}
 
 const AppRoutes = () => (
   <Routes>
@@ -27,14 +54,16 @@ const AppRoutes = () => (
 );
 
 const App = () => (
-  <ErrorProvider>
-    <ThemeProvider theme={theme}>
-      <CssBaseline />
-      <Router>
-        <AppRoutes />
-      </Router>
-    </ThemeProvider>
-  </ErrorProvider>
+  <ErrorBoundary>
+    <ErrorProvider>
+      <ThemeProvider theme={theme}>
+        <CssBaseline />
+        <Router>
+          <AppRoutes />
+        </Router>
+      </ThemeProvider>
+    </ErrorProvider>
+  </ErrorBoundary>
 );
 
 export default App;
