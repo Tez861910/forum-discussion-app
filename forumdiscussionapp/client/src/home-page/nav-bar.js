@@ -1,51 +1,65 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import CreateThread from '../threads/create-thread';
-import Typography from '@mui/material/Typography';
+import Button from '@mui/material/Button';
+import ButtonGroup from '@mui/material/ButtonGroup';
+import Box from '@mui/material/Box';
 
 const Navbar = ({
   renderButtonsByRoleId,
   roleId,
   onCourseSelect,
   selectedCourse,
+  onForumDiscussionButtonClick,
 }) => {
-  const renderCreateThread = () => {
-    if (roleId === '2' || roleId === '3') {
-      if (selectedCourse) {
-        return <CreateThread courseId={selectedCourse} />;
-      } else {
-        return (
-          <Typography variant="h6" sx={{ my: 3 }}>
-            Please select a course to create a thread.
-          </Typography>
-        );
-      }
-    }
-    return null;
+  const handleChange = (event, courseId) => {
+    event.stopPropagation();
+    onCourseSelect(courseId);
   };
 
+  const renderAdminPanelButtons = () => (
+    <>
+      <Button onClick={() => onCourseSelect('courses')} color="inherit">
+        Courses
+      </Button>
+      <Button onClick={() => onCourseSelect('users')} color="inherit">
+        Users
+      </Button>
+      <Button onClick={() => onCourseSelect('roles')} color="inherit">
+        Roles
+      </Button>
+    </>
+  );
+
+  const renderForumDiscussionButton = () => (
+    <Button
+      onClick={onForumDiscussionButtonClick}
+      color="primary"
+      disabled={!selectedCourse}
+    >
+      Forum Discussion
+    </Button>
+  );
+
+  const renderBackToCoursesButton = () => (
+    <Button
+      onClick={(event) => handleChange(event, null)}
+      color="primary"
+      disabled={!selectedCourse}
+    >
+      Back to Courses
+    </Button>
+  );
+
   return (
-    <nav className="navbar navbar-expand-sm navbar-dark bg-transparent">
-      <div className="container-fluid">
-        <button
-          className="navbar-toggler"
-          type="button"
-          data-bs-toggle="collapse"
-          data-bs-target="#navbarNav"
-          aria-controls="navbarNav"
-          aria-expanded="false"
-          aria-label="Toggle navigation"
-        >
-          <span className="navbar-toggler-icon"></span>
-        </button>
-        <div className="collapse navbar-collapse" id="navbarNav">
-          <ul className="navbar-nav ms-auto mt-2 mt-lg-0">
-            {renderButtonsByRoleId(roleId)}
-            {renderCreateThread()}
-          </ul>
-        </div>
-      </div>
-    </nav>
+    <Box>
+      <ButtonGroup variant="contained" aria-label="outlined primary button group" sx={{ my: 3 }}>
+        {renderButtonsByRoleId(roleId)}
+
+        {roleId === '2' && renderForumDiscussionButton()}
+
+        {roleId === '3' && renderBackToCoursesButton()}
+      </ButtonGroup>
+    </Box>
   );
 };
 
@@ -54,6 +68,7 @@ Navbar.propTypes = {
   roleId: PropTypes.string.isRequired,
   onCourseSelect: PropTypes.func.isRequired,
   selectedCourse: PropTypes.string,
+  onForumDiscussionButtonClick: PropTypes.func,
 };
 
 export default Navbar;

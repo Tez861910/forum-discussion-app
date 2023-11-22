@@ -1,140 +1,98 @@
-import React, { useState, useEffect } from 'react';
-import { Button, Modal, Select, MenuItem } from '@mui/material';
+import React, { useState } from 'react';
+import { Button, Modal, Toolbar, Box } from '@mui/material';
 import LogoutIcon from '@mui/icons-material/Logout';
 import AddIcon from '@mui/icons-material/Add';
 import CourseEnrollmentModal from './course-enrollment-modal';
 import UserProfile from './user-profile';
+import EnrolledCoursesDropdown from './enrolled-courses-dropdown';
 import './home.css';
 
 const Sidebar = ({
   isEnrollmentModalOpen,
-  enrolledCourses,
   setEnrollmentModalOpen,
   handleEnrollmentSuccess,
   handleLogout,
   setUserProfileOpen,
-  handleCourseButtonClick,
+  onCourseSelect,
   roleId,
 }) => {
   const [isUserProfileOpen, setLocalUserProfileOpen] = useState(false);
-  const [hasEnrolledCourses, setHasEnrolledCourses] = useState(false);
-  const [selectedCourse, setSelectedCourse] = useState(null);
-  const [isUserProfileModalVisible, setIsUserProfileModalVisible] = useState(false);
-
-  useEffect(() => {
-    setHasEnrolledCourses(roleId === '3' && enrolledCourses.length > 0);
-  }, [roleId, enrolledCourses]);
 
   const handleUserProfileClick = () => {
     setLocalUserProfileOpen(true);
-    setIsUserProfileModalVisible(true);
     setUserProfileOpen(true);
   };
 
   const handleEnrollNowClick = () => {
-    if (roleId === '3' && (!hasEnrolledCourses || enrolledCourses.length === 0)) {
+    if (roleId === '3') {
       setEnrollmentModalOpen(true);
     }
   };
 
-  const renderCourseButtons = () => {
-    return enrolledCourses.map((course) => (
-      <Button
-        key={course.CourseID}
-        variant="contained"
-        className="sidebar-button"
-        onClick={() => handleCourseButtonClick(course.CourseID)}
-        sx={{ mb: 2 }}
-      >
-        {course.CourseName}
-      </Button>
-    ));
+  const handleCourseChange = (courseId) => {
+    onCourseSelect(courseId);
   };
+  
 
   const handleModalClose = () => {
     setLocalUserProfileOpen(false);
-    setIsUserProfileModalVisible(false);
     setUserProfileOpen(false);
   };
 
-  const handleNavigateBack = () => {
-    if (isUserProfileModalVisible) {
-      setLocalUserProfileOpen(false);
-      setIsUserProfileModalVisible(false);
-      setUserProfileOpen(false);
-    }
-  };
-
   return (
-    <div className="sidebar-container">
-      <div className="sidebar-content">
+    <Box className="sidebar-container">
+      <Toolbar />
+      <Box className="sidebar-content">
+        {/* Enrolled Courses Dropdown */}
+        <EnrolledCoursesDropdown
+          onCourseSelect={onCourseSelect}
+          onCourseChange={handleCourseChange}
+        />
+
+        {/* User Profile Button */}
         <Button
           variant="contained"
           className="sidebar-button"
-          sx={{ mb: 2 }}
           onClick={handleUserProfileClick}
         >
           User Profile
         </Button>
-        {(hasEnrolledCourses || enrolledCourses.length === 0) && roleId === '3' && (
+
+        {/* Enroll Now Button (only for role 3) */}
+        {roleId === '3' && (
           <Button
             onClick={handleEnrollNowClick}
             variant="contained"
             className="sidebar-button"
             startIcon={<AddIcon />}
-            sx={{ mb: 2 }}
           >
             Enroll Now
           </Button>
         )}
-        {hasEnrolledCourses && (
-          <Select
-            value={selectedCourse}
-            onChange={(event) => setSelectedCourse(event.target.value)}
-            displayEmpty
-            sx={{ mb: 2 }}
-          >
-            <MenuItem value="" disabled>
-              Select a Course
-            </MenuItem>
-            {enrolledCourses.map((course) => (
-              <MenuItem key={course.CourseID} value={course.CourseID}>
-                {course.CourseName}
-              </MenuItem>
-            ))}
-          </Select>
-        )}
-        {renderCourseButtons()} 
-        {selectedCourse && (
-          <Button
-            onClick={() => handleCourseButtonClick(selectedCourse)}
-            variant="contained"
-            className="sidebar-button"
-            sx={{ mb: 2 }}
-          >
-            Create Thread
-          </Button>
-        )}
+
+        {/* Logout Button */}
         <Button
           onClick={handleLogout}
           variant="contained"
           className="sidebar-button"
           startIcon={<LogoutIcon />}
-          sx={{ mb: 2 }}
         >
           Logout
         </Button>
-      </div>
+      </Box>
+
+      {/* Course Enrollment Modal */}
       <CourseEnrollmentModal
         isOpen={isEnrollmentModalOpen}
         onRequestClose={() => setEnrollmentModalOpen(false)}
         onEnrollSuccess={handleEnrollmentSuccess}
-        enrolledCourses={enrolledCourses}
       />
+
+      {/* User Profile Modal */}
       <Modal open={isUserProfileOpen} onClose={handleModalClose}>
         <UserProfile onClose={handleModalClose} />
       </Modal>
-    </div>
+    </Box>
   );
 };
 

@@ -30,24 +30,16 @@ function CreateThread({ courseId }) {
 
   useEffect(() => {
     const storedUserId = localStorage.getItem('userId');
-    if (!storedUserId) {
-      console.error('User ID not found in local storage');
-      return;
-    }
-
     const storedRoleId = localStorage.getItem('roleId');
-    if (!storedRoleId) {
-      console.error('Role ID not found in local storage');
+
+    if (!storedUserId || !storedRoleId) {
+      console.error('User ID or Role ID not found in local storage');
       return;
     }
 
-    const userIdNumber = parseInt(storedUserId, 10);
-    setUserId(userIdNumber);
+    setUserId(parseInt(storedUserId, 10));
+    setRoleId(parseInt(storedRoleId, 10));
 
-    const roleIdNumber = parseInt(storedRoleId, 10);
-    setRoleId(roleIdNumber);
-
-    console.log('Fetching threads for courseId:', courseId);
     fetchThreads(courseId);
   }, [courseId]);
 
@@ -58,9 +50,7 @@ function CreateThread({ courseId }) {
         return;
       }
 
-      const response = await axios.get(
-        `http://localhost:8081/threads/threads/get/${courseId}`
-      );
+      const response = await axios.get(`http://localhost:8081/threads/threads/get/${courseId}`);
       setThreads(response.data[0]);
     } catch (error) {
       setError('Error fetching threads. Please try again.');
@@ -78,17 +68,21 @@ function CreateThread({ courseId }) {
         title: newThread.title,
         content: newThread.content,
         courseIds: [courseId],
-        userId: userId,
+        userId,
       });
 
-      await fetchThreads(courseId);
-      setNewThread({
-        title: 'New Thread Title',
-        content: 'New Thread Content',
-      });
+      fetchThreads(courseId);
+      resetNewThread();
     } catch (error) {
       setError('Error creating thread. Please try again.');
     }
+  };
+
+  const resetNewThread = () => {
+    setNewThread({
+      title: 'New Thread Title',
+      content: 'New Thread Content',
+    });
   };
 
   const toggleEdit = (threadId) => {
@@ -99,32 +93,19 @@ function CreateThread({ courseId }) {
     setEditThreadId(null);
   };
 
-  const cancelThread = () => {
-    setEditThreadId(null);
-    setNewThread({
-      title: 'New Thread Title',
-      content: 'New Thread Content',
-    });
-  };
-
   const updateThread = async (threadId) => {
-    const threadToUpdate = threads.find(
-      (thread) => thread.threadId === threadId
-    );
-
     try {
-      await axios.put(
-        `http://localhost:8081/threads/threads/update/${threadId}`,
-        {
-          title: threadToUpdate.threadTitle,
-          content: threadToUpdate.threadContent,
-          courseIds: [courseId],
-          userId: userId,
-        }
-      );
+      const threadToUpdate = threads.find((thread) => thread.threadId === threadId);
 
-      await fetchThreads(courseId);
-      setEditThreadId(null);
+      await axios.put(`http://localhost:8081/threads/threads/update/${threadId}`, {
+        title: threadToUpdate.threadTitle,
+        content: threadToUpdate.threadContent,
+        courseIds: [courseId],
+        userId,
+      });
+
+      fetchThreads(courseId);
+      cancelEdit();
     } catch (error) {
       setError('Error updating thread. Please try again.');
     }
@@ -132,18 +113,14 @@ function CreateThread({ courseId }) {
 
   const confirmDelete = (threadId) => {
     setDeletionThreadID(threadId);
-    setConfirmationDialogMessage(
-      'Are you sure you want to delete this thread?'
-    );
+    setConfirmationDialogMessage('Are you sure you want to delete this thread?');
     setConfirmationDialogOpen(true);
   };
 
   const handleDeleteClick = async () => {
     try {
-      await axios.delete(
-        `http://localhost:8081/threads/threads/delete/${deletionThreadID}`
-      );
-      await fetchThreads(courseId);
+      await axios.delete(`http://localhost:8081/threads/threads/delete/${deletionThreadID}`);
+      fetchThreads(courseId);
       setConfirmationDialogOpen(false);
     } catch (error) {
       setError('Error deleting thread. Please try again.');
@@ -155,20 +132,9 @@ function CreateThread({ courseId }) {
     setDeletionThreadID(null);
   };
 
-  return (
-    <div className="create-thread-container">
-      <Link
-        to="/home"
-        style={{ textDecoration: 'none', color: 'blue', marginBottom: '10px' }}
-      >
-        Back to Home
-      </Link>
-      <Typography variant="h2">Create Thread</Typography>
-      <Typography variant="h3">Your Threads:</Typography>
-
-      {error && <Typography className="error-message">{error}</Typography>}
-
-      {Array.isArray(threads) && threads.length > 0 ? (
+  const renderThreads = () => {
+    if (Array.isArray(threads) && threads.length > 0) {
+      return (
         <ul className="thread-list">
           {threads.map((thread) => (
             <li key={thread.threadId} className="thread-item">
@@ -178,14 +144,7 @@ function CreateThread({ courseId }) {
                     label="Title"
                     name="title"
                     value={thread.threadTitle}
-                    onChange={(e) => {
-                      const updatedThreads = threads.map((t) =>
-                        t.threadId === thread.threadId
-                          ? { ...t, threadTitle: e.target.value }
-                          : t
-                      );
-                      setThreads(updatedThreads);
-                    }}
+                    onChange={(e) => handleThreadFieldChange(thread.threadId, 'title', e.target.value)}
                   />
                   <TextField
                     label="Content"
@@ -193,14 +152,7 @@ function CreateThread({ courseId }) {
                     multiline
                     rows={4}
                     value={thread.threadContent}
-                    onChange={(e) => {
-                      const updatedThreads = threads.map((t) =>
-                        t.threadId === thread.threadId
-                          ? { ...t, threadContent: e.target.value }
-                          : t
-                      );
-                      setThreads(updatedThreads);
-                    }}
+                    onChange={(e) => handleThreadFieldChange(thread.threadId, 'content', e.target.value)}
                   />
                   <Button
                     variant="contained"
@@ -246,9 +198,33 @@ function CreateThread({ courseId }) {
             </li>
           ))}
         </ul>
-      ) : (
-        <Typography>No threads available.</Typography>
-      )}
+      );
+    } else {
+      return <Typography>No threads available.</Typography>;
+    }
+  };
+
+  const handleThreadFieldChange = (threadId, field, value) => {
+    const updatedThreads = threads.map((t) =>
+      t.threadId === threadId ? { ...t, [field]: value } : t
+    );
+    setThreads(updatedThreads);
+  };
+
+  return (
+    <div className="create-thread-container">
+      <Link
+        to="/home"
+        style={{ textDecoration: 'none', color: 'blue', marginBottom: '10px' }}
+      >
+        Back to Home
+      </Link>
+      <Typography variant="h2">Create Thread</Typography>
+      <Typography variant="h3">Your Threads:</Typography>
+
+      {error && <Typography className="error-message">{error}</Typography>}
+
+      {renderThreads()}
 
       <div className="create-new-thread">
         <Typography variant="h3">Create New Thread</Typography>
@@ -277,7 +253,7 @@ function CreateThread({ courseId }) {
           <Button
             variant="contained"
             color="secondary"
-            onClick={cancelThread}
+            onClick={resetNewThread}
           >
             Cancel Thread
           </Button>

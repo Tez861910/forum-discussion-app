@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import {
   Dialog,
@@ -27,7 +27,6 @@ function CourseUserModal({ onClose, selectedCourseId, open }) {
   const [enrolledUsers, setEnrolledUsers] = useState([]);
   const [allUsers, setAllUsers] = useState([]);
   const [removeConfirmation, setRemoveConfirmation] = useState({ open: false, user: null });
-  const fetchTimeoutRef = useRef(null);
 
   useEffect(() => {
     fetchCourseEnrollments();
@@ -139,7 +138,7 @@ function CourseUserModal({ onClose, selectedCourseId, open }) {
       open={open}
       TransitionComponent={Transition}
       keepMounted
-      onClose={onClose}
+      onClose={() => onClose()}  // Use the callback function to close the modal
       aria-labelledby="user-modal-title"
       aria-describedby="user-modal-description"
     >
@@ -185,7 +184,7 @@ function CourseUserModal({ onClose, selectedCourseId, open }) {
         </Grid>
       </DialogContent>
       <DialogActions>
-        <Button onClick={onClose} color="primary" size="small">
+        <Button onClick={() => onClose()} color="primary" size="small">
           <CloseIcon />
         </Button>
         <Button

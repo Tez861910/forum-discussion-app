@@ -1,17 +1,18 @@
-import React, { useState, useEffect, useCallback } from 'react';
+import React, { useState, useEffect } from 'react';
+import { Container, Typography, Grid, CssBaseline } from '@mui/material';
 import { useNavigate } from 'react-router-dom';
-import { Container, Typography, Grid, Button } from '@mui/material';
 import { useCookies } from 'react-cookie';
 import axios from 'axios';
-import './home.css';
+import Sidebar from './side-bar';
+import Navbar from './nav-bar';
+import Scheduler from './scheduler';
+import UserProfile from './user-profile';
+import CourseEnrollmentModal from './course-enrollment-modal';
+import ForumDiscussion from '../threads/Forumdiscussion';
 import AdminCourses from '../admin/AdminCourses';
 import AdminUsers from '../admin/AdminUsers';
 import AdminRoles from '../admin/AdminRoles';
-import UserProfile from './user-profile';
-import CourseEnrollmentModal from './course-enrollment-modal';
-import Sidebar from './side-bar';
-import Navbar from './nav-bar';
-import CreateThread from '../threads/create-thread';
+import './home.css';
 
 const API_URL = 'http://localhost:8081/home/refresh-token';
 
@@ -21,12 +22,11 @@ const Home = () => {
   const [navigateToPathState, setNavigateToPath] = useState(null);
   const [isUserProfileOpen, setUserProfileOpen] = useState(false);
   const [isEnrollmentModalOpen, setEnrollmentModalOpen] = useState(false);
-  const [coursesEnrolled, setCoursesEnrolled] = useState(false);
-  const [enrolledCourses, setEnrolledCourses] = useState([]);
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [activeView, setActiveView] = useState('courses');
   const [selectedCourse, setSelectedCourse] = useState(null);
   const [isCoursesEnrolled, setIsCoursesEnrolled] = useState(false);
+  const [isForumDiscussionVisible, setForumDiscussionVisible] = useState(false);
   const navigate = useNavigate();
 
   const clearUserData = async () => {
@@ -50,7 +50,6 @@ const Home = () => {
 
   const handleRoleSpecificActions = (roleId) => {
     if (['1', '2', '3'].includes(roleId)) {
-      setCoursesEnrolled(true);
       setIsCoursesEnrolled(true);
     }
   };
@@ -80,46 +79,11 @@ const Home = () => {
     clearUserData();
   };
 
-  const fetchUserCourses = useCallback(async () => {
-    try {
-      const userId = localStorage.getItem('userId');
-
-      if (!userId) {
-        console.error('User ID not found in local storage');
-        return [];
-      }
-
-      const response = await axios.get('http://localhost:8081/users/usercourses/get/id', {
-        params: { userId: userId },
-      });
-
-      if (response.status === 200) {
-        return response.data.userCourses;
-      } else {
-        console.error('Failed to fetch user courses:', response.status);
-        return [];
-      }
-    } catch (error) {
-      console.error('Error fetching user courses:', error);
-      return [];
-    }
-  }, []);
-
-  const fetchUserAndEnrolledCourses = async () => {
-    try {
-      console.log('Calling fetchUserCourses...');
-      const userCoursesData = await fetchUserCourses();
-      const enrolledCourseIds = userCoursesData.map((course) => course.CourseID);
-      setEnrolledCourses(enrolledCourseIds);
-    } catch (error) {
-      console.error('Error fetching enrolled courses:', error);
-    }
-  };
-
   useEffect(() => {
     const storedRoleId = localStorage.getItem('roleId');
     if (storedRoleId) {
       setRoleId(storedRoleId);
+      handleRoleSpecificActions(storedRoleId);
     }
 
     const token = cookies.token;
@@ -127,9 +91,6 @@ const Home = () => {
     const handleTokenRefreshAndFetch = async () => {
       if (isLoggedIn && token) {
         await handleTokenRefresh();
-        if (isLoggedIn) {
-          await fetchUserAndEnrolledCourses(); // Await here
-        }
       }
 
       if (navigateToPathState && roleId) {
@@ -139,7 +100,7 @@ const Home = () => {
     };
 
     handleTokenRefreshAndFetch();
-  }, [cookies.token, isLoggedIn, navigateToPathState, roleId, setCookie, enrolledCourses, navigate, fetchUserCourses]);
+  }, [cookies.token, isLoggedIn, navigateToPathState, roleId, setCookie, navigate]);
 
   const navigateToPath = (path) => {
     if (!roleId) {
@@ -150,7 +111,6 @@ const Home = () => {
   };
 
   const handleEnrollmentSuccess = () => {
-    setCoursesEnrolled(true);
     setEnrollmentModalOpen(false);
   };
 
@@ -164,83 +124,34 @@ const Home = () => {
     setEnrollmentModalOpen(false);
   };
 
-  const renderButtonsByRoleId = (roleId) => {
-    switch (roleId) {
-      case '1':
-        return (
-          <>
-            <Button
-              onClick={() => handleViewChange('courses')}
-              variant="contained"
-              sx={{ my: 3, width: '100%' }}
-            >
-              Manage Courses
-            </Button>
-            <Button
-              onClick={() => handleViewChange('users')}
-              variant="contained"
-              sx={{ my: 3, width: '100%' }}
-            >
-              Manage Users
-            </Button>
-            <Button
-              onClick={() => handleViewChange('roles')}
-              variant="contained"
-              sx={{ my: 3, width: '100%' }}
-            >
-              Manage Roles
-            </Button>
-          </>
-        );
-      case '2':
-      case '3':
-        return (
-          <>
-            <Button
-              onClick={() => handleCourseSelect()}
-              variant="contained"
-              sx={{ my: 3, width: '100%' }}
-            >
-              Forum Discussion
-            </Button>
-            {renderCourseButtons()}
-          </>
-        );
-      default:
-        return null;
-    }
+  const handleForumDiscussionButtonClick = () => {
+    setForumDiscussionVisible(true);
   };
 
-  const handleViewChange = (view) => {
-    setActiveView(view);
-  };
+const renderActiveView = () => {
+  const isAdmin = roleId === '1';
+  const isTeacherOrStudent = ['2', '3'].includes(roleId);
 
-  const renderActiveView = () => {
-    if (roleId === '1') {
-      switch (activeView) {
-        case 'courses':
-          return <AdminCourses />;
-        case 'users':
-          return <AdminUsers />;
-        case 'roles':
-          return <AdminRoles />;
-        default:
-          return <AdminCourses />;
-      }
-    } else if (['2', '3'].includes(roleId)) {
-      if (selectedCourse) {
-        return <CreateThread courseId={selectedCourse} />;
-      } else {
-        return (
-          <Typography variant="h6" sx={{ my: 3 }}>
-            Please select a course to access this feature.
-          </Typography>
-        );
-      }
-    } else {
-      return <UserProfile />;
-    }
-  };
+  return (
+    <div>
+      <Scheduler roleId={roleId} userId={localStorage.getItem('userId')} />
+
+      {isAdmin && activeView === 'courses' && <AdminCourses />}
+      {isAdmin && activeView === 'users' && <AdminUsers />}
+      {isAdmin && activeView === 'roles' && <AdminRoles />}
+
+      {isTeacherOrStudent && selectedCourse && !isForumDiscussionVisible && (
+        <Typography variant="h6" sx={{ my: 3 }}>
+          Please select a course to access this feature.
+        </Typography>
+      )}
+
+      {isTeacherOrStudent && selectedCourse && isForumDiscussionVisible && (
+        <ForumDiscussion courseId={selectedCourse} />
+      )}
+    </div>
+  );
+};
 
   const getRoleHeaderText = (roleId) => {
     switch (roleId) {
@@ -255,36 +166,23 @@ const Home = () => {
     }
   };
 
-  const renderCourseButtons = () => {
-    return enrolledCourses.map((course) => (
-      <Button
-        key={course.CourseID}
-        variant="contained"
-        onClick={() => handleCourseSelect(course.CourseID)}
-        sx={{ my: 3, width: '100%' }}
-      >
-        {course.CourseName}
-      </Button>
-    ));
-  };
-
   return (
     <>
-      <Container className="home-container">
-        <Typography variant="h2" sx={{ textAlign: 'center', my: 3 }}>
+      <CssBaseline />
+      <Container>
+        <Typography variant="h2" align="center" sx={{ my: 3 }}>
           {getRoleHeaderText(roleId)}
         </Typography>
 
-        <Grid container className="main-container" spacing={3}>
+        <Grid container spacing={3}>
           <Grid item xs={2}>
             <Sidebar
               isEnrollmentModalOpen={isEnrollmentModalOpen}
-              enrolledCourses={enrolledCourses}
               setEnrollmentModalOpen={setEnrollmentModalOpen}
               handleEnrollmentSuccess={handleEnrollmentSuccess}
               handleLogout={handleLogout}
               setUserProfileOpen={setUserProfileOpen}
-              handleCourseButtonClick={handleCourseSelect}
+              onCourseSelect={handleCourseSelect}
               roleId={roleId}
               isCoursesEnrolled={isCoursesEnrolled}
             />
@@ -298,12 +196,16 @@ const Home = () => {
 
               <div className="button-container">
                 <Navbar
-                  renderButtonsByRoleId={renderButtonsByRoleId}
+                  renderButtonsByRoleId={renderActiveView}
                   roleId={roleId}
                   onCourseSelect={handleCourseSelect}
                   selectedCourse={selectedCourse}
+                  onForumDiscussionButtonClick={handleForumDiscussionButtonClick}
                 />
               </div>
+
+              {/* Display the Scheduler component */}
+              <Scheduler roleId={roleId} userId={localStorage.getItem('userId')} />
 
               {renderActiveView()}
             </div>
@@ -311,7 +213,6 @@ const Home = () => {
         </Grid>
 
         <UserProfile isOpen={isUserProfileOpen} onClose={() => setUserProfileOpen(false)} />
-
         <CourseEnrollmentModal
           isOpen={isEnrollmentModalOpen}
           onRequestClose={() => setEnrollmentModalOpen(false)}
