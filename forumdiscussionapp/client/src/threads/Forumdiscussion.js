@@ -1,6 +1,15 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
-import { Typography, Button, TextField } from '@mui/material';
+import {
+  Typography,
+  Button,
+  TextField,
+  Dialog,
+  DialogTitle,
+  DialogContent,
+  DialogActions,
+  Box,
+} from '@mui/material';
 import ThreadList from './ThreadList';
 import ThreadModal from './ThreadModal';
 import CommentSection from './comment-section';
@@ -14,6 +23,7 @@ function ForumDiscussion({ courseId }) {
   const [userId, setUserId] = useState(localStorage.getItem('userId'));
   const [newThreadTitle, setNewThreadTitle] = useState('');
   const [newThreadContent, setNewThreadContent] = useState('');
+  const [showCreateModal, setShowCreateModal] = useState(false);
 
   useEffect(() => {
     const fetchThreads = async () => {
@@ -26,7 +36,7 @@ function ForumDiscussion({ courseId }) {
     };
 
     fetchThreads();
-  }, [courseId, userId]); // Include userId in the dependency array
+  }, [courseId, userId]);
 
   const handleThreadSelection = (threadId) => {
     setSelectedThread(threadId);
@@ -35,6 +45,14 @@ function ForumDiscussion({ courseId }) {
 
   const handleModalClose = () => {
     setShowModal(false);
+  };
+
+  const handleOpenCreateModal = () => {
+    setShowCreateModal(true);
+  };
+
+  const handleCloseCreateModal = () => {
+    setShowCreateModal(false);
   };
 
   const handleCreateThread = async () => {
@@ -64,37 +82,50 @@ function ForumDiscussion({ courseId }) {
   };
 
   return (
-    <div>
+    <Box>
       <Typography variant="h2">Forum Discussion</Typography>
       {role === '2' && (
-        <div>
-          <TextField
-            label="Thread Title"
-            value={newThreadTitle}
-            onChange={(e) => setNewThreadTitle(e.target.value)}
-          />
-          <TextField
-            label="Thread Content"
-            multiline
-            rows={4}
-            value={newThreadContent}
-            onChange={(e) => setNewThreadContent(e.target.value)}
-          />
-          <Button variant="contained" color="primary" onClick={handleCreateThread}>
+        <Box mt={2}>
+          <Button variant="contained" color="primary" onClick={handleOpenCreateModal}>
             Create Thread
           </Button>
-        </div>
+          <Dialog open={showCreateModal} onClose={handleCloseCreateModal}>
+            <DialogTitle>Create New Thread</DialogTitle>
+            <DialogContent>
+              <TextField
+                label="Thread Title"
+                value={newThreadTitle}
+                onChange={(e) => setNewThreadTitle(e.target.value)}
+                fullWidth
+                margin="dense"
+              />
+              <TextField
+                label="Thread Content"
+                multiline
+                rows={4}
+                value={newThreadContent}
+                onChange={(e) => setNewThreadContent(e.target.value)}
+                fullWidth
+                margin="dense"
+              />
+            </DialogContent>
+            <DialogActions>
+              <Button onClick={handleCloseCreateModal} color="primary">
+                Cancel
+              </Button>
+              <Button onClick={handleCreateThread} color="primary">
+                Create
+              </Button>
+            </DialogActions>
+          </Dialog>
+        </Box>
       )}
       <ThreadList threads={threads} onThreadSelect={handleThreadSelection} />
       {showModal && (
-        <ThreadModal
-          threadId={selectedThread}
-          onClose={handleModalClose}
-          role={role}
-        />
+        <ThreadModal threadId={selectedThread} onClose={handleModalClose} role={role} />
       )}
       {selectedThread && <CommentSection threadId={selectedThread} role={role} />}
-    </div>
+    </Box>
   );
 }
 

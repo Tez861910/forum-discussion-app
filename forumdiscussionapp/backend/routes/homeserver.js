@@ -3,16 +3,23 @@ const router = express.Router();
 const { query } = require('../db');
 const { accessToken, verifyJwt } = require('../authvalid');
 
-// Endpoint to create a new event
-router.post('/events/create', verifyJwt, async (req, res) => {
+router.post('/events/create', async (req, res) => {
   try {
     const { EventTitle, EventDescription, EventDate, CourseID } = req.body;
     const UserID = req.user.id;
 
-    const result = await query(
-      'INSERT INTO Events (EventTitle, EventDescription, EventDate, UserID, CourseID) VALUES (?, ?, ?, ?, ?)',
-      [EventTitle, EventDescription, EventDate, UserID, CourseID]
-    );
+    let result;
+    if (CourseID) {
+      result = await query(
+        'INSERT INTO Events (EventTitle, EventDescription, EventDate, UserID, CourseID) VALUES (?, ?, ?, ?, ?)',
+        [EventTitle, EventDescription, EventDate, UserID, CourseID]
+      );
+    } else {
+      result = await query(
+        'INSERT INTO Events (EventTitle, EventDescription, EventDate, UserID) VALUES (?, ?, ?, ?)',
+        [EventTitle, EventDescription, EventDate, UserID]
+      );
+    }
 
     res.json({ success: true, message: 'Event created successfully' });
   } catch (error) {
@@ -21,8 +28,9 @@ router.post('/events/create', verifyJwt, async (req, res) => {
   }
 });
 
+
 // Endpoint to get all events
-router.get('/events', verifyJwt, async (req, res) => {
+router.get('/events',  async (req, res) => {
   try {
     const UserID = req.user.id;
 

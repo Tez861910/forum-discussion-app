@@ -140,9 +140,10 @@ function AdminRoles() {
                 size="small"
               />
             ) : (
-              <ListItemText primary={role.roleName}
-              onClick={() => handleRoleUserModal(role.roleId)} 
-               />
+              <ListItemText
+                primary={role.roleName}
+                onClick={() => handleRoleUserModal(role.roleId)} 
+              />
             )}
           </Grid>
           <Grid item xs={isEditing ? 6 : 4}>

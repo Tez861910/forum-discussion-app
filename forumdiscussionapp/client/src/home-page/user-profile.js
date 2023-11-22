@@ -63,7 +63,7 @@ const UserProfile = ({ isOpen, onClose }) => {
   };
 
   const handleNavigateBack = () => {
-    onClose(); 
+    onClose();
   };
 
   return (
@@ -102,8 +102,7 @@ const UserProfile = ({ isOpen, onClose }) => {
               <Button variant="contained" color="primary" onClick={handleEdit} sx={{ mr: 2 }}>
                 Edit
               </Button>
-              <Button variant="contained" onClick={handleNavigateBack}>
-                <ArrowBackIcon />
+              <Button variant="contained" onClick={handleNavigateBack} startIcon={<ArrowBackIcon />}>
                 Cancel
               </Button>
             </Box>

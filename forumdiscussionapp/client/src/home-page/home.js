@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Container, Typography, Grid, CssBaseline } from '@mui/material';
+import { Container, Typography, Grid, CssBaseline, Paper } from '@mui/material';
 import { useNavigate } from 'react-router-dom';
 import { useCookies } from 'react-cookie';
 import axios from 'axios';
@@ -12,7 +12,6 @@ import ForumDiscussion from '../threads/Forumdiscussion';
 import AdminCourses from '../admin/AdminCourses';
 import AdminUsers from '../admin/AdminUsers';
 import AdminRoles from '../admin/AdminRoles';
-import './home.css';
 
 const API_URL = 'http://localhost:8081/home/refresh-token';
 
@@ -30,7 +29,7 @@ const Home = () => {
   const navigate = useNavigate();
 
   const clearUserData = async () => {
-    await new Promise(resolve => setTimeout(resolve, 100));
+    await new Promise((resolve) => setTimeout(resolve, 100));
     setCookie('token', '', { path: '/', expires: new Date(0) });
     localStorage.removeItem('userId');
     localStorage.removeItem('roleId');
@@ -70,7 +69,7 @@ const Home = () => {
         ? handleTokenRefreshSuccess(response.data)
         : handleTokenRefreshFailure();
     } catch (error) {
-      console.error('Token refresh failed:', error);
+      console.error(`Token refresh failed: ${error}`);
       handleTokenRefreshFailure();
     }
   };
@@ -128,98 +127,90 @@ const Home = () => {
     setForumDiscussionVisible(true);
   };
 
-const renderActiveView = () => {
-  const isAdmin = roleId === '1';
-  const isTeacherOrStudent = ['2', '3'].includes(roleId);
+  const renderActiveView = () => {
+    const isAdmin = roleId === '1';
+    const isTeacherOrStudent = ['2', '3'].includes(roleId);
 
-  return (
-    <div>
-      <Scheduler roleId={roleId} userId={localStorage.getItem('userId')} />
+    return (
+      <Paper elevation={3} sx={{ p: 2, mt: 2 }}>
+        {isAdmin && activeView === 'courses' && <AdminCourses />}
+        {isAdmin && activeView === 'users' && <AdminUsers />}
+        {isAdmin && activeView === 'roles' && <AdminRoles />}
 
-      {isAdmin && activeView === 'courses' && <AdminCourses />}
-      {isAdmin && activeView === 'users' && <AdminUsers />}
-      {isAdmin && activeView === 'roles' && <AdminRoles />}
+        {isTeacherOrStudent && selectedCourse && !isForumDiscussionVisible && (
+          <Typography variant="h6" sx={{ my: 3 }}>
+            Please select a course to access this feature.
+          </Typography>
+        )}
 
-      {isTeacherOrStudent && selectedCourse && !isForumDiscussionVisible && (
-        <Typography variant="h6" sx={{ my: 3 }}>
-          Please select a course to access this feature.
-        </Typography>
-      )}
-
-      {isTeacherOrStudent && selectedCourse && isForumDiscussionVisible && (
-        <ForumDiscussion courseId={selectedCourse} />
-      )}
-    </div>
-  );
-};
+        {isTeacherOrStudent && selectedCourse && isForumDiscussionVisible && (
+          <ForumDiscussion courseId={selectedCourse} />
+        )}
+      </Paper>
+    );
+  };
 
   const getRoleHeaderText = (roleId) => {
-    switch (roleId) {
-      case '1':
-        return 'Admin Home Panel';
-      case '2':
-        return 'Teacher Home Panel';
-      case '3':
-        return 'Student Home Panel';
-      default:
-        return 'Home Panel';
-    }
+    const roleTitles = {
+      '1': 'Admin Home Panel',
+      '2': 'Teacher Home Panel',
+      '3': 'Student Home Panel',
+    };
+    return roleTitles[roleId] || 'Home Panel';
   };
 
   return (
-    <>
+    <Container sx={{ mt: 2 }}>
       <CssBaseline />
-      <Container>
-        <Typography variant="h2" align="center" sx={{ my: 3 }}>
-          {getRoleHeaderText(roleId)}
-        </Typography>
+      <Typography variant="h2" align="center" sx={{ my: 3 }}>
+        {getRoleHeaderText(roleId)}
+      </Typography>
 
-        <Grid container spacing={3}>
-          <Grid item xs={2}>
-            <Sidebar
-              isEnrollmentModalOpen={isEnrollmentModalOpen}
-              setEnrollmentModalOpen={setEnrollmentModalOpen}
-              handleEnrollmentSuccess={handleEnrollmentSuccess}
-              handleLogout={handleLogout}
-              setUserProfileOpen={setUserProfileOpen}
-              onCourseSelect={handleCourseSelect}
-              roleId={roleId}
-              isCoursesEnrolled={isCoursesEnrolled}
-            />
-          </Grid>
-
-          <Grid item xs={10}>
-            <div className="main-content">
-              <Typography variant="h4" sx={{ my: 3 }}>
-                Welcome, {roleId === '1' ? 'Admin' : roleId === '2' ? 'Teacher' : 'Student'}
-              </Typography>
-
-              <div className="button-container">
-                <Navbar
-                  renderButtonsByRoleId={renderActiveView}
-                  roleId={roleId}
-                  onCourseSelect={handleCourseSelect}
-                  selectedCourse={selectedCourse}
-                  onForumDiscussionButtonClick={handleForumDiscussionButtonClick}
-                />
-              </div>
-
-              {/* Display the Scheduler component */}
-              <Scheduler roleId={roleId} userId={localStorage.getItem('userId')} />
-
-              {renderActiveView()}
-            </div>
-          </Grid>
+      <Grid container spacing={3}>
+        <Grid item xs={2}>
+          <Sidebar
+            isEnrollmentModalOpen={isEnrollmentModalOpen}
+            setEnrollmentModalOpen={setEnrollmentModalOpen}
+            handleEnrollmentSuccess={handleEnrollmentSuccess}
+            handleLogout={handleLogout}
+            setUserProfileOpen={setUserProfileOpen}
+            onCourseSelect={handleCourseSelect}
+            roleId={roleId}
+            isCoursesEnrolled={isCoursesEnrolled}
+          />
         </Grid>
 
-        <UserProfile isOpen={isUserProfileOpen} onClose={() => setUserProfileOpen(false)} />
-        <CourseEnrollmentModal
-          isOpen={isEnrollmentModalOpen}
-          onRequestClose={() => setEnrollmentModalOpen(false)}
-          onEnrollSuccess={handleEnrollmentSuccess}
-        />
-      </Container>
-    </>
+        <Grid item xs={10}>
+          <div className="main-content">
+            <Typography variant="h4" sx={{ my: 3 }}>
+              Welcome, {roleId === '1' ? 'Admin' : roleId === '2' ? 'Teacher' : 'Student'}
+            </Typography>
+
+            <div className="button-container">
+              <Navbar
+                renderButtonsByRoleId={renderActiveView}
+                roleId={roleId}
+                onCourseSelect={handleCourseSelect}
+                selectedCourse={selectedCourse}
+                onForumDiscussionButtonClick={handleForumDiscussionButtonClick}
+              />
+            </div>
+
+            {/* Display the Scheduler component */}
+            <Scheduler roleId={roleId} userId={localStorage.getItem('userId')} />
+
+            {renderActiveView()}
+          </div>
+        </Grid>
+      </Grid>
+
+      <UserProfile isOpen={isUserProfileOpen} onClose={() => setUserProfileOpen(false)} />
+      <CourseEnrollmentModal
+        isOpen={isEnrollmentModalOpen}
+        onRequestClose={() => setEnrollmentModalOpen(false)}
+        onEnrollSuccess={handleEnrollmentSuccess}
+      />
+    </Container>
   );
 };
 

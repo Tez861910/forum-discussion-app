@@ -35,7 +35,7 @@
 }
 
 /* Styles for the success message */
-.signup-page .success-message {
+.signup-page .form .success-message {
   color: #4CAF50;
   font-size: 16px;
   margin-top: 15px;

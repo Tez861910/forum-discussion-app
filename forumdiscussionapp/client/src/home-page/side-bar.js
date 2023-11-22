@@ -5,7 +5,6 @@ import AddIcon from '@mui/icons-material/Add';
 import CourseEnrollmentModal from './course-enrollment-modal';
 import UserProfile from './user-profile';
 import EnrolledCoursesDropdown from './enrolled-courses-dropdown';
-import './home.css';
 
 const Sidebar = ({
   isEnrollmentModalOpen,
@@ -32,7 +31,6 @@ const Sidebar = ({
   const handleCourseChange = (courseId) => {
     onCourseSelect(courseId);
   };
-  
 
   const handleModalClose = () => {
     setLocalUserProfileOpen(false);
@@ -42,16 +40,20 @@ const Sidebar = ({
   return (
     <Box className="sidebar-container">
       <Toolbar />
+
       <Box className="sidebar-content">
         {/* Enrolled Courses Dropdown */}
-        <EnrolledCoursesDropdown
-          onCourseSelect={onCourseSelect}
-          onCourseChange={handleCourseChange}
-        />
+        {roleId !== '1' && (
+          <EnrolledCoursesDropdown
+            onCourseSelect={onCourseSelect}
+            onCourseChange={handleCourseChange}
+          />
+        )}
 
         {/* User Profile Button */}
         <Button
           variant="contained"
+          fullWidth
           className="sidebar-button"
           onClick={handleUserProfileClick}
         >
@@ -61,6 +63,7 @@ const Sidebar = ({
         {/* Enroll Now Button (only for role 3) */}
         {roleId === '3' && (
           <Button
+            fullWidth
             onClick={handleEnrollNowClick}
             variant="contained"
             className="sidebar-button"
@@ -72,6 +75,7 @@ const Sidebar = ({
 
         {/* Logout Button */}
         <Button
+          fullWidth
           onClick={handleLogout}
           variant="contained"
           className="sidebar-button"

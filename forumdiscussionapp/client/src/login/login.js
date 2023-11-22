@@ -57,9 +57,9 @@ const Login = () => {
             {['email', 'password'].map((field) => (
               <Grid item xs={12} key={field}>
                 <TextField
-                  variant="outlined"
-                  margin="normal"
                   fullWidth
+                  margin="normal"
+                  variant="outlined"
                   id={field}
                   label={field === 'email' ? 'Email' : 'Password'}
                   type={field === 'email' ? 'email' : 'password'}
@@ -72,8 +72,8 @@ const Login = () => {
               </Grid>
             ))}
             <Button
-              type="submit"
               fullWidth
+              type="submit"
               variant="contained"
               color="primary"
             >

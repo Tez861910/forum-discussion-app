@@ -5,7 +5,6 @@ import ButtonGroup from '@mui/material/ButtonGroup';
 import Box from '@mui/material/Box';
 
 const Navbar = ({
-  renderButtonsByRoleId,
   roleId,
   onCourseSelect,
   selectedCourse,
@@ -18,13 +17,13 @@ const Navbar = ({
 
   const renderAdminPanelButtons = () => (
     <>
-      <Button onClick={() => onCourseSelect('courses')} color="inherit">
+      <Button onClick={() => onCourseSelect('courses')} variant="outlined" color="primary">
         Courses
       </Button>
-      <Button onClick={() => onCourseSelect('users')} color="inherit">
+      <Button onClick={() => onCourseSelect('users')} variant="outlined" color="primary">
         Users
       </Button>
-      <Button onClick={() => onCourseSelect('roles')} color="inherit">
+      <Button onClick={() => onCourseSelect('roles')} variant="outlined" color="primary">
         Roles
       </Button>
     </>
@@ -33,6 +32,7 @@ const Navbar = ({
   const renderForumDiscussionButton = () => (
     <Button
       onClick={onForumDiscussionButtonClick}
+      variant="contained"
       color="primary"
       disabled={!selectedCourse}
     >
@@ -43,6 +43,7 @@ const Navbar = ({
   const renderBackToCoursesButton = () => (
     <Button
       onClick={(event) => handleChange(event, null)}
+      variant="contained"
       color="primary"
       disabled={!selectedCourse}
     >
@@ -50,13 +51,22 @@ const Navbar = ({
     </Button>
   );
 
+  const renderRoleSpecificButtons = () => {
+    switch (roleId) {
+      case '1':
+        return renderAdminPanelButtons();
+      case '2':
+      case '3':
+        return renderForumDiscussionButton();
+      default:
+        return null;
+    }
+  };
+
   return (
     <Box>
       <ButtonGroup variant="contained" aria-label="outlined primary button group" sx={{ my: 3 }}>
-        {renderButtonsByRoleId(roleId)}
-
-        {roleId === '2' && renderForumDiscussionButton()}
-
+        {renderRoleSpecificButtons()}
         {roleId === '3' && renderBackToCoursesButton()}
       </ButtonGroup>
     </Box>
@@ -64,7 +74,6 @@ const Navbar = ({
 };
 
 Navbar.propTypes = {
-  renderButtonsByRoleId: PropTypes.func.isRequired,
   roleId: PropTypes.string.isRequired,
   onCourseSelect: PropTypes.func.isRequired,
   selectedCourse: PropTypes.string,

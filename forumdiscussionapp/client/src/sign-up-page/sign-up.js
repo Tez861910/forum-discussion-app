@@ -85,36 +85,45 @@ const Signup = () => {
         <Typography variant="h2">Sign-Up</Typography>
         <form onSubmit={handleSubmit}>
           <TextField
-            type="text"
+            fullWidth
+            label="User Name"
             name="name"
             value={formData.name}
             onChange={handleInputChange}
-            fullWidth
-            label="User Name"
+            variant="outlined"
+            error={!!errors.name}
+            helperText={errors.name}
           />
-          {errors.name && <span className="text-danger">{errors.name}</span>}
 
           <TextField
-            type="email"
+            fullWidth
+            label="User Email"
             name="email"
             value={formData.email}
             onChange={handleInputChange}
-            fullWidth
-            label="User Email"
+            variant="outlined"
+            error={!!errors.email}
+            helperText={errors.email}
           />
-          {errors.email && <span className="text-danger">{errors.email}</span>}
 
           <TextField
-            type="password"
+            fullWidth
+            label="Password"
             name="password"
             value={formData.password}
             onChange={handleInputChange}
-            fullWidth
-            label="Password"
+            variant="outlined"
+            type="password"
+            error={!!errors.password}
+            helperText={errors.password}
           />
-          {errors.password && <span className="text-danger">{errors.password}</span>}
 
-          <RoleDropdown roles={roles} roleId={formData.roleId} handleRoleChange={handleInputChange} errors={errors} />
+          <RoleDropdown
+            roles={roles}
+            roleId={formData.roleId}
+            handleRoleChange={handleInputChange}
+            errors={errors}
+          />
 
           <Button type="submit" fullWidth variant="contained" color="success">
             Sign up

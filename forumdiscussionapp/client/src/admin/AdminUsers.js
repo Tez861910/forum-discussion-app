@@ -78,7 +78,7 @@ function AdminUsers() {
         roleId: newUser.RoleID,
       })
       .then(() => {
-        fetchUsers(); 
+        fetchUsers();
         setNewUser({
           UserName: '',
           UserEmail: '',
@@ -112,7 +112,7 @@ function AdminUsers() {
     axios
       .put(`http://localhost:8081/users/users/update/${userId}`, updatedUserData)
       .then(() => {
-        fetchUsers(); // Fetch users after updating
+        fetchUsers();
         setEditingUserId(null);
         console.log('User updated successfully');
       })
@@ -129,7 +129,7 @@ function AdminUsers() {
     axios
       .delete(`http://localhost:8081/users/users/delete/${deleteConfirmation.userId}`)
       .then(() => {
-        fetchUsers(); // Fetch users after deleting
+        fetchUsers();
         console.log('User deleted successfully');
       })
       .catch((error) => {

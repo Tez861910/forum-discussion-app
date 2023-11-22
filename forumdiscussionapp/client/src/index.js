@@ -1,20 +1,25 @@
 import React from 'react';
-import ReactDOM from 'react-dom/client';
+import { createRoot } from 'react-dom/client';
 import App from './App';
 import reportWebVitals from './report-web-vitals';
-import 'bootstrap/dist/css/bootstrap.min.css';
+import CssBaseline from '@mui/material/CssBaseline';
+import { ThemeProvider } from '@mui/system';
+import theme from './Theme';
+import './index.css';
 
 // Get the root element
 const rootElement = document.getElementById('root');
 
 if (rootElement) {
   try {
-    // Create a React root and render the app within a strict mode
-    const root = ReactDOM.createRoot(rootElement);
-    root.render(
-      <React.StrictMode>
-        <App />
-      </React.StrictMode>
+    // Use createRoot instead of ReactDOM.render
+    createRoot(rootElement).render(
+      <ThemeProvider theme={theme}>
+        <CssBaseline />
+        <React.StrictMode>
+          <App />
+        </React.StrictMode>
+      </ThemeProvider>
     );
   } catch (error) {
     console.error("Error rendering the app:", error);

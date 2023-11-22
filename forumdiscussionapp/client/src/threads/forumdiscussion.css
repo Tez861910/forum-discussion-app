@@ -1,48 +1,58 @@
 /* styles.css */
 
+/* Adjustments for Material-UI v5 */
+
+/* Margins and padding for thread list */
 .thread-list {
-    margin-top: 20px;
-  }
-  
-  .thread-list ul {
-    list-style-type: none;
-    padding: 0;
-  }
-  
-  .thread-list li {
-    margin-bottom: 10px;
-  }
-  
-  .comment-section-container {
-    margin-top: 20px;
-  }
-  
-  .comment-list {
-    list-style-type: none;
-    padding: 0;
-  }
-  
-  .comment-item {
-    border: 1px solid #ccc;
-    padding: 10px;
-    margin-bottom: 10px;
-  }
-  
-  .comment-input {
-    width: 100%;
-    margin-top: 10px;
-    padding: 10px;
-    resize: none;
-  }
-  
-  .submit-button {
-    margin-top: 10px;
-  }
-  
-  .thread-modal {
-    max-width: 500px;
-    margin: auto;
-  }
-  
-  /* Add more styles as needed */
-  
+  margin-top: 20px;
+}
+
+/* Styling for unordered list in thread list */
+.thread-list ul {
+  list-style-type: none;
+  padding: 0;
+}
+
+/* Margin for list items in thread list */
+.thread-list li {
+  margin-bottom: 10px;
+}
+
+/* Margin for the comment section container */
+.comment-section-container {
+  margin-top: 20px;
+}
+
+/* Styling for unordered list in comment list */
+.comment-list {
+  list-style-type: none;
+  padding: 0;
+}
+
+/* Styling for each comment item */
+.comment-item {
+  border: 1px solid #ccc;
+  padding: 10px;
+  margin-bottom: 10px;
+}
+
+/* Full width comment input with padding and no resize */
+.comment-input {
+  width: 100%;
+  margin-top: 10px;
+  padding: 10px;
+  resize: none;
+}
+
+/* Margin for the submit button */
+.submit-button {
+  margin-top: 10px;
+}
+
+/* Styling for the thread modal */
+.thread-modal {
+  max-width: 500px;
+  margin: auto;
+}
+
+/* Add more styles as needed */
