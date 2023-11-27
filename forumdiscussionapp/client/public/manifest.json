@@ -1,6 +1,7 @@
 {
-  "short_name": "React App",
+  "short_name": "Forum Discussion App",
   "name": "Create React App Sample",
+  "description": "A sample forum discussion app built with Create React App.",
   "icons": [
     {
       "src": "logo.ico",
@@ -20,6 +21,6 @@
   ],
   "start_url": ".",
   "display": "standalone",
-  "theme_color": "#000000",
+  "theme_color": "#3498db", 
   "background_color": "#ffffff"
 }
