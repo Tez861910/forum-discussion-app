@@ -1,4 +1,3 @@
-// Import necessary dependencies
 import React, { useState, useEffect, useCallback } from 'react';
 import axios from 'axios';
 import RoleDropdown from './role-dropdown';
@@ -6,9 +5,7 @@ import { Link as RouterLink, useNavigate } from 'react-router-dom';
 import { Container, Grid, Typography, TextField, Button } from '@mui/material';
 import './sign-up.css';
 
-// Signup component
 const Signup = () => {
-  // State variables
   const [formData, setFormData] = useState({
     name: '',
     email: '',
@@ -20,13 +17,11 @@ const Signup = () => {
   const [successMessage, setSuccessMessage] = useState([]);
   const [roles, setRoles] = useState([]);
 
-  // Event handler for input changes
   const handleInputChange = useCallback((event) => {
     const { name, value } = event.target;
     setFormData((prevFormData) => ({ ...prevFormData, [name]: value }));
   }, []);
 
-  // Fetch roles data on component mount
   const fetchData = useCallback(async () => {
     try {
       const rolesResponse = await axios.get('http://localhost:8081/roles/roles/get');
@@ -41,10 +36,10 @@ const Signup = () => {
     fetchData();
   }, [fetchData]);
 
-  // Form submission handler
   const handleSubmit = useCallback(async (event) => {
     event.preventDefault();
     const validationErrors = {};
+
     // Validate form data
     if (!formData.name) {
       validationErrors.name = 'Name is required';
@@ -58,6 +53,7 @@ const Signup = () => {
     if (!formData.roleId) {
       validationErrors.roleId = 'Role is required';
     }
+
     setErrors(validationErrors);
 
     if (Object.keys(validationErrors).length === 0) {
@@ -89,13 +85,14 @@ const Signup = () => {
     }
   }, [formData, navigate]);
 
-  // Render the component
   return (
-    <Container maxWidth="sm" className="signup-page">
+    <Container maxWidth="xs" className="signup-page">
       <Grid container justifyContent="center" alignItems="center" spacing={2}>
         <Grid item xs={12}>
           <div className="form">
-            <Typography variant="h4">Sign-Up</Typography>
+            <Typography variant="h4" align="center" gutterBottom>
+              Sign-Up
+            </Typography>
             <form onSubmit={handleSubmit}>
               <TextField
                 fullWidth
@@ -106,6 +103,8 @@ const Signup = () => {
                 variant="outlined"
                 error={!!errors.name}
                 helperText={errors.name}
+                margin="normal"
+                className="MuiInputBase-input"
               />
 
               <TextField
@@ -117,6 +116,8 @@ const Signup = () => {
                 variant="outlined"
                 error={!!errors.email}
                 helperText={errors.email}
+                margin="normal"
+                className="MuiInputBase-input"
               />
 
               <TextField
@@ -129,6 +130,8 @@ const Signup = () => {
                 type="password"
                 error={!!errors.password}
                 helperText={errors.password}
+                margin="normal"
+                className="MuiInputBase-input"
               />
 
               <RoleDropdown
@@ -142,20 +145,24 @@ const Signup = () => {
                 Sign up
               </Button>
               {successMessage.map((message, index) => (
-                <Typography key={index} variant="body2" className="success-message">
+                <Typography key={index} variant="body2" className="success-message" align="center">
                   {message}
                 </Typography>
               ))}
-              <Typography variant="body2">You agree to our terms and conditions</Typography>
+              <Typography variant="body2" align="center" className="terms-message">
+                You agree to our terms and conditions
+              </Typography>
               <Button
                 component={RouterLink}
                 to="/login"
                 fullWidth
                 variant="contained"
                 color="primary"
-                className="btn-default"
               >
-                Login
+                Go to Login
+              </Button>
+              <Button component={RouterLink} to="/" fullWidth variant="outlined" color="primary">
+                Back to Start
               </Button>
             </form>
           </div>

@@ -87,6 +87,11 @@ const Login = () => {
               Create Account
             </Link>
           </form>
+          <Link to="/" style={{ textDecoration: 'none', display: 'block', textAlign: 'center', marginTop: '20px' }}>
+          <Button variant="outlined" color="primary" sx={{ width: '100%', borderRadius: '8px' }}>
+            Back to Start
+          </Button>
+        </Link>
         </div>
       </div>
     </Container>

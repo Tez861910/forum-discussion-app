@@ -9,21 +9,17 @@ const Navbar = ({
   onButtonClick,
   selectedCourse,
   isTeacherOrStudent,
-  isForumDiscussionVisible,
   onMCQFormButtonClick,
   onMCQAnswerFormButtonClick,
   onForumDiscussionButtonClick,
+  onSchedulerButtonClick,  
 }) => {
   return (
     <Box>
       <ButtonGroup variant="contained" aria-label="outlined primary button group" sx={{ my: 3 }}>
         {roleId === '1' && (
           <>
-            <Button
-              onClick={() => onButtonClick('adminCourses')}
-              variant="outlined"
-              color="primary"
-            >
+            <Button onClick={() => onButtonClick('adminCourses')} variant="outlined" color="primary">
               Manage Courses
             </Button>
             <Button onClick={() => onButtonClick('adminUsers')} variant="outlined" color="primary">
@@ -38,14 +34,16 @@ const Navbar = ({
         {(roleId === '2' || roleId === '3') && (
           <>
            <Button
-              onClick={onForumDiscussionButtonClick}  
-              variant={isForumDiscussionVisible ? 'contained' : 'outlined'}
+              onClick={() => {
+                onForumDiscussionButtonClick();
+              }}
+              variant="outlined"
               color="primary"
               disabled={!selectedCourse}
             >
               Forum Discussion
             </Button>
-            
+
             {isTeacherOrStudent && roleId === '2' && (
               <Button
                 onClick={onMCQFormButtonClick}
@@ -68,6 +66,10 @@ const Navbar = ({
             )}
           </>
         )}
+
+        <Button onClick={onSchedulerButtonClick} variant="outlined" color="primary">
+          Scheduler
+        </Button>
       </ButtonGroup>
     </Box>
   );
@@ -81,7 +83,8 @@ Navbar.propTypes = {
   isForumDiscussionVisible: PropTypes.bool,
   onMCQFormButtonClick: PropTypes.func,
   onMCQAnswerFormButtonClick: PropTypes.func,
-  onForumDiscussionButtonClick: PropTypes.func, 
+  onForumDiscussionButtonClick: PropTypes.func,
+  onSchedulerButtonClick: PropTypes.func, 
 };
 
 export default Navbar;

@@ -1,19 +1,20 @@
 import React, { useState, useEffect } from 'react';
-import { Container, Typography, Grid, CssBaseline, Paper} from '@mui/material';
+import { Container, Typography, Grid, CssBaseline, Paper } from '@mui/material';
 import { useNavigate } from 'react-router-dom';
 import { useCookies } from 'react-cookie';
 import axios from 'axios';
 import Sidebar from './side-bar';
 import Navbar from './nav-bar';
-import Scheduler from './scheduler';
-import UserProfile from './user-profile';
-import CourseEnrollmentModal from './course-enrollment-modal';
-import ForumDiscussion from '../threads/Forumdiscussion';
 import AdminCourses from '../admin/AdminCourses';
 import AdminUsers from '../admin/AdminUsers';
 import AdminRoles from '../admin/AdminRoles';
 import MCQForm from '../mcq-form/mcq-form';
 import MCQAnswerForm from '../mcq-form/mcq-answer-form';
+import ForumDiscussion from '../threads/Forumdiscussion';
+import Scheduler from './scheduler';
+import UserProfile from './user-profile';
+import CourseEnrollmentModal from './course-enrollment-modal';
+
 import './home.css';
 
 const API_URL = 'http://localhost:8081/home/refresh-token';
@@ -25,7 +26,7 @@ const Home = () => {
   const [isUserProfileOpen, setUserProfileOpen] = useState(false);
   const [isEnrollmentModalOpen, setEnrollmentModalOpen] = useState(false);
   const [isLoggedIn, setIsLoggedIn] = useState(false);
-  const [activeView, setActiveView] = useState('scheduler'); 
+  const [activeView, setActiveView] = useState('scheduler');
   const [selectedCourse, setSelectedCourse] = useState(null);
   const [isCoursesEnrolled, setIsCoursesEnrolled] = useState(false);
   const [isForumDiscussionVisible, setForumDiscussionVisible] = useState(false);
@@ -88,13 +89,11 @@ const Home = () => {
       handleRoleSpecificActions(storedRoleId);
 
       switch (storedRoleId) {
-        case '1': 
+        case '1':
           setActiveView('adminCourses');
           break;
-        case '2': 
-          setActiveView('scheduler');
-          break;
-        case '3': 
+        case '2':
+        case '3':
           setActiveView('scheduler');
           break;
         default:
@@ -114,7 +113,6 @@ const Home = () => {
         setNavigateToPath(null);
       }
     };
-    
 
     handleTokenRefreshAndFetch();
   }, [cookies.token, isLoggedIn, navigateToPathState, roleId, setCookie, navigate]);
@@ -135,7 +133,8 @@ const Home = () => {
 
   const handleForumDiscussionButtonClick = () => {
     setForumDiscussionVisible(!isForumDiscussionVisible);
-  };
+    setActiveView(isForumDiscussionVisible ? 'scheduler' : 'forumDiscussion');
+  };  
 
   const handleMCQFormButtonClick = () => {
     if (selectedCourse) {
@@ -149,35 +148,49 @@ const Home = () => {
     }
   };
 
+  const handleSchedulerButtonClick = () => {
+    setActiveView('scheduler');
+  };
+
   const renderActiveView = () => {
     const isAdmin = roleId === '1';
     const isTeacherOrStudent = ['2', '3'].includes(roleId);
-
+  
     return (
       <Paper elevation={3} sx={{ p: 2, mt: 2 }}>
         {isAdmin && activeView === 'adminCourses' && <AdminCourses />}
         {isAdmin && activeView === 'adminUsers' && <AdminUsers />}
         {isAdmin && activeView === 'adminRoles' && <AdminRoles />}
-
+  
         {isTeacherOrStudent && selectedCourse && isForumDiscussionVisible && (
           <ForumDiscussion courseId={selectedCourse} />
         )}
-
+  
         {isTeacherOrStudent && selectedCourse && activeView === 'mcqform' && (
           <MCQForm courseId={selectedCourse} />
         )}
-
+  
         {isTeacherOrStudent && selectedCourse && activeView === 'mcqanswerform' && (
           <MCQAnswerForm courseId={selectedCourse} />
+        )}
+  
+        {activeView === 'scheduler' && (
+          <Scheduler roleId={roleId} userId={localStorage.getItem('userId')} />
+        )}
+  
+        {/* Conditionally render ForumDiscussion based on isForumDiscussionVisible */}
+        {isForumDiscussionVisible && (
+          <ForumDiscussion courseId={selectedCourse} />
         )}
       </Paper>
     );
   };
 
   const handleNavbarButtonClick = (view) => {
+    setForumDiscussionVisible(view === 'forumDiscussion');
     setActiveView(view);
   };
-
+  
   const getRoleHeaderText = (roleId) => {
     const roleTitles = {
       '1': 'Admin Home Panel',
@@ -214,19 +227,17 @@ const Home = () => {
               Welcome, {roleId === '1' ? 'Admin' : roleId === '2' ? 'Teacher' : 'Student'}
             </Typography>
 
-            <Scheduler roleId={roleId} userId={localStorage.getItem('userId')} />
-
             <div className="button-container">
               <Navbar
                 onButtonClick={handleNavbarButtonClick}
                 roleId={roleId}
                 onCourseSelect={handleCourseSelect}
                 selectedCourse={selectedCourse}
-                isForumDiscussionVisible={isForumDiscussionVisible}
                 onForumDiscussionButtonClick={handleForumDiscussionButtonClick}
                 isTeacherOrStudent={['2', '3'].includes(roleId)}
                 onMCQFormButtonClick={handleMCQFormButtonClick}
                 onMCQAnswerFormButtonClick={handleMCQAnswerFormButtonClick}
+                onSchedulerButtonClick={handleSchedulerButtonClick} 
               />
             </div>
 
