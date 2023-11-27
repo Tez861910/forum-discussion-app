@@ -14,19 +14,19 @@ const MCQSummary = ({ questions, answers }) => {
                 <Typography variant="strong">
                   Question {index + 1}:
                 </Typography>
-                {question.question} {/* Render the question text */}
+                {question.question} 
               </div>
               <div className="flex">
                 <Typography variant="strong">
                   Correct Answer:
                 </Typography>
-                {question.correctAnswer} {/* Render the correct answer */}
+                {question.correctAnswer}
               </div>
               <div className="flex">
                 <Typography variant="strong">
                   Your Answer:
                 </Typography>
-                {answers[index].selectedOption || 'Not answered'} {/* Render the selected option or "Not answered" */}
+                {answers[index].selectedOption || 'Not answered'} 
               </div>
             </div>
           </ListItem>

@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Container, Typography, Grid, CssBaseline, Paper } from '@mui/material';
+import { Container, Typography, Grid, CssBaseline, Paper} from '@mui/material';
 import { useNavigate } from 'react-router-dom';
 import { useCookies } from 'react-cookie';
 import axios from 'axios';
@@ -12,6 +12,9 @@ import ForumDiscussion from '../threads/Forumdiscussion';
 import AdminCourses from '../admin/AdminCourses';
 import AdminUsers from '../admin/AdminUsers';
 import AdminRoles from '../admin/AdminRoles';
+import MCQForm from '../mcq-form/mcq-form';
+import MCQAnswerForm from '../mcq-form/mcq-answer-form';
+import './home.css';
 
 const API_URL = 'http://localhost:8081/home/refresh-token';
 
@@ -22,7 +25,7 @@ const Home = () => {
   const [isUserProfileOpen, setUserProfileOpen] = useState(false);
   const [isEnrollmentModalOpen, setEnrollmentModalOpen] = useState(false);
   const [isLoggedIn, setIsLoggedIn] = useState(false);
-  const [activeView, setActiveView] = useState('courses');
+  const [activeView, setActiveView] = useState('scheduler'); 
   const [selectedCourse, setSelectedCourse] = useState(null);
   const [isCoursesEnrolled, setIsCoursesEnrolled] = useState(false);
   const [isForumDiscussionVisible, setForumDiscussionVisible] = useState(false);
@@ -30,7 +33,7 @@ const Home = () => {
 
   const clearUserData = async () => {
     await new Promise((resolve) => setTimeout(resolve, 100));
-    setCookie('token', '', { path: '/', expires: new Date(0) });
+    setCookie('token', '', { path: '/login', expires: new Date(0) });
     localStorage.removeItem('userId');
     localStorage.removeItem('roleId');
     setIsLoggedIn(false);
@@ -39,7 +42,7 @@ const Home = () => {
 
   const handleTokenRefreshSuccess = (data) => {
     const newAccessToken = data.accessToken;
-    setCookie('token', newAccessToken, { path: '/' });
+    setCookie('token', newAccessToken, { path: '/login' });
 
     const storedRoleId = localStorage.getItem('roleId');
     setRoleId(storedRoleId);
@@ -83,6 +86,20 @@ const Home = () => {
     if (storedRoleId) {
       setRoleId(storedRoleId);
       handleRoleSpecificActions(storedRoleId);
+
+      switch (storedRoleId) {
+        case '1': 
+          setActiveView('adminCourses');
+          break;
+        case '2': 
+          setActiveView('scheduler');
+          break;
+        case '3': 
+          setActiveView('scheduler');
+          break;
+        default:
+          setActiveView('scheduler');
+      }
     }
 
     const token = cookies.token;
@@ -97,17 +114,10 @@ const Home = () => {
         setNavigateToPath(null);
       }
     };
+    
 
     handleTokenRefreshAndFetch();
   }, [cookies.token, isLoggedIn, navigateToPathState, roleId, setCookie, navigate]);
-
-  const navigateToPath = (path) => {
-    if (!roleId) {
-      setNavigateToPath(path);
-    } else {
-      navigate(path);
-    }
-  };
 
   const handleEnrollmentSuccess = () => {
     setEnrollmentModalOpen(false);
@@ -124,7 +134,19 @@ const Home = () => {
   };
 
   const handleForumDiscussionButtonClick = () => {
-    setForumDiscussionVisible(true);
+    setForumDiscussionVisible(!isForumDiscussionVisible);
+  };
+
+  const handleMCQFormButtonClick = () => {
+    if (selectedCourse) {
+      setActiveView('mcqform');
+    }
+  };
+
+  const handleMCQAnswerFormButtonClick = () => {
+    if (selectedCourse) {
+      setActiveView('mcqanswerform');
+    }
   };
 
   const renderActiveView = () => {
@@ -133,21 +155,27 @@ const Home = () => {
 
     return (
       <Paper elevation={3} sx={{ p: 2, mt: 2 }}>
-        {isAdmin && activeView === 'courses' && <AdminCourses />}
-        {isAdmin && activeView === 'users' && <AdminUsers />}
-        {isAdmin && activeView === 'roles' && <AdminRoles />}
-
-        {isTeacherOrStudent && selectedCourse && !isForumDiscussionVisible && (
-          <Typography variant="h6" sx={{ my: 3 }}>
-            Please select a course to access this feature.
-          </Typography>
-        )}
+        {isAdmin && activeView === 'adminCourses' && <AdminCourses />}
+        {isAdmin && activeView === 'adminUsers' && <AdminUsers />}
+        {isAdmin && activeView === 'adminRoles' && <AdminRoles />}
 
         {isTeacherOrStudent && selectedCourse && isForumDiscussionVisible && (
           <ForumDiscussion courseId={selectedCourse} />
         )}
+
+        {isTeacherOrStudent && selectedCourse && activeView === 'mcqform' && (
+          <MCQForm courseId={selectedCourse} />
+        )}
+
+        {isTeacherOrStudent && selectedCourse && activeView === 'mcqanswerform' && (
+          <MCQAnswerForm courseId={selectedCourse} />
+        )}
       </Paper>
     );
+  };
+
+  const handleNavbarButtonClick = (view) => {
+    setActiveView(view);
   };
 
   const getRoleHeaderText = (roleId) => {
@@ -186,18 +214,21 @@ const Home = () => {
               Welcome, {roleId === '1' ? 'Admin' : roleId === '2' ? 'Teacher' : 'Student'}
             </Typography>
 
+            <Scheduler roleId={roleId} userId={localStorage.getItem('userId')} />
+
             <div className="button-container">
               <Navbar
-                renderButtonsByRoleId={renderActiveView}
+                onButtonClick={handleNavbarButtonClick}
                 roleId={roleId}
                 onCourseSelect={handleCourseSelect}
                 selectedCourse={selectedCourse}
+                isForumDiscussionVisible={isForumDiscussionVisible}
                 onForumDiscussionButtonClick={handleForumDiscussionButtonClick}
+                isTeacherOrStudent={['2', '3'].includes(roleId)}
+                onMCQFormButtonClick={handleMCQFormButtonClick}
+                onMCQAnswerFormButtonClick={handleMCQAnswerFormButtonClick}
               />
             </div>
-
-            {/* Display the Scheduler component */}
-            <Scheduler roleId={roleId} userId={localStorage.getItem('userId')} />
 
             {renderActiveView()}
           </div>

@@ -10,12 +10,15 @@ import MCQAnswerForm from './mcq-form/mcq-answer-form';
 import { Home } from './home-page/home';
 import theme from './Theme';
 import Login from './login/login';
+import Start from './start';
 import Signup from './sign-up-page/sign-up';
 
 class ErrorBoundary extends React.Component {
   constructor(props) {
+
     super(props);
     this.state = { hasError: false };
+    
   }
 
   static getDerivedStateFromError(error) {
@@ -42,7 +45,8 @@ function logErrorToMyService(error, errorInfo) {
 
 const AppRoutes = () => (
   <Routes>
-    <Route path="/" element={<Login />} />
+    <Route path="/" element={<Start/>} />
+    <Route path="/login" element={<Login />} />
     <Route path="/sign-up" element={<Signup />} />
     <Route path="/home/adminpanel" element={<AdminPanel />} />
     <Route path="/home/forum-discussion" element={<ForumDiscussion />} />

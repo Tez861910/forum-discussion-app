@@ -6,68 +6,68 @@ import Box from '@mui/material/Box';
 
 const Navbar = ({
   roleId,
-  onCourseSelect,
+  onButtonClick,
   selectedCourse,
+  isTeacherOrStudent,
+  isForumDiscussionVisible,
+  onMCQFormButtonClick,
+  onMCQAnswerFormButtonClick,
   onForumDiscussionButtonClick,
 }) => {
-  const handleChange = (event, courseId) => {
-    event.stopPropagation();
-    onCourseSelect(courseId);
-  };
-
-  const renderAdminPanelButtons = () => (
-    <>
-      <Button onClick={() => onCourseSelect('courses')} variant="outlined" color="primary">
-        Courses
-      </Button>
-      <Button onClick={() => onCourseSelect('users')} variant="outlined" color="primary">
-        Users
-      </Button>
-      <Button onClick={() => onCourseSelect('roles')} variant="outlined" color="primary">
-        Roles
-      </Button>
-    </>
-  );
-
-  const renderForumDiscussionButton = () => (
-    <Button
-      onClick={onForumDiscussionButtonClick}
-      variant="contained"
-      color="primary"
-      disabled={!selectedCourse}
-    >
-      Forum Discussion
-    </Button>
-  );
-
-  const renderBackToCoursesButton = () => (
-    <Button
-      onClick={(event) => handleChange(event, null)}
-      variant="contained"
-      color="primary"
-      disabled={!selectedCourse}
-    >
-      Back to Courses
-    </Button>
-  );
-
-  const renderRoleSpecificButtons = () => {
-    switch (roleId) {
-      case '1':
-        return renderAdminPanelButtons();
-      case '2':
-      case '3':
-        return renderForumDiscussionButton();
-      default:
-        return null;
-    }
-  };
-
   return (
     <Box>
       <ButtonGroup variant="contained" aria-label="outlined primary button group" sx={{ my: 3 }}>
-        {renderRoleSpecificButtons()}
-        {roleId === '3' && renderBackToCoursesButton()}
+        {roleId === '1' && (
+          <>
+            <Button
+              onClick={() => onButtonClick('adminCourses')}
+              variant="outlined"
+              color="primary"
+            >
+              Manage Courses
+            </Button>
+            <Button onClick={() => onButtonClick('adminUsers')} variant="outlined" color="primary">
+              Manage Users
+            </Button>
+            <Button onClick={() => onButtonClick('adminRoles')} variant="outlined" color="primary">
+              Manage Roles
+            </Button>
+          </>
+        )}
+
+        {(roleId === '2' || roleId === '3') && (
+          <>
+           <Button
+              onClick={onForumDiscussionButtonClick}  
+              variant={isForumDiscussionVisible ? 'contained' : 'outlined'}
+              color="primary"
+              disabled={!selectedCourse}
+            >
+              Forum Discussion
+            </Button>
+            
+            {isTeacherOrStudent && roleId === '2' && (
+              <Button
+                onClick={onMCQFormButtonClick}
+                variant="outlined"
+                color="primary"
+                disabled={!selectedCourse}
+              >
+                Create MCQ
+              </Button>
+            )}
+            {isTeacherOrStudent && roleId === '3' && (
+              <Button
+                onClick={onMCQAnswerFormButtonClick}
+                variant="outlined"
+                color="primary"
+                disabled={!selectedCourse}
+              >
+                Answer MCQ
+              </Button>
+            )}
+          </>
+        )}
       </ButtonGroup>
     </Box>
   );
@@ -75,9 +75,13 @@ const Navbar = ({
 
 Navbar.propTypes = {
   roleId: PropTypes.string.isRequired,
-  onCourseSelect: PropTypes.func.isRequired,
+  onButtonClick: PropTypes.func.isRequired,
   selectedCourse: PropTypes.string,
-  onForumDiscussionButtonClick: PropTypes.func,
+  isTeacherOrStudent: PropTypes.bool,
+  isForumDiscussionVisible: PropTypes.bool,
+  onMCQFormButtonClick: PropTypes.func,
+  onMCQAnswerFormButtonClick: PropTypes.func,
+  onForumDiscussionButtonClick: PropTypes.func, 
 };
 
 export default Navbar;

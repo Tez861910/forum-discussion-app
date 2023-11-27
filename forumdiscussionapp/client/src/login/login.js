@@ -17,7 +17,7 @@ const Login = () => {
   };
 
   const handleLoginSuccess = (data) => {
-    setCookie('token', data.token, { path: '/' });
+    setCookie('token', data.token, { path: '/login' });
     localStorage.setItem('userId', data.userId);
     localStorage.setItem('roleId', data.roleId);
 
@@ -76,13 +76,14 @@ const Login = () => {
               type="submit"
               variant="contained"
               color="primary"
+              sx={{ mt: 2 }}
             >
               Log in
             </Button>
-            <Typography variant="body2">
+            <Typography variant="body2" sx={{ mt: 2 }}>
               You agree to our terms and conditions
             </Typography>
-            <Link to="/sign-up" variant="body2">
+            <Link to="/sign-up" variant="body2" sx={{ mt: 2 }}>
               Create Account
             </Link>
           </form>

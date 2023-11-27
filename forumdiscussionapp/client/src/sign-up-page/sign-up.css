@@ -1,30 +1,35 @@
 /* Styles for the entire signup container */
 .signup-page {
-  width: 360px;
-  padding: 8% 0 0;
-  margin: auto;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 100vh;
 }
 
 /* Styles for the signup form */
 .signup-page .form {
-  position: relative;
-  z-index: 1;
   background: #FFFFFF;
   max-width: 360px;
-  margin: 0 auto 100px;
+  width: 100%;
   padding: 45px;
   text-align: center;
   box-shadow: 0 0 20px 0 rgba(0, 0, 0, 0.2), 0 5px 5px 0 rgba(0, 0, 0, 0.24);
+  margin: auto; /* Add this line to center the form */
 }
 
 /* Styles for the signup input fields */
 .signup-page .form .MuiInputBase-input {
   width: 100%;
+  margin-bottom: 15px;
 }
 
 /* Styles for the signup button */
 .signup-page .form .MuiButton-containedPrimary {
   width: 100%;
+  background-color: #2196f3;
+  color: #ebf0f3;
+  margin-top: 20px;
+  padding: 15px;
 }
 
 /* Styles for the error message */
@@ -39,4 +44,10 @@
   color: #4CAF50;
   font-size: 16px;
   margin-top: 15px;
+}
+
+/* Styles for the link to login */
+.signup-page .form .btn-default {
+  margin-top: 20px;
+  padding: 15px;
 }

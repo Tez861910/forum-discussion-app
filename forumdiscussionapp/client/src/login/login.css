@@ -3,12 +3,13 @@
   display: flex;
   justify-content: center;
   align-items: center;
-  height: 100vh;
-  background-color: #FFFFFF;
+  height: 100vh; 
 }
 
 /* Styles for the login form */
-.form {
+.login-page .form {
+  position: relative;
+  z-index: 1;
   background: #FFFFFF;
   max-width: 360px;
   padding: 45px;
@@ -17,20 +18,22 @@
   border-radius: 8px;
 }
 
+
 /* Styles for the login button */
-.form .MuiButton-containedPrimary {
+.login-page .form .MuiButton-containedPrimary {
   width: 100%;
-  margin: 10px 0;
+  margin-top: 10px;
 }
 
 /* Styles for error message */
-.message {
+.login-page .message {
   margin: 15px 0 0;
   color: #b3b3b3;
   font-size: 12px;
 }
 
-.message a {
+.login-page .message a {
   color: #4CAF50;
   text-decoration: none;
+  cursor: pointer;
 }

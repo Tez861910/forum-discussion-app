@@ -1,22 +1,25 @@
-import { createTheme } from '@mui/system';
+import { createTheme } from '@mui/material/styles';
 
 const theme = createTheme({
   palette: {
     primary: {
-      main: '#1976D2',
+      main: '#2196F3', 
     },
     secondary: {
       main: '#FF4081',
     },
     error: {
-      main: '#FF5252',
+      main: '#FF5252', 
     },
     background: {
-      default: '#F5F5F5',
+      default: '#ffe4c4',
     },
     text: {
       primary: '#333333',
       secondary: '#666666',
+    },
+    common: {
+      white: '#ffffff',
     },
   },
   typography: {
@@ -43,13 +46,15 @@ const theme = createTheme({
       styleOverrides: {
         root: {
           textTransform: 'none',
+          borderRadius: '8px', 
+          padding: '12px 24px', 
         },
       },
     },
     MuiInputLabel: {
       styleOverrides: {
         root: {
-          // Add additional styling if needed
+          
         },
       },
     },

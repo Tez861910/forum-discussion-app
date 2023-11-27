@@ -29,8 +29,6 @@ const MCQForm = ({ courseId }) => {
 
         if (response.data.success) {
           onSave(mcqData);
-          // Assuming there's a route to the created MCQ, you can redirect there
-          navigate(`/mcq/${response.data.mcqId}`);
         } else {
           console.error('Error saving MCQ data:', response.data.error);
         }
