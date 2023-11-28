@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { Dialog, DialogTitle, DialogContent, DialogActions,  Button, TextField } from '@mui/material';
 
-function ThreadModal({ threadId, onClose, role }) {
+function ThreadModal({ threadId, onClose, role, userId }) {
   const [thread, setThread] = useState(null);
   const [editedTitle, setEditedTitle] = useState('');
   const [editedContent, setEditedContent] = useState('');

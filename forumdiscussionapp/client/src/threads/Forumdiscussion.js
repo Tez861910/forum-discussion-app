@@ -10,9 +10,9 @@ import {
   DialogActions,
   Box,
 } from '@mui/material';
-import ThreadList from './ThreadList';
+import ThreadList from './ThreadList'; 
 import ThreadModal from './ThreadModal';
-import CommentSection from './comment-section';
+import CommentSection from './comment-section'; 
 import './forumdiscussion.css';
 
 function ForumDiscussion({ courseId }) {
@@ -29,7 +29,8 @@ function ForumDiscussion({ courseId }) {
     const fetchThreads = async () => {
       try {
         const response = await axios.get(`http://localhost:8081/threads/threads/get/${courseId}`);
-        setThreads(response.data.threads);
+        console.log('API Response:', response.data);
+        setThreads(response.data[0]); 
       } catch (error) {
         console.error('Error fetching threads:', error);
       }
@@ -60,6 +61,7 @@ function ForumDiscussion({ courseId }) {
       console.error('courseId and userId are required');
       return;
     }
+
     try {
       const response = await axios.post('http://localhost:8081/threads/threads/create', {
         title: newThreadTitle,
@@ -69,7 +71,7 @@ function ForumDiscussion({ courseId }) {
       });
 
       const updatedThreadsResponse = await axios.get(`http://localhost:8081/threads/threads/get/${courseId}`);
-      setThreads(updatedThreadsResponse.data.threads);
+      setThreads(updatedThreadsResponse.data[0]); 
 
       setSelectedThread(response.data.threadId);
       setShowModal(true);
@@ -122,11 +124,9 @@ function ForumDiscussion({ courseId }) {
           </Dialog>
         </Box>
       )}
-      <ThreadList threads={threads} onThreadSelect={handleThreadSelection} />
-      {showModal && (
-        <ThreadModal threadId={selectedThread} onClose={handleModalClose} role={role} />
-      )}
-      {selectedThread && <CommentSection threadId={selectedThread} role={role} />}
+      <ThreadList threads={threads} onThreadSelect={handleThreadSelection} role={role} />
+      { <ThreadModal threadId={selectedThread} onClose={handleModalClose} role={role} userId={userId} />}
+      {selectedThread && <CommentSection threadId={selectedThread} role={role} userId={userId} />}
     </Box>
   );
 }

@@ -2,10 +2,9 @@ import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { Typography, TextareaAutosize, Button } from '@mui/material';
 
-function CommentSection({ threadId, role }) {
+function CommentSection({ threadId, role, userId }) {
   const [comments, setComments] = useState([]);
   const [newComment, setNewComment] = useState('');
-  const userId = localStorage.getItem('userId');
   const courseId = localStorage.getItem('courseId');
 
   const fetchComments = async () => {
@@ -41,6 +40,29 @@ function CommentSection({ threadId, role }) {
     }
   };
 
+  const handleEditComment = async (commentId, updatedContent) => {
+    try {
+      await axios.put(`http://localhost:8081/comments/update/${commentId}`, {
+        content: updatedContent,
+      });
+
+      // Reload comments after updating a comment.
+      fetchComments();
+    } catch (error) {
+      console.error('Error updating comment:', error);
+    }
+  };
+
+  const handleDeleteComment = async (commentId) => {
+    try {
+      await axios.delete(`http://localhost:8081/comments/delete/${commentId}`);
+      // Reload comments after deleting a comment.
+      fetchComments();
+    } catch (error) {
+      console.error('Error deleting comment:', error);
+    }
+  };
+
   return (
     <div className="comment-section-container">
       <Typography variant="h2">Comments</Typography>
@@ -48,6 +70,14 @@ function CommentSection({ threadId, role }) {
         {comments.map((comment) => (
           <li key={comment.id} className="comment-item">
             {comment.content}
+            {role === 'student' && userId === comment.userId && (
+              <>
+                <Button onClick={() => handleEditComment(comment.id, prompt('Edit comment:', comment.content))}>
+                  Edit
+                </Button>
+                <Button onClick={() => handleDeleteComment(comment.id)}>Delete</Button>
+              </>
+            )}
           </li>
         ))}
       </ul>
