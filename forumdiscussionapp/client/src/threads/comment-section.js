@@ -2,17 +2,19 @@ import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { Typography, TextareaAutosize, Button } from '@mui/material';
 
-function CommentSection({ threadId, role, userId }) {
+function CommentSection({ threadId, roleId, userId }) {
   const [comments, setComments] = useState([]);
   const [newComment, setNewComment] = useState('');
-  const courseId = localStorage.getItem('courseId');
+  const [fetchError, setFetchError] = useState(null);
 
   const fetchComments = async () => {
     try {
-      const response = await axios.get(`http://localhost:8081/comments/getCommentsByThread/${threadId}`);
+      const response = await axios.get(`http://localhost:8081/comments/comments/get/${threadId}`);
       setComments(response.data.comments);
+      setFetchError(null);
     } catch (error) {
       console.error('Error fetching comments:', error);
+      setFetchError('Error fetching comments');
     }
   };
 
@@ -23,15 +25,15 @@ function CommentSection({ threadId, role, userId }) {
   const handleCommentSubmit = async (event) => {
     event.preventDefault();
 
-    if (threadId && role === 'student') {
+    console.log('Current threadId:', threadId);
+
+    if (threadId && newComment.trim() !== '') {
       try {
-        await axios.post(`http://localhost:8081/comments/addCommentToThread/${threadId}`, {
+        await axios.post(`http://localhost:8081/comments/comments/create/${threadId}`, {
           content: newComment,
           userId,
-          courseId,
         });
 
-        // Reload comments after adding a new comment.
         setNewComment('');
         fetchComments();
       } catch (error) {
@@ -42,11 +44,10 @@ function CommentSection({ threadId, role, userId }) {
 
   const handleEditComment = async (commentId, updatedContent) => {
     try {
-      await axios.put(`http://localhost:8081/comments/update/${commentId}`, {
+      await axios.put(`http://localhost:8081/comments/comments/update/${commentId}`, {
         content: updatedContent,
       });
 
-      // Reload comments after updating a comment.
       fetchComments();
     } catch (error) {
       console.error('Error updating comment:', error);
@@ -55,8 +56,8 @@ function CommentSection({ threadId, role, userId }) {
 
   const handleDeleteComment = async (commentId) => {
     try {
-      await axios.delete(`http://localhost:8081/comments/delete/${commentId}`);
-      // Reload comments after deleting a comment.
+      await axios.delete(`http://localhost:8081/comments/comments/delete/${commentId}`);
+
       fetchComments();
     } catch (error) {
       console.error('Error deleting comment:', error);
@@ -66,11 +67,14 @@ function CommentSection({ threadId, role, userId }) {
   return (
     <div className="comment-section-container">
       <Typography variant="h2">Comments</Typography>
+
+      {fetchError && <p>{fetchError}</p>}
+
       <ul className="comment-list">
         {comments.map((comment) => (
           <li key={comment.id} className="comment-item">
             {comment.content}
-            {role === 'student' && userId === comment.userId && (
+            {(roleId === '2' || (roleId === '3' && userId === comment.userId)) && (
               <>
                 <Button onClick={() => handleEditComment(comment.id, prompt('Edit comment:', comment.content))}>
                   Edit
@@ -81,7 +85,8 @@ function CommentSection({ threadId, role, userId }) {
           </li>
         ))}
       </ul>
-      {role === 'student' && (
+
+      {roleId === '2' || roleId === '3' ? (
         <form onSubmit={handleCommentSubmit}>
           <TextareaAutosize
             value={newComment}
@@ -93,7 +98,7 @@ function CommentSection({ threadId, role, userId }) {
             Submit Comment
           </Button>
         </form>
-      )}
+      ) : null}
     </div>
   );
 }

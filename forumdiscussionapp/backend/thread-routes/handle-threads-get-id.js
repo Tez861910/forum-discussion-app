@@ -1,6 +1,6 @@
 const { query } = require('../db');
 
-async function handleThreadsGetById(req, res) {
+async function handleThreadsGetByThreadId(req, res) {
   const { threadId } = req.params;
 
   try {
@@ -21,5 +21,5 @@ async function handleThreadsGetById(req, res) {
 }
 
 module.exports = {
-  handleThreadsGetById,
+  handleThreadsGetByThreadId,
 };

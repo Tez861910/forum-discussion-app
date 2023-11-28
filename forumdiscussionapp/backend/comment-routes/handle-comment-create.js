@@ -4,7 +4,7 @@ const { query } = require('../db');
 async function handleCommentCreate(req, res) {
 {
     const { threadId } = req.params;
-    const { content, userId, courseId } = req.body;
+    const { content, userId } = req.body;
   
     try {
    
@@ -14,8 +14,8 @@ async function handleCommentCreate(req, res) {
         return res.status(400).json({ error: 'Comment content is required' });
       }
   
-      const sql = 'INSERT INTO comments (Content, UserID, CourseID, ThreadID) VALUES (?, ?, ?, ?)';
-      const [result] = await query(sql, [content, userId, courseId, threadId]);
+      const sql = 'INSERT INTO comments (Content, UserID,  ThreadID) VALUES (?, ?, ?)';
+      const [result] = await query(sql, [content, userId,  threadId]);
   
       if (result.affectedRows === 1) {
         console.log('Comment created successfully');

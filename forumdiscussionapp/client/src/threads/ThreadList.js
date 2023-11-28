@@ -1,7 +1,7 @@
 import React from 'react';
 import { Button, Typography } from '@mui/material';
 
-function ThreadList({ threads, onThreadSelect, role }) {
+function ThreadList({ threads, onThreadSelect, roleId }) {
   console.log(threads); 
   
   const threadArray = Array.isArray(threads) ? threads : [];

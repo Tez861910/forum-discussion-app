@@ -12,14 +12,13 @@ import {
 } from '@mui/material';
 import ThreadList from './ThreadList'; 
 import ThreadModal from './ThreadModal';
-import CommentSection from './comment-section'; 
 import './forumdiscussion.css';
 
 function ForumDiscussion({ courseId }) {
   const [threads, setThreads] = useState([]);
   const [selectedThread, setSelectedThread] = useState(null);
   const [showModal, setShowModal] = useState(false);
-  const [role, setRole] = useState(localStorage.getItem('roleId'));
+  const [roleId, setRoleId] = useState(localStorage.getItem('roleId'));
   const [userId, setUserId] = useState(localStorage.getItem('userId'));
   const [newThreadTitle, setNewThreadTitle] = useState('');
   const [newThreadContent, setNewThreadContent] = useState('');
@@ -74,7 +73,6 @@ function ForumDiscussion({ courseId }) {
       setThreads(updatedThreadsResponse.data[0]); 
 
       setSelectedThread(response.data.threadId);
-      setShowModal(true);
 
       setShowCreateModal(false);
 
@@ -88,7 +86,7 @@ function ForumDiscussion({ courseId }) {
   return (
     <Box>
       <Typography variant="h2">Forum Discussion</Typography>
-      {role === '2' && (
+      {roleId === '2' && (
         <Box mt={2}>
           <Button variant="contained" color="primary" onClick={handleOpenCreateModal}>
             Create Thread
@@ -124,9 +122,8 @@ function ForumDiscussion({ courseId }) {
           </Dialog>
         </Box>
       )}
-      <ThreadList threads={threads} onThreadSelect={handleThreadSelection} role={role} />
-      { <ThreadModal threadId={selectedThread} onClose={handleModalClose} role={role} userId={userId} />}
-      {selectedThread && <CommentSection threadId={selectedThread} role={role} userId={userId} />}
+      <ThreadList threads={threads} onThreadSelect={handleThreadSelection} roleId={roleId} />
+      {selectedThread && showModal && <ThreadModal threadId={selectedThread} onClose={handleModalClose} roleId={roleId} userId={userId} showModal={showModal} />}
     </Box>
   );
 }

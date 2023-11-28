@@ -1,6 +1,6 @@
 const { query } = require('../db'); 
 
-async function handleThreadsThreadIdComment(req, res) {
+async function handleCommentGetThreadId(req, res) {
   const { threadId } = req.params;
   const sql = 'SELECT * FROM Comments WHERE ThreadID = ?';
   
@@ -14,5 +14,5 @@ async function handleThreadsThreadIdComment(req, res) {
 }
 
 module.exports = {
-  handleThreadsThreadIdComment,
+  handleCommentGetThreadId,
 };
