@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
-import { Dialog, DialogTitle, DialogContent, DialogActions, Typography, Button, TextField } from '@mui/material';
+import { Dialog, DialogTitle, DialogContent, DialogActions,  Button, TextField } from '@mui/material';
 
 function ThreadModal({ threadId, onClose, role }) {
   const [thread, setThread] = useState(null);
@@ -48,7 +48,7 @@ function ThreadModal({ threadId, onClose, role }) {
   };
 
   return (
-    <Dialog open={true} onClose={onClose}>
+    <Dialog open={!!thread} onClose={onClose}>
       <DialogTitle>{thread && thread.title}</DialogTitle>
       <DialogContent>
         <TextField

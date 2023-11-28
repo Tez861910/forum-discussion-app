@@ -7,11 +7,11 @@ function ThreadList({ threads, onThreadSelect }) {
       <Typography variant="h3">Thread List</Typography>
       <ul>
         {threads && threads.map((thread) => (
-          <li key={thread.ThreadID}>
-            <Button onClick={() => onThreadSelect(thread.ThreadID)}>
-              {thread.ThreadTitle || 'Untitled Thread'}
-            </Button>
-          </li>
+          <li key={thread.threadId}>
+          <Button onClick={() => onThreadSelect(thread.threadId)}>
+            {thread.threadTitle || 'Untitled Thread'}
+          </Button>
+        </li>        
         ))}
       </ul>
     </div>

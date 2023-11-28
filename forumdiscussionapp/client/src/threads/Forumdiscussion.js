@@ -74,6 +74,8 @@ function ForumDiscussion({ courseId }) {
       setSelectedThread(response.data.threadId);
       setShowModal(true);
 
+      setShowCreateModal(false);
+
       setNewThreadTitle('');
       setNewThreadContent('');
     } catch (error) {

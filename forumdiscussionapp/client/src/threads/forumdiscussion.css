@@ -2,57 +2,61 @@
 
 /* Adjustments for Material-UI v5 */
 
-/* Margins and padding for thread list */
+/* Thread List */
 .thread-list {
   margin-top: 20px;
 }
 
-/* Styling for unordered list in thread list */
 .thread-list ul {
   list-style-type: none;
   padding: 0;
 }
 
-/* Margin for list items in thread list */
 .thread-list li {
   margin-bottom: 10px;
 }
 
-/* Margin for the comment section container */
+/* Comment Section */
 .comment-section-container {
   margin-top: 20px;
 }
 
-/* Styling for unordered list in comment list */
 .comment-list {
   list-style-type: none;
   padding: 0;
 }
 
-/* Styling for each comment item */
 .comment-item {
-  border: 1px solid #ccc;
-  padding: 10px;
-  margin-bottom: 10px;
+  border: 1px solid #ddd; /* Lighter border color for a softer look */
+  border-radius: 4px; /* Add some border radius for a rounded appearance */
+  padding: 15px;
+  margin-bottom: 15px;
+  background-color: #fff; /* White background */
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); /* Subtle box shadow for depth */
 }
 
-/* Full width comment input with padding and no resize */
 .comment-input {
   width: 100%;
-  margin-top: 10px;
+  margin-top: 15px;
   padding: 10px;
+  border: 1px solid #ddd; /* Light border */
+  border-radius: 4px;
   resize: none;
 }
 
-/* Margin for the submit button */
 .submit-button {
-  margin-top: 10px;
+  margin-top: 15px;
 }
 
-/* Styling for the thread modal */
+/* Thread Modal */
 .thread-modal {
   max-width: 500px;
   margin: auto;
+  padding: 20px;
+  border: 1px solid #ddd; /* Light border */
+  border-radius: 4px;
+  background-color: #fff;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
 }
 
 /* Add more styles as needed */

@@ -90,7 +90,7 @@ const Home = () => {
 
       switch (storedRoleId) {
         case '1':
-          setActiveView('adminCourses');
+          setActiveView('scheduler');
           break;
         case '2':
         case '3':
@@ -162,7 +162,7 @@ const Home = () => {
         {isAdmin && activeView === 'adminUsers' && <AdminUsers />}
         {isAdmin && activeView === 'adminRoles' && <AdminRoles />}
   
-        {isTeacherOrStudent && selectedCourse && isForumDiscussionVisible && (
+        {isTeacherOrStudent && selectedCourse && isForumDiscussionVisible && activeView === 'forumDiscussion' && (
           <ForumDiscussion courseId={selectedCourse} />
         )}
   
@@ -177,14 +177,10 @@ const Home = () => {
         {activeView === 'scheduler' && (
           <Scheduler roleId={roleId} userId={localStorage.getItem('userId')} />
         )}
-  
-        {/* Conditionally render ForumDiscussion based on isForumDiscussionVisible */}
-        {isForumDiscussionVisible && (
-          <ForumDiscussion courseId={selectedCourse} />
-        )}
       </Paper>
     );
   };
+  
 
   const handleNavbarButtonClick = (view) => {
     setForumDiscussionVisible(view === 'forumDiscussion');
