@@ -3,13 +3,13 @@ import { createTheme } from '@mui/material/styles';
 const theme = createTheme({
   palette: {
     primary: {
-      main: '#2196F3', 
+      main: '#2196F3',
     },
     secondary: {
       main: '#FF4081',
     },
     error: {
-      main: '#FF5252', 
+      main: '#FF5252',
     },
     background: {
       default: '#ffe4c4',
@@ -18,12 +18,10 @@ const theme = createTheme({
       primary: '#333333',
       secondary: '#666666',
     },
-    common: {
-      white: '#ffffff',
-    },
   },
   typography: {
     fontFamily: '"Roboto", "Helvetica", "Arial", sans-serif',
+    fontWeightBold: 700,
     h1: {
       fontSize: '2rem',
       fontWeight: 'bold',
@@ -46,15 +44,15 @@ const theme = createTheme({
       styleOverrides: {
         root: {
           textTransform: 'none',
-          borderRadius: '8px', 
-          padding: '12px 24px', 
+          borderRadius: '8px',
+          padding: '12px 24px',
         },
       },
     },
     MuiInputLabel: {
       styleOverrides: {
         root: {
-          
+          // Add additional styling if needed
         },
       },
     },

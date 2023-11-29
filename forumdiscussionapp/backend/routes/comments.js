@@ -4,13 +4,13 @@ const cors = require('cors');
 const app = express();
 router.use(express.json());
 router.use(cors());
-
+const { query } = require('../db');
 const { isUserAuthorized } = require('../authvalid');
-const handleCommentDeleteId =require('../comment-routes/handle-comment-delete-id')
-const handleCommentUpdateId =require('../comment-routes/handle-comment-update-id')
-const handleCommentCreate =require('../comment-routes/handle-comment-create')
-const handleCommentGet =require('../comment-routes/handle-comment-get')
-const handleCommentGetThreadId =require('../comment-routes/handle-comments-get-threadid')
+const {handleCommentDeleteId} =require('../comment-routes/handle-comment-delete-id')
+const {handleCommentUpdateId} =require('../comment-routes/handle-comment-update-id')
+const {handleCommentCreate} =require('../comment-routes/handle-comment-create')
+const {handleCommentGet} =require('../comment-routes/handle-comment-get')
+const {handleCommentGetThreadId} =require('../comment-routes/handle-comments-get-threadid')
 
 //Get all comments
 router.get('/comments/get/:threadId', async (req, res) => handleCommentGet(req, res));

@@ -1,7 +1,8 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import axios from 'axios';
 import RoleDropdown from './role-dropdown';
-import { Link as RouterLink, useNavigate } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
+import { Link as RouterLink } from 'react-router-dom';
 import { Container, Grid, Typography, TextField, Button } from '@mui/material';
 import './sign-up.css';
 
@@ -89,7 +90,7 @@ const Signup = () => {
     <Container maxWidth="xs" className="signup-page">
       <Grid container justifyContent="center" alignItems="center" spacing={2}>
         <Grid item xs={12}>
-          <div className="form">
+          <div className="signup-form">
             <Typography variant="h4" align="center" gutterBottom>
               Sign-Up
             </Typography>
@@ -104,7 +105,7 @@ const Signup = () => {
                 error={!!errors.name}
                 helperText={errors.name}
                 margin="normal"
-                className="MuiInputBase-input"
+                className="signup-MuiInputBase-input"
               />
 
               <TextField
@@ -117,7 +118,7 @@ const Signup = () => {
                 error={!!errors.email}
                 helperText={errors.email}
                 margin="normal"
-                className="MuiInputBase-input"
+                className="signup-MuiInputBase-input"
               />
 
               <TextField
@@ -131,7 +132,7 @@ const Signup = () => {
                 error={!!errors.password}
                 helperText={errors.password}
                 margin="normal"
-                className="MuiInputBase-input"
+                className="signup-MuiInputBase-input"
               />
 
               <RoleDropdown
@@ -141,17 +142,20 @@ const Signup = () => {
                 errors={errors}
               />
 
-              <Button type="submit" fullWidth variant="contained" color="primary">
+              <Button type="submit" fullWidth variant="contained" color="primary" className="signup-MuiButton-containedPrimary">
                 Sign up
               </Button>
+
               {successMessage.map((message, index) => (
-                <Typography key={index} variant="body2" className="success-message" align="center">
+                <Typography key={index} variant="body2" className="signup-success-message" align="center">
                   {message}
                 </Typography>
               ))}
+
               <Typography variant="body2" align="center" className="terms-message">
                 You agree to our terms and conditions
               </Typography>
+
               <Button
                 component={RouterLink}
                 to="/login"
@@ -161,6 +165,7 @@ const Signup = () => {
               >
                 Go to Login
               </Button>
+
               <Button component={RouterLink} to="/" fullWidth variant="outlined" color="primary">
                 Back to Start
               </Button>

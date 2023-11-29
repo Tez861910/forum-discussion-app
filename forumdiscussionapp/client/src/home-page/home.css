@@ -4,10 +4,7 @@ body {
   font-family: 'Roboto', sans-serif;
   margin: 0;
   padding: 0;
-  background-color: #f4f4f4;
 }
-
-/* User Profile Styles */
 
 .user-profile {
   max-width: 400px;
@@ -63,142 +60,143 @@ body {
   background-color: #007bff;
   color: #fff;
   margin-top: 20px;
+}
 
-  &:hover {
-    background-color: #0056b3;
-  }
+.user-profile button.primary:hover {
+  background-color: #0056b3;
 }
 
 .user-profile button.back-button {
   background-color: #6c757d;
   color: #fff;
   margin-top: 20px;
-
-  &:hover {
-    background-color: #5a6268;
-  }
 }
+
+.user-profile button.back-button:hover {
+  background-color: #5a6268;
+}
+
 
 /* Sidebar Styles */
 
 .sidebar-container {
-  width: 240px;
-  background-color: #ffffff;
-  color: #333;
-  display: flex;
-  flex-direction: column;
-  align-items: flex-start;
-  padding-top: 20px;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  width: '240px';
+  background-color: '#ffffff';
+  color: '#333';
+  display: 'flex';
+  flex-direction: 'column';
+  align-items: 'flex-start';
+  padding-top: '20px';
+  box-shadow: '0 4px 8px rgba(0, 0, 0, 0.1)';
 }
 
 .sidebar-content {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
+  display: 'flex';
+  flex-direction: 'column';
+  align-items: 'center';
 }
 
 .sidebar-button {
-  margin-top: 20px;
-  margin-bottom: 10px;
-  width: 80%;
+  margin-top: '20px';
+  margin-bottom: '10px';
+  width: '80%';
 }
 
 /* Navbar Styles */
 
 .navbar {
-  background-color: #3949ab;
-  color: #fff;
-  padding: 10px 20px;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  background-color: '#3949ab';
+  color: '#fff';
+  padding: '10px 20px';
+  display: 'flex';
+  justify-content: 'space-between';
+  align-items: 'center';
+  box-shadow: '0 4px 8px rgba(0, 0, 0, 0.1)';
 }
 
 .navbar-brand {
-  cursor: pointer;
-  font-size: 1.5rem;
-  font-weight: bold;
-  text-decoration: none;
-  color: #fff;
+  cursor: 'pointer';
+  font-size: '1.5rem';
+  font-weight: 'bold';
+  text-decoration: 'none';
+  color: '#fff';
 }
 
 /* Main Content Styles */
 
 .home-container {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  padding: 20px;
+  display: 'flex';
+  flex-direction: 'column';
+  align-items: 'center';
+  padding: '20px';
 }
 
 .heading {
-  font-size: 2rem;
-  letter-spacing: 1px;
-  margin-bottom: 20px;
-  color: #333;
+  font-size: '2rem';
+  letter-spacing: '1px';
+  margin-bottom: '20px';
+  color: '#333';
 }
 
 .content-container {
-  display: flex;
-  justify-content: space-between;
-  width: 100%;
-  margin-top: 20px;
+  display: 'flex';
+  justify-content: 'space-between';
+  width: '100%';
+  margin-top: '20px';
 }
 
 .main-content {
   flex: 1;
-  width: 100%;
-  padding: 20px;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-  border-radius: 8px;
-  background-color: #ffffff;
+  width: '100%';
+  padding: '20px';
+  box-shadow: '0 4px 8px rgba(0, 0, 0, 0.1)';
+  border-radius: '8px';
+  background-color: '#ffffff';
 }
 
 .button-container {
-  display: flex;
-  justify-content: space-between;
-  margin-top: 20px;
+  display: 'flex';
+  justify-content: 'space-between';
+  margin-top: '20px';
 }
 
 .btn {
-  padding: 12px 20px;
-  margin-left: 10px;
-  border: none;
-  border-radius: 5px;
-  cursor: pointer;
-  text-decoration: none;
-  color: #fff;
-  background-color: #4CAF50;
-  text-align: center;
+  padding: '12px 20px';
+  margin-left: '10px';
+  border: 'none';
+  border-radius: '5px';
+  cursor: 'pointer';
+  text-decoration: 'none';
+  color: '#fff';
+  background-color: '#4CAF50';
+  text-align: 'center';
 }
 
 /* Responsive Styles */
 
 @media (max-width: 768px) {
   .sidebar-container {
-    width: 100%;
-    padding: 20px;
+    width: '100%';
+    padding: '20px';
   }
 
   .content-container {
-    flex-direction: column;
-    align-items: center;
+    flex-direction: 'column';
+    align-items: 'center';
   }
 
   .main-content {
-    width: 100%;
-    margin-top: 20px;
+    width: '100%';
+    margin-top: '20px';
   }
 
   .button-container {
-    flex-direction: column;
-    align-items: center;
+    flex-direction: 'column';
+    align-items: 'center';
   }
 
   .btn {
-    margin-top: 10px;
-    margin-left: 0;
+    margin-top: '10px';
+    margin-left: '0';
   }
 }

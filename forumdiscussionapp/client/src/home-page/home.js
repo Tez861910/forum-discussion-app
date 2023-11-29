@@ -38,7 +38,7 @@ const Home = () => {
     localStorage.removeItem('userId');
     localStorage.removeItem('roleId');
     setIsLoggedIn(false);
-    navigate('/');
+    navigate('/login');
   };
 
   const handleTokenRefreshSuccess = (data) => {
@@ -252,4 +252,4 @@ const Home = () => {
   );
 };
 
-export { Home };
+export default Home;

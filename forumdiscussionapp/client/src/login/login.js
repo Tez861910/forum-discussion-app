@@ -1,13 +1,13 @@
-import React, { useState } from 'react';
+import * as React from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import { useCookies } from 'react-cookie';
-import { Button, Container, Grid, Typography, TextField } from '@mui/material';
+import { Button, Container, Grid, Typography, TextField, Box } from '@mui/material';
 import './login.css';
 
 const Login = () => {
-  const [values, setValues] = useState({ email: '', password: '' });
-  const [error, setError] = useState('');
+  const [values, setValues] = React.useState({ email: '', password: '' });
+  const [error, setError] = React.useState('');
   const navigate = useNavigate();
   const [cookies, setCookie] = useCookies();
 
@@ -46,54 +46,52 @@ const Login = () => {
   };
 
   return (
-    <Container component="main" maxWidth="xs">
-      <div className="login-page">
-        <div className="form">
-          <Typography component="h2" variant="h5">
-            Sign-In
+    <Container component="main" maxWidth="xs" sx={{ display: 'flex', alignItems: 'center', justifyContent: 'center', height: '100vh' }}>
+      <Box className="login-form" component="div">
+        <Typography component="h2" variant="h5">
+          Sign-In
+        </Typography>
+        {error && <div className="login-message">{error}</div>}
+        <form onSubmit={handleSubmit}>
+          {['email', 'password'].map((field) => (
+            <Grid item xs={12} key={field}>
+              <TextField
+                fullWidth
+                margin="normal"
+                variant="outlined"
+                id={field}
+                label={field === 'email' ? 'Email' : 'Password'}
+                type={field === 'email' ? 'email' : 'password'}
+                placeholder={`Enter ${field === 'email' ? 'Email' : 'Password'}`}
+                name={field}
+                autoComplete={field === 'email' ? 'email' : 'current-password'}
+                value={values[field]}
+                onChange={handleInput}
+              />
+            </Grid>
+          ))}
+          <Button
+            fullWidth
+            type="submit"
+            variant="contained"
+            color="primary"
+            sx={{ mt: 2 }}
+          >
+            Log in
+          </Button>
+          <Typography variant="body2" sx={{ mt: 2 }}>
+            You agree to our terms and conditions
           </Typography>
-          {error && <div className="message">{error}</div>}
-          <form onSubmit={handleSubmit}>
-            {['email', 'password'].map((field) => (
-              <Grid item xs={12} key={field}>
-                <TextField
-                  fullWidth
-                  margin="normal"
-                  variant="outlined"
-                  id={field}
-                  label={field === 'email' ? 'Email' : 'Password'}
-                  type={field === 'email' ? 'email' : 'password'}
-                  placeholder={`Enter ${field === 'email' ? 'Email' : 'Password'}`}
-                  name={field}
-                  autoComplete={field === 'email' ? 'email' : 'current-password'}
-                  value={values[field]}
-                  onChange={handleInput}
-                />
-              </Grid>
-            ))}
-            <Button
-              fullWidth
-              type="submit"
-              variant="contained"
-              color="primary"
-              sx={{ mt: 2 }}
-            >
-              Log in
-            </Button>
-            <Typography variant="body2" sx={{ mt: 2 }}>
-              You agree to our terms and conditions
-            </Typography>
-            <Link to="/sign-up" variant="body2" sx={{ mt: 2 }}>
-              Create Account
-            </Link>
-          </form>
-          <Link to="/" style={{ textDecoration: 'none', display: 'block', textAlign: 'center', marginTop: '20px' }}>
+          <Link to="/sign-up" variant="body2" sx={{ mt: 2 }}>
+            Create Account
+          </Link>
+        </form>
+        <Link to="/" style={{ textDecoration: 'none', display: 'block', textAlign: 'center', marginTop: '20px' }}>
           <Button variant="outlined" color="primary" sx={{ width: '100%', borderRadius: '8px' }}>
             Back to Start
           </Button>
         </Link>
-        </div>
-      </div>
+      </Box>
     </Container>
   );
 };

@@ -1,41 +1,52 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import axios from 'axios';
 import { Typography, TextareaAutosize, Button } from '@mui/material';
+
+const fetchComments = async (threadId) => {
+  try {
+    const response = await axios.get(`http://localhost:8081/comments/comments/get/${threadId}`);
+    return response.data.comments || [];
+  } catch (error) {
+    console.error('Error fetching comments:', error);
+    throw error; 
+  }
+};
 
 function CommentSection({ threadId, roleId, userId }) {
   const [comments, setComments] = useState([]);
   const [newComment, setNewComment] = useState('');
   const [fetchError, setFetchError] = useState(null);
+  const [isLoading, setIsLoading] = useState(false);
 
-  const fetchComments = async () => {
+  const loadComments = useCallback(async () => {
+    setIsLoading(true);
     try {
-      const response = await axios.get(`http://localhost:8081/comments/comments/get/${threadId}`);
-      setComments(response.data.comments);
+      const comments = await fetchComments(threadId);
+      setComments(comments);
       setFetchError(null);
     } catch (error) {
-      console.error('Error fetching comments:', error);
-      setFetchError('Error fetching comments');
+      console.error('Error loading comments:', error);
+      setFetchError('Error loading comments');
     }
-  };
+    setIsLoading(false);
+  }, [threadId]);
 
   useEffect(() => {
-    fetchComments();
-  }, [threadId]);
+    loadComments();
+  }, [loadComments]);
 
   const handleCommentSubmit = async (event) => {
     event.preventDefault();
 
-    console.log('Current threadId:', threadId);
-
     if (threadId && newComment.trim() !== '') {
       try {
         await axios.post(`http://localhost:8081/comments/comments/create/${threadId}`, {
-          content: newComment,
+          CommentContent: newComment,
           userId,
         });
 
         setNewComment('');
-        fetchComments();
+        loadComments();
       } catch (error) {
         console.error('Error adding comment:', error);
       }
@@ -48,7 +59,7 @@ function CommentSection({ threadId, roleId, userId }) {
         content: updatedContent,
       });
 
-      fetchComments();
+      loadComments();
     } catch (error) {
       console.error('Error updating comment:', error);
     }
@@ -58,7 +69,7 @@ function CommentSection({ threadId, roleId, userId }) {
     try {
       await axios.delete(`http://localhost:8081/comments/comments/delete/${commentId}`);
 
-      fetchComments();
+      loadComments();
     } catch (error) {
       console.error('Error deleting comment:', error);
     }
@@ -70,23 +81,31 @@ function CommentSection({ threadId, roleId, userId }) {
 
       {fetchError && <p>{fetchError}</p>}
 
-      <ul className="comment-list">
-        {comments.map((comment) => (
-          <li key={comment.id} className="comment-item">
-            {comment.content}
-            {(roleId === '2' || (roleId === '3' && userId === comment.userId)) && (
-              <>
-                <Button onClick={() => handleEditComment(comment.id, prompt('Edit comment:', comment.content))}>
-                  Edit
-                </Button>
-                <Button onClick={() => handleDeleteComment(comment.id)}>Delete</Button>
-              </>
-            )}
-          </li>
-        ))}
-      </ul>
+      {isLoading ? (
+        <p>Loading comments...</p>
+      ) : (
+        <ul className="comment-list">
+          {comments.length > 0 ? (
+            comments.map((comment) => (
+              <li key={comment.CommentID} className="comment-item">
+                {comment.CommentContent}
+                {(roleId === '2' || (roleId === '3' && userId === comment.UserID)) && (
+                  <>
+                    <Button onClick={() => handleEditComment(comment.CommentID, prompt('Edit comment:', comment.CommentContent))}>
+                      Edit
+                    </Button>
+                    <Button onClick={() => handleDeleteComment(comment.CommentID)}>Delete</Button>
+                  </>
+                )}
+              </li>
+            ))
+          ) : (
+            <p>No comments to display</p>
+          )}
+        </ul>
+      )}
 
-      {roleId === '2' || roleId === '3' ? (
+      {(roleId === '2' || roleId === '3') && (
         <form onSubmit={handleCommentSubmit}>
           <TextareaAutosize
             value={newComment}
@@ -98,7 +117,7 @@ function CommentSection({ threadId, roleId, userId }) {
             Submit Comment
           </Button>
         </form>
-      ) : null}
+      )}
     </div>
   );
 }

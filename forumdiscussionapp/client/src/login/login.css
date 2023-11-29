@@ -1,13 +1,5 @@
-/* Styles for the entire login container */
-.login-page {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  height: 100vh; 
-}
 
-/* Styles for the login form */
-.login-page .form {
+.login-form {
   position: relative;
   z-index: 1;
   background: #FFFFFF;
@@ -18,21 +10,18 @@
   border-radius: 8px;
 }
 
-
-/* Styles for the login button */
-.login-page .form .MuiButton-containedPrimary {
+.login-MuiButton-containedPrimary {
   width: 100%;
   margin-top: 10px;
 }
 
-/* Styles for error message */
-.login-page .message {
+.login-message {
   margin: 15px 0 0;
   color: #b3b3b3;
   font-size: 12px;
 }
 
-.login-page .message a {
+.login-message a {
   color: #4CAF50;
   text-decoration: none;
   cursor: pointer;

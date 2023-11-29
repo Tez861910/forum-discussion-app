@@ -123,7 +123,7 @@ function ForumDiscussion({ courseId }) {
         </Box>
       )}
       <ThreadList threads={threads} onThreadSelect={handleThreadSelection} roleId={roleId} />
-      {selectedThread && showModal && <ThreadModal threadId={selectedThread} onClose={handleModalClose} roleId={roleId} userId={userId} showModal={showModal} />}
+      {selectedThread && showModal && <ThreadModal threadId={selectedThread} onClose={handleModalClose} roleId={roleId} userId={userId} courseId={courseId}  showModal={showModal} />}
     </Box>
   );
 }

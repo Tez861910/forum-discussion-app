@@ -9,14 +9,18 @@ import '@fontsource/roboto/700.css';
 
 const rootElement = document.getElementById('root');
 
-if (rootElement) {
-  try {
-    createRoot(rootElement).render(<App />);
-  } catch (error) {
-    console.error("Error rendering the app:", error);
-  }
-} else {
-  console.error("Root element 'root' not found in the document.");
+if (!rootElement) {
+  throw new Error("Root element 'root' not found in the document.");
+}
+
+try {
+  createRoot(rootElement).render(
+    <React.StrictMode>
+      <App />
+    </React.StrictMode>
+  );
+} catch (error) {
+  console.error("Error rendering the app:", error);
 }
 
 try {

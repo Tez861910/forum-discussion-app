@@ -3,7 +3,7 @@ import axios from 'axios';
 import { Dialog, DialogTitle, DialogContent, DialogActions, Button, TextField } from '@mui/material';
 import CommentSection from './comment-section';
 
-function ThreadModal({ threadId, onClose, roleId, userId }) {
+function ThreadModal({courseId ,threadId, onClose, roleId, userId }) {
   const [thread, setThread] = useState({ title: '', content: '' });
   const [editedTitle, setEditedTitle] = useState('');
   const [editedContent, setEditedContent] = useState('');
@@ -41,6 +41,8 @@ function ThreadModal({ threadId, onClose, roleId, userId }) {
       await axios.put(`http://localhost:8081/threads/threads/update/${threadId}`, {
         title: editedTitle,
         content: editedContent,
+        userId: userId,
+        courseId: courseId,
       });
 
       const response = await axios.get(`http://localhost:8081/threads/threads/get/${threadId}`);
@@ -104,7 +106,7 @@ function ThreadModal({ threadId, onClose, roleId, userId }) {
             </Button>
           </DialogActions>
 
-          <CommentSection threadId={threadId} roleId={roleId} userId={userId} />
+          <CommentSection threadId={threadId} roleId={roleId} userId={userId} courseId={courseId} />
         </>
       )}
     </Dialog>
