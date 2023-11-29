@@ -68,14 +68,29 @@ const UserProfile = ({ isOpen, onClose }) => {
 
   return (
     <Modal open={isOpen} onClose={() => { onClose(); setEditing(false); }}>
-      <Box className="user-profile" sx={{ p: 3, width: 400, mx: 'auto' }}>
+      <Box sx={style}>
         <Typography variant="h6" mb={2}>
           User Profile
         </Typography>
+
         {editing ? (
           <>
-            <TextField fullWidth label="Name" value={newName} onChange={(e) => setNewName(e.target.value)} mb={2} />
-            <TextField fullWidth label="Email" value={newEmail} onChange={(e) => setNewEmail(e.target.value)} mb={2} />
+            <TextField
+              fullWidth
+              label="Name"
+              value={newName}
+              onChange={(e) => setNewName(e.target.value)}
+              mb={2}
+              sx={{ mb: 2 }}
+            />
+            <TextField
+              fullWidth
+              label="Email"
+              value={newEmail}
+              onChange={(e) => setNewEmail(e.target.value)}
+              mb={2}
+              sx={{ mb: 2 }}
+            />
             <TextField
               fullWidth
               label="Password"
@@ -95,15 +110,15 @@ const UserProfile = ({ isOpen, onClose }) => {
           </>
         ) : (
           <>
-            <Typography>Name: {userData.UserName}</Typography>
-            <Typography>Email: {userData.UserEmail}</Typography>
-            <Typography>Role: {userData.RoleName}</Typography>
+            <Typography mb={1}>Name: {userData.UserName}</Typography>
+            <Typography mb={1}>Email: {userData.UserEmail}</Typography>
+            <Typography mb={1}>Role: {userData.RoleName}</Typography>
             <Box sx={{ display: 'flex', justifyContent: 'flex-end', mt: 2 }}>
               <Button variant="contained" color="primary" onClick={handleEdit} sx={{ mr: 2 }}>
                 Edit
               </Button>
               <Button variant="contained" onClick={handleNavigateBack} startIcon={<ArrowBackIcon />}>
-                Cancel
+                Back
               </Button>
             </Box>
           </>
@@ -111,6 +126,19 @@ const UserProfile = ({ isOpen, onClose }) => {
       </Box>
     </Modal>
   );
+};
+
+const style = {
+  position: 'absolute',
+  top: '50%',
+  left: '50%',
+  transform: 'translate(-50%, -50%)',
+  width: 400,
+  bgcolor: 'background.paper',
+  border: '2px solid #000',
+  borderRadius: 8, 
+  boxShadow: 24,
+  p: 4,
 };
 
 export default UserProfile;

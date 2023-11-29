@@ -1,8 +1,6 @@
-import React from 'react';
+import * as React from 'react';
 import PropTypes from 'prop-types';
-import Button from '@mui/material/Button';
-import ButtonGroup from '@mui/material/ButtonGroup';
-import Box from '@mui/material/Box';
+import { Button, ButtonGroup, Box, Typography, Alert } from '@mui/material';
 
 const Navbar = ({
   roleId,
@@ -15,8 +13,8 @@ const Navbar = ({
   onSchedulerButtonClick,  
 }) => {
   return (
-    <Box>
-      <ButtonGroup variant="contained" aria-label="outlined primary button group" sx={{ my: 3 }}>
+    <Box sx={{ my: 3 }}>
+      <ButtonGroup variant="contained" aria-label="outlined primary button group">
         {roleId === '1' && (
           <>
             <Button onClick={() => onButtonClick('adminCourses')} variant="outlined" color="primary">
@@ -71,6 +69,13 @@ const Navbar = ({
           Scheduler
         </Button>
       </ButtonGroup>
+      {!selectedCourse && (
+        <Alert severity="info" sx={{ mt: 2 }}>
+          <Typography variant="body2">
+            Please select a course to enable more options.
+          </Typography>
+        </Alert>
+      )}
     </Box>
   );
 };

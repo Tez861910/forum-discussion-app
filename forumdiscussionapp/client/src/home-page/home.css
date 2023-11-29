@@ -6,6 +6,7 @@ body {
   padding: 0;
 }
 
+/* user.css 
 .user-profile {
   max-width: 400px;
   margin: 0 auto;
@@ -32,7 +33,7 @@ body {
   color: #555;
 }
 
-.user-profile input {
+.user-profile .MuiTextField-root {
   width: 100%;
   padding: 12px;
   margin: 12px 0;
@@ -42,12 +43,12 @@ body {
   box-sizing: border-box;
 }
 
-.user-profile input:focus {
+.user-profile .MuiTextField-root:focus {
   outline: none;
   border-color: #007bff;
 }
 
-.user-profile button {
+.user-profile .MuiButton-root {
   padding: 12px 20px;
   border: none;
   border-radius: 5px;
@@ -56,26 +57,26 @@ body {
   transition: background-color 0.3s ease;
 }
 
-.user-profile button.primary {
+.user-profile .MuiButton-containedPrimary {
   background-color: #007bff;
   color: #fff;
   margin-top: 20px;
 }
 
-.user-profile button.primary:hover {
+.user-profile .MuiButton-containedPrimary:hover {
   background-color: #0056b3;
 }
 
-.user-profile button.back-button {
+.user-profile .MuiButton-containedSecondary {
   background-color: #6c757d;
   color: #fff;
   margin-top: 20px;
 }
 
-.user-profile button.back-button:hover {
+.user-profile .MuiButton-containedSecondary:hover {
   background-color: #5a6268;
 }
-
+*/
 
 /* Sidebar Styles */
 

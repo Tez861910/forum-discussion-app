@@ -1,10 +1,12 @@
-import React, { useState } from 'react';
-import { Button, Modal, Toolbar, Box } from '@mui/material';
+import * as React from 'react';
+import PropTypes from 'prop-types';
+import { Button, Box, Stack, Alert, Modal, Avatar, Typography } from '@mui/material';
 import LogoutIcon from '@mui/icons-material/Logout';
 import AddIcon from '@mui/icons-material/Add';
 import CourseEnrollmentModal from './course-enrollment-modal';
 import UserProfile from './user-profile';
 import EnrolledCoursesDropdown from './enrolled-courses-dropdown';
+import AvatarUploadModal from './AvatarUploadModal'; 
 
 const Sidebar = ({
   isEnrollmentModalOpen,
@@ -15,7 +17,8 @@ const Sidebar = ({
   onCourseSelect,
   roleId,
 }) => {
-  const [isUserProfileOpen, setLocalUserProfileOpen] = useState(false);
+  const [isUserProfileOpen, setLocalUserProfileOpen] = React.useState(false);
+  const [isAvatarModalOpen, setAvatarModalOpen] = React.useState(false); 
 
   const handleUserProfileClick = () => {
     setLocalUserProfileOpen(true);
@@ -37,11 +40,25 @@ const Sidebar = ({
     setUserProfileOpen(false);
   };
 
-  return (
-    <Box className="sidebar-container">
-      <Toolbar />
+  const handleAvatarClick = () => {
+    setAvatarModalOpen(true); 
+  };
 
-      <Box className="sidebar-content">
+  const handleAvatarModalClose = () => {
+    setAvatarModalOpen(false); 
+  };
+
+  return (
+    <Box sx={{ p: 2 }}>
+      <Stack spacing={2}>
+        {/* User Avatar */}
+        <Avatar sx={{ width: 56, height: 56, mb: 2 }} onClick={handleAvatarClick}>U</Avatar>
+
+        {/* User Role */}
+        <Typography variant="h6" gutterBottom component="div">
+          {roleId === '1' ? 'Admin' : roleId === '2' ? 'Teacher' : 'Student'}
+        </Typography>
+
         {/* Enrolled Courses Dropdown */}
         {roleId !== '1' && (
           <EnrolledCoursesDropdown
@@ -54,7 +71,6 @@ const Sidebar = ({
         <Button
           variant="contained"
           fullWidth
-          className="sidebar-button"
           onClick={handleUserProfileClick}
         >
           User Profile
@@ -66,7 +82,6 @@ const Sidebar = ({
             fullWidth
             onClick={handleEnrollNowClick}
             variant="contained"
-            className="sidebar-button"
             startIcon={<AddIcon />}
           >
             Enroll Now
@@ -78,12 +93,11 @@ const Sidebar = ({
           fullWidth
           onClick={handleLogout}
           variant="contained"
-          className="sidebar-button"
           startIcon={<LogoutIcon />}
         >
           Logout
         </Button>
-      </Box>
+      </Stack>
 
       {/* Course Enrollment Modal */}
       <CourseEnrollmentModal
@@ -93,11 +107,28 @@ const Sidebar = ({
       />
 
       {/* User Profile Modal */}
-      <Modal open={isUserProfileOpen} onClose={handleModalClose}>
-        <UserProfile onClose={handleModalClose} />
-      </Modal>
+        <UserProfile 
+         open={isUserProfileOpen}
+        onClose={handleModalClose} />
+      
+
+      {/* Avatar Upload Modal */}
+      <AvatarUploadModal
+        isOpen={isAvatarModalOpen}
+        onRequestClose={handleAvatarModalClose}
+      />
     </Box>
   );
+};
+
+Sidebar.propTypes = {
+  isEnrollmentModalOpen: PropTypes.bool.isRequired,
+  setEnrollmentModalOpen: PropTypes.func.isRequired,
+  handleEnrollmentSuccess: PropTypes.func.isRequired,
+  handleLogout: PropTypes.func.isRequired,
+  setUserProfileOpen: PropTypes.func.isRequired,
+  onCourseSelect: PropTypes.func.isRequired,
+  roleId: PropTypes.string.isRequired,
 };
 
 export default Sidebar;

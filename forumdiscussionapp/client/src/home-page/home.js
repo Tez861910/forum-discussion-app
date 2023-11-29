@@ -1,5 +1,5 @@
-import React, { useState, useEffect } from 'react';
-import { Container, Typography, Grid, CssBaseline, Paper } from '@mui/material';
+import * as React from 'react';
+import { Container, Typography, Grid, Paper , Box, Stack } from '@mui/material';
 import { useNavigate } from 'react-router-dom';
 import { useCookies } from 'react-cookie';
 import axios from 'axios';
@@ -15,21 +15,21 @@ import Scheduler from './scheduler';
 import UserProfile from './user-profile';
 import CourseEnrollmentModal from './course-enrollment-modal';
 
-import './home.css';
+//import './home.css';
 
 const API_URL = 'http://localhost:8081/home/refresh-token';
 
 const Home = () => {
-  const [roleId, setRoleId] = useState('');
+  const [roleId, setRoleId] = React.useState('');
   const [cookies, setCookie] = useCookies();
-  const [navigateToPathState, setNavigateToPath] = useState(null);
-  const [isUserProfileOpen, setUserProfileOpen] = useState(false);
-  const [isEnrollmentModalOpen, setEnrollmentModalOpen] = useState(false);
-  const [isLoggedIn, setIsLoggedIn] = useState(false);
-  const [activeView, setActiveView] = useState('scheduler');
-  const [selectedCourse, setSelectedCourse] = useState(null);
-  const [isCoursesEnrolled, setIsCoursesEnrolled] = useState(false);
-  const [isForumDiscussionVisible, setForumDiscussionVisible] = useState(false);
+  const [navigateToPathState, setNavigateToPath] = React.useState(null);
+  const [isUserProfileOpen, setUserProfileOpen] = React.useState(false);
+  const [isEnrollmentModalOpen, setEnrollmentModalOpen] = React.useState(false);
+  const [isLoggedIn, setIsLoggedIn] = React.useState(false);
+  const [activeView, setActiveView] = React.useState('scheduler');
+  const [selectedCourse, setSelectedCourse] = React.useState(null);
+  const [isCoursesEnrolled, setIsCoursesEnrolled] = React.useState(false);
+  const [isForumDiscussionVisible, setForumDiscussionVisible] = React.useState(false);
   const navigate = useNavigate();
 
   const clearUserData = async () => {
@@ -82,7 +82,7 @@ const Home = () => {
     clearUserData();
   };
 
-  useEffect(() => {
+  React.useEffect(() => {
     const storedRoleId = localStorage.getItem('roleId');
     if (storedRoleId) {
       setRoleId(storedRoleId);
@@ -131,10 +131,10 @@ const Home = () => {
     setEnrollmentModalOpen(false);
   };
 
-  const handleForumDiscussionButtonClick = () => {
+ const handleForumDiscussionButtonClick = () => {
     setForumDiscussionVisible(!isForumDiscussionVisible);
     setActiveView(isForumDiscussionVisible ? 'scheduler' : 'forumDiscussion');
-  };  
+  }; 
 
   const handleMCQFormButtonClick = () => {
     if (selectedCourse) {
@@ -180,7 +180,6 @@ const Home = () => {
       </Paper>
     );
   };
-  
 
   const handleNavbarButtonClick = (view) => {
     setForumDiscussionVisible(view === 'forumDiscussion');
@@ -198,49 +197,46 @@ const Home = () => {
 
   return (
     <Container sx={{ mt: 2 }}>
-      <CssBaseline />
       <Typography variant="h2" align="center" sx={{ my: 3 }}>
         {getRoleHeaderText(roleId)}
       </Typography>
 
-      <Grid container spacing={3}>
-        <Grid item xs={2}>
-          <Sidebar
-            isEnrollmentModalOpen={isEnrollmentModalOpen}
-            setEnrollmentModalOpen={setEnrollmentModalOpen}
-            handleEnrollmentSuccess={handleEnrollmentSuccess}
-            handleLogout={handleLogout}
-            setUserProfileOpen={setUserProfileOpen}
-            onCourseSelect={handleCourseSelect}
-            roleId={roleId}
-            isCoursesEnrolled={isCoursesEnrolled}
-          />
-        </Grid>
+      <Stack direction="row" spacing={3}>
+        <Sidebar
+          isEnrollmentModalOpen={isEnrollmentModalOpen}
+          setEnrollmentModalOpen={setEnrollmentModalOpen}
+          handleEnrollmentSuccess={handleEnrollmentSuccess}
+          handleLogout={handleLogout}
+          setUserProfileOpen={setUserProfileOpen}
+          onCourseSelect={handleCourseSelect}
+          roleId={roleId}
+          isCoursesEnrolled={isCoursesEnrolled}
+        />
 
-        <Grid item xs={10}>
-          <div className="main-content">
-            <Typography variant="h4" sx={{ my: 3 }}>
-              Welcome, {roleId === '1' ? 'Admin' : roleId === '2' ? 'Teacher' : 'Student'}
-            </Typography>
+        <Box sx={{ width: '100%', p: 2 }}>
+          <Typography variant="h4" sx={{ my: 3 }}>
+            Welcome, {roleId === '1' ? 'Admin' : roleId === '2' ? 'Teacher' : 'Student'}
+          </Typography>
 
-            <div className="button-container">
-              <Navbar
-                onButtonClick={handleNavbarButtonClick}
-                roleId={roleId}
-                onCourseSelect={handleCourseSelect}
-                selectedCourse={selectedCourse}
-                onForumDiscussionButtonClick={handleForumDiscussionButtonClick}
-                isTeacherOrStudent={['2', '3'].includes(roleId)}
-                onMCQFormButtonClick={handleMCQFormButtonClick}
-                onMCQAnswerFormButtonClick={handleMCQAnswerFormButtonClick}
-                onSchedulerButtonClick={handleSchedulerButtonClick} 
-              />
-            </div>
+          <Box sx={{ mb: 2 }}>
+            <Navbar
+              onButtonClick={handleNavbarButtonClick}
+              roleId={roleId}
+              onCourseSelect={handleCourseSelect}
+              selectedCourse={selectedCourse}
+              onForumDiscussionButtonClick={handleForumDiscussionButtonClick}
+              isTeacherOrStudent={['2', '3'].includes(roleId)}
+              onMCQFormButtonClick={handleMCQFormButtonClick}
+              onMCQAnswerFormButtonClick={handleMCQAnswerFormButtonClick}
+              onSchedulerButtonClick={handleSchedulerButtonClick} 
+            />
+          </Box>
 
+          <Paper elevation={3} sx={{ p: 2 }}>
             {renderActiveView()}
-          </div>
-        </Grid>
-      </Grid>
+          </Paper>
+        </Box>
+      </Stack>
 
       <UserProfile isOpen={isUserProfileOpen} onClose={() => setUserProfileOpen(false)} />
       <CourseEnrollmentModal
