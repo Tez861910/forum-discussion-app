@@ -1,6 +1,6 @@
 import * as React from 'react';
 import PropTypes from 'prop-types';
-import { Button, Box, Stack,  Avatar, Typography, Drawer,  IconButton } from '@mui/material';
+import { Button, Box, Stack, Alert, Modal, Avatar, Typography, Drawer, Toolbar, List, ListItem, ListItemIcon, ListItemText, IconButton } from '@mui/material';
 import LogoutIcon from '@mui/icons-material/Logout';
 import AddIcon from '@mui/icons-material/Add';
 import MenuIcon from '@mui/icons-material/Menu';
@@ -64,7 +64,8 @@ const Sidebar = ({
         <MenuIcon />
       </IconButton>
       <Drawer
-        variant="permanent"
+        variant="persistent"
+        anchor="left"
         open={open}
         onClose={handleDrawerToggle}
         sx={{
@@ -128,26 +129,25 @@ const Sidebar = ({
             </Button>
           </Stack>
         </Box>
+        {/* Course Enrollment Modal */}
+        <CourseEnrollmentModal
+          isOpen={isEnrollmentModalOpen}
+          onRequestClose={() => setEnrollmentModalOpen(false)}
+          onEnrollSuccess={handleEnrollmentSuccess}
+        />
+
+        {/* User Profile Modal */}
+        <UserProfile 
+          open={isUserProfileOpen}
+          onClose={handleModalClose} 
+        />
+
+        {/* Avatar Upload Modal */}
+        <AvatarUploadModal
+          isOpen={isAvatarModalOpen}
+          onRequestClose={handleAvatarModalClose}
+        />
       </Drawer>
-
-      {/* Course Enrollment Modal */}
-      <CourseEnrollmentModal
-        isOpen={isEnrollmentModalOpen}
-        onRequestClose={() => setEnrollmentModalOpen(false)}
-        onEnrollSuccess={handleEnrollmentSuccess}
-      />
-
-      {/* User Profile Modal */}
-      <UserProfile 
-        open={isUserProfileOpen}
-        onClose={handleModalClose} 
-      />
-
-      {/* Avatar Upload Modal */}
-      <AvatarUploadModal
-        isOpen={isAvatarModalOpen}
-        onRequestClose={handleAvatarModalClose}
-      />
     </Box>
   );
 };
