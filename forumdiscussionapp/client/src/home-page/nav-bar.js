@@ -34,6 +34,7 @@ const Navbar = ({
            <Button
               onClick={() => {
                 onForumDiscussionButtonClick();
+                onButtonClick('forumDiscussion');
               }}
               variant="outlined"
               color="primary"
@@ -44,7 +45,10 @@ const Navbar = ({
 
             {isTeacherOrStudent && roleId === '2' && (
               <Button
-                onClick={onMCQFormButtonClick}
+                onClick={() => {
+                  onMCQFormButtonClick();
+                  onButtonClick('mcqform');
+                }}
                 variant="outlined"
                 color="primary"
                 disabled={!selectedCourse}
@@ -54,7 +58,10 @@ const Navbar = ({
             )}
             {isTeacherOrStudent && roleId === '3' && (
               <Button
-                onClick={onMCQAnswerFormButtonClick}
+                onClick={() => {
+                  onMCQAnswerFormButtonClick();
+                  onButtonClick('mcqanswerform');
+                }}
                 variant="outlined"
                 color="primary"
                 disabled={!selectedCourse}
@@ -65,19 +72,22 @@ const Navbar = ({
           </>
         )}
 
-        <Button onClick={onSchedulerButtonClick} variant="outlined" color="primary">
+        <Button onClick={() => {
+          onSchedulerButtonClick();
+          onButtonClick('scheduler');
+        }} variant="outlined" color="primary">
           Scheduler
         </Button>
       </ButtonGroup>
-      {!selectedCourse && (
-        <Alert severity="info" sx={{ mt: 2 }}>
-          <Typography variant="body2">
-            Please select a course to enable more options.
-          </Typography>
-        </Alert>
-      )}
+      {((roleId === '2' || roleId === '3') && !selectedCourse) && (
+       <Alert severity="info" sx={{ mt: 2 }}>
+       <Typography variant="body2">
+        Please select a course to enable more options.
+       </Typography>
+     </Alert>
+   )}
     </Box>
-  );
+   );
 };
 
 Navbar.propTypes = {

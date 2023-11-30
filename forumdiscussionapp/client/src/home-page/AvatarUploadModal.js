@@ -22,7 +22,7 @@ const AvatarUploadModal = ({ isOpen, onRequestClose }) => {
     const userId = localStorage.getItem('userId');
     formData.append('userId', userId);
   
-    axios.post('http://localhost:3000/home/upload-avatar', formData)
+    axios.post('http://localhost:8081/home/upload-avatar', formData)
       .then((response) => {
         console.log(response.data);
         onRequestClose();

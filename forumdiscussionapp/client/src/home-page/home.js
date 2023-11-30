@@ -1,5 +1,6 @@
 import * as React from 'react';
-import { Container, Typography, Grid, Paper , Box, Stack } from '@mui/material';
+import { useRoutes } from 'react-router-dom';
+import { Container, Typography,  Paper , Box, Stack } from '@mui/material';
 import { useNavigate } from 'react-router-dom';
 import { useCookies } from 'react-cookie';
 import axios from 'axios';
@@ -131,7 +132,7 @@ const Home = () => {
     setEnrollmentModalOpen(false);
   };
 
- const handleForumDiscussionButtonClick = () => {
+  const handleForumDiscussionButtonClick = () => {
     setForumDiscussionVisible(!isForumDiscussionVisible);
     setActiveView(isForumDiscussionVisible ? 'scheduler' : 'forumDiscussion');
   }; 
@@ -152,38 +153,22 @@ const Home = () => {
     setActiveView('scheduler');
   };
 
-  const renderActiveView = () => {
-    const isAdmin = roleId === '1';
-    const isTeacherOrStudent = ['2', '3'].includes(roleId);
-  
-    return (
-      <Paper elevation={3} sx={{ p: 2, mt: 2 }}>
-        {isAdmin && activeView === 'adminCourses' && <AdminCourses />}
-        {isAdmin && activeView === 'adminUsers' && <AdminUsers />}
-        {isAdmin && activeView === 'adminRoles' && <AdminRoles />}
-  
-        {isTeacherOrStudent && selectedCourse && isForumDiscussionVisible && activeView === 'forumDiscussion' && (
-          <ForumDiscussion courseId={selectedCourse} />
-        )}
-  
-        {isTeacherOrStudent && selectedCourse && activeView === 'mcqform' && (
-          <MCQForm courseId={selectedCourse} />
-        )}
-  
-        {isTeacherOrStudent && selectedCourse && activeView === 'mcqanswerform' && (
-          <MCQAnswerForm courseId={selectedCourse} />
-        )}
-  
-        {activeView === 'scheduler' && (
-          <Scheduler roleId={roleId} userId={localStorage.getItem('userId')} />
-        )}
-      </Paper>
-    );
-  };
+  const routes = useRoutes([
+    { path: 'admin-courses', element: <AdminCourses /> },
+    { path: 'admin-roles', element: <AdminRoles /> },
+    { path: 'admin-users', element: <AdminUsers /> },
+    { path: 'scheduler', element: <Scheduler /> },
+    { path: 'user-profile', element: <UserProfile /> },
+    { path: 'course-enrollment-modal', element: <CourseEnrollmentModal /> },
+    { path: 'forum-discussion', element: <ForumDiscussion /> },
+    { path: 'mcq-form', element: <MCQForm /> },
+    { path: 'mcq-answer-form', element: <MCQAnswerForm /> },
+  ]);
 
   const handleNavbarButtonClick = (view) => {
     setForumDiscussionVisible(view === 'forumDiscussion');
     setActiveView(view);
+    navigate(view, { replace: true });
   };
   
   const getRoleHeaderText = (roleId) => {
@@ -233,7 +218,7 @@ const Home = () => {
           </Box>
 
           <Paper elevation={3} sx={{ p: 2 }}>
-            {renderActiveView()}
+            {routes}
           </Paper>
         </Box>
       </Stack>

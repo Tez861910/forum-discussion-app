@@ -1,29 +1,28 @@
-import React, { useState, useEffect, useCallback } from 'react';
+import * as React from 'react';
 import axios from 'axios';
 import RoleDropdown from './role-dropdown';
 import { useNavigate } from 'react-router-dom';
 import { Link as RouterLink } from 'react-router-dom';
-import { Container, Grid, Typography, TextField, Button } from '@mui/material';
-import './sign-up.css';
+import { Container, Grid, Typography, TextField, Button, Stack, Box, Paper } from '@mui/material';
 
 const Signup = () => {
-  const [formData, setFormData] = useState({
+  const [formData, setFormData] = React.useState({
     name: '',
     email: '',
     password: '',
     roleId: '',
   });
   const navigate = useNavigate();
-  const [errors, setErrors] = useState({});
-  const [successMessage, setSuccessMessage] = useState([]);
-  const [roles, setRoles] = useState([]);
+  const [errors, setErrors] = React.useState({});
+  const [successMessage, setSuccessMessage] = React.useState([]);
+  const [roles, setRoles] = React.useState([]);
 
-  const handleInputChange = useCallback((event) => {
+  const handleInputChange = React.useCallback((event) => {
     const { name, value } = event.target;
     setFormData((prevFormData) => ({ ...prevFormData, [name]: value }));
   }, []);
 
-  const fetchData = useCallback(async () => {
+  const fetchData = React.useCallback(async () => {
     try {
       const rolesResponse = await axios.get('http://localhost:8081/roles/roles/get');
       const rolesData = rolesResponse.data.roles;
@@ -33,11 +32,11 @@ const Signup = () => {
     }
   }, []);
 
-  useEffect(() => {
+  React.useEffect(() => {
     fetchData();
   }, [fetchData]);
 
-  const handleSubmit = useCallback(async (event) => {
+  const handleSubmit = React.useCallback(async (event) => {
     event.preventDefault();
     const validationErrors = {};
 
@@ -87,10 +86,10 @@ const Signup = () => {
   }, [formData, navigate]);
 
   return (
-    <Container maxWidth="xs" className="signup-page">
-      <Grid container justifyContent="center" alignItems="center" spacing={2}>
-        <Grid item xs={12}>
-          <div className="signup-form">
+    <Container maxWidth="xs" sx={{ mt: 8, mb: 4 }}>
+      <Paper elevation={3} sx={{ p: 3, backgroundColor: 'background.paper', borderRadius: 2 }}>
+        <Stack spacing={2} justifyContent="center" alignItems="center">
+          <Grid item xs={12}>
             <Typography variant="h4" align="center" gutterBottom>
               Sign-Up
             </Typography>
@@ -105,7 +104,7 @@ const Signup = () => {
                 error={!!errors.name}
                 helperText={errors.name}
                 margin="normal"
-                className="signup-MuiInputBase-input"
+                sx={{ '.MuiInputBase-input': { fontSize: '1rem' } }}
               />
 
               <TextField
@@ -118,7 +117,7 @@ const Signup = () => {
                 error={!!errors.email}
                 helperText={errors.email}
                 margin="normal"
-                className="signup-MuiInputBase-input"
+                sx={{ '.MuiInputBase-input': { fontSize: '1rem' } }}
               />
 
               <TextField
@@ -128,51 +127,57 @@ const Signup = () => {
                 value={formData.password}
                 onChange={handleInputChange}
                 variant="outlined"
-                type="password"
                 error={!!errors.password}
                 helperText={errors.password}
                 margin="normal"
-                className="signup-MuiInputBase-input"
+                sx={{ '.MuiInputBase-input': { fontSize: '1rem' } }}
               />
 
               <RoleDropdown
+                label="Role"
+                name="roleId"
+                value={formData.roleId}
+                onChange={handleInputChange}
+                variant="outlined"
+                error={!!errors.roleId}
+                helperText={errors.roleId}
+                margin="normal"
+                sx={{ '.MuiInputBase-input': { fontSize: '1rem' } }}
                 roles={roles}
-                roleId={formData.roleId}
-                handleRoleChange={handleInputChange}
-                errors={errors}
               />
 
-              <Button type="submit" fullWidth variant="contained" color="primary" className="signup-MuiButton-containedPrimary">
-                Sign up
-              </Button>
-
-              {successMessage.map((message, index) => (
-                <Typography key={index} variant="body2" className="signup-success-message" align="center">
-                  {message}
-                </Typography>
-              ))}
-
-              <Typography variant="body2" align="center" className="terms-message">
-                You agree to our terms and conditions
-              </Typography>
-
               <Button
-                component={RouterLink}
-                to="/login"
+                type="submit"
                 fullWidth
                 variant="contained"
                 color="primary"
+                sx={{ mt: 3, mb: 2 }}
               >
-                Go to Login
+                Sign Up
               </Button>
 
-              <Button component={RouterLink} to="/" fullWidth variant="outlined" color="primary">
-                Back to Start
+              <Grid container justifyContent="flex-center">
+                <Grid item>
+                  <RouterLink to="/login" variant="body2">
+                    Already have an account? Sign in
+                  </RouterLink>
+                </Grid>
+              </Grid>
+
+              <Button
+                type="button"
+                fullWidth
+                variant="contained"
+                color="secondary"
+                sx={{ mt: 3, mb: 2 }}
+                onClick={() => navigate('/')}
+              >
+                Go back to start
               </Button>
             </form>
-          </div>
-        </Grid>
-      </Grid>
+          </Grid>
+        </Stack>
+      </Paper>
     </Container>
   );
 };
