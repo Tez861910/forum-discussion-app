@@ -134,18 +134,18 @@ const Home = () => {
 
   const handleForumDiscussionButtonClick = () => {
     setForumDiscussionVisible(!isForumDiscussionVisible);
-    setActiveView(isForumDiscussionVisible ? 'scheduler' : 'forumDiscussion');
+    setActiveView(isForumDiscussionVisible ? 'scheduler' : 'forum-discussion');
   }; 
 
   const handleMCQFormButtonClick = () => {
     if (selectedCourse) {
-      setActiveView('mcqform');
+      setActiveView('mcq-form');
     }
   };
 
   const handleMCQAnswerFormButtonClick = () => {
     if (selectedCourse) {
-      setActiveView('mcqanswerform');
+      setActiveView('mcq-answer-form');
     }
   };
 
@@ -166,7 +166,7 @@ const Home = () => {
   ]);
 
   const handleNavbarButtonClick = (view) => {
-    setForumDiscussionVisible(view === 'forumDiscussion');
+    setForumDiscussionVisible(view === 'forum-discussion');
     setActiveView(view);
     navigate(view, { replace: true });
   };

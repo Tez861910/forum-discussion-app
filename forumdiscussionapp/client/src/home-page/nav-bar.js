@@ -1,6 +1,15 @@
 import * as React from 'react';
 import PropTypes from 'prop-types';
-import { Button, ButtonGroup, Box, Typography, Alert } from '@mui/material';
+import { Button, ButtonGroup, Box, Typography, Alert, styled } from '@mui/material';
+
+const StyledButtonGroup = styled(ButtonGroup)(({ theme }) => ({
+  '& .MuiButton-root': {
+    margin: theme.spacing(1),
+  },
+  '& .MuiButton-outlinedPrimary': {
+    borderColor: theme.palette.primary.main,
+  },
+}));
 
 const Navbar = ({
   roleId,
@@ -14,16 +23,16 @@ const Navbar = ({
 }) => {
   return (
     <Box sx={{ my: 3 }}>
-      <ButtonGroup variant="contained" aria-label="outlined primary button group">
+      <StyledButtonGroup variant="contained" aria-label="outlined primary button group">
         {roleId === '1' && (
           <>
-            <Button onClick={() => onButtonClick('adminCourses')} variant="outlined" color="primary">
+            <Button onClick={() => onButtonClick('admin-courses')} variant="outlined" color="primary">
               Manage Courses
             </Button>
-            <Button onClick={() => onButtonClick('adminUsers')} variant="outlined" color="primary">
+            <Button onClick={() => onButtonClick('admin-users')} variant="outlined" color="primary">
               Manage Users
             </Button>
-            <Button onClick={() => onButtonClick('adminRoles')} variant="outlined" color="primary">
+            <Button onClick={() => onButtonClick('admin-roles')} variant="outlined" color="primary">
               Manage Roles
             </Button>
           </>
@@ -34,7 +43,6 @@ const Navbar = ({
            <Button
               onClick={() => {
                 onForumDiscussionButtonClick();
-                onButtonClick('forumDiscussion');
               }}
               variant="outlined"
               color="primary"
@@ -45,10 +53,7 @@ const Navbar = ({
 
             {isTeacherOrStudent && roleId === '2' && (
               <Button
-                onClick={() => {
-                  onMCQFormButtonClick();
-                  onButtonClick('mcqform');
-                }}
+                onClick={onMCQFormButtonClick}
                 variant="outlined"
                 color="primary"
                 disabled={!selectedCourse}
@@ -58,10 +63,7 @@ const Navbar = ({
             )}
             {isTeacherOrStudent && roleId === '3' && (
               <Button
-                onClick={() => {
-                  onMCQAnswerFormButtonClick();
-                  onButtonClick('mcqanswerform');
-                }}
+                onClick={onMCQAnswerFormButtonClick}
                 variant="outlined"
                 color="primary"
                 disabled={!selectedCourse}
@@ -72,13 +74,10 @@ const Navbar = ({
           </>
         )}
 
-        <Button onClick={() => {
-          onSchedulerButtonClick();
-          onButtonClick('scheduler');
-        }} variant="outlined" color="primary">
+        <Button onClick={onSchedulerButtonClick} variant="outlined" color="primary">
           Scheduler
         </Button>
-      </ButtonGroup>
+      </StyledButtonGroup>
       {((roleId === '2' || roleId === '3') && !selectedCourse) && (
        <Alert severity="info" sx={{ mt: 2 }}>
        <Typography variant="body2">
