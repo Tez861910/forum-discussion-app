@@ -2,11 +2,11 @@ const { query } = require('../db');
 
 async function handleCommentDeleteId(req, res) {
 {
-    const { id } = req.params;
+    const { commentId } = req.params;
   
     try {
       const sql = 'DELETE FROM comments WHERE CommentID = ?';
-      const [result] = await query(sql, [id]);
+      const [result] = await query(sql, [commentId]);
   
       if (result.affectedRows === 1) {
         console.log('Comment deleted successfully');

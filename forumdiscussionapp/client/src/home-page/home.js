@@ -123,8 +123,8 @@ const Home = () => {
   const handleDrawerToggle = () => {
     console.log('handleDrawerToggle triggered');
     setSidebarOpen(!isSidebarOpen);
-  console.log('Sidebar open state:', isSidebarOpen);
-};
+    console.log('Sidebar open state:', isSidebarOpen);
+  };
 
   const handleEnrollmentSuccess = () => {
     setEnrollmentModalOpen(false);
@@ -140,7 +140,10 @@ const Home = () => {
     setEnrollmentModalOpen(false);
   };
 
-  
+  const handleCourseChange = (courseId) => {
+    setSelectedCourse(courseId);
+  };
+
   const Wrapper = ({ component: Component, view }) => {
     React.useEffect(() => {
       setActiveView(view);
@@ -160,7 +163,6 @@ const Home = () => {
     { path: 'mcq-form', element: <Wrapper component={MCQForm} view='mcq-form' /> },
     { path: 'mcq-answer-form', element: <Wrapper component={MCQAnswerForm} view='mcq-answer-form' /> },
   ]);
-
 
   const getRoleHeaderText = (roleId) => {
     const roleTitles = {
@@ -187,7 +189,6 @@ const Home = () => {
           handleEnrollmentSuccess={handleEnrollmentSuccess}
           handleLogout={handleLogout}
           setUserProfileOpen={setUserProfileOpen}
-          onCourseSelect={handleCourseSelect}
           roleId={roleId}
           isCoursesEnrolled={isCoursesEnrolled}
         />
@@ -202,6 +203,8 @@ const Home = () => {
               roleId={roleId}
               selectedCourse={selectedCourse}
               isTeacherOrStudent={['2', '3'].includes(roleId)}
+              onCourseSelect={handleCourseSelect}
+              handleCourseChange={handleCourseChange}
               onButtonClick={(view) => {
                 setActiveView(view);
                 navigate(view, { replace: true });
@@ -223,7 +226,6 @@ const Home = () => {
       />
     </Container>
   );
-  
 };
 
 export default Home;

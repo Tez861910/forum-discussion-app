@@ -1,6 +1,7 @@
 import * as React from 'react';
 import PropTypes from 'prop-types';
 import { Button, ButtonGroup, Box, Typography, Alert, styled } from '@mui/material';
+import EnrolledCoursesDropdown from './enrolled-courses-dropdown';
 
 const StyledButtonGroup = styled(ButtonGroup)(({ theme }) => ({
   '& .MuiButton-root': {
@@ -17,28 +18,34 @@ const Navbar = ({
   onButtonClick,
   selectedCourse,
   isTeacherOrStudent,
+  onCourseSelect,
+  handleCourseChange,
 }) => {
   return (
     <Box sx={{ my: 3 }}>
       <StyledButtonGroup variant="contained" aria-label="outlined primary button group">
         {roleId === '1' && (
           <>
-            <Button onClick={() => onButtonClick('admin-courses', userId, selectedCourse)} variant="outlined" color="primary">
+            <Button onClick={() => onButtonClick('/home/admin-courses', userId, selectedCourse)} variant="outlined" color="primary">
               Manage Courses
             </Button>
-            <Button onClick={() => onButtonClick('admin-users', userId, selectedCourse)} variant="outlined" color="primary">
+            <Button onClick={() => onButtonClick('/home/admin-users', userId, selectedCourse)} variant="outlined" color="primary">
               Manage Users
             </Button>
-            <Button onClick={() => onButtonClick('admin-roles', userId, selectedCourse)} variant="outlined" color="primary">
+            <Button onClick={() => onButtonClick('/home/admin-roles', userId, selectedCourse)} variant="outlined" color="primary">
               Manage Roles
             </Button>
           </>
         )}
 
         {(roleId === '2' || roleId === '3') && (
-          <>
+          <Box sx={{ display: 'flex', alignItems: 'center' }}>
+            <EnrolledCoursesDropdown
+              onCourseSelect={onCourseSelect}
+              onCourseChange={handleCourseChange}
+            />
             <Button
-              onClick={() => onButtonClick('forum-discussion', userId, selectedCourse)}
+              onClick={() => onButtonClick('/home/forum-discussion', userId, selectedCourse)}
               variant="outlined"
               color="primary"
               disabled={!selectedCourse}
@@ -48,7 +55,7 @@ const Navbar = ({
 
             {isTeacherOrStudent && roleId === '2' && (
               <Button
-                onClick={() => onButtonClick('mcq-form', userId, selectedCourse)}
+                onClick={() => onButtonClick('/home/mcq-form', userId, selectedCourse)}
                 variant="outlined"
                 color="primary"
                 disabled={!selectedCourse}
@@ -58,7 +65,7 @@ const Navbar = ({
             )}
             {isTeacherOrStudent && roleId === '3' && (
               <Button
-                onClick={() => onButtonClick('mcq-answer-form', userId, selectedCourse)}
+                onClick={() => onButtonClick('/home/mcq-answer-form', userId, selectedCourse)}
                 variant="outlined"
                 color="primary"
                 disabled={!selectedCourse}
@@ -66,10 +73,10 @@ const Navbar = ({
                 Answer MCQ
               </Button>
             )}
-          </>
+          </Box>
         )}
 
-        <Button onClick={() => onButtonClick('scheduler', userId, selectedCourse)} variant="outlined" color="primary">
+        <Button onClick={() => onButtonClick('/home/scheduler', userId,roleId, selectedCourse)} variant="outlined" color="primary">
           Scheduler
         </Button>
       </StyledButtonGroup>
@@ -89,6 +96,8 @@ Navbar.propTypes = {
   onButtonClick: PropTypes.func.isRequired,
   selectedCourse: PropTypes.string,
   isTeacherOrStudent: PropTypes.bool,
+  onCourseSelect: PropTypes.func.isRequired,
+  handleCourseChange: PropTypes.func.isRequired,
 };
 
 export default Navbar;

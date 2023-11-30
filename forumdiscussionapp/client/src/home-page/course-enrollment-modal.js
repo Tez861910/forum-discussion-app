@@ -1,19 +1,19 @@
 import React, { useState, useEffect, useCallback } from 'react';
-import Modal from 'react-modal';
-import axios from 'axios';
-import {
-  InputAdornment,
-  TextField,
-  List,
-  ListItem,
-  Checkbox,
-  Button,
-  Typography,
-  Box,
-} from '@mui/material';
+import Dialog from '@mui/material/Dialog';
+import DialogTitle from '@mui/material/DialogTitle';
+import DialogContent from '@mui/material/DialogContent';
+import DialogActions from '@mui/material/DialogActions';
+import Box from '@mui/material/Box';
+import Button from '@mui/material/Button';
+import Checkbox from '@mui/material/Checkbox';
+import List from '@mui/material/List';
+import ListItem from '@mui/material/ListItem';
+import ListItemText from '@mui/material/ListItemText';
+import TextField from '@mui/material/TextField';
+import Typography from '@mui/material/Typography';
 import SearchIcon from '@mui/icons-material/Search';
-
-Modal.setAppElement('#root');
+import InputAdornment from '@mui/material/InputAdornment';
+import axios from 'axios';
 
 const CourseEnrollmentModal = ({ isOpen, onRequestClose, onEnrollSuccess }) => {
   const [selectedCourses, setSelectedCourses] = useState([]);
@@ -133,7 +133,7 @@ const CourseEnrollmentModal = ({ isOpen, onRequestClose, onEnrollSuccess }) => {
     if (enrolledCourse) {
       return (
         <ListItem key={enrolledCourse.CourseID} disablePadding>
-          {enrolledCourse.CourseName}
+          <ListItemText primary={enrolledCourse.CourseName} />
         </ListItem>
       );
     } else {
@@ -150,68 +150,62 @@ const CourseEnrollmentModal = ({ isOpen, onRequestClose, onEnrollSuccess }) => {
           checked={selectedCourses.includes(course.CourseID)}
           onChange={() => handleCourseSelection(course.CourseID)}
         />
-        {course.CourseName}
+        <ListItemText primary={course.CourseName} />
       </ListItem>
     ));
 
   return (
-    <Modal
-      isOpen={isOpen}
-      onRequestClose={onRequestClose}
-      contentLabel="Course Enrollment Modal"
-      style={{
-        content: {
-          width: '400px',
-          margin: 'auto',
-        },
-      }}
+    <Dialog
+      open={isOpen}
+      onClose={onRequestClose}
+      aria-labelledby="course-enrollment-modal-title"
+      aria-describedby="course-enrollment-modal-description"
     >
-      <Typography variant="h5" gutterBottom>
-        Enroll in Courses
-      </Typography>
-
-      {enrolledCoursesList.length > 0 && (
-        <div>
-          <Typography variant="h6">Enrolled Courses</Typography>
-          <List>{enrolledCoursesList}</List>
-        </div>
-      )}
-
-      <TextField
-        fullWidth
-        variant="outlined"
-        placeholder="Search courses..."
-        value={searchTerm}
-        onChange={(e) => setSearchTerm(e.target.value)}
-        InputProps={{
-          startAdornment: (
-            <InputAdornment position="start">
-              <SearchIcon />
-            </InputAdornment>
-          ),
-        }}
-        sx={{ marginBottom: 2 }}
-      />
-
-      <List>
-        {selectableCoursesList.length > 0 ? (
-          selectableCoursesList
-        ) : (
-          <Typography variant="body2" color="textSecondary">
-            No available courses for enrollment.
-          </Typography>
+      <DialogTitle id="course-enrollment-modal-title">Enroll in Courses</DialogTitle>
+      <DialogContent dividers>
+        {enrolledCoursesList.length > 0 && (
+          <Box sx={{ marginBottom: 2 }}>
+            <Typography variant="h6">Enrolled Courses</Typography>
+            <List>{enrolledCoursesList}</List>
+          </Box>
         )}
-      </List>
 
-      <Box sx={{ display: 'flex', justifyContent: 'flex-end', marginTop: 2 }}>
+        <TextField
+          fullWidth
+          variant="outlined"
+          placeholder="Search courses..."
+          value={searchTerm}
+          onChange={(e) => setSearchTerm(e.target.value)}
+          InputProps={{
+            startAdornment: (
+              <InputAdornment position="start">
+                <SearchIcon />
+              </InputAdornment>
+            ),
+          }}
+          sx={{ marginBottom: 2 }}
+        />
+
+        <Typography variant="h6">Available Courses</Typography>
+        <List>
+          {selectableCoursesList.length > 0 ? (
+            selectableCoursesList
+          ) : (
+            <Typography variant="body2" color="textSecondary">
+              No available courses for enrollment.
+            </Typography>
+          )}
+        </List>
+      </DialogContent>
+      <DialogActions>
         <Button variant="contained" onClick={handleEnroll} sx={{ marginRight: 2 }}>
           Enroll
         </Button>
         <Button variant="outlined" onClick={onRequestClose}>
           Cancel
         </Button>
-      </Box>
-    </Modal>
+      </DialogActions>
+    </Dialog>
   );
 };
 

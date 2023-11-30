@@ -1,23 +1,26 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import axios from 'axios';
-import { Typography, TextareaAutosize, Button } from '@mui/material';
-
-const fetchComments = async (threadId) => {
-  try {
-    const response = await axios.get(`http://localhost:8081/comments/comments/get/${threadId}`);
-    return response.data.comments || [];
-  } catch (error) {
-    console.error('Error fetching comments:', error);
-    throw error; 
-  }
-};
+import { Typography, TextareaAutosize, Button, Box, TextField } from '@mui/material';
 
 function CommentSection({ threadId, roleId, userId }) {
   const [comments, setComments] = useState([]);
   const [newComment, setNewComment] = useState('');
   const [fetchError, setFetchError] = useState(null);
   const [isLoading, setIsLoading] = useState(false);
+  const [editingComment, setEditingComment] = useState(null);
+  const [editedContent, setEditedContent] = useState('');
 
+  const fetchComments = async (threadId) => {
+    try {
+      const response = await axios.get(`http://localhost:8081/comments/comments/get/${threadId}`);
+      const comments = response.data.comments;
+      return Array.isArray(comments) ? comments : [comments];  
+    } catch (error) {
+      console.error('Error fetching comments:', error);
+      throw error; 
+    }
+  };
+  
   const loadComments = useCallback(async () => {
     setIsLoading(true);
     try {
@@ -53,13 +56,15 @@ function CommentSection({ threadId, roleId, userId }) {
     }
   };
 
-  const handleEditComment = async (commentId, updatedContent) => {
+  const handleEditComment = async (commentId) => {
     try {
       await axios.put(`http://localhost:8081/comments/comments/update/${commentId}`, {
-        content: updatedContent,
+        content: editedContent,
       });
 
       loadComments();
+      setEditingComment(null);
+      setEditedContent('');
     } catch (error) {
       console.error('Error updating comment:', error);
     }
@@ -76,33 +81,51 @@ function CommentSection({ threadId, roleId, userId }) {
   };
 
   return (
-    <div className="comment-section-container">
-      <Typography variant="h2">Comments</Typography>
+    <Box className="comment-section-container" sx={{ p: 2 }}>
+      <Typography variant="h2">Comment Section</Typography>
 
       {fetchError && <p>{fetchError}</p>}
 
       {isLoading ? (
         <p>Loading comments...</p>
       ) : (
-        <ul className="comment-list">
+        <Box className="comment-list" sx={{ mt: 2 }}>
           {comments.length > 0 ? (
-            comments.map((comment) => (
-              <li key={comment.CommentID} className="comment-item">
-                {comment.CommentContent}
-                {(roleId === '2' || (roleId === '3' && userId === comment.UserID)) && (
-                  <>
-                    <Button onClick={() => handleEditComment(comment.CommentID, prompt('Edit comment:', comment.CommentContent))}>
+         comments.map((comment) => (
+          <Box key={comment?.CommentID} className="comment-item" sx={{ mb: 2 }}>
+            {editingComment === comment?.CommentID ? (
+              <Box>
+                <TextField
+                  value={editedContent}
+                  onChange={(e) => setEditedContent(e.target.value)}
+                />
+                <Button onClick={() => handleEditComment(comment?.CommentID)}>
+                  Save
+                </Button>
+                <Button onClick={() => setEditingComment(null)}>
+                  Cancel
+                </Button>
+              </Box>
+            ) : (
+              <>
+                {comment?.CommentContent}
+                {(roleId === '2' || (roleId === '3' && userId === comment?.UserID)) && (
+                  <Box sx={{ mt: 1 }}>
+                    <Button onClick={() => { setEditingComment(comment?.CommentID); setEditedContent(comment?.CommentContent); }}>
                       Edit
                     </Button>
-                    <Button onClick={() => handleDeleteComment(comment.CommentID)}>Delete</Button>
-                  </>
+                    <Button onClick={() => handleDeleteComment(comment?.CommentID)}>Delete</Button>
+                  </Box>
                 )}
-              </li>
-            ))
+              </>
+            )}
+          </Box>
+        ))
+        
           ) : (
             <p>No comments to display</p>
           )}
-        </ul>
+        </Box>
       )}
 
       {(roleId === '2' || roleId === '3') && (
@@ -112,13 +135,14 @@ function CommentSection({ threadId, roleId, userId }) {
             onChange={(e) => setNewComment(e.target.value)}
             placeholder="Add a comment..."
             className="comment-input"
+            sx={{ mt: 2 }}
           />
-          <Button type="submit" variant="contained" color="primary" className="submit-button">
+          <Button type="submit" variant="contained" color="primary" className="submit-button" sx={{ mt: 2 }}>
             Submit Comment
           </Button>
         </form>
       )}
-    </div>
+    </Box>
   );
 }
 

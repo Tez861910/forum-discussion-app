@@ -55,7 +55,7 @@ function ThreadModal({ courseId, threadId, onClose, roleId, userId }) {
         courseId: courseId,
       });
 
-      const response = await axios.get(`http://localhost:8081/threads/threads/get/${threadId}`);
+      const response = await axios.get(`http://localhost:8081/threads/threads/getthread/${threadId}`);
       const updatedThreadData = response.data?.thread;
 
       if (updatedThreadData) {

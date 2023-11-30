@@ -10,13 +10,15 @@ import {
   DialogContentText,
   DialogTitle,
 } from '@mui/material';
+import { DatePicker } from '@mui/lab';
 import axios from 'axios';
 
 const API_URL = 'http://localhost:8081';
 
-const Scheduler = ({ roleId, userId }) => {
+const Scheduler = ({ roleId, userId , selectedCourse: courseId }) => {
   const [events, setEvents] = useState([]);
   const [open, setOpen] = useState(false);
+  const [selectedDate, setSelectedDate] = useState(new Date());
   const [newEvent, setNewEvent] = useState({
     EventTitle: '',
     EventDescription: '',
@@ -26,7 +28,7 @@ const Scheduler = ({ roleId, userId }) => {
 
   const fetchEvents = async () => {
     try {
-      const response = await axios.get(`${API_URL}/home/events`);
+      const response = await axios.get(`${API_URL}/events/events/get`);
       setEvents(response.data);
     } catch (error) {
       console.error('Error fetching events:', error);
@@ -35,15 +37,41 @@ const Scheduler = ({ roleId, userId }) => {
 
   const createEvent = async () => {
     try {
-      const response = await axios.post(`${API_URL}/home/events/create`, {
+      const response = await axios.post(`${API_URL}/events/events/create`, {
         ...newEvent,
+        EventDate: selectedDate,
         UserID: userId,
+        CourseID:courseId,
       });
       setEvents([...events, response.data]);
       setNewEvent({ EventTitle: '', EventDescription: '', EventDate: '', CourseId: '' });
       handleClose();
     } catch (error) {
       console.error('Error creating event:', error);
+    }
+  };
+
+  const editEvent = async (eventId) => {
+    try {
+      const response = await axios.put(`${API_URL}/events/events/edit/${eventId}`, {
+        ...newEvent,
+        EventDate: selectedDate,
+        UserID: userId,
+      });
+      setEvents(events.map(event => event.EventID === eventId ? response.data : event));
+      setNewEvent({ EventTitle: '', EventDescription: '', EventDate: '', CourseId: '' });
+      handleClose();
+    } catch (error) {
+      console.error('Error editing event:', error);
+    }
+  };
+
+  const deleteEvent = async (eventId) => {
+    try {
+      await axios.delete(`${API_URL}/events/events/delete/${eventId}`);
+      setEvents(events.filter(event => event.EventID !== eventId));
+    } catch (error) {
+      console.error('Error deleting event:', error);
     }
   };
 
@@ -66,7 +94,7 @@ const Scheduler = ({ roleId, userId }) => {
       </Typography>
 
       {/* Admins and Teachers can create events */}
-      {['1', '2'].includes(roleId) && (
+      {[1, 2].includes(roleId) && (
         <div>
           <Button variant="contained" sx={{ mt: 2 }} onClick={handleClickOpen}>
             Create Event
@@ -101,18 +129,18 @@ const Scheduler = ({ roleId, userId }) => {
                   />
                 </Grid>
                 <Grid item xs={12} sm={6}>
-                  <TextField
+                  <DatePicker
                     label="Date"
-                    type="date"
-                    variant="outlined"
-                    fullWidth
-                    value={newEvent.EventDate}
-                    onChange={(e) => setNewEvent({ ...newEvent, EventDate: e.target.value })}
-                    sx={{ my: 1 }}
+                    value={selectedDate}
+                    onChange={(newValue) => {
+                      setSelectedDate(newValue);
+                      setNewEvent({ ...newEvent, EventDate: newValue.toISOString() });
+                    }}
+                    renderInput={(params) => <TextField {...params} />}
                   />
                 </Grid>
                 {/* Teachers can select the courseId */}
-                {roleId === '2' && (
+                {roleId === 2 && (
                   <Grid item xs={12} sm={6}>
                     <TextField
                       label="Course ID"
@@ -146,6 +174,16 @@ const Scheduler = ({ roleId, userId }) => {
             <Typography variant="h6">{event.EventTitle}</Typography>
             <Typography>{event.EventDescription}</Typography>
             <Typography>Date: {event.EventDate}</Typography>
+            {roleId === 1 && (
+              <div>
+                <Button variant="contained" color="primary" onClick={() => editEvent(event.EventID)}>
+                  Edit
+                </Button>
+                <Button variant="contained" color="secondary" onClick={() => deleteEvent(event.EventID)}>
+                  Delete
+                </Button>
+              </div>
+            )}
           </div>
         ))}
       </div>

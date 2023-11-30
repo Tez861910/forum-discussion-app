@@ -16,11 +16,12 @@ import ThreadModal from './ThreadModal';
 import './forumdiscussion.css';
 
 
-function ForumDiscussion({ selectedCourse: courseId, userId }) {
+function ForumDiscussion({ selectedCourse: courseId}) {
   const [threads, setThreads] = React.useState([]);
   const [selectedThread, setSelectedThread] = React.useState(null);
   const [showModal, setShowModal] = React.useState(false);
   const roleId = localStorage.getItem('roleId');
+  const userId = localStorage.getItem('userId');
   const [newThreadTitle, setNewThreadTitle] = React.useState('');
   const [newThreadContent, setNewThreadContent] = React.useState('');
   const [showCreateModal, setShowCreateModal] = React.useState(false);
@@ -59,10 +60,7 @@ function ForumDiscussion({ selectedCourse: courseId, userId }) {
   };
 
   const handleCreateThread = async () => {
-    if (!courseId || !userId) {
-      console.error('courseId and userId are required');
-      return;
-    }
+    
 
     try {
       const response = await axios.post('http://localhost:8081/threads/threads/create', {

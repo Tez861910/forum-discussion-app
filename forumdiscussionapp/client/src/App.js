@@ -1,6 +1,6 @@
 import React, { Suspense } from 'react';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
-import { ThemeProvider } from '@mui/material';
+import { ThemeProvider , CssBaseline } from '@mui/material';
 import { ErrorBoundary } from 'react-error-boundary';
 import theme from './Theme'; 
 const AdminCourses = React.lazy(() => import('./admin/AdminCourses'));
@@ -51,6 +51,7 @@ const AppRoutes = () => (
 const App = () => (
   <ErrorBoundary FallbackComponent={ErrorFallback}>
     <ThemeProvider theme={theme}>
+    <CssBaseline />
       <Router>
         <Suspense fallback={<div>Loading...</div>}>
           <AppRoutes />

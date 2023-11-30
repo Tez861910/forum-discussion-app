@@ -5,7 +5,7 @@ async function handleCommentGet(req, res) {
   const { threadId } = req.params;
 
   try {
-    const sql = 'SELECT * FROM comments Where ThreadID = ?';
+    const sql = 'SELECT * FROM comments';
     const [results] = await query(sql, [threadId]);
 
     console.log('Comments fetched successfully');

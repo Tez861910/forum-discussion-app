@@ -2,7 +2,7 @@ const { query } = require('../db');
 
 async function handleCommentUpdateId(req, res) {
     {
-        const { id } = req.params;
+        const { commentId } = req.params;
         const { content } = req.body;
       
         try {
@@ -11,8 +11,8 @@ async function handleCommentUpdateId(req, res) {
             return res.status(400).json({ error: 'Comment content is required' });
           }
       
-          const sql = 'UPDATE comments SET Content = ? WHERE CommentID = ?';
-          const [result] = await query(sql, [content, id]);
+          const sql = 'UPDATE comments SET CommentContent = ? WHERE CommentID = ?';
+          const [result] = await query(sql, [content, commentId]);
       
           if (result.affectedRows === 1) {
             console.log('Comment updated successfully');

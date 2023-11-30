@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { Button, Modal, Box, Typography, Stack } from '@mui/material';
+import { Button, Modal, Box, Typography, Stack, TextField } from '@mui/material';
 import { styled } from '@mui/system';
 import axios from 'axios';
 
@@ -9,9 +9,11 @@ const Input = styled('input')({
 
 const AvatarUploadModal = ({ isOpen, onRequestClose }) => {
   const [selectedFile, setSelectedFile] = React.useState(null);
+  const [fileName, setFileName] = React.useState('');
 
   const handleFileChange = (event) => {
     setSelectedFile(event.target.files[0]);
+    setFileName(event.target.files[0].name);
   };
 
   const handleUploadClick = () => {
@@ -39,13 +41,20 @@ const AvatarUploadModal = ({ isOpen, onRequestClose }) => {
         <Typography variant="h6" component="div" gutterBottom>
           Upload Avatar
         </Typography>
-        <Stack direction="row" spacing={2}>
+        <Stack direction="column" spacing={2}>
           <label htmlFor="contained-button-file">
             <Input accept="image/*" id="contained-button-file" type="file" onChange={handleFileChange} />
             <Button variant="contained" component="span">
               Select File
             </Button>
           </label>
+          <TextField
+            fullWidth
+            variant="outlined"
+            disabled
+            value={fileName}
+            label="Selected File"
+          />
           <Button variant="contained" color="primary" onClick={handleUploadClick}>
             Upload
           </Button>

@@ -110,9 +110,9 @@ const UserProfile = ({ isOpen, onClose }) => {
           </>
         ) : (
           <>
-            <Typography mb={1}>Name: {userData.UserName}</Typography>
-            <Typography mb={1}>Email: {userData.UserEmail}</Typography>
-            <Typography mb={1}>Role: {userData.RoleName}</Typography>
+            <Typography mb={1} sx={{ fontWeight: 'medium' }}>Name: {userData.UserName}</Typography>
+            <Typography mb={1} sx={{ fontWeight: 'medium' }}>Email: {userData.UserEmail}</Typography>
+            <Typography mb={1} sx={{ fontWeight: 'medium' }}>Role: {userData.RoleName}</Typography>
             <Box sx={{ display: 'flex', justifyContent: 'flex-end', mt: 2 }}>
               <Button variant="contained" color="primary" onClick={handleEdit} sx={{ mr: 2 }}>
                 Edit
@@ -139,6 +139,12 @@ const style = {
   borderRadius: 8, 
   boxShadow: 24,
   p: 4,
-};
+  color: 'text.primary',
+  fontFamily: 'Roboto, sans-serif',
+  fontWeight: 'normal',
+  lineHeight: 'normal',
+  letterSpacing: 'normal',
+  textAlign: 'left',
+}
 
 export default UserProfile;

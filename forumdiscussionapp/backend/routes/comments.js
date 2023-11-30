@@ -13,7 +13,7 @@ const {handleCommentGet} =require('../comment-routes/handle-comment-get')
 const {handleCommentGetThreadId} =require('../comment-routes/handle-comments-get-threadid')
 
 //Get all comments
-router.get('/comments/get/:threadId', async (req, res) => handleCommentGet(req, res));
+router.get('/comments/get', async (req, res) => handleCommentGet(req, res));
 
 // Create a new comment 
 router.post('/comments/create/:threadId', async (req, res) => handleCommentCreate(req, res));

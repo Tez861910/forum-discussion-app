@@ -1,13 +1,12 @@
 import * as React from 'react';
 import PropTypes from 'prop-types';
-import { Button, Box, Stack, Alert, Modal, Avatar, Typography, Drawer, Toolbar, List, ListItem, ListItemIcon, ListItemText, IconButton } from '@mui/material';
+import { Button, Box, Stack, Avatar, Typography, Drawer,  IconButton } from '@mui/material';
 import LogoutIcon from '@mui/icons-material/Logout';
 import AddIcon from '@mui/icons-material/Add';
 import MenuIcon from '@mui/icons-material/Menu';
 import ChevronLeftIcon from '@mui/icons-material/ChevronLeft';
 import CourseEnrollmentModal from './course-enrollment-modal';
 import UserProfile from './user-profile';
-import EnrolledCoursesDropdown from './enrolled-courses-dropdown';
 import AvatarUploadModal from './AvatarUploadModal'; 
 
 const Sidebar = ({
@@ -33,10 +32,6 @@ const Sidebar = ({
     if (roleId === '3') {
       setEnrollmentModalOpen(true);
     }
-  };
-
-  const handleCourseChange = (courseId) => {
-    onCourseSelect(courseId);
   };
 
   const handleModalClose = () => {
@@ -88,14 +83,6 @@ const Sidebar = ({
             <Typography variant="h6" gutterBottom component="div">
               {roleId === '1' ? 'Admin' : roleId === '2' ? 'Teacher' : 'Student'}
             </Typography>
-
-            {/* Enrolled Courses Dropdown */}
-            {roleId !== '1' && (
-              <EnrolledCoursesDropdown
-                onCourseSelect={onCourseSelect}
-                onCourseChange={handleCourseChange}
-              />
-            )}
 
             {/* User Profile Button */}
             <Button
