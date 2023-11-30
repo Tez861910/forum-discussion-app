@@ -29,7 +29,7 @@ const Home = () => {
   const [activeView, setActiveView] = React.useState('scheduler');
   const [selectedCourse, setSelectedCourse] = React.useState(null);
   const [isCoursesEnrolled, setIsCoursesEnrolled] = React.useState(false);
-  //const [isForumDiscussionVisible, setForumDiscussionVisible] = React.useState(false);
+  const [isSidebarOpen, setSidebarOpen] = React.useState(false);
   const navigate = useNavigate();
 
   const clearUserData = async () => {
@@ -120,6 +120,12 @@ const Home = () => {
     handleTokenRefreshAndFetch();
   }, [cookies.token, isLoggedIn, navigateToPathState, roleId, setCookie, navigate]);
 
+  const handleDrawerToggle = () => {
+    console.log('handleDrawerToggle triggered');
+    setSidebarOpen(!isSidebarOpen);
+  console.log('Sidebar open state:', isSidebarOpen);
+};
+
   const handleEnrollmentSuccess = () => {
     setEnrollmentModalOpen(false);
   };
@@ -170,9 +176,12 @@ const Home = () => {
       <Typography variant="h2" align="center" sx={{ my: 3 }}>
         {getRoleHeaderText(roleId)}
       </Typography>
-
-      <Stack direction="row" spacing={3}>
+  
+      <Box sx={{ display: 'flex' }}>
         <Sidebar
+          open={isSidebarOpen}
+          handleDrawerToggle={handleDrawerToggle}
+          key={isSidebarOpen} 
           isEnrollmentModalOpen={isEnrollmentModalOpen}
           setEnrollmentModalOpen={setEnrollmentModalOpen}
           handleEnrollmentSuccess={handleEnrollmentSuccess}
@@ -182,12 +191,11 @@ const Home = () => {
           roleId={roleId}
           isCoursesEnrolled={isCoursesEnrolled}
         />
-
-        <Box sx={{ width: '100%', p: 2 }}>
+        <Box sx={{ flexGrow: 1, p: 2 }}>
           <Typography variant="h4" sx={{ my: 3 }}>
             Welcome, {roleId === '1' ? 'Admin' : roleId === '2' ? 'Teacher' : 'Student'}
           </Typography>
-
+  
           <Box sx={{ mb: 2 }}>
             <Navbar
               userId={userId}
@@ -200,13 +208,13 @@ const Home = () => {
               }}
             />
           </Box>
-
+  
           <Paper elevation={3} sx={{ p: 2 }}>
             {routes}
           </Paper>
         </Box>
-      </Stack>
-
+      </Box>
+  
       <UserProfile isOpen={isUserProfileOpen} onClose={() => setUserProfileOpen(false)} />
       <CourseEnrollmentModal
         isOpen={isEnrollmentModalOpen}
@@ -215,6 +223,7 @@ const Home = () => {
       />
     </Container>
   );
+  
 };
 
 export default Home;

@@ -10,23 +10,13 @@ import {
   DialogContent,
   DialogActions,
   Box,
-  styled,
-  ButtonGroup,
 } from '@mui/material';
 import ThreadList from './ThreadList'; 
 import ThreadModal from './ThreadModal';
 import './forumdiscussion.css';
 
-const StyledButtonGroup = styled(ButtonGroup)(({ theme }) => ({
-  '& .MuiButton-root': {
-    margin: theme.spacing(1),
-  },
-  '& .MuiButton-outlinedPrimary': {
-    borderColor: theme.palette.primary.main,
-  },
-}));
 
-function ForumDiscussion({ selectedCourse, userId }) {
+function ForumDiscussion({ selectedCourse: courseId, userId }) {
   const [threads, setThreads] = React.useState([]);
   const [selectedThread, setSelectedThread] = React.useState(null);
   const [showModal, setShowModal] = React.useState(false);
@@ -38,7 +28,7 @@ function ForumDiscussion({ selectedCourse, userId }) {
   React.useEffect(() => {
     const fetchThreads = async () => {
       try {
-        const response = await axios.get(`http://localhost:8081/threads/threads/get/${selectedCourse}`);
+        const response = await axios.get(`http://localhost:8081/threads/threads/get/${courseId}`);
         console.log('API Response:', response.data);
         startTransition(() => {
           setThreads(response.data[0]); 
@@ -49,7 +39,7 @@ function ForumDiscussion({ selectedCourse, userId }) {
     };
 
     fetchThreads();
-  }, [selectedCourse, userId]);
+  }, [courseId, userId]);
 
   const handleThreadSelection = (threadId) => {
     setSelectedThread(threadId);
@@ -69,8 +59,8 @@ function ForumDiscussion({ selectedCourse, userId }) {
   };
 
   const handleCreateThread = async () => {
-    if (!selectedCourse || !userId) {
-      console.error('selectedCourse and userId are required');
+    if (!courseId || !userId) {
+      console.error('courseId and userId are required');
       return;
     }
 
@@ -78,11 +68,11 @@ function ForumDiscussion({ selectedCourse, userId }) {
       const response = await axios.post('http://localhost:8081/threads/threads/create', {
         title: newThreadTitle,
         content: newThreadContent,
-        courseId: selectedCourse,
+        courseId,
         userId,
       });
 
-      const updatedThreadsResponse = await axios.get(`http://localhost:8081/threads/threads/get/${selectedCourse}`);
+      const updatedThreadsResponse = await axios.get(`http://localhost:8081/threads/threads/get/${courseId}`);
       startTransition(() => {
         setThreads(updatedThreadsResponse.data[0]); 
       });
@@ -139,8 +129,8 @@ function ForumDiscussion({ selectedCourse, userId }) {
           </Dialog>
         </Box>
       )}
-      <StyledButtonGroup  threads={threads} onThreadSelect={handleThreadSelection} roleId={roleId} />
-      {selectedThread && showModal && <ThreadModal threadId={selectedThread} onClose={handleModalClose} roleId={roleId} userId={userId} courseId={selectedCourse}  showModal={showModal} />}
+      <ThreadList  threads={threads} onThreadSelect={handleThreadSelection} roleId={roleId} />
+      {selectedThread && showModal && <ThreadModal threadId={selectedThread} onClose={handleModalClose} roleId={roleId} userId={userId} courseId={courseId}  showModal={showModal} />}
     </Box>
   );
 }

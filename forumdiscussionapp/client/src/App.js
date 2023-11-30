@@ -33,7 +33,7 @@ const AppRoutes = () => (
     <Route path="/" element={<Start />} />
     <Route path="/login" element={<Login />} />
     <Route path="/sign-up" element={<Signup />} />
-    <Route path="/home" element={<Home />}>
+    <Route path="/home/*" element={<Home />}>
       <Route path="admin-courses" element={<AdminCourses />} />
       <Route path="admin-roles" element={<AdminRoles />} />
       <Route path="admin-users" element={<AdminUsers />} />

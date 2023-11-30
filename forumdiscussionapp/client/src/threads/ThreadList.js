@@ -1,23 +1,32 @@
-import React from 'react';
-import { Button, Typography } from '@mui/material';
+import * as React from 'react';
+import { Button, Typography, styled, List, ListItem } from '@mui/material';
 
-function ThreadList({ threads, onThreadSelect, roleId }) {
+const StyledButton = styled(Button)(({ theme }) => ({
+  margin: theme.spacing(1),
+  '&.MuiButton-outlinedPrimary': {
+    borderColor: theme.palette.primary.main,
+  },
+}));
+
+function ThreadList({ threads, onThreadSelect }) {
   console.log(threads); 
   
   const threadArray = Array.isArray(threads) ? threads : [];
 
   return (
-    <div className="thread-list">
-      <Typography variant="h3">Thread List</Typography>
-      <ul>
+    <div>
+      <Typography variant="h3" component="div" gutterBottom>
+        Thread List
+      </Typography>
+      <List>
         {threadArray.map((thread) => (
-          <li key={thread.ThreadID}>
-            <Button onClick={() => onThreadSelect(thread.ThreadID)}>
+          <ListItem key={thread.ThreadID}>
+            <StyledButton onClick={() => onThreadSelect(thread.ThreadID)}>
               {thread.ThreadTitle || 'Untitled Thread'}
-            </Button>
-          </li>
+            </StyledButton>
+          </ListItem>
         ))}
-      </ul>
+      </List>
     </div>
   );
 }
