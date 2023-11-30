@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { useRoutes } from 'react-router-dom';
-import { Container, Typography,  Paper , Box, Stack } from '@mui/material';
+import { Container, Typography, Paper, Box, Stack } from '@mui/material';
 import { useNavigate } from 'react-router-dom';
 import { useCookies } from 'react-cookie';
 import axios from 'axios';
@@ -15,8 +15,6 @@ import ForumDiscussion from '../threads/Forumdiscussion';
 import Scheduler from './scheduler';
 import UserProfile from './user-profile';
 import CourseEnrollmentModal from './course-enrollment-modal';
-
-//import './home.css';
 
 const API_URL = 'http://localhost:8081/home/refresh-token';
 
@@ -205,15 +203,10 @@ const Home = () => {
 
           <Box sx={{ mb: 2 }}>
             <Navbar
-              onButtonClick={handleNavbarButtonClick}
               roleId={roleId}
-              onCourseSelect={handleCourseSelect}
+              onButtonClick={handleNavbarButtonClick}
               selectedCourse={selectedCourse}
-              onForumDiscussionButtonClick={handleForumDiscussionButtonClick}
               isTeacherOrStudent={['2', '3'].includes(roleId)}
-              onMCQFormButtonClick={handleMCQFormButtonClick}
-              onMCQAnswerFormButtonClick={handleMCQAnswerFormButtonClick}
-              onSchedulerButtonClick={handleSchedulerButtonClick} 
             />
           </Box>
 

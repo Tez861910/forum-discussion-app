@@ -16,10 +16,6 @@ const Navbar = ({
   onButtonClick,
   selectedCourse,
   isTeacherOrStudent,
-  onMCQFormButtonClick,
-  onMCQAnswerFormButtonClick,
-  onForumDiscussionButtonClick,
-  onSchedulerButtonClick,  
 }) => {
   return (
     <Box sx={{ my: 3 }}>
@@ -42,7 +38,7 @@ const Navbar = ({
           <>
            <Button
               onClick={() => {
-                onForumDiscussionButtonClick();
+                onButtonClick('forum-discussion');
               }}
               variant="outlined"
               color="primary"
@@ -53,7 +49,7 @@ const Navbar = ({
 
             {isTeacherOrStudent && roleId === '2' && (
               <Button
-                onClick={onMCQFormButtonClick}
+                onClick={() => onButtonClick('mcq-form')}
                 variant="outlined"
                 color="primary"
                 disabled={!selectedCourse}
@@ -63,7 +59,7 @@ const Navbar = ({
             )}
             {isTeacherOrStudent && roleId === '3' && (
               <Button
-                onClick={onMCQAnswerFormButtonClick}
+                onClick={() => onButtonClick('mcq-answer-form')}
                 variant="outlined"
                 color="primary"
                 disabled={!selectedCourse}
@@ -74,7 +70,7 @@ const Navbar = ({
           </>
         )}
 
-        <Button onClick={onSchedulerButtonClick} variant="outlined" color="primary">
+        <Button onClick={() => onButtonClick('scheduler')} variant="outlined" color="primary">
           Scheduler
         </Button>
       </StyledButtonGroup>
@@ -94,11 +90,6 @@ Navbar.propTypes = {
   onButtonClick: PropTypes.func.isRequired,
   selectedCourse: PropTypes.string,
   isTeacherOrStudent: PropTypes.bool,
-  isForumDiscussionVisible: PropTypes.bool,
-  onMCQFormButtonClick: PropTypes.func,
-  onMCQAnswerFormButtonClick: PropTypes.func,
-  onForumDiscussionButtonClick: PropTypes.func,
-  onSchedulerButtonClick: PropTypes.func, 
 };
 
 export default Navbar;
