@@ -20,6 +20,7 @@ const API_URL = 'http://localhost:8081/home/refresh-token';
 
 const Home = () => {
   const [roleId, setRoleId] = React.useState('');
+  const [userId,setUserId]=React.useState('');
   const [cookies, setCookie] = useCookies();
   const [navigateToPathState, setNavigateToPath] = React.useState(null);
   const [isUserProfileOpen, setUserProfileOpen] = React.useState(false);
@@ -46,6 +47,9 @@ const Home = () => {
 
     const storedRoleId = localStorage.getItem('roleId');
     setRoleId(storedRoleId);
+
+    const storedUserId = localStorage.getItem('userId');
+    setUserId(storedUserId);
 
     storedRoleId && handleRoleSpecificActions(storedRoleId);
   };
@@ -130,45 +134,28 @@ const Home = () => {
     setEnrollmentModalOpen(false);
   };
 
-  const handleForumDiscussionButtonClick = () => {
-    setForumDiscussionVisible(!isForumDiscussionVisible);
-    setActiveView(isForumDiscussionVisible ? 'scheduler' : 'forum-discussion');
-  }; 
+  
+  const Wrapper = ({ component: Component, view }) => {
+    React.useEffect(() => {
+      setActiveView(view);
+    }, [view]);
 
-  const handleMCQFormButtonClick = () => {
-    if (selectedCourse) {
-      setActiveView('mcq-form');
-    }
-  };
-
-  const handleMCQAnswerFormButtonClick = () => {
-    if (selectedCourse) {
-      setActiveView('mcq-answer-form');
-    }
-  };
-
-  const handleSchedulerButtonClick = () => {
-    setActiveView('scheduler');
+    return <Component selectedCourse={selectedCourse} />;
   };
 
   const routes = useRoutes([
     { path: 'admin-courses', element: <AdminCourses /> },
     { path: 'admin-roles', element: <AdminRoles /> },
     { path: 'admin-users', element: <AdminUsers /> },
-    { path: 'scheduler', element: <Scheduler /> },
+    { path: 'scheduler', element: <Wrapper component={Scheduler} view='scheduler' /> },
     { path: 'user-profile', element: <UserProfile /> },
     { path: 'course-enrollment-modal', element: <CourseEnrollmentModal /> },
-    { path: 'forum-discussion', element: <ForumDiscussion /> },
-    { path: 'mcq-form', element: <MCQForm /> },
-    { path: 'mcq-answer-form', element: <MCQAnswerForm /> },
+    { path: 'forum-discussion', element: <Wrapper component={ForumDiscussion} view='forum-discussion' /> },
+    { path: 'mcq-form', element: <Wrapper component={MCQForm} view='mcq-form' /> },
+    { path: 'mcq-answer-form', element: <Wrapper component={MCQAnswerForm} view='mcq-answer-form' /> },
   ]);
 
-  const handleNavbarButtonClick = (view) => {
-    setForumDiscussionVisible(view === 'forum-discussion');
-    setActiveView(view);
-    navigate(view, { replace: true });
-  };
-  
+
   const getRoleHeaderText = (roleId) => {
     const roleTitles = {
       '1': 'Admin Home Panel',
@@ -203,10 +190,14 @@ const Home = () => {
 
           <Box sx={{ mb: 2 }}>
             <Navbar
+              userId={userId}
               roleId={roleId}
-              onButtonClick={handleNavbarButtonClick}
               selectedCourse={selectedCourse}
               isTeacherOrStudent={['2', '3'].includes(roleId)}
+              onButtonClick={(view) => {
+                setActiveView(view);
+                navigate(view, { replace: true });
+              }}
             />
           </Box>
 

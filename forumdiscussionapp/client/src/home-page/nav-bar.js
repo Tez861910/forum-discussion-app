@@ -12,6 +12,7 @@ const StyledButtonGroup = styled(ButtonGroup)(({ theme }) => ({
 }));
 
 const Navbar = ({
+  userId,
   roleId,
   onButtonClick,
   selectedCourse,
@@ -36,10 +37,8 @@ const Navbar = ({
 
         {(roleId === '2' || roleId === '3') && (
           <>
-           <Button
-              onClick={() => {
-                onButtonClick('forum-discussion');
-              }}
+            <Button
+              onClick={() => onButtonClick('forum-discussion')}
               variant="outlined"
               color="primary"
               disabled={!selectedCourse}

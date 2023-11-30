@@ -18,8 +18,8 @@ function ForumDiscussion({ courseId }) {
   const [threads, setThreads] = useState([]);
   const [selectedThread, setSelectedThread] = useState(null);
   const [showModal, setShowModal] = useState(false);
-  const [roleId, setRoleId] = useState(localStorage.getItem('roleId'));
-  const [userId, setUserId] = useState(localStorage.getItem('userId'));
+  const roleId = localStorage.getItem('roleId');
+  const userId = localStorage.getItem('userId');
   const [newThreadTitle, setNewThreadTitle] = useState('');
   const [newThreadContent, setNewThreadContent] = useState('');
   const [showCreateModal, setShowCreateModal] = useState(false);
