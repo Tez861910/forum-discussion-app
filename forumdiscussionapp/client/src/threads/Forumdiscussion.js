@@ -13,8 +13,6 @@ import {
 } from '@mui/material';
 import ThreadList from './ThreadList'; 
 import ThreadModal from './ThreadModal';
-import './forumdiscussion.css';
-
 
 function ForumDiscussion({ selectedCourse: courseId}) {
   const [threads, setThreads] = React.useState([]);
@@ -128,7 +126,7 @@ function ForumDiscussion({ selectedCourse: courseId}) {
         </Box>
       )}
       <ThreadList  threads={threads} onThreadSelect={handleThreadSelection} roleId={roleId} />
-      {selectedThread && showModal && <ThreadModal threadId={selectedThread} onClose={handleModalClose} roleId={roleId} userId={userId} courseId={courseId}  showModal={showModal} />}
+      {selectedThread && showModal && <ThreadModal threadId={selectedThread} onClose={handleModalClose} roleId={roleId} />}
     </Box>
   );
 }

@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { startTransition } from 'react';
 import axios from 'axios';
-import { Dialog, DialogTitle, DialogContent, DialogActions, Button, TextField, styled, Card, CardContent, CardHeader } from '@mui/material';
+import { Dialog, DialogTitle, DialogContent, DialogActions, Button, TextField, styled, Card, CardContent, CardHeader, Box } from '@mui/material';
 import CommentSection from './comment-section';
 
 const StyledButton = styled(Button)(({ theme }) => ({
@@ -9,6 +9,10 @@ const StyledButton = styled(Button)(({ theme }) => ({
   '&.MuiButton-outlinedPrimary': {
     borderColor: theme.palette.primary.main,
   },
+}));
+
+const StyledCard = styled(Card)(({ theme }) => ({
+  marginBottom: theme.spacing(2),
 }));
 
 function ThreadModal({ courseId, threadId, onClose, roleId, userId }) {
@@ -80,12 +84,12 @@ function ThreadModal({ courseId, threadId, onClose, roleId, userId }) {
   };
 
   return (
-    <Dialog open={!!threadId} onClose={onClose}>
+    <Dialog open={!!threadId} onClose={onClose} fullWidth maxWidth="md">
       {threadId && (
         <>
           <DialogTitle>{thread.title}</DialogTitle>
-          <DialogContent>
-            <Card>
+          <DialogContent dividers>
+            <StyledCard>
               <CardHeader title="Thread Details" />
               <CardContent>
                 <TextField
@@ -94,6 +98,7 @@ function ThreadModal({ courseId, threadId, onClose, roleId, userId }) {
                   onChange={(e) => setEditedTitle(e.target.value)}
                   disabled={!isEditable}
                   InputProps={{ style: { color: isEditable ? 'inherit' : 'black', opacity: isEditable ? 1 : 0.7 } }}
+                  fullWidth
                 />
                 <TextField
                   label="Content"
@@ -103,9 +108,13 @@ function ThreadModal({ courseId, threadId, onClose, roleId, userId }) {
                   onChange={(e) => setEditedContent(e.target.value)}
                   disabled={!isEditable}
                   InputProps={{ style: { color: isEditable ? 'inherit' : 'black', opacity: isEditable ? 1 : 0.7 } }}
+                  fullWidth
                 />
               </CardContent>
-            </Card>
+            </StyledCard>
+            <Box sx={{ overflow: 'auto', maxHeight: '50vh' }}>
+              <CommentSection threadId={threadId} roleId={roleId} userId={userId} courseId={courseId} />
+            </Box>
           </DialogContent>
           <DialogActions>
             {isEditable && (
@@ -122,8 +131,6 @@ function ThreadModal({ courseId, threadId, onClose, roleId, userId }) {
               Close
             </StyledButton>
           </DialogActions>
-
-          <CommentSection threadId={threadId} roleId={roleId} userId={userId} courseId={courseId} />
         </>
       )}
     </Dialog>
