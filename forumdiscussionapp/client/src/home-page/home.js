@@ -29,7 +29,7 @@ const Home = () => {
   const [activeView, setActiveView] = React.useState('scheduler');
   const [selectedCourse, setSelectedCourse] = React.useState(null);
   const [isCoursesEnrolled, setIsCoursesEnrolled] = React.useState(false);
-  const [isForumDiscussionVisible, setForumDiscussionVisible] = React.useState(false);
+  //const [isForumDiscussionVisible, setForumDiscussionVisible] = React.useState(false);
   const navigate = useNavigate();
 
   const clearUserData = async () => {

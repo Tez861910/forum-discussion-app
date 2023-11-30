@@ -23,13 +23,13 @@ const Navbar = ({
       <StyledButtonGroup variant="contained" aria-label="outlined primary button group">
         {roleId === '1' && (
           <>
-            <Button onClick={() => onButtonClick('admin-courses')} variant="outlined" color="primary">
+            <Button onClick={() => onButtonClick('admin-courses', userId, selectedCourse)} variant="outlined" color="primary">
               Manage Courses
             </Button>
-            <Button onClick={() => onButtonClick('admin-users')} variant="outlined" color="primary">
+            <Button onClick={() => onButtonClick('admin-users', userId, selectedCourse)} variant="outlined" color="primary">
               Manage Users
             </Button>
-            <Button onClick={() => onButtonClick('admin-roles')} variant="outlined" color="primary">
+            <Button onClick={() => onButtonClick('admin-roles', userId, selectedCourse)} variant="outlined" color="primary">
               Manage Roles
             </Button>
           </>
@@ -38,7 +38,7 @@ const Navbar = ({
         {(roleId === '2' || roleId === '3') && (
           <>
             <Button
-              onClick={() => onButtonClick('forum-discussion')}
+              onClick={() => onButtonClick('forum-discussion', userId, selectedCourse)}
               variant="outlined"
               color="primary"
               disabled={!selectedCourse}
@@ -48,7 +48,7 @@ const Navbar = ({
 
             {isTeacherOrStudent && roleId === '2' && (
               <Button
-                onClick={() => onButtonClick('mcq-form')}
+                onClick={() => onButtonClick('mcq-form', userId, selectedCourse)}
                 variant="outlined"
                 color="primary"
                 disabled={!selectedCourse}
@@ -58,7 +58,7 @@ const Navbar = ({
             )}
             {isTeacherOrStudent && roleId === '3' && (
               <Button
-                onClick={() => onButtonClick('mcq-answer-form')}
+                onClick={() => onButtonClick('mcq-answer-form', userId, selectedCourse)}
                 variant="outlined"
                 color="primary"
                 disabled={!selectedCourse}
@@ -69,7 +69,7 @@ const Navbar = ({
           </>
         )}
 
-        <Button onClick={() => onButtonClick('scheduler')} variant="outlined" color="primary">
+        <Button onClick={() => onButtonClick('scheduler', userId, selectedCourse)} variant="outlined" color="primary">
           Scheduler
         </Button>
       </StyledButtonGroup>
