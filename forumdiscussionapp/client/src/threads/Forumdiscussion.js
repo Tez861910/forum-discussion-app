@@ -24,21 +24,21 @@ function ForumDiscussion({ selectedCourse: courseId}) {
   const [newThreadContent, setNewThreadContent] = React.useState('');
   const [showCreateModal, setShowCreateModal] = React.useState(false);
 
-  React.useEffect(() => {
-    const fetchThreads = async () => {
-      try {
-        const response = await axios.get(`http://localhost:8081/threads/threads/get/${courseId}`);
-        console.log('API Response:', response.data);
-        startTransition(() => {
-          setThreads(response.data[0]); 
-        });
-      } catch (error) {
-        console.error('Error fetching threads:', error);
-      }
-    };
-
-    fetchThreads();
+  const fetchThreads = React.useCallback(async () => {
+    try {
+      const response = await axios.get(`http://localhost:8081/threads/threads/get/${courseId}`);
+      console.log('API Response:', response.data);
+      startTransition(() => {
+        setThreads(response.data[0]); 
+      });
+    } catch (error) {
+      console.error('Error fetching threads:', error);
+    }
   }, [courseId, userId]);
+
+  React.useEffect(() => {
+    fetchThreads();
+  }, [fetchThreads]);
 
   const handleThreadSelection = (threadId) => {
     setSelectedThread(threadId);
@@ -47,6 +47,7 @@ function ForumDiscussion({ selectedCourse: courseId}) {
 
   const handleModalClose = () => {
     setShowModal(false);
+    fetchThreads(); 
   };
 
   const handleOpenCreateModal = () => {
@@ -58,8 +59,6 @@ function ForumDiscussion({ selectedCourse: courseId}) {
   };
 
   const handleCreateThread = async () => {
-    
-
     try {
       const response = await axios.post('http://localhost:8081/threads/threads/create', {
         title: newThreadTitle,
@@ -68,17 +67,13 @@ function ForumDiscussion({ selectedCourse: courseId}) {
         userId,
       });
 
-      const updatedThreadsResponse = await axios.get(`http://localhost:8081/threads/threads/get/${courseId}`);
-      startTransition(() => {
-        setThreads(updatedThreadsResponse.data[0]); 
-      });
-
       setSelectedThread(response.data.threadId);
 
       setShowCreateModal(false);
 
       setNewThreadTitle('');
       setNewThreadContent('');
+      fetchThreads();
     } catch (error) {
       console.error('Error creating thread:', error);
     }
@@ -126,7 +121,7 @@ function ForumDiscussion({ selectedCourse: courseId}) {
         </Box>
       )}
       <ThreadList  threads={threads} onThreadSelect={handleThreadSelection} roleId={roleId} />
-      {selectedThread && showModal && <ThreadModal threadId={selectedThread} onClose={handleModalClose} roleId={roleId} />}
+      {selectedThread && showModal && <ThreadModal threadId={selectedThread} onClose={handleModalClose} roleId={roleId} courseId={courseId} />}
     </Box>
   );
 }

@@ -2,10 +2,10 @@ const { query } = require('../db');
                                     
 async function handleThreadsDeleteId(req, res) {
 {
-    const { id } = req.params;
+    const { threadId } = req.params;
     try {
       const sql = 'DELETE FROM Threads WHERE ThreadID = ?';
-      const [result] = await query(sql, [id]);
+      const [result] = await query(sql, [threadId]);
       if (result.affectedRows === 1) {
         console.log('Thread deleted successfully');
         res.json({ message: 'Thread deleted successfully' });

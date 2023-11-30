@@ -2,7 +2,7 @@ const { query } = require('../db');
                                     
 async function handleThreadsUpdateId(req, res) {
 {
-    const { id } = req.params;
+    const { threadId } = req.params;
     const { title, content, courseId } = req.body;
     try {
       if (!title || !content || !courseId ) {
@@ -10,7 +10,7 @@ async function handleThreadsUpdateId(req, res) {
         return res.status(400).json({ error: 'Title, content, courseId, and userId are required' });
       }
       const sql = 'UPDATE Threads SET ThreadTitle = ?, ThreadContent = ?, CourseID = ?   WHERE ThreadID = ?';
-      const [result] = await query(sql, [title, content, courseId, id]);
+      const [result] = await query(sql, [title, content, courseId, threadId]);
       if (result.affectedRows === 1) {
         console.log('Thread updated successfully');
         res.json({ message: 'Thread updated successfully' });

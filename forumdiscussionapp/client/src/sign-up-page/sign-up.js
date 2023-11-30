@@ -38,6 +38,7 @@ const Signup = () => {
 
   const handleSubmit = React.useCallback(async (event) => {
     event.preventDefault();
+    console.log('Form submitted'); 
     const validationErrors = {};
 
     // Validate form data
@@ -124,6 +125,7 @@ const Signup = () => {
                 fullWidth
                 label="Password"
                 name="password"
+                type="password"
                 value={formData.password}
                 onChange={handleInputChange}
                 variant="outlined"
@@ -134,46 +136,47 @@ const Signup = () => {
               />
 
               <RoleDropdown
-                label="Role"
                 name="roleId"
                 value={formData.roleId}
                 onChange={handleInputChange}
-                variant="outlined"
+                roles={roles}
                 error={!!errors.roleId}
                 helperText={errors.roleId}
-                margin="normal"
-                sx={{ '.MuiInputBase-input': { fontSize: '1rem' } }}
-                roles={roles}
               />
 
               <Button
                 type="submit"
-                fullWidth
                 variant="contained"
                 color="primary"
+                fullWidth
                 sx={{ mt: 3, mb: 2 }}
               >
                 Sign Up
               </Button>
 
-              <Grid container justifyContent="flex-center">
+              <Grid container justifyContent="flex-end">
                 <Grid item>
-                  <RouterLink to="/login" variant="body2">
+                  <RouterLink to="/login">
                     Already have an account? Sign in
                   </RouterLink>
                 </Grid>
               </Grid>
 
-              <Button
+              <Grid container justifyContent="flex-end">
+                
+                <Button
                 type="button"
-                fullWidth
                 variant="contained"
                 color="secondary"
+                fullWidth
                 sx={{ mt: 3, mb: 2 }}
                 onClick={() => navigate('/')}
               >
                 Go back to start
               </Button>
+
+                
+              </Grid>
             </form>
           </Grid>
         </Stack>

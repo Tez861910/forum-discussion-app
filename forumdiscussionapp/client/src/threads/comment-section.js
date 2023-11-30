@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import axios from 'axios';
 import { Typography, TextareaAutosize, Button, Box, TextField } from '@mui/material';
+import Responses from './Responses';
 
 function CommentSection({ threadId, roleId, userId }) {
   const [comments, setComments] = useState([]);
@@ -105,6 +106,7 @@ function CommentSection({ threadId, roleId, userId }) {
                 <Button onClick={() => setEditingComment(null)}>
                   Cancel
                 </Button>
+                <Responses commentId={comment?.CommentID} userId={userId} roleId={roleId} /> 
               </Box>
             ) : (
               <>
