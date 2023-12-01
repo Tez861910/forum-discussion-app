@@ -5,7 +5,7 @@ import { ErrorBoundary } from 'react-error-boundary';
 import theme from './Theme'; 
 const AdminCourses = React.lazy(() => import('./admin/AdminCourses'));
 const AdminRoles = React.lazy(() => import('./admin/AdminRoles'));
-const AdminUsers = React.lazy(() => import('./admin/AdminUsers'));
+const AdminUsers = React.lazy(() => import('./admin/Users/AdminUsers'));
 const Scheduler = React.lazy(() => import('./home-page/scheduler'));
 const UserProfile = React.lazy(() => import('./home-page/user-profile'));
 const CourseEnrollmentModal = React.lazy(() => import('./home-page/course-enrollment-modal'));

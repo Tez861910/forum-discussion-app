@@ -7,7 +7,7 @@ import axios from 'axios';
 import Sidebar from './side-bar';
 import Navbar from './nav-bar';
 import AdminCourses from '../admin/AdminCourses';
-import AdminUsers from '../admin/AdminUsers';
+import AdminUsers from '../admin/users/AdminUsers';
 import AdminRoles from '../admin/AdminRoles';
 import MCQForm from '../mcq-form/mcq-form';
 import MCQAnswerForm from '../mcq-form/mcq-answer-form';
