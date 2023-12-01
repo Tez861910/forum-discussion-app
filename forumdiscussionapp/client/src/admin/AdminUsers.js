@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import * as React from 'react';
 import axios from 'axios';
 import {
   Button,
@@ -17,28 +17,30 @@ import {
   TableHead,
   TableRow,
   Paper,
+  Box,
+  Typography,
 } from '@mui/material';
 
 function AdminUsers() {
-  const [users, setUsers] = useState([]);
-  const [newUser, setNewUser] = useState({
+  const [users, setUsers] = React.useState([]);
+  const [newUser, setNewUser] = React.useState({
     UserName: '',
     UserEmail: '',
     RoleID: '',
     UserPassword: '',
   });
-  const [roles, setRoles] = useState([]);
-  const [editingUserId, setEditingUserId] = useState(null);
-  const [updatedUserData, setUpdatedUserData] = useState({
+  const [roles, setRoles] = React.useState([]);
+  const [editingUserId, setEditingUserId] = React.useState(null);
+  const [updatedUserData, setUpdatedUserData] = React.useState({
     UserName: '',
     UserEmail: '',
     RoleID: '',
     UserPassword: '',
   });
-  const [deleteConfirmation, setDeleteConfirmation] = useState({ open: false, userId: null });
-  const [createUserModalOpen, setCreateUserModalOpen] = useState(false);
+  const [deleteConfirmation, setDeleteConfirmation] = React.useState({ open: false, userId: null });
+  const [createUserModalOpen, setCreateUserModalOpen] = React.useState(false);
 
-  useEffect(() => {
+  React.useEffect(() => {
     fetchUsers();
     fetchRoles();
   }, []);
@@ -156,15 +158,20 @@ function AdminUsers() {
   };
 
   return (
-    <div className="admin-users-container">
-      <h1>Admin User Management</h1>
-      <div className="create-user-form">
-        <Button variant="contained" color="primary" onClick={() => setCreateUserModalOpen(true)}>
-          Create User
-        </Button>
-      </div>
+    <Box sx={{ p: 2 }}>
+      <Typography variant="h4" gutterBottom component="div">
+       Admin Users Management
+      </Typography>
+      <Button
+        variant="contained"
+        color="primary"
+        onClick={() => setCreateUserModalOpen(true)}
+        sx={{ mb: 2 }}
+      >
+        Create User
+      </Button>
       <TableContainer component={Paper}>
-        <Table>
+        <Table sx={{ minWidth: 650 }} aria-label="simple table">
           <TableHead>
             <TableRow>
               <TableCell>Name</TableCell>
@@ -174,75 +181,100 @@ function AdminUsers() {
             </TableRow>
           </TableHead>
           <TableBody>
-            {Array.isArray(users) &&
-              users.map((user) => (
-                <TableRow key={user.UserID}>
-                  <TableCell>{user.UserName}</TableCell>
-                  <TableCell>{user.UserEmail}</TableCell>
-                  <TableCell>{getRoleName(user.RoleID)}</TableCell>
-                  <TableCell>
-                    <Button onClick={() => handleEditUser(user)}>Edit</Button>
-                    <Button onClick={() => handleDeleteUser(user.UserID)}>Delete</Button>
-                  </TableCell>
-                </TableRow>
-              ))}
+            {users.map((user) => (
+              <TableRow
+                key={user.UserID}
+                sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
+              >
+                <TableCell component="th" scope="row">
+                  {user.UserName}
+                </TableCell>
+                <TableCell>{user.UserEmail}</TableCell>
+                <TableCell>{getRoleName(user.RoleID)}</TableCell>
+                <TableCell>
+                  <Button
+                    variant="contained"
+                    color="primary"
+                    onClick={() => handleEditUser(user)}
+                    sx={{ mr: 1 }}
+                  >
+                    Edit
+                  </Button>
+                  <Button
+                    variant="contained"
+                    color="secondary"
+                    onClick={() => handleDeleteUser(user.UserID)}
+                  >
+                    Delete
+                  </Button>
+                </TableCell>
+              </TableRow>
+            ))}
           </TableBody>
         </Table>
       </TableContainer>
       <Dialog
         open={createUserModalOpen}
         onClose={() => setCreateUserModalOpen(false)}
-        aria-labelledby="create-user-dialog-title"
+        aria-labelledby="create-dialog-title"
       >
-        <DialogTitle id="create-user-dialog-title">Create User</DialogTitle>
+        <DialogTitle id="create-dialog-title">Create User</DialogTitle>
         <DialogContent>
-          <div className="dialog-create-user-form">
-            <div className="form-field">
-              <label htmlFor="create-name">Name</label>
-              <TextField
-                type="text"
-                id="create-name"
-                value={newUser.UserName}
-                onChange={(e) => setNewUser({ ...newUser, UserName: e.target.value })}
-              />
-            </div>
-            <div className="form-field">
-              <label htmlFor="create-email">Email</label>
-              <TextField
-                type="email"
-                id="create-email"
-                value={newUser.UserEmail}
-                onChange={(e) => setNewUser({ ...newUser, UserEmail: e.target.value })}
-              />
-            </div>
-            <div className="form-field">
-              <label htmlFor="create-password">Password</label>
-              <TextField
-                type="password"
-                id="create-password"
-                value={newUser.UserPassword}
-                onChange={(e) => setNewUser({ ...newUser, UserPassword: e.target.value })}
-              />
-            </div>
-            <div className="form-field">
-              <label htmlFor="create-role">Role</label>
-              <Select
-                label="Role"
-                id="create-role"
-                value={newUser.RoleID}
-                onChange={(e) => setNewUser({ ...newUser, RoleID: e.target.value })}
-              >
-                <MenuItem value="">
-                  <em>Choose Role</em>
+          <Box className="dialog-create-user-form" sx={{ display: 'flex', flexDirection: 'column', gap: 2 }}>
+            <TextField
+              label="Name"
+              type="text"
+              value={newUser.UserName}
+              onChange={(e) =>
+                setNewUser((prevData) => ({
+                  ...prevData,
+                  UserName: e.target.value,
+                }))
+              }
+            />
+            <TextField
+              label="Email"
+              type="email"
+              value={newUser.UserEmail}
+              onChange={(e) =>
+                setNewUser((prevData) => ({
+                  ...prevData,
+                  UserEmail: e.target.value,
+                }))
+              }
+            />
+            <Select
+              label="Role"
+              value={newUser.RoleID}
+              onChange={(e) =>
+                setNewUser((prevData) => ({
+                  ...prevData,
+                  RoleID: e.target.value,
+                }))
+              }
+            >
+              <MenuItem value="">
+                <em>Choose Role</em>
+              </MenuItem>
+              {roles.map((role) => (
+                <MenuItem key={role.roleId} value={role.roleId}>
+                  {role.roleName}
                 </MenuItem>
-                {roles.map((role) => (
-                  <MenuItem key={role.roleId} value={role.roleId}>
-                    {role.roleName}
-                  </MenuItem>
-                ))}
-              </Select>
-            </div>
-          </div>
+              ))}
+            </Select>
+            {/* Password Field */}
+            <TextField
+              label="Password"
+              type="password"
+              value={newUser.UserPassword}
+              onChange={(e) =>
+                setNewUser((prevData) => ({
+                  ...prevData,
+                  UserPassword: e.target.value,
+                }))
+              }
+            />
+          </Box>
         </DialogContent>
         <DialogActions>
           <Button onClick={() => setCreateUserModalOpen(false)} color="primary">
@@ -255,13 +287,12 @@ function AdminUsers() {
       </Dialog>
       <Dialog
         open={deleteConfirmation.open}
-        onClose={cancelDelete}
-        aria-labelledby="alert-dialog-title"
-        aria-describedby="alert-dialog-description"
+        onClose={() => setDeleteConfirmation({ open: false, userId: null })}
+        aria-labelledby="delete-dialog-title"
       >
-        <DialogTitle id="alert-dialog-title">Confirm Deletion</DialogTitle>
+        <DialogTitle id="delete-dialog-title">Confirm Deletion</DialogTitle>
         <DialogContent>
-          <DialogContentText id="alert-dialog-description">
+          <DialogContentText id="delete-dialog-description">
             Are you sure you want to delete this user?
           </DialogContentText>
         </DialogContent>
@@ -281,54 +312,41 @@ function AdminUsers() {
       >
         <DialogTitle id="edit-dialog-title">Edit User</DialogTitle>
         <DialogContent>
-          <div className="dialog-edit-user-form">
-            <div className="form-field">
-              <label htmlFor="edit-name">Name</label>
-              <TextField
-                type="text"
-                id="edit-name"
-                value={updatedUserData.UserName}
-                onChange={(e) => handleInputChange('UserName', e.target.value)}
-              />
-            </div>
-            <div className="form-field">
-              <label htmlFor="edit-email">Email</label>
-              <TextField
-                type="email"
-                id="edit-email"
-                value={updatedUserData.UserEmail}
-                onChange={(e) => handleInputChange('UserEmail', e.target.value)}
-              />
-            </div>
-            <div className="form-field">
-              <label htmlFor="edit-role">Role</label>
-              <Select
-                label="Role"
-                id="edit-role"
-                value={updatedUserData.RoleID}
-                onChange={(e) => handleInputChange('RoleID', e.target.value)}
-              >
-                <MenuItem value="">
-                  <em>Choose Role</em>
+          <Box className="dialog-edit-user-form" sx={{ display: 'flex', flexDirection: 'column', gap: 2 }}>
+            <TextField
+              label="Name"
+              type="text"
+              value={updatedUserData.UserName}
+              onChange={(e) => handleInputChange('UserName', e.target.value)}
+            />
+            <TextField
+              label="Email"
+              type="email"
+              value={updatedUserData.UserEmail}
+              onChange={(e) => handleInputChange('UserEmail', e.target.value)}
+            />
+            <Select
+              label="Role"
+              value={updatedUserData.RoleID}
+              onChange={(e) => handleInputChange('RoleID', e.target.value)}
+            >
+              <MenuItem value="">
+                <em>Choose Role</em>
+              </MenuItem>
+              {roles.map((role) => (
+                <MenuItem key={role.roleId} value={role.roleId}>
+                  {role.roleName}
                 </MenuItem>
-                {roles.map((role) => (
-                  <MenuItem key={role.roleId} value={role.roleId}>
-                    {role.roleName}
-                  </MenuItem>
-                ))}
-              </Select>
-            </div>
+              ))}
+            </Select>
             {/* Password Field */}
-            <div className="form-field">
-              <label htmlFor="edit-password">Password</label>
-              <TextField
-                type="password"
-                id="edit-password"
-                value={updatedUserData.UserPassword}
-                onChange={(e) => handleInputChange('UserPassword', e.target.value)}
-              />
-            </div>
-          </div>
+            <TextField
+              label="Password"
+              type="password"
+              value={updatedUserData.UserPassword}
+              onChange={(e) => handleInputChange('UserPassword', e.target.value)}
+            />
+          </Box>
         </DialogContent>
         <DialogActions>
           <Button onClick={() => setEditingUserId(null)} color="primary">
@@ -339,7 +357,7 @@ function AdminUsers() {
           </Button>
         </DialogActions>
       </Dialog>
-    </div>
+    </Box>
   );
 }
 
