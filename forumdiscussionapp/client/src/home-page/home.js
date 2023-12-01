@@ -8,7 +8,7 @@ import Sidebar from './side-bar';
 import Navbar from './nav-bar';
 import AdminCourses from '../admin/AdminCourses';
 import AdminUsers from '../admin/Users/AdminUsers';
-import AdminRoles from '../admin/AdminRoles';
+import AdminRoles from '../admin/Roles/AdminRoles';
 import MCQForm from '../mcq-form/mcq-form';
 import MCQAnswerForm from '../mcq-form/mcq-answer-form';
 import ForumDiscussion from '../threads/Forumdiscussion';

@@ -4,24 +4,16 @@ import {
   Typography,
   TextField,
   Button,
-  List,
-  ListItem,
-  ListItemText,
-  ListItemSecondaryAction,
-  IconButton,
   Dialog,
   DialogTitle,
   DialogContent,
   DialogActions,
   Slide,
   CircularProgress,
-  Grid,
   Box,
 } from '@mui/material';
-import DeleteIcon from '@mui/icons-material/Delete';
-import EditIcon from '@mui/icons-material/Edit';
-import SaveIcon from '@mui/icons-material/Save';
-import CancelIcon from '@mui/icons-material/Cancel';
+import RoleListItem from './RoleListItem';
+import RoleList from './RoleList';
 import RoleUserModal from './RolesUserModal';
 
 const Transition = React.forwardRef(function Transition(props, ref) {
@@ -31,7 +23,6 @@ const Transition = React.forwardRef(function Transition(props, ref) {
 function AdminRoles() {
   const [roles, setRoles] = React.useState([]);
   const [newRoleName, setNewRoleName] = React.useState('');
-  const [editingRoleId, setEditingRoleId] = React.useState(null);
   const [updatedRoleName, setUpdatedRoleName] = React.useState('');
   const [deleteConfirmation, setDeleteConfirmation] = React.useState({ open: false, roleId: null });
   const [error, setError] = React.useState(null);
@@ -73,14 +64,12 @@ function AdminRoles() {
     }
   };
 
-  const handleEditRole = async (roleId) => {
+  const handleEditRole = async (roleId, updatedRoleName) => {
     try {
       const response = await axios.put(`http://localhost:8081/roles/roles/update/${roleId}`, {
         roleName: updatedRoleName,
       });
       console.log('Edit Role Response:', response.data);
-      setEditingRoleId(null);
-      setUpdatedRoleName('');
       fetchRoles();
     } catch (error) {
       console.error('Error updating role:', error);
@@ -114,94 +103,9 @@ function AdminRoles() {
     setDeleteConfirmation({ open: false, roleId: null });
   };
 
-  const handleEditRoleModal = (roleId) => {
-    setEditingRoleId(roleId);
-  };
-
   const handleRoleUserModal = (roleId) => {
     setUserModalOpen(true);
     setSelectedRoleId(roleId);
-  };
-
-  const renderRoleListItem = (role) => {
-    const isEditing = editingRoleId === role.roleId;
-
-    return (
-      <ListItem key={role.roleId} divider>
-        <Grid container alignItems="center" spacing={2}>
-          <Grid item xs={isEditing ? 6 : 8}>
-            {isEditing ? (
-              <TextField
-                type="text"
-                value={updatedRoleName}
-                onChange={(e) => setUpdatedRoleName(e.target.value)}
-                fullWidth
-                variant="outlined"
-                size="small"
-              />
-            ) : (
-              <ListItemText
-                primary={role.roleName}
-                onClick={() => handleRoleUserModal(role.roleId)}
-                sx={{ cursor: 'pointer', color: 'primary.main' }}
-              />
-            )}
-          </Grid>
-          <Grid item xs={isEditing ? 6 : 4}>
-            {isEditing ? (
-              <div>
-                <Button
-                  variant="contained"
-                  color="primary"
-                  startIcon={<SaveIcon />}
-                  onClick={() => handleEditRole(role.roleId)}
-                  size="small"
-                  style={{ marginRight: 8 }}
-                >
-                  Save
-                </Button>
-                <Button
-                  variant="contained"
-                  color="secondary"
-                  startIcon={<CancelIcon />}
-                  onClick={() => setEditingRoleId(null)}
-                  size="small"
-                >
-                  Cancel
-                </Button>
-              </div>
-            ) : (
-              <ListItemSecondaryAction>
-                <IconButton
-                  edge="end"
-                  aria-label="edit"
-                  onClick={() => handleEditRoleModal(role.roleId)}
-                  size="small"
-                >
-                  <EditIcon />
-                </IconButton>
-                <IconButton
-                  edge="end"
-                  aria-label="delete"
-                  onClick={() => handleDeleteRole(role.roleId)}
-                  size="small"
-                >
-                  <DeleteIcon />
-                </IconButton>
-                <IconButton
-                  edge="end"
-                  aria-label="users"
-                  onClick={() => handleRoleUserModal(role.roleId)}  
-                  size="small"
-                >
-                  {/* Add appropriate icon for managing users in the role */}
-                </IconButton>
-              </ListItemSecondaryAction>
-            )}
-          </Grid>
-        </Grid>
-      </ListItem>
-    );
   };
 
   return (
@@ -234,13 +138,7 @@ function AdminRoles() {
           Create
         </Button>
       </Box>
-      <List>
-        {roles.length > 0 ? (
-          roles.map((role) => renderRoleListItem(role))
-        ) : (
-          roles.length === 0 ? <ListItem>No roles available</ListItem> : null
-        )}
-      </List>
+      <RoleList roles={roles} handleEditRole={handleEditRole} handleDeleteRole={handleDeleteRole} handleRoleUserModal={handleRoleUserModal} />
       <Dialog
         open={deleteConfirmation.open}
         TransitionComponent={Transition}
