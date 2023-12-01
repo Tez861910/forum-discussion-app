@@ -205,7 +205,7 @@ function AdminRoles() {
   };
 
   return (
-    <Box sx={{ padding: 2, backgroundColor: 'background.default', minHeight: '100vh' }}>
+    <Box sx={{ padding: 2, backgroundColor: '#f0deff', minHeight: '100vh' }}>
       <Typography variant="h4" sx={{ marginBottom: 2 }}>
         Admin Roles Management
       </Typography>

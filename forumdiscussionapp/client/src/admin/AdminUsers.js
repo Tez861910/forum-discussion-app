@@ -2,24 +2,13 @@ import * as React from 'react';
 import axios from 'axios';
 import {
   Button,
-  Dialog,
-  DialogActions,
-  DialogContent,
-  DialogContentText,
-  DialogTitle,
-  TextField,
-  Select,
-  MenuItem,
-  Table,
-  TableBody,
-  TableCell,
-  TableContainer,
-  TableHead,
-  TableRow,
-  Paper,
   Box,
   Typography,
 } from '@mui/material';
+import UserTable from './UserTable';
+import CreateUserDialog from './CreateUserDialog';
+import EditUserDialog from './EditUserDialog';
+import DeleteConfirmationDialog from './DeleteConfirmationDialog';
 
 function AdminUsers() {
   const [users, setUsers] = React.useState([]);
@@ -160,7 +149,7 @@ function AdminUsers() {
   return (
     <Box sx={{ p: 2 }}>
       <Typography variant="h4" gutterBottom component="div">
-       Admin Users Management
+        User Management
       </Typography>
       <Button
         variant="contained"
@@ -170,193 +159,10 @@ function AdminUsers() {
       >
         Create User
       </Button>
-      <TableContainer component={Paper}>
-        <Table sx={{ minWidth: 650 }} aria-label="simple table">
-          <TableHead>
-            <TableRow>
-              <TableCell>Name</TableCell>
-              <TableCell>Email</TableCell>
-              <TableCell>Role</TableCell>
-              <TableCell>Actions</TableCell>
-            </TableRow>
-          </TableHead>
-          <TableBody>
-            {users.map((user) => (
-              <TableRow
-                key={user.UserID}
-                sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
-              >
-                <TableCell component="th" scope="row">
-                  {user.UserName}
-                </TableCell>
-                <TableCell>{user.UserEmail}</TableCell>
-                <TableCell>{getRoleName(user.RoleID)}</TableCell>
-                <TableCell>
-                  <Button
-                    variant="contained"
-                    color="primary"
-                    onClick={() => handleEditUser(user)}
-                    sx={{ mr: 1 }}
-                  >
-                    Edit
-                  </Button>
-                  <Button
-                    variant="contained"
-                    color="secondary"
-                    onClick={() => handleDeleteUser(user.UserID)}
-                  >
-                    Delete
-                  </Button>
-                </TableCell>
-              </TableRow>
-            ))}
-          </TableBody>
-        </Table>
-      </TableContainer>
-      <Dialog
-        open={createUserModalOpen}
-        onClose={() => setCreateUserModalOpen(false)}
-        aria-labelledby="create-dialog-title"
-      >
-        <DialogTitle id="create-dialog-title">Create User</DialogTitle>
-        <DialogContent>
-          <Box className="dialog-create-user-form" sx={{ display: 'flex', flexDirection: 'column', gap: 2 }}>
-            <TextField
-              label="Name"
-              type="text"
-              value={newUser.UserName}
-              onChange={(e) =>
-                setNewUser((prevData) => ({
-                  ...prevData,
-                  UserName: e.target.value,
-                }))
-              }
-            />
-            <TextField
-              label="Email"
-              type="email"
-              value={newUser.UserEmail}
-              onChange={(e) =>
-                setNewUser((prevData) => ({
-                  ...prevData,
-                  UserEmail: e.target.value,
-                }))
-              }
-            />
-            <Select
-              label="Role"
-              value={newUser.RoleID}
-              onChange={(e) =>
-                setNewUser((prevData) => ({
-                  ...prevData,
-                  RoleID: e.target.value,
-                }))
-              }
-            >
-              <MenuItem value="">
-                <em>Choose Role</em>
-              </MenuItem>
-              {roles.map((role) => (
-                <MenuItem key={role.roleId} value={role.roleId}>
-                  {role.roleName}
-                </MenuItem>
-              ))}
-            </Select>
-            {/* Password Field */}
-            <TextField
-              label="Password"
-              type="password"
-              value={newUser.UserPassword}
-              onChange={(e) =>
-                setNewUser((prevData) => ({
-                  ...prevData,
-                  UserPassword: e.target.value,
-                }))
-              }
-            />
-          </Box>
-        </DialogContent>
-        <DialogActions>
-          <Button onClick={() => setCreateUserModalOpen(false)} color="primary">
-            Cancel
-          </Button>
-          <Button onClick={handleCreateUser} color="primary">
-            Create
-          </Button>
-        </DialogActions>
-      </Dialog>
-      <Dialog
-        open={deleteConfirmation.open}
-        onClose={() => setDeleteConfirmation({ open: false, userId: null })}
-        aria-labelledby="delete-dialog-title"
-      >
-        <DialogTitle id="delete-dialog-title">Confirm Deletion</DialogTitle>
-        <DialogContent>
-          <DialogContentText id="delete-dialog-description">
-            Are you sure you want to delete this user?
-          </DialogContentText>
-        </DialogContent>
-        <DialogActions>
-          <Button onClick={cancelDelete} color="primary">
-            Cancel
-          </Button>
-          <Button onClick={confirmDelete} color="secondary">
-            Delete
-          </Button>
-        </DialogActions>
-      </Dialog>
-      <Dialog
-        open={editingUserId !== null}
-        onClose={() => setEditingUserId(null)}
-        aria-labelledby="edit-dialog-title"
-      >
-        <DialogTitle id="edit-dialog-title">Edit User</DialogTitle>
-        <DialogContent>
-          <Box className="dialog-edit-user-form" sx={{ display: 'flex', flexDirection: 'column', gap: 2 }}>
-            <TextField
-              label="Name"
-              type="text"
-              value={updatedUserData.UserName}
-              onChange={(e) => handleInputChange('UserName', e.target.value)}
-            />
-            <TextField
-              label="Email"
-              type="email"
-              value={updatedUserData.UserEmail}
-              onChange={(e) => handleInputChange('UserEmail', e.target.value)}
-            />
-            <Select
-              label="Role"
-              value={updatedUserData.RoleID}
-              onChange={(e) => handleInputChange('RoleID', e.target.value)}
-            >
-              <MenuItem value="">
-                <em>Choose Role</em>
-              </MenuItem>
-              {roles.map((role) => (
-                <MenuItem key={role.roleId} value={role.roleId}>
-                  {role.roleName}
-                </MenuItem>
-              ))}
-            </Select>
-            {/* Password Field */}
-            <TextField
-              label="Password"
-              type="password"
-              value={updatedUserData.UserPassword}
-              onChange={(e) => handleInputChange('UserPassword', e.target.value)}
-            />
-          </Box>
-        </DialogContent>
-        <DialogActions>
-          <Button onClick={() => setEditingUserId(null)} color="primary">
-            Cancel
-          </Button>
-          <Button onClick={() => handleUpdateUser(editingUserId)} color="primary">
-            Update
-          </Button>
-        </DialogActions>
-      </Dialog>
+      <UserTable users={users} handleEditUser={handleEditUser} handleDeleteUser={handleDeleteUser} getRoleName={getRoleName} />
+      <CreateUserDialog open={createUserModalOpen} handleClose={() => setCreateUserModalOpen(false)} handleCreateUser={handleCreateUser} newUser={newUser} setNewUser={setNewUser} roles={roles} />
+      <DeleteConfirmationDialog open={deleteConfirmation.open} handleClose={() => setDeleteConfirmation({ open: false, userId: null })} handleDelete={confirmDelete} />
+      <EditUserDialog open={editingUserId !== null} handleClose={() => setEditingUserId(null)} handleUpdateUser={handleUpdateUser} updatedUserData={updatedUserData} handleInputChange={handleInputChange} roles={roles} />
     </Box>
   );
 }
