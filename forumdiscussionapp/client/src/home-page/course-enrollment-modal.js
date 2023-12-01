@@ -161,7 +161,7 @@ const CourseEnrollmentModal = ({ isOpen, onRequestClose, onEnrollSuccess }) => {
       aria-labelledby="course-enrollment-modal-title"
       aria-describedby="course-enrollment-modal-description"
     >
-      <DialogTitle id="course-enrollment-modal-title">Enroll in Courses</DialogTitle>
+      <DialogTitle id="course-enrollment-modal-title">Course Enrollment</DialogTitle>
       <DialogContent dividers>
         {enrolledCoursesList.length > 0 && (
           <Box sx={{ marginBottom: 2 }}>

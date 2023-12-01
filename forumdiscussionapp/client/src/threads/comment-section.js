@@ -1,15 +1,18 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import axios from 'axios';
 import { Typography, TextareaAutosize, Button, Box, TextField } from '@mui/material';
-import Responses from './Responses';
+import Responses from './Responses'; 
 
-function CommentSection({ threadId, roleId, userId }) {
+function CommentSection({ threadId }) {
+  const roleId = localStorage.getItem('roleId');
+  const userId = localStorage.getItem('userId');
   const [comments, setComments] = useState([]);
   const [newComment, setNewComment] = useState('');
   const [fetchError, setFetchError] = useState(null);
   const [isLoading, setIsLoading] = useState(false);
   const [editingComment, setEditingComment] = useState(null);
   const [editedContent, setEditedContent] = useState('');
+  const [selectedComment, setSelectedComment] = useState(null);
 
   const fetchComments = async (threadId) => {
     try {
@@ -92,38 +95,37 @@ function CommentSection({ threadId, roleId, userId }) {
       ) : (
         <Box className="comment-list" sx={{ mt: 2 }}>
           {comments.length > 0 ? (
-         comments.map((comment) => (
-          <Box key={comment?.CommentID} className="comment-item" sx={{ mb: 2 }}>
-            {editingComment === comment?.CommentID ? (
-              <Box>
-                <TextField
-                  value={editedContent}
-                  onChange={(e) => setEditedContent(e.target.value)}
-                />
-                <Button onClick={() => handleEditComment(comment?.CommentID)}>
-                  Save
-                </Button>
-                <Button onClick={() => setEditingComment(null)}>
-                  Cancel
-                </Button>
-                <Responses commentId={comment?.CommentID} userId={userId} roleId={roleId} /> 
-              </Box>
-            ) : (
-              <>
-                {comment?.CommentContent}
-                {(roleId === '2' || (roleId === '3' && userId === comment?.UserID)) && (
-                  <Box sx={{ mt: 1 }}>
-                    <Button onClick={() => { setEditingComment(comment?.CommentID); setEditedContent(comment?.CommentContent); }}>
-                      Edit
+            comments.map((comment) => (
+              <Box key={comment?.CommentID} className="comment-item" sx={{ mb: 2 }}>
+                {editingComment === comment?.CommentID ? (
+                  <Box>
+                    <TextField
+                      value={editedContent}
+                      onChange={(e) => setEditedContent(e.target.value)}
+                    />
+                    <Button onClick={() => handleEditComment(comment?.CommentID)}>
+                      Save
                     </Button>
-                    <Button onClick={() => handleDeleteComment(comment?.CommentID)}>Delete</Button>
+                    <Button onClick={() => setEditingComment(null)}>
+                      Cancel
+                    </Button>
                   </Box>
+                ) : (
+                  <>
+                    {comment?.CommentContent}
+                    {(roleId === '2' || (roleId === '3' && userId === comment?.UserID)) && (
+                      <Box sx={{ mt: 1 }}>
+                        <Button onClick={() => { setEditingComment(comment?.CommentID); setEditedContent(comment?.CommentContent); }}>
+                          Edit
+                        </Button>
+                        <Button onClick={() => handleDeleteComment(comment?.CommentID)}>Delete</Button>
+                      </Box>
+                    )}
+                  </>
                 )}
-              </>
-            )}
-          </Box>
-        ))
-        
+                <Button onClick={() => setSelectedComment(comment)}>View Responses</Button>
+              </Box>
+            ))
           ) : (
             <p>No comments to display</p>
           )}
@@ -143,6 +145,14 @@ function CommentSection({ threadId, roleId, userId }) {
             Submit Comment
           </Button>
         </form>
+      )}
+
+      {selectedComment && (
+        <Responses
+          commentId={selectedComment.CommentID}
+          open={Boolean(selectedComment)}
+          onClose={() => setSelectedComment(null)}
+        />
       )}
     </Box>
   );
