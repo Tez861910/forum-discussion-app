@@ -9,6 +9,7 @@ const UserProfile = ({ isOpen, onClose }) => {
   const [newPassword, setNewPassword] = useState('');
   const [editing, setEditing] = useState(false);
   const [userData, setUserData] = useState({
+    
     UserName: 'N/A',
     UserEmail: 'N/A',
     RoleName: 'N/A',

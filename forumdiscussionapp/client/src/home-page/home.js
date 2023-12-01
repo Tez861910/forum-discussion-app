@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { useRoutes } from 'react-router-dom';
-import { Container, Typography, Paper, Box, Stack } from '@mui/material';
+import { Container, Typography, Paper, Box } from '@mui/material';
 import { useNavigate } from 'react-router-dom';
 import { useCookies } from 'react-cookie';
 import axios from 'axios';
@@ -188,6 +188,7 @@ const Home = () => {
           setEnrollmentModalOpen={setEnrollmentModalOpen}
           handleEnrollmentSuccess={handleEnrollmentSuccess}
           handleLogout={handleLogout}
+          isUserProfileOpen={isUserProfileOpen}
           setUserProfileOpen={setUserProfileOpen}
           roleId={roleId}
           isCoursesEnrolled={isCoursesEnrolled}

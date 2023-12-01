@@ -75,7 +75,7 @@ function CourseUserModal({ onClose, selectedCourseId, open }) {
 
   const handleAddUserToCourse = async () => {
     try {
-      if (!selectedUsersToAdd || selectedUsersToAdd.length === 0 || !selectedUsersToAdd[0]?.UserID) {
+      if (!selectedUsersToAdd || selectedUsersToAdd.length === 0 || !selectedUsersToAdd[0]?.userId) {
         console.error('Invalid user selected');
         return;
       }
@@ -103,12 +103,12 @@ function CourseUserModal({ onClose, selectedCourseId, open }) {
 
   const confirmRemoveUser = async () => {
     try {
-      if (!removeConfirmation.user || !removeConfirmation.user.UserID) {
+      if (!removeConfirmation.user || !removeConfirmation.user.userId) {
         console.error('Invalid user selected for removal');
         return;
       }
 
-      const userId = removeConfirmation.user.UserID;
+      const userId = removeConfirmation.user.userId;
 
       const response = await axios.patch(
         `http://localhost:8081/courses/courses/${selectedCourseId}/enrollments/${userId}`
@@ -138,7 +138,7 @@ function CourseUserModal({ onClose, selectedCourseId, open }) {
       open={open}
       TransitionComponent={Transition}
       keepMounted
-      onClose={() => onClose()}  // Use the callback function to close the modal
+      onClose={() => onClose()} 
       aria-labelledby="user-modal-title"
       aria-describedby="user-modal-description"
     >

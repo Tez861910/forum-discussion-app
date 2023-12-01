@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import * as React from 'react';
 import axios from 'axios';
 import {
   Typography,
@@ -16,30 +16,30 @@ import {
   Slide,
   CircularProgress,
   Grid,
+  Box,
 } from '@mui/material';
 import DeleteIcon from '@mui/icons-material/Delete';
 import EditIcon from '@mui/icons-material/Edit';
 import SaveIcon from '@mui/icons-material/Save';
 import CancelIcon from '@mui/icons-material/Cancel';
 import RoleUserModal from './RolesUserModal';
-import './adminrole.css';
 
 const Transition = React.forwardRef(function Transition(props, ref) {
   return <Slide direction="up" ref={ref} {...props} />;
 });
 
 function AdminRoles() {
-  const [roles, setRoles] = useState([]);
-  const [newRoleName, setNewRoleName] = useState('');
-  const [editingRoleId, setEditingRoleId] = useState(null);
-  const [updatedRoleName, setUpdatedRoleName] = useState('');
-  const [deleteConfirmation, setDeleteConfirmation] = useState({ open: false, roleId: null });
-  const [error, setError] = useState(null);
-  const [loading, setLoading] = useState(false);
-  const [userModalOpen, setUserModalOpen] = useState(false);
-  const [selectedRoleId, setSelectedRoleId] = useState(null);
+  const [roles, setRoles] = React.useState([]);
+  const [newRoleName, setNewRoleName] = React.useState('');
+  const [editingRoleId, setEditingRoleId] = React.useState(null);
+  const [updatedRoleName, setUpdatedRoleName] = React.useState('');
+  const [deleteConfirmation, setDeleteConfirmation] = React.useState({ open: false, roleId: null });
+  const [error, setError] = React.useState(null);
+  const [loading, setLoading] = React.useState(false);
+  const [userModalOpen, setUserModalOpen] = React.useState(false);
+  const [selectedRoleId, setSelectedRoleId] = React.useState(null);
 
-  useEffect(() => {
+  React.useEffect(() => {
     fetchRoles();
   }, []);
 
@@ -142,7 +142,8 @@ function AdminRoles() {
             ) : (
               <ListItemText
                 primary={role.roleName}
-                onClick={() => handleRoleUserModal(role.roleId)} 
+                onClick={() => handleRoleUserModal(role.roleId)}
+                sx={{ cursor: 'pointer', color: 'primary.main' }}
               />
             )}
           </Grid>
@@ -204,14 +205,14 @@ function AdminRoles() {
   };
 
   return (
-    <div className="admin-roles-container">
-      <Typography variant="h4" style={{ marginBottom: 16 }}>
-        Manage Roles
+    <Box sx={{ padding: 2, backgroundColor: 'background.default', minHeight: '100vh' }}>
+      <Typography variant="h4" sx={{ marginBottom: 2 }}>
+        Admin Roles Management
       </Typography>
-      {error && <Typography variant="body1" color="error" style={{ marginBottom: 16 }}>{error}</Typography>}
-      {loading && <CircularProgress style={{ marginBottom: 16 }} />}
-      <div style={{ marginBottom: 16 }}>
-        <Typography variant="h6" style={{ marginBottom: 8 }}>
+      {error && <Typography variant="body1" color="error" sx={{ marginBottom: 2 }}>{error}</Typography>}
+      {loading && <CircularProgress sx={{ marginBottom: 2 }} />}
+      <Box sx={{ marginBottom: 2 }}>
+        <Typography variant="h6" sx={{ marginBottom: 1 }}>
           Create Role
         </Typography>
         <TextField
@@ -222,7 +223,7 @@ function AdminRoles() {
           value={newRoleName}
           onChange={(e) => setNewRoleName(e.target.value)}
           size="small"
-          style={{ marginBottom: 8 }}
+          sx={{ marginBottom: 1 }}
         />
         <Button
           variant="contained"
@@ -232,7 +233,7 @@ function AdminRoles() {
         >
           Create
         </Button>
-      </div>
+      </Box>
       <List>
         {roles.length > 0 ? (
           roles.map((role) => renderRoleListItem(role))
@@ -270,7 +271,7 @@ function AdminRoles() {
           open={userModalOpen}
         />
       )}
-    </div>
+    </Box>
   );
 }
 

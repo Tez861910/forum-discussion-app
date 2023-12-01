@@ -16,16 +16,15 @@ const Sidebar = ({
   setEnrollmentModalOpen,
   handleEnrollmentSuccess,
   handleLogout,
+  isUserProfileOpen,
   setUserProfileOpen,
-  onCourseSelect,
-  roleId,
+  roleId,        
 }) => {
-  const [isUserProfileOpen, setLocalUserProfileOpen] = React.useState(false);
   const [isAvatarModalOpen, setAvatarModalOpen] = React.useState(false); 
 
   const handleUserProfileClick = () => {
-    setLocalUserProfileOpen(true);
     setUserProfileOpen(true);
+    
   };
 
   const handleEnrollNowClick = () => {
@@ -35,7 +34,7 @@ const Sidebar = ({
   };
 
   const handleModalClose = () => {
-    setLocalUserProfileOpen(false);
+    
     setUserProfileOpen(false);
   };
 
@@ -125,7 +124,7 @@ const Sidebar = ({
 
         {/* User Profile Modal */}
         <UserProfile 
-          open={isUserProfileOpen}
+          isOpen={isUserProfileOpen}
           onClose={handleModalClose} 
         />
 
@@ -146,9 +145,10 @@ Sidebar.propTypes = {
   setEnrollmentModalOpen: PropTypes.func.isRequired,
   handleEnrollmentSuccess: PropTypes.func.isRequired,
   handleLogout: PropTypes.func.isRequired,
-  setUserProfileOpen: PropTypes.func.isRequired,
-  onCourseSelect: PropTypes.func.isRequired,
+  isUserProfileOpen: PropTypes.bool.isRequired,     
+  setUserProfileOpen: PropTypes.func.isRequired,    
   roleId: PropTypes.string.isRequired,
 };
+
 
 export default Sidebar;

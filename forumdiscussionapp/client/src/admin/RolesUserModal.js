@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from 'react';
+import * as React from 'react';
 import axios from 'axios';
 import {
   Dialog,
@@ -12,27 +12,24 @@ import {
   List,
   ListItem,
   ListItemText,
-  ListItemSecondaryAction,
-  IconButton,
   Grid,
   Typography,
+  Box,
 } from '@mui/material';
 import CloseIcon from '@mui/icons-material/Close';
 import ArrowDropDownIcon from '@mui/icons-material/ArrowDropDown';
-import DeleteIcon from '@mui/icons-material/Delete';
 
 const Transition = React.forwardRef(function Transition(props, ref) {
   return <Slide direction="up" ref={ref} {...props} />;
 });
 
 function RoleUserModal({ open, onClose, selectedRoleId }) {
-  const [selectedUsersToAdd, setSelectedUsersToAdd] = useState([]);
-  const [enrolledUsers, setEnrolledUsers] = useState([]);
-  const [allUsers, setAllUsers] = useState([]);
-  const [removeConfirmation, setRemoveConfirmation] = useState({ open: false, user: null });
-  const fetchTimeoutRef = useRef(null);
+  const [selectedUsersToAdd, setSelectedUsersToAdd] = React.useState([]);
+  const [enrolledUsers, setEnrolledUsers] = React.useState([]);
+  const [allUsers, setAllUsers] = React.useState([]);
+  const [removeConfirmation, setRemoveConfirmation] = React.useState({ open: false, user: null });
 
-  useEffect(() => {
+  React.useEffect(() => {
     if (open) {
       fetchRoleUsers();
       fetchAllUsers();
@@ -56,8 +53,11 @@ function RoleUserModal({ open, onClose, selectedRoleId }) {
   const fetchRoleUsers = async () => {
     try {
       const response = await axios.get(`http://localhost:8081/roles/roles/enrollments/${selectedRoleId}`);
-      if (response.data && response.data.enrollments) {
-        const roleUsersData = response.data.enrollments[selectedRoleId] || [];
+      if (response.data && typeof response.data.enrollments === 'object') {
+        const enrollmentsData = response.data.enrollments;
+        const roleUsersData = Object.values(enrollmentsData).flatMap((enrollments) =>
+          enrollments.map((user) => ({ UserID: user.UserID, UserName: user.UserName }))
+        );
         setEnrolledUsers(roleUsersData);
       } else {
         console.error('Invalid response data format (Role Users):', response.data);
@@ -77,6 +77,7 @@ function RoleUserModal({ open, onClose, selectedRoleId }) {
       const userId = selectedUsersToAdd[0].userId;
 
       const response = await axios.post(`http://localhost:8081/roles/roles/${selectedRoleId}/enroll`, {
+        roleId:selectedRoleId,
         userId: userId,
       });
 
@@ -113,7 +114,6 @@ function RoleUserModal({ open, onClose, selectedRoleId }) {
   const cancelRemoveUser = () => {
     setRemoveConfirmation({ open: false, user: null });
   };
-
   const DropdownIndicator = ({ isOpen }) => (
     <div style={{ display: 'flex', alignItems: 'center', paddingRight: '8px' }}>
       <ArrowDropDownIcon color={isOpen ? 'primary' : 'action'} />
@@ -129,48 +129,44 @@ function RoleUserModal({ open, onClose, selectedRoleId }) {
       aria-labelledby="user-modal-title"
       aria-describedby="user-modal-description"
     >
-      <DialogTitle id="user-modal-title">{`Users in Role ${selectedRoleId}`}</DialogTitle>
+      <DialogTitle id="user-modal-title">{`Users in Role `}</DialogTitle>
       <DialogContent>
         <Grid container spacing={2}>
           <Grid item xs={12}>
-          <List>
-  {enrolledUsers.map((user) => (
-    <ListItem key={user.UserID}>
-      <ListItemText primary={user.UserName} />
-      <ListItemSecondaryAction>
-        <IconButton onClick={() => handleRemoveUserConfirmation(user)}>
-          <DeleteIcon />
-        </IconButton>
-      </ListItemSecondaryAction>
-    </ListItem>
-  ))}
-</List>
-
+            <List>
+              {enrolledUsers.map((user) => (
+                <ListItem key={user.UserID}>
+                  <ListItemText primary={user.UserName} />
+                  <Button onClick={() => handleRemoveUserConfirmation(user)}>
+                    <CloseIcon />
+                  </Button>
+                </ListItem>
+              ))}
+            </List>
           </Grid>
           <Grid item xs={12}>
-          <Autocomplete
-  options={allUsers || []}
-  getOptionLabel={(option) => (option?.UserName) || ''}
-  isOptionEqualToValue={(option, value) => option?.UserID === value?.UserID}
-  onChange={(event, value) => setSelectedUsersToAdd(value)}
-  renderInput={(params) => (
-    <TextField
-      {...params}
-      label="Add Users"
-      variant="outlined"
-      fullWidth
-      size="small"
-    />
-  )}
-  value={selectedUsersToAdd}
-  multiple
-  renderOption={(props, option) => (
-    <li {...props}>
-      <div>{option?.UserName}</div>
-    </li>
-  )}
-/>
-
+            <Autocomplete
+              options={allUsers || []}
+              getOptionLabel={(option) => (option?.UserName) || ''}
+              isOptionEqualToValue={(option, value) => option?.UserID === value?.UserID}
+              onChange={(event, value) => setSelectedUsersToAdd(value)}
+              renderInput={(params) => (
+                <TextField
+                  {...params}
+                  label="Add Users"
+                  variant="outlined"
+                  fullWidth
+                  size="small"
+                />
+              )}
+              value={selectedUsersToAdd}
+              multiple
+              renderOption={(props, option) => (
+                <li {...props}>
+                  <div>{option?.UserName}</div>
+                </li>
+              )}
+            />
           </Grid>
         </Grid>
       </DialogContent>
@@ -184,7 +180,7 @@ function RoleUserModal({ open, onClose, selectedRoleId }) {
           onClick={handleAddUserToRole}
           size="small"
         >
-          Add User
+          Enroll Users
         </Button>
       </DialogActions>
 
