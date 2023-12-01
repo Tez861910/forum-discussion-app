@@ -6,7 +6,7 @@ import { useCookies } from 'react-cookie';
 import axios from 'axios';
 import Sidebar from './side-bar';
 import Navbar from './nav-bar';
-import AdminCourses from '../admin/AdminCourses';
+import AdminCourses from '../admin/Courses/AdminCourses';
 import AdminUsers from '../admin/Users/AdminUsers';
 import AdminRoles from '../admin/Roles/AdminRoles';
 import MCQForm from '../mcq-form/mcq-form';

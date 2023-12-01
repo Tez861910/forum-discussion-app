@@ -2,19 +2,14 @@ import * as React from 'react';
 import axios from 'axios';
 import {
   Typography,
-  TextField,
-  Button,
-  Dialog,
-  DialogTitle,
-  DialogContent,
-  DialogActions,
   Slide,
   CircularProgress,
   Box,
 } from '@mui/material';
-import RoleListItem from './RoleListItem';
 import RoleList from './RoleList';
 import RoleUserModal from './RolesUserModal';
+import DeleteConfirmationDialog from './DeleteConfirmationDialog3';
+import CreateRoleSection from './CreateRoleSection';
 
 const Transition = React.forwardRef(function Transition(props, ref) {
   return <Slide direction="up" ref={ref} {...props} />;
@@ -52,17 +47,40 @@ function AdminRoles() {
     }
   };
 
-  const handleCreateRole = async () => {
+  const handleCreateRole = async (newRoleName) => {
     try {
-      const response = await axios.post('http://localhost:8081/roles/roles/create', { roleName: newRoleName });
-      console.log('Create Role Response:', response.data);
-      setNewRoleName('');
-      fetchRoles();
+      const trimmedRoleName = newRoleName.trim();
+  
+      if (!trimmedRoleName) {
+        console.error('Role name cannot be empty.');
+        setError('Role name cannot be empty.');
+        return;
+      }
+  
+      console.log('Creating role:', trimmedRoleName);
+  
+      const response = await axios.post('http://localhost:8081/roles/roles/create', { roleName: trimmedRoleName });
+  
+      console.log('Create Role Response:', response);
+  
+      if (response.data && response.data.message === 'Role created successfully') {
+        console.log('Role created successfully');
+        setNewRoleName('');
+        fetchRoles();
+      } else {
+        console.error('Error creating role:', response.data);
+        if (response.data && response.data.error) {
+          setError(response.data.error);
+        } else {
+          setError('Error creating role. Please try again.');
+        }
+      }
     } catch (error) {
       console.error('Error creating role:', error);
       setError('Error creating role. Please try again.');
     }
   };
+  
 
   const handleEditRole = async (roleId, updatedRoleName) => {
     try {
@@ -115,53 +133,13 @@ function AdminRoles() {
       </Typography>
       {error && <Typography variant="body1" color="error" sx={{ marginBottom: 2 }}>{error}</Typography>}
       {loading && <CircularProgress sx={{ marginBottom: 2 }} />}
-      <Box sx={{ marginBottom: 2 }}>
-        <Typography variant="h6" sx={{ marginBottom: 1 }}>
-          Create Role
-        </Typography>
-        <TextField
-          type="text"
-          label="Role Name"
-          variant="outlined"
-          fullWidth
-          value={newRoleName}
-          onChange={(e) => setNewRoleName(e.target.value)}
-          size="small"
-          sx={{ marginBottom: 1 }}
-        />
-        <Button
-          variant="contained"
-          color="primary"
-          onClick={handleCreateRole}
-          size="small"
-        >
-          Create
-        </Button>
-      </Box>
+      <CreateRoleSection handleCreateRole={handleCreateRole} />
       <RoleList roles={roles} handleEditRole={handleEditRole} handleDeleteRole={handleDeleteRole} handleRoleUserModal={handleRoleUserModal} />
-      <Dialog
+      <DeleteConfirmationDialog
         open={deleteConfirmation.open}
-        TransitionComponent={Transition}
-        keepMounted
-        onClose={cancelDelete}
-        aria-labelledby="alert-dialog-slide-title"
-        aria-describedby="alert-dialog-slide-description"
-      >
-        <DialogTitle id="alert-dialog-slide-title">Confirm Deletion</DialogTitle>
-        <DialogContent>
-          <Typography variant="body1" gutterBottom>
-            Are you sure you want to delete this role?
-          </Typography>
-        </DialogContent>
-        <DialogActions>
-          <Button onClick={cancelDelete} color="primary">
-            Cancel
-          </Button>
-          <Button onClick={confirmDelete} color="primary">
-            Confirm
-          </Button>
-        </DialogActions>
-      </Dialog>
+        handleCancel={cancelDelete}
+        handleConfirm={confirmDelete}
+      />
       {userModalOpen && (
         <RoleUserModal
           onClose={() => setUserModalOpen(false)}
