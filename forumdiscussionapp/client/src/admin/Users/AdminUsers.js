@@ -92,15 +92,22 @@ function AdminUsers() {
       UserPassword: '',
     });
   };
-
-  const handleUpdateUser = (userId) => {
+  
+  const handleUpdateUser = () => {
+    // Ensure updatedUserData is valid
     if (!updatedUserData.UserName || !updatedUserData.UserEmail || updatedUserData.RoleID === '') {
       setEditingUserId(null);
       return;
     }
-
+  
+    // Ensure editingUserId is not null or undefined
+    if (editingUserId === null || editingUserId === undefined) {
+      console.error('Invalid user ID for update');
+      return;
+    }
+  
     axios
-      .put(`http://localhost:8081/users/users/update/${userId}`, updatedUserData)
+      .put(`http://localhost:8081/users/users/update/${editingUserId}`, updatedUserData)
       .then(() => {
         fetchUsers();
         setEditingUserId(null);
@@ -110,6 +117,7 @@ function AdminUsers() {
         console.error('Error updating user:', error);
       });
   };
+  
 
   const handleDeleteUser = (userId) => {
     setDeleteConfirmation({ open: true, userId });
