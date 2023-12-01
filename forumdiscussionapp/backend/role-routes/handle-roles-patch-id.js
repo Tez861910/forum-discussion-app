@@ -1,9 +1,9 @@
 const { query } = require('../db');
 
 async function handleRolesPatchId(req, res) {
-  try {
-    const { id } = req.params;
+  const { id } = req.params;
 
+  try {
     const updateSql = 'UPDATE roles SET IsDeleted = TRUE WHERE RoleID = ?';
     const [result] = await query(updateSql, [id]);
 

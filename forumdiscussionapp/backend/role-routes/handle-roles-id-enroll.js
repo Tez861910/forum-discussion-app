@@ -1,10 +1,9 @@
 const { query } = require('../db');
 
 async function handleRolesIdEnroll(req, res) {
-  try {
-    const userId = req.body.userId;
-    const roleId = req.params.roleId;
+  const { userId, roleId } = req.params;
 
+  try {
     // Check if the user already has the role
     const existingRoleSql = 'SELECT UserRoleID FROM userroles WHERE UserID = ? AND RoleID = ?';
     const [existingRoleResult] = await query(existingRoleSql, [userId, roleId]);
