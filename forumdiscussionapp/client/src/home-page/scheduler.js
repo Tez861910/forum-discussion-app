@@ -3,19 +3,26 @@ import {
   Typography,
   Button,
   TextField,
-  Grid,
   Dialog,
   DialogActions,
   DialogContent,
   DialogContentText,
   DialogTitle,
+  Grid,
+  Box,
+  Paper,
 } from '@mui/material';
-import { DatePicker } from '@mui/lab';
+import DatePicker from 'react-datepicker';
+import 'react-datepicker/dist/react-datepicker.css';
+import Calendar from 'react-calendar';
+import 'react-calendar/dist/Calendar.css';
 import axios from 'axios';
 
 const API_URL = 'http://localhost:8081';
 
-const Scheduler = ({ roleId, userId , selectedCourse: courseId }) => {
+const Scheduler = ({ selectedCourse: courseId }) => {
+  const userId = localStorage.getItem('userId');
+  const roleId = localStorage.getItem('roleId');
   const [events, setEvents] = useState([]);
   const [open, setOpen] = useState(false);
   const [selectedDate, setSelectedDate] = useState(new Date());
@@ -25,11 +32,12 @@ const Scheduler = ({ roleId, userId , selectedCourse: courseId }) => {
     EventDate: '',
     CourseId: '',
   });
+  const [selectedEventId, setSelectedEventId] = useState(null);
 
   const fetchEvents = async () => {
     try {
       const response = await axios.get(`${API_URL}/events/events/get`);
-      setEvents(response.data);
+      setEvents(response.data.events);
     } catch (error) {
       console.error('Error fetching events:', error);
     }
@@ -38,29 +46,61 @@ const Scheduler = ({ roleId, userId , selectedCourse: courseId }) => {
   const createEvent = async () => {
     try {
       const response = await axios.post(`${API_URL}/events/events/create`, {
-        ...newEvent,
-        EventDate: selectedDate,
-        UserID: userId,
-        CourseID:courseId,
+        EventTitle: newEvent.EventTitle,
+        EventDescription: newEvent.EventDescription,
+        EventDate: selectedDate.toISOString(),
+        CourseID: parseInt(newEvent.CourseId), 
+        UserID: parseInt(userId),
       });
-      setEvents([...events, response.data]);
-      setNewEvent({ EventTitle: '', EventDescription: '', EventDate: '', CourseId: '' });
-      handleClose();
+
+      if (response.data.success) {
+        setEvents([...events, response.data.event]);
+        setNewEvent({
+          EventTitle: '',
+          EventDescription: '',
+          EventDate: '',
+          CourseId: '',
+        });
+        handleClose();
+      } else {
+        console.error('Error creating event:', response.data.error);
+        // Handle error scenarios, show a message, etc.
+      }
     } catch (error) {
       console.error('Error creating event:', error);
     }
   };
 
-  const editEvent = async (eventId) => {
+  const editEvent = async () => {
     try {
-      const response = await axios.put(`${API_URL}/events/events/edit/${eventId}`, {
-        ...newEvent,
-        EventDate: selectedDate,
-        UserID: userId,
-      });
-      setEvents(events.map(event => event.EventID === eventId ? response.data : event));
-      setNewEvent({ EventTitle: '', EventDescription: '', EventDate: '', CourseId: '' });
-      handleClose();
+      const response = await axios.put(
+        `${API_URL}/events/events/edit/${selectedEventId}`,
+        {
+          EventTitle: newEvent.EventTitle,
+          EventDescription: newEvent.EventDescription,
+          EventDate: selectedDate.toISOString(),
+          CourseID: parseInt(newEvent.CourseId), 
+          UserID: parseInt(userId),
+        }
+      );
+
+      if (response.data.success) {
+        setEvents((prevEvents) =>
+          prevEvents.map((event) =>
+            event.EventID === selectedEventId ? response.data.event : event
+          )
+        );
+        setNewEvent({
+          EventTitle: '',
+          EventDescription: '',
+          EventDate: '',
+          CourseId: '',
+        });
+        handleClose();
+      } else {
+        console.error('Error editing event:', response.data.error);
+        // Handle error scenarios, show a message, etc.
+      }
     } catch (error) {
       console.error('Error editing event:', error);
     }
@@ -69,10 +109,26 @@ const Scheduler = ({ roleId, userId , selectedCourse: courseId }) => {
   const deleteEvent = async (eventId) => {
     try {
       await axios.delete(`${API_URL}/events/events/delete/${eventId}`);
-      setEvents(events.filter(event => event.EventID !== eventId));
+      setEvents((prevEvents) =>
+        prevEvents.filter((event) => event.EventID !== eventId)
+      );
+      handleClose();
     } catch (error) {
       console.error('Error deleting event:', error);
     }
+  };
+
+  const handleEditClick = (eventId) => {
+    const selectedEvent = events.find((event) => event.EventID === eventId);
+    setSelectedEventId(eventId);
+    setNewEvent({
+      EventTitle: selectedEvent.EventTitle,
+      EventDescription: selectedEvent.EventDescription,
+      EventDate: selectedEvent.EventDate,
+      CourseId: selectedEvent.CourseID.toString(), // Convert CourseID to string
+    });
+    setSelectedDate(new Date(selectedEvent.EventDate));
+    handleClickOpen();
   };
 
   const handleClickOpen = () => {
@@ -81,6 +137,7 @@ const Scheduler = ({ roleId, userId , selectedCourse: courseId }) => {
 
   const handleClose = () => {
     setOpen(false);
+    setSelectedEventId(null);
   };
 
   useEffect(() => {
@@ -93,100 +150,118 @@ const Scheduler = ({ roleId, userId , selectedCourse: courseId }) => {
         University Events Scheduler
       </Typography>
 
-      {/* Admins and Teachers can create events */}
-      {[1, 2].includes(roleId) && (
-        <div>
-          <Button variant="contained" sx={{ mt: 2 }} onClick={handleClickOpen}>
+      {roleId === '1' || roleId === '2' ? (
+        <Box
+          sx={{
+            display: 'flex',
+            flexDirection: 'column',
+            alignItems: 'flex-start',
+            mb: 2,
+          }}
+        >
+          <Button variant="contained" onClick={handleClickOpen}>
             Create Event
           </Button>
-          <Dialog open={open} onClose={handleClose} aria-labelledby="form-dialog-title">
-            <DialogTitle id="form-dialog-title">Create New Event</DialogTitle>
-            <DialogContent>
-              <DialogContentText>
-                Please fill out the form below to create a new event.
-              </DialogContentText>
-              <Grid container spacing={2}>
-                <Grid item xs={12} sm={6}>
-                  <TextField
-                    label="Title"
-                    variant="outlined"
-                    fullWidth
-                    value={newEvent.EventTitle}
-                    onChange={(e) => setNewEvent({ ...newEvent, EventTitle: e.target.value })}
-                    sx={{ my: 1 }}
-                  />
-                </Grid>
-                <Grid item xs={12} sm={6}>
-                  <TextField
-                    label="Description"
-                    variant="outlined"
-                    fullWidth
-                    multiline
-                    rows={3}
-                    value={newEvent.EventDescription}
-                    onChange={(e) => setNewEvent({ ...newEvent, EventDescription: e.target.value })}
-                    sx={{ my: 1 }}
-                  />
-                </Grid>
-                <Grid item xs={12} sm={6}>
-                  <DatePicker
-                    label="Date"
-                    value={selectedDate}
-                    onChange={(newValue) => {
-                      setSelectedDate(newValue);
-                      setNewEvent({ ...newEvent, EventDate: newValue.toISOString() });
-                    }}
-                    renderInput={(params) => <TextField {...params} />}
-                  />
-                </Grid>
-                {/* Teachers can select the courseId */}
-                {roleId === 2 && (
-                  <Grid item xs={12} sm={6}>
-                    <TextField
-                      label="Course ID"
-                      variant="outlined"
-                      fullWidth
-                      value={newEvent.CourseId}
-                      onChange={(e) => setNewEvent({ ...newEvent, CourseId: e.target.value })}
-                      sx={{ my: 1 }}
-                    />
-                  </Grid>
-                )}
-              </Grid>
-            </DialogContent>
-            <DialogActions>
-              <Button onClick={handleClose} color="primary">
-                Cancel
-              </Button>
-              <Button onClick={createEvent} color="primary">
-                Create
-              </Button>
-            </DialogActions>
-          </Dialog>
-        </div>
-      )}
+        </Box>
+      ) : null}
 
-      {/* Display all events */}
-      <div sx={{ my: 3 }}>
-        <Typography variant="h5">Upcoming Events</Typography>
-        {events.map((event) => (
-          <div key={event.EventID} sx={{ my: 2 }}>
-            <Typography variant="h6">{event.EventTitle}</Typography>
-            <Typography>{event.EventDescription}</Typography>
-            <Typography>Date: {event.EventDate}</Typography>
-            {roleId === 1 && (
-              <div>
-                <Button variant="contained" color="primary" onClick={() => editEvent(event.EventID)}>
-                  Edit
-                </Button>
-                <Button variant="contained" color="secondary" onClick={() => deleteEvent(event.EventID)}>
-                  Delete
-                </Button>
+      <Box
+        sx={{
+          display: 'flex',
+          justifyContent: 'space-between',
+          alignItems: 'flex-start',
+          flexDirection: 'row',
+          mt: 4,
+        }}
+      >
+        <Paper elevation={3} sx={{ width: '60%', p: 2 }}>
+          <Typography variant="h6">Calendar</Typography>
+          <Calendar />
+        </Paper>
+
+        <Paper elevation={3} sx={{ width: '35%', p: 2 }}>
+          <Typography variant="h6">Events</Typography>
+          {events.length > 0 ? (
+            events.map((event) => (
+              <div key={event.EventID} sx={{ my: 2 }}>
+                <Typography variant="subtitle1">{
+                <Typography variant="subtitle1">{event.EventTitle}</Typography>
+                <Typography variant="body2">{event.EventDescription}</Typography>
+                <Typography variant="body2">
+                  {new Date(event.EventDate).toLocaleDateString()}
+                </Typography>
+                <div>
+                  {(roleId === '1' || (roleId === '2' && userId === event.UserID)) && (
+                    <>
+                      <Button onClick={() => handleEditClick(event.EventID)}>Edit</Button>
+                      <Button onClick={() => deleteEvent(event.EventID)}>Delete</Button>
+                    </>
+                  )}
+                </div>
               </div>
-            )}
-          </div>
-        ))}
-      </div>
+            ))
+          ) : (
+            <Typography variant="body2">No events to show</Typography>
+          )}
+        </Paper>
+      </Box>
+
+      <Dialog open={open} onClose={handleClose} aria-labelledby="form-dialog-title">
+        <DialogTitle id="form-dialog-title">
+          {selectedEventId ? 'Edit Event' : 'Create New Event'}
+        </DialogTitle>
+        <DialogContent>
+          <DialogContentText>
+            To create a new event, please enter the event title, description, and date here.
+          </DialogContentText>
+          <Grid container spacing={2}>
+            <Grid item xs={12} sm={6}>
+              <TextField
+                autoFocus
+                margin="dense"
+                id="title"
+                label="Event Title"
+                type="text"
+                fullWidth
+                value={newEvent.EventTitle}
+                onChange={(e) => setNewEvent({ ...newEvent, EventTitle: e.target.value })}
+              />
+            </Grid>
+            <Grid item xs={12} sm={6}>
+              <TextField
+                margin="dense"
+                id="description"
+                label="Event Description"
+                type="text"
+                fullWidth
+                value={newEvent.EventDescription}
+                onChange={(e) =>
+                  setNewEvent({ ...newEvent, EventDescription: e.target.value })
+                }
+              />
+            </Grid>
+            <Grid item xs={12} sm={6}>
+              <DatePicker selected={selectedDate} onChange={(date) => setSelectedDate(date)} />
+            </Grid>
+            <Grid item xs={12} sm={6}>
+              <TextField
+                label="Course ID"
+                variant="outlined"
+                fullWidth
+                value={newEvent.CourseId}
+                onChange={(e) => setNewEvent({ ...newEvent, CourseId: e.target.value })}
+                sx={{ my: 1 }}
+              />
+            </Grid>
+          </Grid>
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={handleClose}>Cancel</Button>
+          <Button onClick={selectedEventId ? editEvent : createEvent}>
+            {selectedEventId ? 'Edit Event' : 'Create Event'}
+          </Button>
+        </DialogActions>
+      </Dialog>
     </div>
   );
 };
