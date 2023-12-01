@@ -194,7 +194,7 @@ function AdminCourses() {
   return (
     <Box sx={{ padding: 2, backgroundColor: 'background.default', minHeight: '100vh' }}>
       <Typography variant="h4" sx={{ marginBottom: 2 }}>
-        Manage Courses
+        Admin Courses Management
       </Typography>
       {error && <Typography variant="body1" color="error" sx={{ marginBottom: 2 }}>{error}</Typography>}
       {loading && <CircularProgress sx={{ marginBottom: 2 }} />}

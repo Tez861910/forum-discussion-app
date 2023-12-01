@@ -18,7 +18,6 @@ import {
   TableRow,
   Paper,
 } from '@mui/material';
-import './adminuser.css';
 
 function AdminUsers() {
   const [users, setUsers] = useState([]);
