@@ -1,20 +1,21 @@
 import React from 'react';
 import { FormControl, InputLabel, MenuItem, Select, FormHelperText } from '@mui/material';
 
-const RoleDropdown = ({ roles, value, onChange, error ,helperText }) => {
+const RoleDropdown = ({ roles, value, onChange, error, helperText }) => {
   const isRolesFetched = Array.isArray(roles) && roles.length > 0;
 
   return (
     <FormControl fullWidth variant="outlined" margin="normal" className="mb-3">
       <InputLabel htmlFor="roleId">Select User Role</InputLabel>
       <Select
-    label="Select User Role"
-    id="roleId"
-    name="roleId"
-    value={value} 
-    error={error}
-    className="rounded-0"
-  >
+        label="Select User Role"
+        id="roleId"
+        name="roleId"
+        value={value}
+        error={error}
+        onChange={onChange}
+        className="rounded-0"
+      >
         <MenuItem value="">
           Select a Role
         </MenuItem>

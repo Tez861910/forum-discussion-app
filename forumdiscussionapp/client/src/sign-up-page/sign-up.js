@@ -17,12 +17,12 @@ const Signup = () => {
   const [successMessage, setSuccessMessage] = React.useState([]);
   const [roles, setRoles] = React.useState([]);
 
-  const handleInputChange = React.useCallback((event) => {
+  const handleInputChange = (event) => {
     const { name, value } = event.target;
     setFormData((prevFormData) => ({ ...prevFormData, [name]: value }));
-  }, []);
+  };
 
-  const fetchData = React.useCallback(async () => {
+  const fetchData = async () => {
     try {
       const rolesResponse = await axios.get('http://localhost:8081/roles/roles/get');
       const rolesData = rolesResponse.data.roles;
@@ -30,18 +30,16 @@ const Signup = () => {
     } catch (error) {
       console.error('Error fetching data:', error);
     }
-  }, []);
+  };
 
   React.useEffect(() => {
     fetchData();
-  }, [fetchData]);
+  }, []);
 
-  const handleSubmit = React.useCallback(async (event) => {
+  const handleSubmit = async (event) => {
     event.preventDefault();
-    console.log('Form submitted'); 
     const validationErrors = {};
 
-    // Validate form data
     if (!formData.name) {
       validationErrors.name = 'Name is required';
     }
@@ -59,11 +57,9 @@ const Signup = () => {
 
     if (Object.keys(validationErrors).length === 0) {
       try {
-        // Submit data to the server
         const response = await axios.post('http://localhost:8081/signup/signup', formData);
 
         if (response.status === 200) {
-          // Handle successful signup
           console.log('Signup successful');
           setSuccessMessage(['Signup successful']);
           navigate('/login');
@@ -74,17 +70,15 @@ const Signup = () => {
             roleId: '',
           });
         } else {
-          // Handle signup failure
           console.error('Signup failed. Status:', response.status);
           setErrors({ _error: 'Signup failed. Please try again.' });
         }
       } catch (error) {
-        // Handle error during signup
         console.error('Error signing up user:', error);
         setErrors({ _error: 'Signup failed. Please try again.' });
       }
     }
-  }, [formData, navigate]);
+  };
 
   return (
     <Container maxWidth="xs" sx={{ mt: 8, mb: 4 }}>
@@ -163,19 +157,16 @@ const Signup = () => {
               </Grid>
 
               <Grid container justifyContent="flex-end">
-                
                 <Button
-                type="button"
-                variant="contained"
-                color="secondary"
-                fullWidth
-                sx={{ mt: 3, mb: 2 }}
-                onClick={() => navigate('/')}
-              >
-                Go back to start
-              </Button>
-
-                
+                  type="button"
+                  variant="contained"
+                  color="secondary"
+                  fullWidth
+                  sx={{ mt: 3, mb: 2 }}
+                  onClick={() => navigate('/')}
+                >
+                  Go back to start
+                </Button>
               </Grid>
             </form>
           </Grid>
