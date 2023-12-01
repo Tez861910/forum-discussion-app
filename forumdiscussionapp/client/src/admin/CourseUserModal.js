@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import * as React from 'react';
 import axios from 'axios';
 import {
   Dialog,
@@ -23,15 +23,17 @@ const Transition = React.forwardRef(function Transition(props, ref) {
 });
 
 function CourseUserModal({ onClose, selectedCourseId, open }) {
-  const [selectedUsersToAdd, setSelectedUsersToAdd] = useState([]);
-  const [enrolledUsers, setEnrolledUsers] = useState([]);
-  const [allUsers, setAllUsers] = useState([]);
-  const [removeConfirmation, setRemoveConfirmation] = useState({ open: false, user: null });
+  const [selectedUsersToAdd, setSelectedUsersToAdd] = React.useState([]);
+  const [enrolledUsers, setEnrolledUsers] = React.useState([]);
+  const [allUsers, setAllUsers] = React.useState([]);
+  const [removeConfirmation, setRemoveConfirmation] = React.useState({ open: false, user: null });
 
-  useEffect(() => {
-    fetchCourseEnrollments();
-    fetchAllUsers();
-  }, [selectedCourseId]);
+  React.useEffect(() => {
+    if (open) {
+      fetchCourseEnrollments();
+      fetchAllUsers();
+    }
+  }, [open, selectedCourseId]);
 
   const fetchAllUsers = async () => {
     try {
@@ -138,7 +140,7 @@ function CourseUserModal({ onClose, selectedCourseId, open }) {
       open={open}
       TransitionComponent={Transition}
       keepMounted
-      onClose={() => onClose()} 
+      onClose={onClose}
       aria-labelledby="user-modal-title"
       aria-describedby="user-modal-description"
     >
@@ -184,7 +186,7 @@ function CourseUserModal({ onClose, selectedCourseId, open }) {
         </Grid>
       </DialogContent>
       <DialogActions>
-        <Button onClick={() => onClose()} color="primary" size="small">
+        <Button onClick={onClose} color="primary" size="small">
           <CloseIcon />
         </Button>
         <Button

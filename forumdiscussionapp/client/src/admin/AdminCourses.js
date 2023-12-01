@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import * as React from 'react';
 import axios from 'axios';
 import {
   Typography,
@@ -16,30 +16,30 @@ import {
   Slide,
   CircularProgress,
   Grid,
+  Box,
 } from '@mui/material';
 import DeleteIcon from '@mui/icons-material/Delete';
 import EditIcon from '@mui/icons-material/Edit';
 import SaveIcon from '@mui/icons-material/Save';
 import CloseIcon from '@mui/icons-material/Close';
 import CourseUserModal from './CourseUserModal';
-import './admincourse.css';
 
 const Transition = React.forwardRef(function Transition(props, ref) {
   return <Slide direction="up" ref={ref} {...props} />;
 });
 
 function AdminCourses() {
-  const [courses, setCourses] = useState([]);
-  const [newCourseName, setNewCourseName] = useState('');
-  const [editingCourseId, setEditingCourseId] = useState(null);
-  const [updatedCourseName, setUpdatedCourseName] = useState('');
-  const [deleteConfirmation, setDeleteConfirmation] = useState({ open: false, courseId: null });
-  const [selectedCourseId, setSelectedCourseId] = useState(null);
-  const [error, setError] = useState(null);
-  const [loading, setLoading] = useState(false);
-  const [userModalOpen, setUserModalOpen] = useState(false);
+  const [courses, setCourses] = React.useState([]);
+  const [newCourseName, setNewCourseName] = React.useState('');
+  const [editingCourseId, setEditingCourseId] = React.useState(null);
+  const [updatedCourseName, setUpdatedCourseName] = React.useState('');
+  const [deleteConfirmation, setDeleteConfirmation] = React.useState({ open: false, courseId: null });
+  const [error, setError] = React.useState(null);
+  const [loading, setLoading] = React.useState(false);
+  const [userModalOpen, setUserModalOpen] = React.useState(false);
+  const [selectedCourseId, setSelectedCourseId] = React.useState(null);
 
-  useEffect(() => {
+  React.useEffect(() => {
     fetchCourses();
   }, []);
 
@@ -113,6 +113,12 @@ function AdminCourses() {
     setDeleteConfirmation({ open: false, courseId: null });
   };
 
+  const handleEditCourseModal = (courseId) => {
+    setEditingCourseId(courseId);
+    setUpdatedCourseName(courses.find(course => course.CourseID === courseId).CourseName);
+  };
+  
+
   const handleCourseSelection = (courseId) => {
     setSelectedCourseId(courseId);
     setUserModalOpen(true);
@@ -128,7 +134,7 @@ function AdminCourses() {
     return (
       <ListItem key={course.CourseID} divider>
         <Grid container alignItems="center" spacing={2}>
-          <Grid item xs={isEditing ? 6 : 8} onClick={() => handleCourseSelection(course.CourseID)}>
+          <Grid item xs={isEditing ? 6 : 8}>
             {isEditing ? (
               <TextField
                 type="text"
@@ -139,7 +145,11 @@ function AdminCourses() {
                 size="small"
               />
             ) : (
-              <ListItemText primary={course.CourseName} />
+              <ListItemText
+                primary={course.CourseName}
+                onClick={() => handleCourseSelection(course.CourseID)}
+                sx={{ cursor: 'pointer', color: 'primary.main' }}
+              />
             )}
           </Grid>
           <Grid item xs={isEditing ? 6 : 4}>
@@ -167,7 +177,7 @@ function AdminCourses() {
               </div>
             ) : (
               <ListItemSecondaryAction>
-                <IconButton edge="end" aria-label="edit" onClick={() => handleCourseSelection(course.CourseID)} size="small">
+                <IconButton edge="end" aria-label="edit" onClick={() => handleEditCourseModal(course.CourseID)} size="small">
                   <EditIcon />
                 </IconButton>
                 <IconButton edge="end" aria-label="delete" onClick={() => handleDeleteCourse(course.CourseID)} size="small">
@@ -182,14 +192,14 @@ function AdminCourses() {
   };
 
   return (
-    <div className="admin-courses-container">
-      <Typography variant="h4" style={{ marginBottom: 16 }}>
+    <Box sx={{ padding: 2, backgroundColor: 'background.default', minHeight: '100vh' }}>
+      <Typography variant="h4" sx={{ marginBottom: 2 }}>
         Manage Courses
       </Typography>
-      {error && <Typography variant="body1" color="error" style={{ marginBottom: 16 }}>{error}</Typography>}
-      {loading && <CircularProgress style={{ marginBottom: 16 }} />}
-      <div style={{ marginBottom: 16 }}>
-        <Typography variant="h6" style={{ marginBottom: 8 }}>
+      {error && <Typography variant="body1" color="error" sx={{ marginBottom: 2 }}>{error}</Typography>}
+      {loading && <CircularProgress sx={{ marginBottom: 2 }} />}
+      <Box sx={{ marginBottom: 2 }}>
+        <Typography variant="h6" sx={{ marginBottom: 1 }}>
           Create Course
         </Typography>
         <TextField
@@ -200,18 +210,17 @@ function AdminCourses() {
           value={newCourseName}
           onChange={(e) => setNewCourseName(e.target.value)}
           size="small"
-          style={{ marginBottom: 8 }}
+          sx={{ marginBottom: 1 }}
         />
         <Button
           variant="contained"
           color="primary"
           onClick={handleCreateCourse}
           size="small"
-          style={{ marginLeft: 8 }}
         >
           Create
         </Button>
-      </div>
+      </Box>
       <List>
         {courses.length > 0 ? (
           courses.map((course) => renderCourseListItem(course))
@@ -234,22 +243,22 @@ function AdminCourses() {
           </Typography>
         </DialogContent>
         <DialogActions>
-          <Button onClick={cancelDelete} color="primary" size="small">
+          <Button onClick={cancelDelete} color="primary">
             Cancel
           </Button>
-          <Button onClick={confirmDelete} color="secondary" size="small">
-            Delete
+          <Button onClick={confirmDelete} color="primary">
+            Confirm
           </Button>
         </DialogActions>
       </Dialog>
-      {userModalOpen && selectedCourseId !== null && (
+      {userModalOpen && (
         <CourseUserModal
           onClose={handleCloseUserModal}
           selectedCourseId={selectedCourseId}
-          open={true}
+          open={userModalOpen}
         />
       )}
-    </div>
+    </Box>
   );
 }
 
