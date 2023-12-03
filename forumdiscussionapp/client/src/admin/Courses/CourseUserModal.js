@@ -14,6 +14,7 @@ import {
   ListItemText,
   Grid,
   Typography,
+  Box,
 } from '@mui/material';
 import CloseIcon from '@mui/icons-material/Close';
 import ArrowDropDownIcon from '@mui/icons-material/ArrowDropDown';
@@ -130,9 +131,9 @@ function CourseUserModal({ onClose, selectedCourseId, open }) {
   };
 
   const DropdownIndicator = ({ isOpen }) => (
-    <div style={{ display: 'flex', alignItems: 'center', paddingRight: '8px' }}>
+    <Box sx={{ display: 'flex', alignItems: 'center', pr: 1 }}>
       <ArrowDropDownIcon color={isOpen ? 'primary' : 'action'} />
-    </div>
+    </Box>
   );
 
   return (
@@ -178,7 +179,7 @@ function CourseUserModal({ onClose, selectedCourseId, open }) {
               multiple
               renderOption={(props, option) => (
                 <li {...props}>
-                  <div>{option?.UserName}</div>
+                  <Box>{option?.UserName}</Box>
                 </li>
               )}
             />

@@ -115,9 +115,9 @@ function RoleUserModal({ open, onClose, selectedRoleId }) {
     setRemoveConfirmation({ open: false, user: null });
   };
   const DropdownIndicator = ({ isOpen }) => (
-    <div style={{ display: 'flex', alignItems: 'center', paddingRight: '8px' }}>
+    <Box sx={{ display: 'flex', alignItems: 'center', pr: 1 }}>
       <ArrowDropDownIcon color={isOpen ? 'primary' : 'action'} />
-    </div>
+    </Box>
   );
 
   return (
@@ -163,7 +163,7 @@ function RoleUserModal({ open, onClose, selectedRoleId }) {
               multiple
               renderOption={(props, option) => (
                 <li {...props}>
-                  <div>{option?.UserName}</div>
+                  <Box>{option?.UserName}</Box>
                 </li>
               )}
             />

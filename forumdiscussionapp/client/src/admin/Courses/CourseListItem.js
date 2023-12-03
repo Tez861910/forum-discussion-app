@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, startTransition } from 'react';
 import {
   ListItem,
   Grid,
@@ -7,11 +7,13 @@ import {
   ListItemText,
   ListItemSecondaryAction,
   IconButton,
+  Box,
 } from '@mui/material';
 import DeleteIcon from '@mui/icons-material/Delete';
 import EditIcon from '@mui/icons-material/Edit';
 import SaveIcon from '@mui/icons-material/Save';
 import CloseIcon from '@mui/icons-material/Close';
+import GroupIcon from '@mui/icons-material/Group';
 
 function CourseListItem({
   course,
@@ -23,10 +25,12 @@ function CourseListItem({
   const [updatedCourseName, setUpdatedCourseName] = useState(course.CourseName);
 
   const handleSaveEdit = () => {
-    setUpdatedCourseName((prevName) => {
-      handleEditCourse(course.CourseID, prevName);
-      setIsEditing(false);
-      return prevName;
+    startTransition(() => {
+      setUpdatedCourseName((prevName) => {
+        handleEditCourse(course.CourseID, prevName);
+        setIsEditing(false);
+        return prevName;
+      });
     });
   };
 
@@ -53,14 +57,14 @@ function CourseListItem({
         </Grid>
         <Grid item xs={isEditing ? 6 : 4}>
           {isEditing ? (
-            <div>
+            <Box sx={{ display: 'flex', justifyContent: 'space-between' }}>
               <Button
                 variant="contained"
                 color="primary"
                 startIcon={<SaveIcon />}
                 onClick={handleSaveEdit}
                 size="small"
-                style={{ marginRight: 8 }}
+                sx={{ mr: 1 }}
               >
                 Save
               </Button>
@@ -73,7 +77,7 @@ function CourseListItem({
               >
                 Cancel
               </Button>
-            </div>
+            </Box>
           ) : (
             <ListItemSecondaryAction>
               <IconButton
@@ -98,7 +102,7 @@ function CourseListItem({
                 onClick={() => handleCourseUserModal(course.CourseID)}
                 size="small"
               >
-                {/* Add appropriate icon for managing users in the course */}
+                 <GroupIcon />
               </IconButton>
             </ListItemSecondaryAction>
           )}

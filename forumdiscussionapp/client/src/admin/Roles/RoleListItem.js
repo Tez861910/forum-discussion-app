@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, startTransition } from 'react';
 import {
   TextField,
   Button,
@@ -7,6 +7,7 @@ import {
   ListItemSecondaryAction,
   IconButton,
   Grid,
+  Box,
 } from '@mui/material';
 import DeleteIcon from '@mui/icons-material/Delete';
 import EditIcon from '@mui/icons-material/Edit';
@@ -18,9 +19,10 @@ function RoleListItem({ role, handleEditRole, handleDeleteRole, handleRoleUserMo
   const [updatedRoleName, setUpdatedRoleName] = useState(role.roleName);
 
   const handleSaveEdit = () => {
-    // Perform validation if needed
-    handleEditRole(role.roleId, updatedRoleName);
-    setIsEditing(false);
+    startTransition(() => {
+      handleEditRole(role.roleId, updatedRoleName);
+      setIsEditing(false);
+    });
   };
 
   return (
@@ -46,14 +48,14 @@ function RoleListItem({ role, handleEditRole, handleDeleteRole, handleRoleUserMo
         </Grid>
         <Grid item xs={isEditing ? 6 : 4}>
           {isEditing ? (
-            <div>
+            <Box sx={{ display: 'flex', justifyContent: 'space-between' }}>
               <Button
                 variant="contained"
                 color="primary"
                 startIcon={<SaveIcon />}
                 onClick={handleSaveEdit}
                 size="small"
-                style={{ marginRight: 8 }}
+                sx={{ mr: 1 }}
               >
                 Save
               </Button>
@@ -66,15 +68,13 @@ function RoleListItem({ role, handleEditRole, handleDeleteRole, handleRoleUserMo
               >
                 Cancel
               </Button>
-            </div>
+            </Box>
           ) : (
             <ListItemSecondaryAction>
               <IconButton
                 edge="end"
                 aria-label="edit"
-                onClick={() => {
-                  setIsEditing(true);
-                }}
+                onClick={() => setIsEditing(true)}
                 size="small"
               >
                 <EditIcon />

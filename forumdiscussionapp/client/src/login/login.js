@@ -52,7 +52,7 @@ const Login = () => {
             <Typography component="h2" variant="h5">
               Sign-In
             </Typography>
-            {error && <div className="login-message">{error}</div>}
+            {error && <Box className="login-message">{error}</Box>}
             <form onSubmit={handleSubmit}>
               {['email', 'password'].map((field) => (
                 <Grid item xs={12} key={field}>

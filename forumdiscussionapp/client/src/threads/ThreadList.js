@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { Button, Typography, styled, List, ListItem } from '@mui/material';
+import { Button, Typography, styled, List, ListItem,Box } from '@mui/material';
 
 const StyledButton = styled(Button)(({ theme }) => ({
   margin: theme.spacing(1),
@@ -14,7 +14,7 @@ function ThreadList({ threads, onThreadSelect }) {
   const threadArray = Array.isArray(threads) ? threads : [];
 
   return (
-    <div>
+    <Box>
       <Typography variant="h3" component="div" gutterBottom>
         Thread List
       </Typography>
@@ -27,7 +27,7 @@ function ThreadList({ threads, onThreadSelect }) {
           </ListItem>
         ))}
       </List>
-    </div>
+    </Box>
   );
 }
 
