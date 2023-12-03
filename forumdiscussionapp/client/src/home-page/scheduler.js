@@ -31,7 +31,6 @@ const Scheduler = ({ selectedCourse: courseId }) => {
     EventTitle: '',
     EventDescription: '',
     EventDate: '',
-    courseId: '',
   });
   const [selectedEventId, setSelectedEventId] = useState(null);
 
@@ -50,8 +49,8 @@ const Scheduler = ({ selectedCourse: courseId }) => {
         EventTitle: newEvent.EventTitle,
         EventDescription: newEvent.EventDescription,
         EventDate: selectedDate.toISOString(),
-        courseId: parseInt(newEvent.courseId), 
-        userId: parseInt(userId),
+        CourseID: parseInt(courseId), 
+        UserID: parseInt(userId),
       });
 
       if (response.data.success) {
@@ -60,12 +59,10 @@ const Scheduler = ({ selectedCourse: courseId }) => {
           EventTitle: '',
           EventDescription: '',
           EventDate: '',
-          courseId: '',
         });
         handleClose();
       } else {
         console.error('Error creating event:', response.data.error);
-        // Handle error scenarios, show a message, etc.
       }
     } catch (error) {
       console.error('Error creating event:', error);
@@ -80,8 +77,8 @@ const Scheduler = ({ selectedCourse: courseId }) => {
           EventTitle: newEvent.EventTitle,
           EventDescription: newEvent.EventDescription,
           EventDate: selectedDate.toISOString(),
-          courseId: parseInt(newEvent.courseId), 
-          userId: parseInt(userId),
+          CourseID: parseInt(courseId), 
+          UserID: parseInt(userId),
         }
       );
 
@@ -95,12 +92,10 @@ const Scheduler = ({ selectedCourse: courseId }) => {
           EventTitle: '',
           EventDescription: '',
           EventDate: '',
-          CourseId: '',
         });
         handleClose();
       } else {
         console.error('Error editing event:', response.data.error);
-        // Handle error scenarios, show a message, etc.
       }
     } catch (error) {
       console.error('Error editing event:', error);
@@ -126,7 +121,6 @@ const Scheduler = ({ selectedCourse: courseId }) => {
       EventTitle: selectedEvent.EventTitle,
       EventDescription: selectedEvent.EventDescription,
       EventDate: selectedEvent.EventDate,
-      CourseId: selectedEvent.CourseID.toString(), // Convert CourseID to string
     });
     setSelectedDate(new Date(selectedEvent.EventDate));
     handleClickOpen();
@@ -242,16 +236,6 @@ const Scheduler = ({ selectedCourse: courseId }) => {
             </Grid>
             <Grid item xs={12} sm={6}>
               <DatePicker selected={selectedDate} onChange={(date) => setSelectedDate(date)} />
-            </Grid>
-            <Grid item xs={12} sm={6}>
-              <TextField
-                label="Course ID"
-                variant="outlined"
-                fullWidth
-                value={newEvent.CourseId}
-                onChange={(e) => setNewEvent({ ...newEvent, CourseId: e.target.value })}
-                sx={{ my: 1 }}
-              />
             </Grid>
           </Grid>
         </DialogContent>

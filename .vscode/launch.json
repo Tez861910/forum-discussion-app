@@ -1,46 +1,34 @@
 {
-    "version": "0.2.0",
-    "configurations": [
-
-      {
-        "type": "node",
-        "request": "launch",
-        "name": "Run Current File",
-        "program": "${file}",
-        "cwd": "${fileDirname}",
-        "outFiles": ["${workspaceFolder}/outFiles/**/*.js"],
-        "runtimeExecutable": "node",
-        "stopOnEntry": false
-      },
-      
-      {
-        "type": "node",
-        "request": "launch",
-        "name": "Launch Server",
-        "program": "./forumdiscussionapp/backend/server.js", 
-        "runtimeExecutable": "node",
-        "restart": true, 
-        "outputCapture": "std",
-        "timeout": 60000,
-        "stopOnEntry": false,
-        "serverReadyAction": {
-          "action": "openExternally",
-          "pattern": "\\bListening on port 8081\\b",
-          "uriFormat": "http://localhost:8081"
-        }
-      },
-          {
-            "name": "Launch Chrome",
-            "type": "chrome",
-            "request": "launch",
-            "url": "http://localhost:3000", 
-            "webRoot": "${forumdiscussionapp/client}",
-            "sourceMaps": true,
-            "userDataDir": "${forumdiscussionapp/client}/.vscode/chrome",
-            "runtimeArgs": ["npm start"]
-          }
-        ]
+  "version": "0.2.0",
+  "configurations": [
+    {
+      "type": "node",
+      "request": "launch",
+      "name": "Launch Server",
+      "program": "${ForumDisussionApp}/forumdiscussionapp/backend/server.js",
+      "runtimeExecutable": "node",
+      "restart": true,
+      "outputCapture": "std",
+      "timeout": 60000,
+      "stopOnEntry": false,
+      "serverReadyAction": {
+        "action": "openExternally",
+        "pattern": "\\bListening on port 8081\\b",
+        "uriFormat": "http://localhost:8081"
       }
-      
+    },
+    {
+      "name": "Launch Chrome",
+      "type": "chrome",
+      "request": "launch",
+      "url": "http://localhost:3000",
+      "webRoot": "${ForumDisussionApp}/forumdiscussionapp/client",
+      "sourceMaps": true,
+      "userDataDir": "${workspaceFolder}/forumdiscussionapp/client/.vscode/chrome",
+      "runtimeArgs": ["--remote-debugging-port=9222", "--new-window", "--app=http://localhost:3000"]
+    }    
+  ]
+}
+
     
   

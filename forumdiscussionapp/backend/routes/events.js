@@ -5,8 +5,9 @@ const { query } = require('../db');
 // Endpoint to create an event
 router.post('/events/create', async (req, res) => {
     try {
-      const { EventTitle, EventDescription, EventDate, CourseID } = req.body;
+      const { EventTitle, EventDescription, EventDate } = req.body;
       const UserID = req.user.id;
+      const CourseID = req.user.courseId;
   
       let result;
       if (CourseID) {
@@ -32,9 +33,9 @@ router.post('/events/create', async (req, res) => {
 // Endpoint to get all events
 router.get('/events/get',  async (req, res) => {
     try {
-      
+      const UserID = req.user.id;
   
-      const events = await query('SELECT * FROM Events', [UserID]);
+      const events = await query('SELECT * FROM Events WHERE UserID = ?', [UserID]);
   
       res.json({ success: true, events });
     } catch (error) {
@@ -47,7 +48,8 @@ router.get('/events/get',  async (req, res) => {
 router.put('/events/edit/:eventId', async (req, res) => {
     try {
       const { eventId } = req.params;
-      const { EventTitle, EventDescription, EventDate, CourseID } = req.body;
+      const { EventTitle, EventDescription, EventDate } = req.body;
+      const CourseID = req.user.courseId;
   
       await query(
         'UPDATE Events SET EventTitle = ?, EventDescription = ?, EventDate = ?, CourseID = ? WHERE EventID = ?',
