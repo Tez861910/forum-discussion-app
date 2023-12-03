@@ -45,7 +45,8 @@
     "build": "react-scripts build",
     "test": "react-scripts test",
     "eject": "react-scripts eject",
-    "debug": "react-scripts start"
+    "serve": "npx serve -s build",
+    "start:serve": "npm run build && npm run serve"
   },
   "eslintConfig": {
     "extends": [
@@ -66,6 +67,7 @@
     ]
   },
   "devDependencies": {
-    "@babel/plugin-proposal-private-property-in-object": "^7.21.11"
+    "@babel/plugin-proposal-private-property-in-object": "^7.21.11",
+    "concurrently": "^8.2.2"
   }
 }

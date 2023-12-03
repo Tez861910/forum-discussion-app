@@ -5,8 +5,9 @@
       "type": "node",
       "request": "launch",
       "name": "Launch Server",
-      "program": "${ForumDisussionApp}/forumdiscussionapp/backend/server.js",
-      "runtimeExecutable": "node",
+      "program": "${ForumDiscussionApp}/forumdiscussionapp/backend/server.js",
+      "runtimeExecutable": "npm",
+      "runtimeArgs": [ "start"],
       "restart": true,
       "outputCapture": "std",
       "timeout": 60000,
@@ -15,20 +16,25 @@
         "action": "openExternally",
         "pattern": "\\bListening on port 8081\\b",
         "uriFormat": "http://localhost:8081"
-      }
+      },
     },
     {
-      "name": "Launch Chrome",
+      "name": "Launch Client",
       "type": "chrome",
       "request": "launch",
+      "cwd": "${ForumDiscussionApp}/forumdiscussionapp/client",
+      "runtimeExecutable": "npm",
+      "runtimeArgs": [ "start:serve"],
       "url": "http://localhost:3000",
-      "webRoot": "${ForumDisussionApp}/forumdiscussionapp/client",
+      "webRoot": "${ForumDiscussionApp}/forumdiscussionapp/client",
       "sourceMaps": true,
-      "userDataDir": "${workspaceFolder}/forumdiscussionapp/client/.vscode/chrome",
-      "runtimeArgs": ["--remote-debugging-port=9222", "--new-window", "--app=http://localhost:3000"]
-    }    
+      "userDataDir": "${ForumDiscussionApp}/forumdiscussionapp/client/.vscode/chrome"
+    }      
+  ],
+  "compounds": [
+    {
+      "name": "Launch Server and Client",
+      "configurations": ["Launch Server", "Launch Client"]
+    }
   ]
 }
-
-    
-  
