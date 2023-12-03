@@ -24,6 +24,11 @@ const loginRoutes = require('./routes/loginserver');
 const homeRoutes = require('./routes/homeserver');
 const signupRoutes = require('./routes/signup');
 const threadsRoutes = require('./routes/threads');
+const eventsRoutes = require('./routes/events');
+const commentsRoutes = require('./routes/comments');
+const responseRoutes = require('./routes/response');
+const mcqformRoutes = require('./routes/mcqform');
+const mcqanswerformRoutes = require('./routes/mcqanswerform');
 
 // Routes
 app.use('/users', usersRoutes);
@@ -32,7 +37,12 @@ app.use('/roles', rolesRoutes);
 app.use('/login', loginRoutes);
 app.use('/signup', signupRoutes);
 app.use('/threads', threadsRoutes);
+app.use('/comments', commentsRoutes);
+app.use('/events', eventsRoutes);
+app.use('/responses', responseRoutes);
 app.use('/home', homeRoutes);
+app.use('/mcqform', mcqformRoutes);
+app.use('/mcqanswerform', mcqanswerformRoutes);
 
 
 // Root route

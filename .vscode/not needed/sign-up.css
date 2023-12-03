@@ -1,0 +1,57 @@
+.signup-page {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 100vh;
+  margin: 0;
+}
+
+.signup-form {
+  background: #FFFFFF;
+  width: 100%;
+  max-width: 360px;
+  padding: 30px;
+  text-align: center;
+  box-shadow: 0 0 20px 0 rgba(0, 0, 0, 0.2), 0 5px 5px 0 rgba(0, 0, 0, 0.24);
+  border-radius: 8px;
+}
+
+.signup-MuiInputBase-input {
+  width: 100%;
+  margin-top: 30px;
+  margin-bottom: 20px;
+  padding: 14px;
+  box-sizing: border-box;
+}
+
+.signup-MuiButton-containedPrimary {
+  width: 100%;
+  margin-top: 20px;
+  padding: 14px;
+}
+
+.signup-text-danger {
+  margin: 12px 0 0;
+  color: #b3b3b3;
+  font-size: 12px;
+}
+
+.signup-success-message {
+  color: #4CAF50;
+  font-size: 16px;
+  margin-top: 16px;
+}
+
+.signup-btn-default {
+  width: 100%;
+  margin-top: 30px;
+  padding: 14px;
+}
+
+.signup-btn-back {
+  text-decoration: none;
+  display: block;
+  text-align: center;
+  margin-top: 20px;
+  margin-bottom: 20px;
+}

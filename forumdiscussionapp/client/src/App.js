@@ -1,77 +1,64 @@
-import React from 'react';
-import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
-import TeacherDashboard from './TeacherDashboard';
-import Home from './Home';
-import Login from './Login';
-import Signup from './Signup';
-import AdminPanel from './AdminPanel';
-import CommentSection from './CommentSection';
-import { ErrorProvider } from './ErrorHandling';
-import AdminCourses from './AdminCourses';
-import AdminThreads from './AdminThreads';
-import AdminComments from './AdminComments';
-import AdminUsers from './AdminUsers';
-import MCQForm from './MCQForm';
-import MCQAnswerForm from './MCQAnswerForm';
+import React, { Suspense } from 'react';
+import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+import { ThemeProvider , CssBaseline } from '@mui/material';
+import { ErrorBoundary } from 'react-error-boundary';
+import theme from './Theme'; 
+const AdminCourses = React.lazy(() => import('./admin/Courses/AdminCourses'));
+const AdminRoles = React.lazy(() => import('./admin/Roles/AdminRoles'));
+const AdminUsers = React.lazy(() => import('./admin/Users/AdminUsers'));
+const Scheduler = React.lazy(() => import('./home-page/scheduler'));
+const UserProfile = React.lazy(() => import('./home-page/user-profile'));
+const CourseEnrollmentModal = React.lazy(() => import('./home-page/course-enrollment-modal'));
+const ForumDiscussion = React.lazy(() => import('./threads/Forumdiscussion'));
+const CommentSection = React.lazy(() => import('./threads/comment-section'));
+const MCQForm = React.lazy(() => import('./mcq-form/mcq-form'));
+const MCQAnswerForm = React.lazy(() => import('./mcq-form/mcq-answer-form'));
+const Home= React.lazy(() => import('./home-page/home'));
+const Login = React.lazy(() => import('./login/login'));
+const Start = React.lazy(() => import('./start/start'));
+const Signup = React.lazy(() => import('./sign-up-page/sign-up'));
 
-const App = () => (
-  <ErrorProvider>
-    <Router>
-      <Routes>
-        <Route path="/" element={<Login />} />
-        <Route path="/signup" element={<Signup />} />
-        <Route path="/home" element={<Home />}>
-          <Route index element={<HomeContent />} />
-          <Route path="adminpanel" element={<AdminPanelContent />} />
-          <Route path="TeacherDashboard" element={<TeacherDashboard />} />
-          <Route path="commentsection" element={<CommentSection />} />
-          <Route path="mcqform" element={<MCQForm />} />
-          <Route path="mcqanswerform" element={<MCQAnswerForm />} />
-        </Route>
-      </Routes>
-    </Router>
-  </ErrorProvider>
+function ErrorFallback({ error, resetErrorBoundary }) {
+  return (
+    <div role="alert">
+      <p>Something went wrong:</p>
+      <pre>{error.message}</pre>
+      <button onClick={resetErrorBoundary}>Try again</button>
+    </div>
+  );
+}
+
+const AppRoutes = () => (
+  <Routes>
+    <Route path="/" element={<Start />} />
+    <Route path="/login" element={<Login />} />
+    <Route path="/sign-up" element={<Signup />} />
+    <Route path="/home/*" element={<Home />}>
+      <Route path="admin-courses" element={<AdminCourses />} />
+      <Route path="admin-roles" element={<AdminRoles />} />
+      <Route path="admin-users" element={<AdminUsers />} />
+      <Route path="scheduler" element={<Scheduler />} />
+      <Route path="user-profile" element={<UserProfile />} />
+      <Route path="course-enrollment-modal" element={<CourseEnrollmentModal />} />
+      <Route path="forum-discussion" element={<ForumDiscussion />} />
+      <Route path="comment-section" element={<CommentSection />} />
+      <Route path="mcq-form" element={<MCQForm />} />
+      <Route path="mcq-answer-form" element={<MCQAnswerForm />} />
+    </Route>
+  </Routes>
 );
 
-const HomeContent = () => {
-  const roleId = localStorage.getItem('roleId');
-  console.log('User Role:', roleId);
-
-  if (roleId === '1') {
-    console.log('Navigating to admin panel');
-    return <Navigate to="adminpanel" />;
-  } else if (roleId === '2') {
-    console.log('Navigating to TeacherDashboard and mcqform');
-    return (
-      <>
-        <Navigate to="TeacherDashboard" />
-        <Navigate to="mcqform" />
-      </>
-    );
-  } else if (roleId === '3') {
-    console.log('Navigating to commentsection and mcqanswerform');
-    return (
-      <>
-        <Navigate to="commentsection" />
-        <Navigate to="mcqanswerform" />
-      </>
-    );
-  } else {
-    console.log('Navigating to TeacherDashboard (default)');
-    return <Navigate to="TeacherDashboard" />;
-  }
-};
-
-const AdminPanelContent = () => (
-  <AdminPanel>
-    <Routes>
-      <Route index element={<AdminPanel />} />
-      <Route path="courses" element={<AdminCourses />} />
-      <Route path="threads" element={<AdminThreads />} />
-      <Route path="comments" element={<AdminComments />} />
-      <Route path="users" element={<AdminUsers />} />
-    </Routes>
-  </AdminPanel>
+const App = () => (
+  <ErrorBoundary FallbackComponent={ErrorFallback}>
+    <ThemeProvider theme={theme}>
+    <CssBaseline />
+      <Router>
+        <Suspense fallback={<div>Loading...</div>}>
+          <AppRoutes />
+        </Suspense>
+      </Router>
+    </ThemeProvider>
+  </ErrorBoundary>
 );
 
 export default App;

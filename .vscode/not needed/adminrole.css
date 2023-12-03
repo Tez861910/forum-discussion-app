@@ -1,0 +1,182 @@
+/* Styling for the AdminRoles component */
+.admin-roles-container {
+  text-align: center;
+  margin: 20px;
+  background-color: #f5f5f5;
+  padding: 20px;
+  border-radius: 8px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+
+.admin-roles-container h4 {
+  font-size: 24px;
+  color: #333333;
+  margin-bottom: 20px;
+}
+
+.admin-roles-container h6 {
+  font-size: 20px;
+  color: #333;
+  margin-top: 20px;
+}
+
+/* Styling for the list items */
+.admin-roles-container .MuiListItem-root {
+  background-color: #ffffff;
+  border-radius: 8px;
+  margin-top: 20px;
+  padding: 20px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.admin-roles-container .edit-input {
+  width: 60%;
+}
+
+/* Styling for Material-UI components */
+.MuiTextField-root {
+  margin: 10px;
+  width: 100%;
+}
+
+.MuiButton-root {
+  margin-top: 10px;
+}
+
+/* Optional: Add some styling for the loading indicator */
+.admin-roles-container .MuiCircularProgress-root {
+  margin-top: 20px;
+}
+
+/* Optional: Style for the confirmation dialog */
+.MuiDialog-paper {
+  width: 400px;
+}
+
+/* Optional: Style for the create role section */
+.admin-roles-container > div {
+  margin-bottom: 20px;
+}
+
+/* Optional: Style for the role list */
+.admin-roles-container .MuiList-root {
+  border: 1px solid #ccc;
+  border-radius: 4px;
+}
+
+/* Optional: Style for individual role items */
+.admin-roles-container .MuiListItem-root {
+  cursor: pointer;
+}
+
+/* Optional: Style for the role name in the list */
+.admin-roles-container .MuiListItemText-primary {
+  font-weight: bold;
+}
+
+/* Optional: Style for the user list */
+.admin-roles-container .MuiList-root .MuiList-root {
+  margin-top: 10px;
+}
+
+/* Optional: Style for the user name input in user list */
+.admin-roles-container .MuiList-root .MuiListItem-root:last-child .MuiTextField-root {
+  margin-right: 10px;
+}
+
+/* Optional: Style for buttons */
+.admin-roles-container .MuiButton-root {
+  margin-top: 10px;
+}
+
+/* Optional: Style for error message */
+.admin-roles-container .MuiTypography-colorError {
+  margin-top: 10px;
+  color: red; /* Set the error message color to red */
+}
+
+/* Optional: Style for no roles available message */
+.admin-roles-container .MuiListItem-root {
+  font-style: italic;
+  color: #777; /* Set the color for the italic message */
+}
+
+/* Optional: Style for the confirmation dialog buttons */
+.MuiDialogActions-root {
+  padding: 16px;
+}
+
+/* Optional: Style for the Cancel button */
+.admin-roles-container .MuiButton-containedSecondary {
+  margin-left: 10px;
+  color: #fff; /* Set text color to white */
+  background-color: #888; /* Set background color for Cancel button */
+}
+
+/* Optional: Style for the Save button */
+.admin-roles-container .MuiButton-containedPrimary {
+  margin-left: 10px;
+}
+
+/* Optional: Style for the Close button */
+.admin-roles-container .MuiButton-text {
+  color: #888; /* Set text color for Close button */
+}
+
+/* Optional: Style for the input label */
+.MuiInputLabel-root {
+  color: #333; /* Set label text color */
+}
+
+/* Optional: Style for the input underline */
+.MuiInput-underline:before {
+  border-bottom: 2px solid #333; /* Set underline color */
+}
+
+/* Optional: Style for the input underline when focused */
+.MuiInput-underline:after {
+  border-bottom: 2px solid #888; /* Set focused underline color */
+}
+
+/* Optional: Style for the input when focused */
+.Mui-focused {
+  color: #888; /* Set focused text color */
+}
+
+/* Style for Autocomplete */
+.MuiAutocomplete-root {
+  width: 100%;
+}
+
+/* Style for TextField inside Autocomplete */
+.MuiTextField-root {
+  width: 100%;
+}
+
+/* Style for dropdown indicator */
+.MuiAutocomplete-popupIndicator {
+  cursor: pointer;
+}
+
+/* Style for Autocomplete options (dropdown list) */
+.MuiAutocomplete-option {
+  padding: 8px 16px;
+  font-size: 14px;
+  color: #333;
+}
+
+/* Style for selected option in Autocomplete */
+.MuiAutocomplete-tag {
+  background-color: #888;
+  color: #fff;
+  margin: 4px;
+  padding: 4px 8px;
+  border-radius: 4px;
+}
+
+/* Style for focused option in Autocomplete */
+.MuiAutocomplete-option[data-focus="true"] {
+  background-color: #eee;
+}

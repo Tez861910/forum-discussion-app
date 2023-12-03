@@ -1,0 +1,12 @@
+{
+    "name": "forumdiscussionapp",
+    "version": "1.0.0",
+    "scripts": {
+        "start:server": "cd backend && npm start",
+        "start:client": "cd client && npx serve -s build",
+        "start": "concurrently \"npm run start:server\" \"npm run start:client\""
+    },
+    "devDependencies": {
+        "concurrently": "^7.6.0"
+    }
+}

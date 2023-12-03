@@ -1,0 +1,62 @@
+/* styles.css */
+
+/* Adjustments for Material-UI v5 */
+
+/* Thread List */
+.thread-list {
+  margin-top: 20px;
+}
+
+.thread-list ul {
+  list-style-type: none;
+  padding: 0;
+}
+
+.thread-list li {
+  margin-bottom: 10px;
+}
+
+/* Comment Section */
+.comment-section-container {
+  margin-top: 20px;
+}
+
+.comment-list {
+  list-style-type: none;
+  padding: 0;
+}
+
+.comment-item {
+  border: 1px solid #ddd; /* Lighter border color for a softer look */
+  border-radius: 4px; /* Add some border radius for a rounded appearance */
+  padding: 15px;
+  margin-bottom: 15px;
+  background-color: #fff; /* White background */
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); /* Subtle box shadow for depth */
+}
+
+.comment-input {
+  width: 100%;
+  margin-top: 15px;
+  padding: 10px;
+  border: 1px solid #ddd; /* Light border */
+  border-radius: 4px;
+  resize: none;
+}
+
+.submit-button {
+  margin-top: 15px;
+}
+
+/* Thread Modal */
+.thread-modal {
+  max-width: 500px;
+  margin: auto;
+  padding: 20px;
+  border: 1px solid #ddd; /* Light border */
+  border-radius: 4px;
+  background-color: #fff;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+/* Add more styles as needed */

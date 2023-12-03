@@ -1,0 +1,60 @@
+.start-body {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: 'Roboto', sans-serif;
+}
+
+.start-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+  padding: 20px;
+  background-color: #f0f0f0;
+}
+
+.start-paper {
+  padding: 30px;
+  border-radius: 15px;
+  background-color: #ffffff;
+  box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+}
+
+.start-logo {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  margin-bottom: 30px;
+}
+
+.start-logo-img {
+  max-width: 100%;
+  height: auto;
+}
+
+.start-welcome-message {
+  font-size: 2.5rem;
+  margin-bottom: 2rem;
+  font-weight: bold;
+  color: #333;
+  text-align: center;
+}
+
+.start-nav-buttons {
+  margin-top: 2rem;
+}
+
+.start-button {
+  width: 100%;
+  height: auto;
+  font-size: 1rem;
+  padding: 15px 25px;
+  border-radius: 5px;
+  transition: background-color 0.3s ease;
+}
+
+.start-button:hover {
+  background-color: #f0f0f0;
+}

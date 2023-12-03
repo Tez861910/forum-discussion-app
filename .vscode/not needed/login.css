@@ -1,0 +1,28 @@
+
+.login-form {
+  position: relative;
+  z-index: 1;
+  background: #FFFFFF;
+  max-width: 360px;
+  padding: 45px;
+  text-align: center;
+  box-shadow: 0 0 20px 0 rgba(0, 0, 0, 0.2), 0 5px 5px 0 rgba(0, 0, 0, 0.24);
+  border-radius: 8px;
+}
+
+.login-MuiButton-containedPrimary {
+  width: 100%;
+  margin-top: 10px;
+}
+
+.login-message {
+  margin: 15px 0 0;
+  color: #b3b3b3;
+  font-size: 12px;
+}
+
+.login-message a {
+  color: #4CAF50;
+  text-decoration: none;
+  cursor: pointer;
+}

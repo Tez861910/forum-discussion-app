@@ -12,8 +12,14 @@ router.post('/login', async (req, res) => {
       return res.status(400).json({ error: 'Email and password are required' });
     }
 
-    const sql = 'SELECT * FROM users WHERE UserEmail = ?';
+    const sql = `
+      SELECT users.*
+      FROM users
+      WHERE users.UserEmail = ?
+    `;
+
     const queryResult = await query(sql, [email]);
+    console.log('Query Result:', queryResult);
 
     if (!Array.isArray(queryResult) || queryResult.length === 0) {
       console.log('No user found with this email: ' + email);
@@ -21,6 +27,8 @@ router.post('/login', async (req, res) => {
     }
 
     const userData = queryResult[0];
+
+    console.log('User Data:', userData);
 
     if (!userData || !userData.UserPassword) {
       console.log('User data is incomplete.');
@@ -36,31 +44,21 @@ router.post('/login', async (req, res) => {
       return res.status(401).json({ error: 'Incorrect password' });
     }
 
-    if (userData.RoleID === undefined || userData.RoleID === null) {
-      console.log('Role ID is not defined in user data.');
-      return res.status(401).json({ error: 'Role ID is not defined in user data' });
-    }
-
-    if (userData.CourseID === undefined || userData.CourseID === null) {
-      console.log('Course ID is not defined in user data.');
-      return res.status(401).json({ error: 'Course ID is not defined in user data' });
-    }
-
-    if (userData.UserID === undefined || userData.UserID === null) {
-      console.log('User ID is not defined in user data.');
-      return res.status(401).json({ error: 'User ID is not defined in user data' });
-    }
-
-    const token = createToken(userData.UserID, userData.UserEmail, userData.RoleID,userData.CourseID);
-
+    const token = createToken(userData.UserID, userData.UserEmail, userData.RoleID);
 
     console.log('Login successful for email: ' + email);
-    res.json({ success: true, message: 'Login successful', token,userId:userData.UserID , roleId: userData.RoleID,courseId:userData.CourseID });
+
+    res.json({
+      success: true,
+      message: 'Login successful',
+      userId: userData.UserID,
+      roleId: userData.RoleID,
+      token: token,
+    });
   } catch (error) {
     console.error('Login failed with error:', error);
     res.status(500).json({ error: 'Login Failed', details: error.message });
   }
 });
-
 
 module.exports = router;

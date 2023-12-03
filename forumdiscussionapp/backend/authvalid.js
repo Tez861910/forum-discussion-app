@@ -20,9 +20,9 @@ async function verifyPassword(password, hashedPassword) {
   return isPasswordValid;
 }
 
-function createToken(userId, email, roleId,courseId) {
+function createToken(userId, email, roleId) {
   const token = jwt.sign(
-    { userId, email, roleId,courseId },
+    { userId, email, roleId },
     JWT_SECRET,
     { expiresIn: '1h' }
   );
@@ -30,15 +30,22 @@ function createToken(userId, email, roleId,courseId) {
   return token;
 }
 
+function accessToken(userId, email, roleId) {
+  return jwt.sign({ userId, email, roleId }, JWT_SECRET, { expiresIn: '1h' });
+}
+
 function verifyJwt(req, res, next) {
   const token = req.headers['authorization'];
+  console.log('Received token:', token);
 
-  if (!token) {
-    console.log('Token not provided');
-    return res.status(401).json({ error: 'Token not provided' });
+  if (!token || !token.startsWith('Bearer ')) {
+    console.log('Invalid token format');
+    return res.status(401).json({ error: 'Invalid token format' });
   }
 
-  jwt.verify(token, JWT_SECRET, (err, decoded) => {
+  const tokenWithoutBearer = token.slice('Bearer '.length);
+
+  jwt.verify(tokenWithoutBearer, JWT_SECRET, (err, decoded) => {
     if (err) {
       if (err.name === 'TokenExpiredError') {
         console.log('Token expired');
@@ -51,49 +58,22 @@ function verifyJwt(req, res, next) {
         return res.status(500).json({ error: 'Internal server error' });
       }
     }
+
+    if (!decoded || !decoded.userId || !decoded.roleId) {
+      console.log('Invalid token contents');
+      return res.status(401).json({ error: 'Invalid token contents' });
+    }
+
     req.roleId = decoded.roleId;
-    req.courseId = decoded.courseId;
     req.userId = decoded.userId;
+    next();
   });
 }
-
-/* Define authorized roles as objects
-const authorizedRoles = {
-  admin: { name: 'Admin', description: 'Administrator Role' },
-  teacher: { name: 'Teacher', description: 'Teacher Role' },
-  student: { name: 'Student', description: 'Student Role' },
-};
-
-// Middleware for checking user authorization
-const checkAuthorization = (req, res, next) => {
-  if (authorizedRoles[req.roleId]) {
-    next(); 
-  } else {
-    res.status(403).json({ error: 'Entry Access denied' });
-  }
-};
-
-// Middleware for checking authorization and fetching additional data
-const checkAuthAndGetData = (req, res, next) => {
-  if (authorizedRoles[req.roleId]) {
-    const data = {
-      content: `${authorizedRoles[req.roleId].name} data`,
-      description: authorizedRoles[req.roleId].description,
-      roleId: req.roleId,
-    };
-    res.json(data);
-  } else {
-    res.status(403).json({ error: 'Access denied' });
-  }
-};*/
-
-// middleware/authMiddleware.js
 
 module.exports = {
   hashPassword,
   verifyPassword,
-  verifyJwt,
   createToken,
-  //checkAuthorization,
-  //checkAuthAndGetData,
+  verifyJwt,
+  accessToken,
 };

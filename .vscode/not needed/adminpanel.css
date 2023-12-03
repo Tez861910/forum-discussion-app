@@ -1,0 +1,14 @@
+/* Styles for AdminPanel */
+.admin-container {
+  margin-top: 20px;
+}
+
+.admin-navigation {
+  margin-bottom: 20px;
+}
+
+.admin-navigation button {
+  margin-right: 10px;
+}
+
+/* Add any other styles you need for AdminPanel */

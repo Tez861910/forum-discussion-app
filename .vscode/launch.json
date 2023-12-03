@@ -1,36 +1,40 @@
 {
-    "version": "0.2.0",
-    "configurations": [
-      
-      
-      {
-        "type": "node",
-        "request": "launch",
-        "name": "Launch Server",
-        "program": "forumdiscussionapp/backend/server.js", 
-        "runtimeExecutable": "node server.js",
-        "restart": true, 
-        "outputCapture": "std",
-        "timeout": 60000,
-        "stopOnEntry": false,
-        "serverReadyAction": {
-          "action": "openExternally",
-          "pattern": "\\bListening on port 8081\\b",
-          "uriFormat": "http://localhost:8081"
-        }
+  "version": "0.2.0",
+  "configurations": [
+    {
+      "type": "node",
+      "request": "launch",
+      "name": "Launch Server",
+      "program": "${ForumDiscussionApp}/forumdiscussionapp/backend/server.js",
+      "runtimeExecutable": "npm",
+      "runtimeArgs": [ "start"],
+      "restart": true,
+      "outputCapture": "std",
+      "timeout": 60000,
+      "stopOnEntry": false,
+      "serverReadyAction": {
+        "action": "openExternally",
+        "pattern": "\\bListening on port 8081\\b",
+        "uriFormat": "http://localhost:8081"
       },
-          {
-            "name": "Launch Chrome",
-            "type": "chrome",
-            "request": "launch",
-            "url": "http://localhost:3000", 
-            "webRoot": "${forumdiscussionapp/client}",
-            "sourceMaps": true,
-            "userDataDir": "${forumdiscussionapp/client}/.vscode/chrome",
-            "runtimeArgs": ["npm start"]
-          }
-        ]
-      }
-      
-    
-  
+    },
+    {
+      "name": "Launch Client",
+      "type": "chrome",
+      "request": "launch",
+      "cwd": "${ForumDiscussionApp}/forumdiscussionapp/client",
+      "runtimeExecutable": "npm",
+      "runtimeArgs": [ "start:serve"],
+      "url": "http://localhost:3000",
+      "webRoot": "${ForumDiscussionApp}/forumdiscussionapp/client",
+      "sourceMaps": true,
+      "userDataDir": "${ForumDiscussionApp}/forumdiscussionapp/client/.vscode/chrome"
+    }      
+  ],
+  "compounds": [
+    {
+      "name": "Launch Server and Client",
+      "configurations": ["Launch Server", "Launch Client"]
+    }
+  ]
+}

@@ -1,0 +1,82 @@
+.create-thread-container {
+  text-align: center;
+  margin: 20px;
+}
+
+.create-thread-container h2 {
+  font-size: 24px;
+  margin-bottom: 20px;
+}
+
+.create-thread-container ul {
+  list-style-type: none;
+  padding: 0;
+}
+
+.create-thread-container li {
+  margin-bottom: 20px;
+  border: 1px solid #ccc;
+  padding: 20px;
+}
+
+.create-thread-container .thread-title {
+  font-weight: bold;
+  margin-bottom: 10px;
+}
+
+.create-thread-container .thread-content {
+  margin-bottom: 10px;
+}
+
+.create-thread-container .edit-button,
+.create-thread-container .delete-button {
+  background-color: #007bff;
+  color: #fff;
+  border: none;
+  padding: 5px 15px;
+  cursor: pointer;
+  margin-right: 10px;
+}
+
+.create-thread-container .delete-button {
+  background-color: #ff0000;
+}
+
+.create-button {
+  background-color: #4caf50;
+  color: #fff;
+  border: none;
+  padding: 10px 20px;
+  cursor: pointer;
+}
+
+.create-new-thread {
+  margin-top: 20px;
+  border: 1px solid #ccc;
+  padding: 20px;
+}
+
+.create-new-thread h3 {
+  font-size: 20px;
+  margin-bottom: 20px;
+}
+
+.create-new-thread label {
+  display: block;
+  margin-bottom: 10px;
+}
+
+.create-new-thread input,
+.create-new-thread textarea {
+  width: 100%;
+  padding: 10px;
+  margin-bottom: 10px;
+}
+
+.update-button {
+  background-color: #007bff;
+  color: #fff;
+  border: none;
+  padding: 10px 20px;
+  cursor: pointer;
+}

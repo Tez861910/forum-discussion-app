@@ -1,0 +1,170 @@
+/* Styling for Admin Users Component */
+.admin-users-container {
+  padding: 16px;
+  background-color: #f5f5f5;
+  border: 1px solid #ddd;
+  border-radius: 5px;
+  box-shadow: 0 0 5px rgba(0, 0, 0, 0.2);
+  margin: 16px;
+}
+
+.admin-users-container h1 {
+  font-size: 24px;
+  margin-bottom: 16px;
+}
+
+.admin-users-container h2 {
+  font-size: 20px;
+  margin-top: 16px;
+  margin-bottom: 16px;
+}
+
+/* Create User Form */
+.create-user-form {
+  margin-bottom: 16px;
+  background-color: #fff;
+  border: 1px solid #ddd;
+  border-radius: 5px;
+  box-shadow: 0 0 5px rgba(0, 0, 0, 0.2);
+  padding: 16px;
+}
+
+.create-user-form h2 {
+  font-size: 20px;
+  margin-top: 0;
+  margin-bottom: 16px;
+}
+
+.create-user-form .form-fields {
+  display: flex;
+  flex-wrap: wrap;
+}
+
+.create-user-form .form-field {
+  width: calc(50% - 16px);
+  margin-right: 16px;
+  margin-bottom: 16px;
+}
+
+.create-user-form input,
+.create-user-form select {
+  width: 100%;
+  padding: 8px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  margin-top: 4px;
+}
+
+/* Form buttons */
+.create-user-form button {
+  background-color: #007bff;
+  color: #fff;
+  border: none;
+  border-radius: 5px;
+  padding: 10px 20px;
+  margin-top: 16px;
+  cursor: pointer;
+}
+
+.create-user-form button:hover {
+  background-color: #0056b3;
+}
+
+/* User List Table */
+.user-table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 16px;
+}
+
+.user-table th,
+.user-table td {
+  padding: 12px;
+  text-align: left;
+}
+
+.user-table th {
+  background-color: #007bff;
+  color: #fff;
+}
+
+.user-table th,
+.user-table td {
+  border: 1px solid #ddd;
+}
+
+/* Edit and Delete buttons */
+.user-actions {
+  display: flex;
+  align-items: center;
+}
+
+.user-actions button {
+  background-color: transparent;
+  border: none;
+  margin-right: 8px;
+  cursor: pointer;
+}
+
+.user-actions button:hover {
+  color: #007bff;
+}
+
+/* Modal Dialog for Editing User */
+.dialog-edit-user-form {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.dialog-edit-user-form label {
+  font-weight: bold;
+}
+
+.dialog-edit-user-form .form-field {
+  width: 100%;
+  margin-right: 0;
+}
+
+.dialog-edit-user-form input,
+.dialog-edit-user-form select {
+  width: 100%;
+  padding: 10px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  margin-top: 4px;
+}
+
+.dialog-edit-user-form button {
+  background-color: #007bff;
+  color: #fff;
+  border: none;
+  border-radius: 5px;
+  padding: 10px 20px;
+  cursor: pointer;
+}
+
+.dialog-edit-user-form button:hover {
+  background-color: #0056b3;
+}
+
+/* Confirmation Dialog */
+.dialog-confirm-delete {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  align-items: center;
+}
+
+.dialog-confirm-delete button {
+  background-color: #f44336;
+  color: #fff;
+  border: none;
+  border-radius: 5px;
+  padding: 10px 20px;
+  cursor: pointer;
+}
+
+.dialog-confirm-delete button:hover {
+  background-color: #d32f2f;
+}
