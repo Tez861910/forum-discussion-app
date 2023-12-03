@@ -33,7 +33,7 @@ router.post('/events/create', async (req, res) => {
 // Endpoint to get all events
 router.get('/events/get',  async (req, res) => {
     try {
-      const UserID = req.user.id;
+      const UserID = req.user.userId;
   
       const events = await query('SELECT * FROM Events WHERE UserID = ?', [UserID]);
   
