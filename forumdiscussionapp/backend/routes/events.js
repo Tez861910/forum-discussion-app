@@ -6,7 +6,7 @@ const { query } = require('../db');
 router.post('/events/create', async (req, res) => {
     try {
       const { EventTitle, EventDescription, EventDate } = req.body;
-      const UserID = req.user.id;
+      const UserID = req.user.userId;
       const CourseID = req.user.courseId;
   
       let result;
