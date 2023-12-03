@@ -11,6 +11,7 @@ import {
   Grid,
   Box,
   Paper,
+  Container,
 } from '@mui/material';
 import DatePicker from 'react-datepicker';
 import 'react-datepicker/dist/react-datepicker.css';
@@ -30,7 +31,7 @@ const Scheduler = ({ selectedCourse: courseId }) => {
     EventTitle: '',
     EventDescription: '',
     EventDate: '',
-    CourseId: '',
+    courseId: '',
   });
   const [selectedEventId, setSelectedEventId] = useState(null);
 
@@ -49,8 +50,8 @@ const Scheduler = ({ selectedCourse: courseId }) => {
         EventTitle: newEvent.EventTitle,
         EventDescription: newEvent.EventDescription,
         EventDate: selectedDate.toISOString(),
-        CourseID: parseInt(newEvent.CourseId), 
-        UserID: parseInt(userId),
+        courseId: parseInt(newEvent.courseId), 
+        userId: parseInt(userId),
       });
 
       if (response.data.success) {
@@ -59,7 +60,7 @@ const Scheduler = ({ selectedCourse: courseId }) => {
           EventTitle: '',
           EventDescription: '',
           EventDate: '',
-          CourseId: '',
+          courseId: '',
         });
         handleClose();
       } else {
@@ -79,8 +80,8 @@ const Scheduler = ({ selectedCourse: courseId }) => {
           EventTitle: newEvent.EventTitle,
           EventDescription: newEvent.EventDescription,
           EventDate: selectedDate.toISOString(),
-          CourseID: parseInt(newEvent.CourseId), 
-          UserID: parseInt(userId),
+          courseId: parseInt(newEvent.courseId), 
+          userId: parseInt(userId),
         }
       );
 
@@ -145,7 +146,7 @@ const Scheduler = ({ selectedCourse: courseId }) => {
   }, []);
 
   return (
-    <div>
+    <Container>
       <Typography variant="h4" sx={{ my: 3 }}>
         University Events Scheduler
       </Typography>
@@ -183,22 +184,21 @@ const Scheduler = ({ selectedCourse: courseId }) => {
           <Typography variant="h6">Events</Typography>
           {events.length > 0 ? (
             events.map((event) => (
-              <div key={event.EventID} sx={{ my: 2 }}>
-                <Typography variant="subtitle1">{
+              <Box key={event.EventID} sx={{ my: 2 }}>
                 <Typography variant="subtitle1">{event.EventTitle}</Typography>
                 <Typography variant="body2">{event.EventDescription}</Typography>
                 <Typography variant="body2">
                   {new Date(event.EventDate).toLocaleDateString()}
                 </Typography>
-                <div>
+                <Box>
                   {(roleId === '1' || (roleId === '2' && userId === event.UserID)) && (
                     <>
                       <Button onClick={() => handleEditClick(event.EventID)}>Edit</Button>
                       <Button onClick={() => deleteEvent(event.EventID)}>Delete</Button>
                     </>
                   )}
-                </div>
-              </div>
+                </Box>
+              </Box>
             ))
           ) : (
             <Typography variant="body2">No events to show</Typography>
@@ -262,7 +262,7 @@ const Scheduler = ({ selectedCourse: courseId }) => {
           </Button>
         </DialogActions>
       </Dialog>
-    </div>
+    </Container>
   );
 };
 
