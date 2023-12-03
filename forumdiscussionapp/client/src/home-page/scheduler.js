@@ -49,8 +49,8 @@ const Scheduler = ({ selectedCourse: courseId }) => {
         EventTitle: newEvent.EventTitle,
         EventDescription: newEvent.EventDescription,
         EventDate: selectedDate.toISOString(),
-        CourseID: parseInt(courseId), 
-        UserID: parseInt(userId),
+        courseId: parseInt(courseId), 
+        userId: parseInt(userId),
       });
 
       if (response.data.success) {
@@ -77,8 +77,8 @@ const Scheduler = ({ selectedCourse: courseId }) => {
           EventTitle: newEvent.EventTitle,
           EventDescription: newEvent.EventDescription,
           EventDate: selectedDate.toISOString(),
-          CourseID: parseInt(courseId), 
-          UserID: parseInt(userId),
+          courseId: parseInt(courseId), 
+          userd: parseInt(userId),
         }
       );
 
