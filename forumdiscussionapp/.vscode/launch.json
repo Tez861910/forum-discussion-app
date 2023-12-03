@@ -5,9 +5,9 @@
       "type": "node",
       "request": "launch",
       "name": "Launch Server",
-      "program": "${ForumDiscussionApp}/forumdiscussionapp/backend/server.js",
+      "program": "${forumdiscussionapp}/backend/server.js",
       "runtimeExecutable": "npm",
-      "runtimeArgs": [ "start"],
+      "runtimeArgs": [ "run", "start:server"],
       "restart": true,
       "outputCapture": "std",
       "timeout": 60000,
@@ -22,13 +22,13 @@
       "name": "Launch Client",
       "type": "chrome",
       "request": "launch",
-      "cwd": "${ForumDiscussionApp}/forumdiscussionapp/client",
+      "cwd": "${forumdiscussionapp}/client",
       "runtimeExecutable": "npm",
-      "runtimeArgs": [ "start:serve"],
+      "runtimeArgs": [ "run", "start:client"],
       "url": "http://localhost:3000",
-      "webRoot": "${ForumDiscussionApp}/forumdiscussionapp/client",
+      "webRoot": "${forumdiscussionapp}/client",
       "sourceMaps": true,
-      "userDataDir": "${ForumDiscussionApp}/forumdiscussionapp/client/.vscode/chrome"
+      "userDataDir": "${forumdiscussionapp}/client/.vscode/chrome"
     }      
   ],
   "compounds": [
