@@ -2,7 +2,7 @@ import * as React from 'react';
 import { useRoutes } from 'react-router-dom';
 import { Container, Typography, Paper, Box } from '@mui/material';
 import { useNavigate } from 'react-router-dom';
-import { useCookies } from 'react-cookie';
+import cookie from 'react-cookie';
 import Sidebar from './side-bar';
 import Navbar from './nav-bar';
 import AdminCourses from '../admin/Courses/AdminCourses';
@@ -18,7 +18,6 @@ import CourseEnrollmentModal from './course-enrollment-modal';
 const Home = () => {
   const [roleId, setRoleId] = React.useState('');
   const [userId,setUserId]=React.useState('');
-  const [cookies, setCookie] = useCookies();
   const [navigateToPathState, setNavigateToPath] = React.useState(null);
   const [isUserProfileOpen, setUserProfileOpen] = React.useState(false);
   const [isEnrollmentModalOpen, setEnrollmentModalOpen] = React.useState(false);
@@ -35,16 +34,16 @@ const Home = () => {
     localStorage.removeItem('roleId');
 
     // Clear cookies
-    setCookie('token', '', { path: '/', expires: new Date(0) });
-    setCookie('refreshToken', '', { path: '/', expires: new Date(0) });
+    cookie.remove('token', { path: '/' });
+    cookie.remove('refreshToken', { path: '/' });
+    console.log(`Token after removal: ${cookie.load('token')}`);  // Log the token
 
     // Update state
     setIsLoggedIn(false);
 
     // Redirect to login page
     navigate('/login');
-};
-
+  };
 
   const handleRoleSpecificActions = (roleId) => {
     if (['1', '2', '3'].includes(roleId)) {
@@ -71,13 +70,12 @@ const Home = () => {
       }
     }
 
-    const token = cookies.token;
 
     if (navigateToPathState && roleId) {
       navigate(navigateToPathState);
       setNavigateToPath(null);
     }
-  }, [cookies.token, isLoggedIn, navigateToPathState, roleId, setCookie, navigate]);
+  }, [ isLoggedIn, navigateToPathState, roleId,  navigate]);
 
   const handleDrawerToggle = () => {
     console.log('handleDrawerToggle triggered');

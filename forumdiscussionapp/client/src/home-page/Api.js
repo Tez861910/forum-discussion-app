@@ -1,15 +1,23 @@
 import { useEffect, useState } from 'react';
 import axios from 'axios';
-import { useCookies } from 'react-cookie';
+import cookie from 'react-cookie';
 
 export default function useApi() {
   const [api, setApi] = useState(null);
-  const [cookies, setCookie] = useCookies(['token', 'refreshToken']);
 
   useEffect(() => {
+    const token = cookie.load('token');
+    console.log(`Token: ${token}`);
+
     const apiInstance = axios.create({
       baseURL: 'http://localhost:8081/api',
       timeout: 5000,
+      headers: { 'Authorization': `Bearer ${token}` } 
+    });
+
+    apiInstance.interceptors.request.use((request) => {
+      console.log(`Token sent: ${request.headers['Authorization']}`);
+      return request;
     });
 
     let isRefreshing = false;
@@ -26,11 +34,6 @@ export default function useApi() {
 
       failedQueue = [];
     };
-
-    apiInstance.interceptors.request.use((request) => {
-      request.headers['Authorization'] = `Bearer ${cookies.token}`;
-      return request;
-    });
 
     apiInstance.interceptors.response.use(
       (response) => {
@@ -55,12 +58,12 @@ export default function useApi() {
           return new Promise(function(resolve, reject) {
             axios.post('http://localhost:8081/home/refresh-token', {}, {
               headers: {
-                Authorization: `Bearer ${cookies.refreshToken}`,
+                Authorization: `Bearer ${cookie.load('refreshToken')}`,
               },
             }).then(({data}) => {
               if (data.success) {
-                setCookie('token', data.token, { path: '/' });
-                setCookie('refreshToken', data.refreshToken, { path: '/' });
+                cookie.save('token', data.token, { path: '/' });
+                cookie.save('refreshToken', data.refreshToken, { path: '/' });
                 error.config.headers['Authorization'] = 'Bearer ' + data.token;
                 processQueue(null, data.token);
                 resolve(apiInstance(error.config));
@@ -82,7 +85,7 @@ export default function useApi() {
     );
 
     setApi(apiInstance);
-  }, [cookies, setCookie]);
+  }, []);
 
   return api;
 }

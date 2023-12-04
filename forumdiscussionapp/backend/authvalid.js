@@ -44,40 +44,39 @@ const createRefreshToken = (userId, email, roleId) => {
 }
 
 const verifyJwt = (req, res, next) => {
-  const token = req.headers['authorization'];
-  console.log('Received token:', token);
+  const authHeader = req.headers['authorization'];
+  console.log('Received auth header:', authHeader);
 
-  if (!token || !token.startsWith('Bearer ')) {
-    console.log('Invalid token format');
-    return res.status(401).json({ error: 'Invalid token format' });
-  }
+  if (authHeader && authHeader.startsWith('Bearer ')) {
+    const token = authHeader.slice('Bearer '.length);
 
-  const tokenWithoutBearer = token.slice('Bearer '.length);
-
-  jwt.verify(tokenWithoutBearer, JWT_SECRET, (err, decoded) => {
-    if (err) {
-      if (err.name === 'TokenExpiredError') {
-        console.log('Token expired');
-        return res.status(401).json({ error: 'Token expired' });
-      } else if (err.name === 'JsonWebTokenError') {
-        console.log('Invalid token');
-        return res.status(401).json({ error: 'Invalid token' });
-      } else {
-        console.error('JWT verification error:', err);
-        return res.status(500).json({ error: 'Internal server error' });
+    jwt.verify(token, JWT_SECRET, (err, decoded) => {
+      if (err) {
+        if (err.name === 'TokenExpiredError') {
+          console.log('Token expired');
+          return res.status(401).json({ error: 'Token expired' });
+        } else if (err.name === 'JsonWebTokenError') {
+          console.log('Invalid token');
+          return res.status(401).json({ error: 'Invalid token' });
+        } else {
+          console.error('JWT verification error:', err);
+          return res.status(500).json({ error: 'Internal server error' });
+        }
       }
-    }
 
-    if (!decoded || !decoded.userId || !decoded.roleId) {
-      console.log('Invalid token contents');
-      return res.status(401).json({ error: 'Invalid token contents' });
-    }
+      if (!decoded || !decoded.userId || !decoded.roleId) {
+        console.log('Invalid token contents');
+        return res.status(401).json({ error: 'Invalid token contents' });
+      }
 
-    req.roleId = decoded.roleId;
-    req.userId = decoded.userId;
+      req.roleId = decoded.roleId;
+      req.userId = decoded.userId;
+      next();
+    });
+  } else {
     next();
-  });
-}
+  }
+};
 
 const verifyRefreshToken = (req, res) => {
   const refreshToken = req.body.token;
