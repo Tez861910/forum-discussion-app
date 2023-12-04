@@ -1,6 +1,7 @@
 import React, { Suspense } from 'react';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import { ThemeProvider , CssBaseline } from '@mui/material';
+import PrivateRoute from './PrivateRoute';
 import { ErrorBoundary } from 'react-error-boundary';
 import theme from './Theme'; 
 const AdminCourses = React.lazy(() => import('./admin/Courses/AdminCourses'));
@@ -33,7 +34,7 @@ const AppRoutes = () => (
     <Route path="/" element={<Start />} />
     <Route path="/login" element={<Login />} />
     <Route path="/sign-up" element={<Signup />} />
-    <Route path="/home/*" element={<Home />}>
+    <PrivateRoute path="/home/*" element={<Home />}>
       <Route path="admin-courses" element={<AdminCourses />} />
       <Route path="admin-roles" element={<AdminRoles />} />
       <Route path="admin-users" element={<AdminUsers />} />
@@ -44,9 +45,10 @@ const AppRoutes = () => (
       <Route path="comment-section" element={<CommentSection />} />
       <Route path="mcq-form" element={<MCQForm />} />
       <Route path="mcq-answer-form" element={<MCQAnswerForm />} />
-    </Route>
+    </PrivateRoute>
   </Routes>
 );
+
 
 const App = () => (
   <ErrorBoundary FallbackComponent={ErrorFallback}>
