@@ -1,6 +1,6 @@
 const express = require('express');
 const router = express.Router();
-const { createToken, hashPassword } = require('../authvalid');
+const { createToken, hashPassword, createRefreshToken } = require('../authvalid');
 const { query } = require('../db');
 const app = express();
 app.use(express.json());
@@ -32,8 +32,9 @@ router.post('/signup', async (req, res) => {
           roleId,
         };
         const token = createToken(payload);
+        const refreshToken = createRefreshToken(payload);
         console.log('User registered successfully for email: ' + email);
-        res.json({ message: 'User registered successfully', token });
+        res.json({ message: 'User registered successfully', token, refreshToken });
       } else {
         console.log('User registration failed for email: ' + email);
         res.status(500).json({ error: 'User registration failed' });

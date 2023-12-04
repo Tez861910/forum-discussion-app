@@ -1,9 +1,12 @@
 const express = require('express');
 const router = express.Router();
 const { query } = require('../db');
+const { verifyJwt} = require('../authvalid');
+
+router.use(express.json());
 
 // Get all responses for a comment
-router.get('/responses/get/:commentId', async (req, res) => {
+router.get('/responses/get/:commentId', verifyJwt, async (req, res) => {
   const { commentId } = req.params;
 
   try {
@@ -22,9 +25,8 @@ router.get('/responses/get/:commentId', async (req, res) => {
   }
 });
 
-
 // Create a new response for a comment
-router.post('/responses/create/:commentId', async (req, res) => {
+router.post('/responses/create/:commentId', verifyJwt, async (req, res) => {
   const { commentId } = req.params;
   const { ResponseContent, userId } = req.body;
 
@@ -40,7 +42,7 @@ router.post('/responses/create/:commentId', async (req, res) => {
 });
 
 // Update a response
-router.put('/responses/update/:responseId', async (req, res) => {
+router.put('/responses/update/:responseId', verifyJwt, async (req, res) => {
   const { responseId } = req.params;
   const { content } = req.body;
 
@@ -55,7 +57,7 @@ router.put('/responses/update/:responseId', async (req, res) => {
 });
 
 // Delete a response
-router.delete('/responses/delete/:responseId', async (req, res) => {
+router.delete('/responses/delete/:responseId', verifyJwt, async (req, res) => {
   const { responseId } = req.params;
 
   try {

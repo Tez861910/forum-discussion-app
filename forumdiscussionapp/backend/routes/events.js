@@ -1,9 +1,11 @@
 const express = require('express');
 const router = express.Router();
 const { query } = require('../db');
+const { verifyJwt } = require('../authvalid');
+router.use(express.json());
 
 // Endpoint to create an event
-router.post('/events/create', async (req, res) => {
+router.post('/events/create', verifyJwt, async (req, res) => {
     try {
       const { EventTitle, EventDescription, EventDate } = req.body;
       const UserID = req.user.userId;
@@ -31,7 +33,7 @@ router.post('/events/create', async (req, res) => {
   
 
 // Endpoint to get all events
-router.get('/events/get',  async (req, res) => {
+router.get('/events/get', verifyJwt, async (req, res) => {
     try {
       const UserID = req.user.userId;
   
@@ -45,7 +47,7 @@ router.get('/events/get',  async (req, res) => {
   });
 
 // Endpoint to edit an event
-router.put('/events/edit/:eventId', async (req, res) => {
+router.put('/events/edit/:eventId', verifyJwt, async (req, res) => {
     try {
       const { eventId } = req.params;
       const { EventTitle, EventDescription, EventDate } = req.body;
@@ -64,7 +66,7 @@ router.put('/events/edit/:eventId', async (req, res) => {
   });
 
 // Endpoint to delete an event
-router.delete('/events/delete/:eventId', async (req, res) => {
+router.delete('/events/delete/:eventId', verifyJwt, async (req, res) => {
     try {
       const { eventId } = req.params;
   

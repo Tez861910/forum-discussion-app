@@ -1,7 +1,7 @@
 const express = require('express');
 const router = express.Router();
 const { query } = require('../db');
-const { createToken, verifyPassword } = require('../authvalid');
+const { createToken, verifyPassword, createRefreshToken } = require('../authvalid');
 
 router.post('/login', async (req, res) => {
   const { email, password } = req.body;
@@ -45,6 +45,7 @@ router.post('/login', async (req, res) => {
     }
 
     const token = createToken(userData.UserID, userData.UserEmail, userData.RoleID);
+    const refreshToken = createRefreshToken(userData.UserID, userData.UserEmail, userData.RoleID);
 
     console.log('Login successful for email: ' + email);
 
@@ -54,6 +55,7 @@ router.post('/login', async (req, res) => {
       userId: userData.UserID,
       roleId: userData.RoleID,
       token: token,
+      refreshToken: refreshToken,
     });
   } catch (error) {
     console.error('Login failed with error:', error);

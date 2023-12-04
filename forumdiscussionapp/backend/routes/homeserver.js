@@ -3,7 +3,7 @@ const router = express.Router();
 const { query } = require('../db');
 const multer = require('multer');
 const path = require('path');
-const { accessToken, verifyJwt } = require('../authvalid');
+const { createToken, verifyJwt, createRefreshToken } = require('../authvalid');
 
 // Set up multer for file uploads
 const storage = multer.diskStorage({
@@ -37,7 +37,7 @@ router.post('/home/upload-avatar', upload.single('avatar'), async (req, res) => 
 // Endpoint to refresh access token
 router.post('/refresh-token', verifyJwt, async (req, res) => {
   try {
-    const newAccessToken = accessToken(req.user);
+    const newAccessToken = createToken(req.user);
 
     res.json({ success: true, accessToken: newAccessToken });
   } catch (error) {

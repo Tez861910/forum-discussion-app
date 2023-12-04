@@ -1,26 +1,28 @@
 const jwt = require('jsonwebtoken');
-const bcrypt = require('bcrypt');
+const argon2 = require('argon2');
 
 const JWT_SECRET = 'fg87234tgf8723gf82g498318u308gn8u';
-const SALT_ROUNDS = 10;
+const REFRESH_TOKEN_SECRET = 'urhrhvoihiuvoalvheipaquie83843veibuiev';
 
-async function hashPassword(password) {
-  const hashedPassword = await bcrypt.hash(password, SALT_ROUNDS);
+let refreshTokens = [];
+
+const hashPassword = async (password) => {
+  const hashedPassword = await argon2.hash(password);
   console.log('Password hashed successfully');
   return hashedPassword;
 }
 
-async function verifyPassword(password, hashedPassword) {
+const verifyPassword = async (password, hashedPassword) => {
   if (!hashedPassword) {
     console.log('No hashed password provided for verification');
     return false;
   }
-  const isPasswordValid = await bcrypt.compare(password, hashedPassword);
+  const isPasswordValid = await argon2.verify(hashedPassword, password);
   console.log('Password verification result:', isPasswordValid);
   return isPasswordValid;
 }
 
-function createToken(userId, email, roleId) {
+const createToken = (userId, email, roleId) => {
   const token = jwt.sign(
     { userId, email, roleId },
     JWT_SECRET,
@@ -30,11 +32,18 @@ function createToken(userId, email, roleId) {
   return token;
 }
 
-function accessToken(userId, email, roleId) {
-  return jwt.sign({ userId, email, roleId }, JWT_SECRET, { expiresIn: '1h' });
+const createRefreshToken = (userId, email, roleId) => {
+  const refreshToken = jwt.sign(
+    { userId, email, roleId },
+    REFRESH_TOKEN_SECRET,
+    { expiresIn: '7d' }
+  );
+  refreshTokens.push(refreshToken);
+  console.log('Refresh token created');
+  return refreshToken;
 }
 
-function verifyJwt(req, res, next) {
+const verifyJwt = (req, res, next) => {
   const token = req.headers['authorization'];
   console.log('Received token:', token);
 
@@ -70,10 +79,28 @@ function verifyJwt(req, res, next) {
   });
 }
 
+const verifyRefreshToken = (req, res) => {
+  const refreshToken = req.body.token;
+  if (refreshToken && refreshTokens.includes(refreshToken)) {
+    jwt.verify(refreshToken, REFRESH_TOKEN_SECRET, (err, decoded) => {
+      if (err) return res.sendStatus(403);
+      const accessToken = jwt.sign(
+        { userId: decoded.userId, email: decoded.email, roleId: decoded.roleId },
+        JWT_SECRET,
+        { expiresIn: '1h' }
+      );
+      return res.json({ accessToken });
+    });
+  } else {
+    return res.sendStatus(403);
+  }
+}
+
 module.exports = {
   hashPassword,
   verifyPassword,
   createToken,
   verifyJwt,
-  accessToken,
+  createRefreshToken,
+  verifyRefreshToken,
 };

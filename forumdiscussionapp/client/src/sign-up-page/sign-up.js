@@ -4,6 +4,7 @@ import RoleDropdown from './role-dropdown';
 import { useNavigate } from 'react-router-dom';
 import { Link as RouterLink } from 'react-router-dom';
 import { Container, Grid, Typography, TextField, Button, Stack, Box, Paper } from '@mui/material';
+import SignUpValidation from './sign-up-validation';
 
 const Signup = () => {
   const [formData, setFormData] = React.useState({
@@ -38,21 +39,8 @@ const Signup = () => {
 
   const handleSubmit = async (event) => {
     event.preventDefault();
-    const validationErrors = {};
 
-    if (!formData.name) {
-      validationErrors.name = 'Name is required';
-    }
-    if (!formData.email) {
-      validationErrors.email = 'Email is required';
-    }
-    if (!formData.password) {
-      validationErrors.password = 'Password is required';
-    }
-    if (!formData.roleId) {
-      validationErrors.roleId = 'Role is required';
-    }
-
+    const validationErrors = SignUpValidation(formData);
     setErrors(validationErrors);
 
     if (Object.keys(validationErrors).length === 0) {
