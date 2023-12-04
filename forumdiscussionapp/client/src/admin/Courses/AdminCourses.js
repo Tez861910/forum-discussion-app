@@ -1,10 +1,10 @@
-import React, { useState, useEffect } from 'react';
-import axios from 'axios';
+import React, { useState, useEffect, useCallback } from 'react';
 import { Typography, CircularProgress, Box } from '@mui/material';
 import CourseList from './CourseList';
 import CreateCourseSection from './CreateCourseSection';
 import DeleteConfirmationDialog from './DeleteConfirmationDialog2';
 import CourseUserModal from './CourseUserModal';
+import useApi from '../../home-page/Api';
 
 function AdminCourses() {
   const [courses, setCourses] = useState([]);
@@ -15,14 +15,12 @@ function AdminCourses() {
   const [userModalOpen, setUserModalOpen] = useState(false);
   const [selectedCourseId, setSelectedCourseId] = useState(null);
 
-  useEffect(() => {
-    fetchCourses();
-  }, []);
+  const api = useApi();
 
-  const fetchCourses = async () => {
+  const fetchCourses = useCallback(async () => {
     setLoading(true);
     try {
-      const response = await axios.get('http://localhost:8081/courses/courses/get');
+      const response = await api.get('/courses/courses/get');
       if (Array.isArray(response.data.courses)) {
         const transformedCourses = response.data.courses.map((row) => ({
           CourseID: row.CourseID,
@@ -39,11 +37,15 @@ function AdminCourses() {
     } finally {
       setLoading(false);
     }
-  };
+  }, [api]);
+
+  useEffect(() => {
+    fetchCourses();
+  }, [fetchCourses]);
 
   const handleCreateCourse = async () => {
     try {
-      const response = await axios.post('http://localhost:8081/courses/courses/create', { courseName: newCourseName });
+      const response = await api.post('/courses/courses/create', { courseName: newCourseName });
       console.log('Create Course Response:', response.data);
       setNewCourseName('');
       fetchCourses();
@@ -63,7 +65,7 @@ function AdminCourses() {
         return;
       }
 
-      const response = await axios.put(`http://localhost:8081/courses/courses/update/${courseId}`, {
+      const response = await api.put(`/courses/courses/update/${courseId}`, {
         courseName: trimmedCourseName,
       });
 
@@ -83,7 +85,7 @@ function AdminCourses() {
 
   const handleConfirmDelete = async () => {
     try {
-      await axios.patch(`http://localhost:8081/courses/courses/delete/${deleteConfirmation.courseId}`);
+      await api.patch(`/courses/courses/delete/${deleteConfirmation.courseId}`);
       console.log('Course deleted successfully');
       fetchCourses();
     } catch (error) {

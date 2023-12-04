@@ -1,38 +1,31 @@
-import * as React from 'react';
-import axios from 'axios';
-import {
-  Typography,
-  Slide,
-  CircularProgress,
-  Box,
-} from '@mui/material';
+import React, { useState, useEffect, useCallback } from 'react';
+import { Typography, Slide, CircularProgress, Box } from '@mui/material';
 import RoleList from './RoleList';
 import RoleUserModal from './RolesUserModal';
 import DeleteConfirmationDialog from './DeleteConfirmationDialog3';
 import CreateRoleSection from './CreateRoleSection';
+import useApi from '../../home-page/Api'; 
 
 const Transition = React.forwardRef(function Transition(props, ref) {
   return <Slide direction="up" ref={ref} {...props} />;
 });
 
 function AdminRoles() {
-  const [roles, setRoles] = React.useState([]);
-  const [newRoleName, setNewRoleName] = React.useState('');
-  const [updatedRoleName, setUpdatedRoleName] = React.useState('');
-  const [deleteConfirmation, setDeleteConfirmation] = React.useState({ open: false, roleId: null });
-  const [error, setError] = React.useState(null);
-  const [loading, setLoading] = React.useState(false);
-  const [userModalOpen, setUserModalOpen] = React.useState(false);
-  const [selectedRoleId, setSelectedRoleId] = React.useState(null);
+  const [roles, setRoles] = useState([]);
+  const [newRoleName, setNewRoleName] = useState('');
+  const [updatedRoleName, setUpdatedRoleName] = useState('');
+  const [deleteConfirmation, setDeleteConfirmation] = useState({ open: false, roleId: null });
+  const [error, setError] = useState(null);
+  const [loading, setLoading] = useState(false);
+  const [userModalOpen, setUserModalOpen] = useState(false);
+  const [selectedRoleId, setSelectedRoleId] = useState(null);
 
-  React.useEffect(() => {
-    fetchRoles();
-  }, []);
+  const api = useApi();
 
-  const fetchRoles = async () => {
+  const fetchRoles = useCallback(async () => {
     setLoading(true);
     try {
-      const response = await axios.get('http://localhost:8081/roles/roles/get');
+      const response = await api.get('/roles/roles/get');
       if (Array.isArray(response.data.roles)) {
         setRoles(response.data.roles);
       } else {
@@ -45,9 +38,13 @@ function AdminRoles() {
     } finally {
       setLoading(false);
     }
-  };
+  }, [api]);
 
-  const handleCreateRole = async (newRoleName) => {
+  useEffect(() => {
+    fetchRoles();
+  }, [fetchRoles]);
+
+  const handleCreateRole = useCallback(async (newRoleName) => {
     try {
       const trimmedRoleName = newRoleName.trim();
   
@@ -59,9 +56,9 @@ function AdminRoles() {
   
       console.log('Creating role:', trimmedRoleName);
   
-      const response = await axios.post('http://localhost:8081/roles/roles/create', { roleName: trimmedRoleName });
+      const response = await api.post('/roles/roles/create', { roleName: trimmedRoleName });
   
-      console.log('Create Role Response:', response);
+      console.log('Create Role Response:', response.data);
   
       if (response.data && response.data.message === 'Role created successfully') {
         console.log('Role created successfully');
@@ -79,12 +76,11 @@ function AdminRoles() {
       console.error('Error creating role:', error);
       setError('Error creating role. Please try again.');
     }
-  };
-  
+  }, [api, fetchRoles]);
 
-  const handleEditRole = async (roleId, updatedRoleName) => {
+  const handleEditRole = useCallback(async (roleId, updatedRoleName) => {
     try {
-      const response = await axios.put(`http://localhost:8081/roles/roles/update/${roleId}`, {
+      const response = await api.put(`/roles/roles/update/${roleId}`, {
         roleName: updatedRoleName,
       });
       console.log('Edit Role Response:', response.data);
@@ -93,15 +89,15 @@ function AdminRoles() {
       console.error('Error updating role:', error);
       setError('Error updating role. Please try again.');
     }
-  };
+  }, [api, fetchRoles]);
 
   const handleDeleteRole = async (roleId) => {
     setDeleteConfirmation({ open: true, roleId });
   };
 
-  const confirmDelete = async () => {
+  const confirmDelete = useCallback(async () => {
     try {
-      const response = await axios.patch(`http://localhost:8081/roles/roles/delete/${deleteConfirmation.roleId}`);
+      const response = await api.patch(`/roles/roles/delete/${deleteConfirmation.roleId}`);
       if (response.data.message === 'Role soft-deleted successfully') {
         console.log('Role soft-deleted successfully');
         fetchRoles();
@@ -115,7 +111,7 @@ function AdminRoles() {
     } finally {
       setDeleteConfirmation({ open: false, roleId: null });
     }
-  };
+  }, [api, deleteConfirmation, fetchRoles]);
   
   const cancelDelete = () => {
     setDeleteConfirmation({ open: false, roleId: null });

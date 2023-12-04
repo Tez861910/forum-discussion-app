@@ -14,6 +14,15 @@ router.post('/signup', async (req, res) => {
       return res.status(400).json({ error: 'Missing user data' });
     }
 
+    // Check if the role exists
+    const roleSql = 'SELECT * FROM roles WHERE RoleID = ?';
+    const roleResults = await query(roleSql, [roleId]);
+
+    if (roleResults.length === 0) {
+      console.log('Role does not exist');
+      return res.status(400).json({ error: 'Role does not exist' });
+    }
+
     const hashedPassword = await hashPassword(password);
 
     const sqluser = 'INSERT INTO users (UserName, UserEmail, UserPassword, RoleID) VALUES (?, ?, ?, ?)';
@@ -48,5 +57,6 @@ router.post('/signup', async (req, res) => {
     res.status(500).json({ error: 'Signup failed', details: error.message });
   }
 });
+
 
 module.exports = router;

@@ -1,14 +1,13 @@
 import React, { useState } from 'react';
-import axios from 'axios';
 import { Typography, Button, TextField, List, ListItem, FormControl, RadioGroup, FormControlLabel, Radio } from '@mui/material';
-import { useNavigate } from 'react-router-dom';
-import './mcq-form.css';
+import useApi from '../home-page/Api';
 
-const MCQForm = ({ courseId }) => {
-  const navigate = useNavigate();
+function MCQForm({ selectedCourse: courseId }) {
+ 
   const [question, setQuestion] = useState('');
   const [options, setOptions] = useState(['', '', '', '']);
   const [correctAnswer, setCorrectAnswer] = useState('');
+  const api = useApi();
 
   const onSave = (mcqData) => {
     console.log('MCQ Data Saved:', mcqData);
@@ -25,7 +24,7 @@ const MCQForm = ({ courseId }) => {
       };
 
       try {
-        const response = await axios.post('http://localhost:8081/mcqform/mcqform/save', mcqData);
+        const response = await api.post('/mcqform/mcqform/save', mcqData);
 
         if (response.data.success) {
           onSave(mcqData);
@@ -38,16 +37,16 @@ const MCQForm = ({ courseId }) => {
     }
   };
 
-  const handleCancel = () => {
-    setQuestion('');
-    setOptions(['', '', '', '']);
-    setCorrectAnswer('');
-  };
-
   const handleOptionChange = (index, value) => {
     const newOptions = [...options];
     newOptions[index] = value;
     setOptions(newOptions);
+  };
+
+  const handleCancel = () => {
+    setQuestion('');
+    setOptions(['', '', '', '']);
+    setCorrectAnswer('');
   };
 
   return (

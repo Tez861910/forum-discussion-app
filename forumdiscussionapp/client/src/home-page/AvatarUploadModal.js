@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { Button, Modal, Box, Typography, Stack, TextField } from '@mui/material';
 import { styled } from '@mui/system';
-import axios from 'axios';
+import useApi from './Api';
 
 const Input = styled('input')({
   display: 'none',
@@ -10,6 +10,7 @@ const Input = styled('input')({
 const AvatarUploadModal = ({ isOpen, onRequestClose }) => {
   const [selectedFile, setSelectedFile] = React.useState(null);
   const [fileName, setFileName] = React.useState('');
+  const api = useApi();
 
   const handleFileChange = (event) => {
     setSelectedFile(event.target.files[0]);
@@ -24,7 +25,7 @@ const AvatarUploadModal = ({ isOpen, onRequestClose }) => {
     const userId = localStorage.getItem('userId');
     formData.append('userId', userId);
   
-    axios.post('http://localhost:8081/home/upload-avatar', formData)
+    api.post('/home/upload-avatar', formData)
       .then((response) => {
         console.log(response.data);
         onRequestClose();

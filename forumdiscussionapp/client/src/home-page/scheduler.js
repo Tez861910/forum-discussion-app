@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import {
   Typography,
   Button,
@@ -17,9 +17,7 @@ import DatePicker from 'react-datepicker';
 import 'react-datepicker/dist/react-datepicker.css';
 import Calendar from 'react-calendar';
 import 'react-calendar/dist/Calendar.css';
-import axios from 'axios';
-
-const API_URL = 'http://localhost:8081';
+import useApi from './Api';
 
 const Scheduler = ({ selectedCourse: courseId }) => {
   const userId = localStorage.getItem('userId');
@@ -33,19 +31,21 @@ const Scheduler = ({ selectedCourse: courseId }) => {
     EventDate: '',
   });
   const [selectedEventId, setSelectedEventId] = useState(null);
+  //const [isLoading, setIsLoading] = useState(true);
+  const api = useApi();
 
-  const fetchEvents = async () => {
+  const fetchEvents = useCallback(async () => {
     try {
-      const response = await axios.get(`${API_URL}/events/events/get`);
+      const response = await api.get('/events/events/get');
       setEvents(response.data.events);
     } catch (error) {
       console.error('Error fetching events:', error);
     }
-  };
+  }, [api]);
 
-  const createEvent = async () => {
+  const createEvent = useCallback(async () => {
     try {
-      const response = await axios.post(`${API_URL}/events/events/create`, {
+      const response = await api.post('/events/events/create', {
         EventTitle: newEvent.EventTitle,
         EventDescription: newEvent.EventDescription,
         EventDate: selectedDate.toISOString(),
@@ -67,12 +67,12 @@ const Scheduler = ({ selectedCourse: courseId }) => {
     } catch (error) {
       console.error('Error creating event:', error);
     }
-  };
+  }, [api, courseId, events, newEvent, selectedDate, userId]);
 
-  const editEvent = async () => {
+  const editEvent = useCallback(async () => {
     try {
-      const response = await axios.put(
-        `${API_URL}/events/events/edit/${selectedEventId}`,
+      const response = await api.put(
+        `/events/events/edit/${selectedEventId}`,
         {
           EventTitle: newEvent.EventTitle,
           EventDescription: newEvent.EventDescription,
@@ -100,11 +100,11 @@ const Scheduler = ({ selectedCourse: courseId }) => {
     } catch (error) {
       console.error('Error editing event:', error);
     }
-  };
+  }, [api, courseId, newEvent, selectedDate, selectedEventId, userId]);
 
-  const deleteEvent = async (eventId) => {
+  const deleteEvent = useCallback(async (eventId) => {
     try {
-      await axios.delete(`${API_URL}/events/events/delete/${eventId}`);
+      await api.delete(`/events/events/delete/${eventId}`);
       setEvents((prevEvents) =>
         prevEvents.filter((event) => event.EventID !== eventId)
       );
@@ -112,7 +112,7 @@ const Scheduler = ({ selectedCourse: courseId }) => {
     } catch (error) {
       console.error('Error deleting event:', error);
     }
-  };
+  }, [api]);
 
   const handleEditClick = (eventId) => {
     const selectedEvent = events.find((event) => event.EventID === eventId);
@@ -137,7 +137,7 @@ const Scheduler = ({ selectedCourse: courseId }) => {
 
   useEffect(() => {
     fetchEvents();
-  }, []);
+  }, [fetchEvents]);
 
   return (
     <Container>

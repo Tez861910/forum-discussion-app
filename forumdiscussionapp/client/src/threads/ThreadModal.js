@@ -1,8 +1,8 @@
 import * as React from 'react';
 import { startTransition } from 'react';
-import axios from 'axios';
 import { Dialog, DialogTitle, DialogContent, DialogActions, Button, TextField, styled, Card, CardContent, CardHeader, Box } from '@mui/material';
 import CommentSection from './comment-section';
+import useApi from '../home-page/Api';
 
 const StyledButton = styled(Button)(({ theme }) => ({
   margin: theme.spacing(1),
@@ -20,11 +20,13 @@ function ThreadModal({ courseId, threadId, onClose, roleId, userId }) {
   const [editedTitle, setEditedTitle] = React.useState('');
   const [editedContent, setEditedContent] = React.useState('');
 
+  const api = useApi();
+
   React.useEffect(() => {
     const fetchThread = async () => {
       try {
         if (threadId) {
-          const response = await axios.get(`http://localhost:8081/threads/threads/getThread/${threadId}`);
+          const response = await api.get(`/threads/threads/getThread/${threadId}`);
           const threadData = response.data?.thread;
   
           console.log('API Response:', response.data);
@@ -46,20 +48,20 @@ function ThreadModal({ courseId, threadId, onClose, roleId, userId }) {
     };
   
     fetchThread();
-  }, [threadId]);
+  }, [api, threadId]);
 
   const isEditable = roleId === '2';
 
   const handleSaveChanges = async () => {
     try {
-      await axios.put(`http://localhost:8081/threads/threads/update/${threadId}`, {
+      await api.put(`/threads/threads/update/${threadId}`, {
         title: editedTitle,
         content: editedContent,
         userId: userId,
         courseId: courseId,
       });
 
-      const response = await axios.get(`http://localhost:8081/threads/threads/getthread/${threadId}`);
+      const response = await api.get(`/threads/threads/getthread/${threadId}`);
       const updatedThreadData = response.data?.thread;
 
       if (updatedThreadData) {
@@ -76,7 +78,7 @@ function ThreadModal({ courseId, threadId, onClose, roleId, userId }) {
 
   const handleDelete = async () => {
     try {
-      await axios.delete(`http://localhost:8081/threads/threads/delete/${threadId}`);
+      await api.delete(`/threads/threads/delete/${threadId}`);
       onClose();
     } catch (error) {
       console.error('Error deleting thread:', error);

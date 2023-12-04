@@ -1,44 +1,31 @@
-import * as React from 'react';
-import axios from 'axios';
-import {
-  Dialog,
-  DialogTitle,
-  DialogContent,
-  DialogActions,
-  TextField,
-  Button,
-  Slide,
-  Autocomplete,
-  List,
-  ListItem,
-  ListItemText,
-  Grid,
-  Typography,
-  Box,
-} from '@mui/material';
+import React, { useState, useEffect, useCallback } from 'react';
+import { Dialog, DialogTitle, DialogContent, DialogActions, TextField, Button, Slide, Autocomplete, List, ListItem, ListItemText, Grid, Typography, Box } from '@mui/material';
 import CloseIcon from '@mui/icons-material/Close';
 import ArrowDropDownIcon from '@mui/icons-material/ArrowDropDown';
+import useApi from '../../home-page/Api'; 
 
 const Transition = React.forwardRef(function Transition(props, ref) {
   return <Slide direction="up" ref={ref} {...props} />;
 });
 
 function RoleUserModal({ open, onClose, selectedRoleId }) {
-  const [selectedUsersToAdd, setSelectedUsersToAdd] = React.useState([]);
-  const [enrolledUsers, setEnrolledUsers] = React.useState([]);
-  const [allUsers, setAllUsers] = React.useState([]);
-  const [removeConfirmation, setRemoveConfirmation] = React.useState({ open: false, user: null });
+  const [selectedUsersToAdd, setSelectedUsersToAdd] = useState([]);
+  const [enrolledUsers, setEnrolledUsers] = useState([]);
+  const [allUsers, setAllUsers] = useState([]);
+  const [removeConfirmation, setRemoveConfirmation] = useState({ open: false, user: null });
 
-  React.useEffect(() => {
+  const api = useApi();
+
+  useEffect(() => {
     if (open) {
       fetchRoleUsers();
       fetchAllUsers();
     }
-  }, [open, selectedRoleId]);
+  }, [api, open, selectedRoleId]);
 
-  const fetchAllUsers = async () => {
+  const fetchAllUsers = useCallback(async () => {
     try {
-      const response = await axios.get('http://localhost:8081/users/users/get');
+      const response = await api.get('/users/users/get');
       if (response.data && Array.isArray(response.data.users)) {
         const filteredUsers = response.data.users;
         setAllUsers(filteredUsers);
@@ -48,11 +35,11 @@ function RoleUserModal({ open, onClose, selectedRoleId }) {
     } catch (error) {
       console.error('Error fetching users:', error);
     }
-  };
+  }, [api]);
 
-  const fetchRoleUsers = async () => {
+  const fetchRoleUsers = useCallback(async () => {
     try {
-      const response = await axios.get(`http://localhost:8081/roles/roles/enrollments/${selectedRoleId}`);
+      const response = await api.get(`/roles/roles/enrollments/${selectedRoleId}`);
       if (response.data && typeof response.data.enrollments === 'object') {
         const enrollmentsData = response.data.enrollments;
         const roleUsersData = Object.values(enrollmentsData).flatMap((enrollments) =>
@@ -65,9 +52,9 @@ function RoleUserModal({ open, onClose, selectedRoleId }) {
     } catch (error) {
       console.error('Error fetching role users:', error);
     }
-  };  
+  }, [api, selectedRoleId]);  
 
-  const handleAddUserToRole = async () => {
+  const handleAddUserToRole = useCallback(async () => {
     try {
       if (!selectedUsersToAdd || selectedUsersToAdd.length === 0 || !selectedUsersToAdd[0]?.userId) {
         console.error('Invalid user selected');
@@ -76,7 +63,7 @@ function RoleUserModal({ open, onClose, selectedRoleId }) {
 
       const userId = selectedUsersToAdd[0].userId;
 
-      const response = await axios.post(`http://localhost:8081/roles/roles/${selectedRoleId}/enroll`, {
+      const response = await api.post(`/roles/roles/${selectedRoleId}/enroll`, {
         roleId:selectedRoleId,
         userId: userId,
       });
@@ -86,13 +73,13 @@ function RoleUserModal({ open, onClose, selectedRoleId }) {
     } catch (error) {
       console.error('Error adding user to role:', error);
     }
-  };
+  }, [api, fetchRoleUsers, selectedRoleId, selectedUsersToAdd]);
 
   const handleRemoveUserConfirmation = (user) => {
     setRemoveConfirmation({ open: true, user });
   };
 
-  const confirmRemoveUser = async () => {
+  const confirmRemoveUser = useCallback(async () => {
     try {
       if (!removeConfirmation.user || !removeConfirmation.user.userId) {
         console.error('Invalid user selected for removal');
@@ -101,7 +88,7 @@ function RoleUserModal({ open, onClose, selectedRoleId }) {
 
       const userId = removeConfirmation.user.userId;
 
-      const response = await axios.delete(`http://localhost:8081/roles/roles/${selectedRoleId}/enrollments/${userId}`);
+      const response = await api.delete(`/roles/roles/${selectedRoleId}/enrollments/${userId}`);
       console.log('Delete User Response:', response.data);
       fetchRoleUsers();
     } catch (error) {
@@ -109,11 +96,12 @@ function RoleUserModal({ open, onClose, selectedRoleId }) {
     } finally {
       setRemoveConfirmation({ open: false, user: null });
     }
-  };
+  }, [api, fetchRoleUsers, removeConfirmation, selectedRoleId]);
 
   const cancelRemoveUser = () => {
     setRemoveConfirmation({ open: false, user: null });
   };
+
   const DropdownIndicator = ({ isOpen }) => (
     <Box sx={{ display: 'flex', alignItems: 'center', pr: 1 }}>
       <ArrowDropDownIcon color={isOpen ? 'primary' : 'action'} />

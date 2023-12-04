@@ -1,20 +1,21 @@
 import React, { useState, useEffect } from 'react';
-import axios from 'axios';
-import MCQSummary from './mcq-summary';
 import { Typography, FormControl, RadioGroup, FormControlLabel, Radio, Button } from '@mui/material';
+import MCQSummary from './mcq-summary';
+import useApi from '../home-page/Api'; 
 
-const MCQAnswerForm = ({ courseId }) => {
+function MCQAnswerForm({ selectedCourse: courseId }) {
   const [isLoading, setIsLoading] = useState(true);
   const [questions, setQuestions] = useState([]);
   const [answers, setAnswers] = useState([]);
   const [selectedOption, setSelectedOption] = useState('');
   const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
   const [allQuestionsAnswered, setAllQuestionsAnswered] = useState(false);
+  const api = useApi();
 
   useEffect(() => {
     const fetchQuestions = async () => {
       try {
-        const response = await axios.get(`http://localhost:8081/mcqanswerform/mcqanswerform/questions/get/${courseId}`);
+        const response = await api.get(`/mcqanswerform/mcqanswerform/questions/get/${courseId}`);
         setQuestions(response.data);
         setIsLoading(false);
       } catch (error) {
@@ -23,7 +24,7 @@ const MCQAnswerForm = ({ courseId }) => {
     };
 
     fetchQuestions();
-  }, [courseId]);
+  }, [api, courseId]);
 
   const handleAnswer = () => {
     const selectedQuestion = questions[currentQuestionIndex];

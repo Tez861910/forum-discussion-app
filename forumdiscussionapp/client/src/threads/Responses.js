@@ -1,7 +1,7 @@
-import React, { useState, useEffect } from 'react';
-import axios from 'axios';
+import React, { useState, useEffect, useCallback } from 'react';
 import { Box, TextField, Button, Dialog, DialogTitle, DialogContent, IconButton } from '@mui/material';
 import CloseIcon from '@mui/icons-material/Close';
+import useApi from '../home-page/Api';
 
 function Responses({ commentId, open, onClose }) {
   const roleId = localStorage.getItem('roleId');
@@ -11,13 +11,11 @@ function Responses({ commentId, open, onClose }) {
   const [editingResponse, setEditingResponse] = useState(null);
   const [editedContent, setEditedContent] = useState('');
 
-  useEffect(() => {
-    fetchResponses();
-  }, []);
+  const api = useApi();
 
-  const fetchResponses = async () => {
+  const fetchResponses = useCallback(async () => {
     try {
-      const response = await axios.get(`http://localhost:8081/responses/responses/get/${commentId}`);
+      const response = await api.get(`/responses/responses/get/${commentId}`);
       let responses = response.data.responses;
   
       // Ensure responses is always an array
@@ -30,14 +28,18 @@ function Responses({ commentId, open, onClose }) {
       console.error('Error fetching responses:', error);
       throw error; 
     }
-  };
+  }, [api, commentId]);
+
+  useEffect(() => {
+    fetchResponses();
+  }, [fetchResponses]);
   
   const handleResponseSubmit = async (event) => {
     event.preventDefault();
 
     if (commentId && newResponse.trim() !== '') {
       try {
-        await axios.post(`http://localhost:8081/responses/responses/create/${commentId}`, {
+        await api.post(`/responses/responses/create/${commentId}`, {
           ResponseContent: newResponse,
           userId,
         });
@@ -52,7 +54,7 @@ function Responses({ commentId, open, onClose }) {
 
   const handleEditResponse = async (responseId) => {
     try {
-      await axios.put(`http://localhost:8081/responses/responses/update/${responseId}`, {
+      await api.put(`/responses/responses/update/${responseId}`, {
         content: editedContent,
       });
 
@@ -66,7 +68,7 @@ function Responses({ commentId, open, onClose }) {
 
   const handleDeleteResponse = async (responseId) => {
     try {
-      await axios.delete(`http://localhost:8081/responses/responses/delete/${responseId}`);
+      await api.delete(`/responses/responses/delete/${responseId}`);
 
       fetchResponses();
     } catch (error) {

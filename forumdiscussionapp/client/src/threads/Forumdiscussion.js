@@ -1,6 +1,4 @@
-import * as React from 'react';
-import { startTransition } from 'react';
-import axios from 'axios';
+import React, { useState, useEffect, useCallback , startTransition } from 'react';
 import {
   Typography,
   Button,
@@ -13,30 +11,33 @@ import {
 } from '@mui/material';
 import ThreadList from './ThreadList'; 
 import ThreadModal from './ThreadModal';
+import useApi from '../home-page/Api';
 
 function ForumDiscussion({ selectedCourse: courseId}) {
-  const [threads, setThreads] = React.useState([]);
-  const [selectedThread, setSelectedThread] = React.useState(null);
-  const [showModal, setShowModal] = React.useState(false);
   const roleId = localStorage.getItem('roleId');
   const userId = localStorage.getItem('userId');
-  const [newThreadTitle, setNewThreadTitle] = React.useState('');
-  const [newThreadContent, setNewThreadContent] = React.useState('');
-  const [showCreateModal, setShowCreateModal] = React.useState(false);
+  const [threads, setThreads] = useState([]);
+  const [selectedThread, setSelectedThread] = useState(null);
+  const [showModal, setShowModal] = useState(false);
+  const [newThreadTitle, setNewThreadTitle] = useState('');
+  const [newThreadContent, setNewThreadContent] = useState('');
+  const [showCreateModal, setShowCreateModal] = useState(false);
+  const api = useApi();
 
-  const fetchThreads = React.useCallback(async () => {
+  const fetchThreads = useCallback(async () => {
     try {
-      const response = await axios.get(`http://localhost:8081/threads/threads/get/${courseId}`);
+      const response = await api.get(`/threads/threads/get/${courseId}`);
       console.log('API Response:', response.data);
       startTransition(() => {
         setThreads(response.data[0]); 
       });
     } catch (error) {
       console.error('Error fetching threads:', error);
+      throw error; 
     }
-  }, [courseId, userId]);
+  }, [api, courseId]);
 
-  React.useEffect(() => {
+  useEffect(() => {
     fetchThreads();
   }, [fetchThreads]);
 
@@ -60,7 +61,7 @@ function ForumDiscussion({ selectedCourse: courseId}) {
 
   const handleCreateThread = async () => {
     try {
-      const response = await axios.post('http://localhost:8081/threads/threads/create', {
+      const response = await api.post('/threads/threads/create', {
         title: newThreadTitle,
         content: newThreadContent,
         courseId,

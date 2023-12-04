@@ -4,8 +4,8 @@ const cors = require('cors');
 const Joi = require('joi');
 
 const app = express();
-app.use(express.json());
-app.use(cors());
+router.use(express.json());
+router.use(cors());
 
 const { handleRolesGet } = require('../role-routes/handle-roles-get');
 const { handleRolesCreate } = require('../role-routes/handle-roles-create');

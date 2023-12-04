@@ -13,17 +13,18 @@ import TextField from '@mui/material/TextField';
 import Typography from '@mui/material/Typography';
 import SearchIcon from '@mui/icons-material/Search';
 import InputAdornment from '@mui/material/InputAdornment';
-import axios from 'axios';
+import useApi from './Api';
 
 const CourseEnrollmentModal = ({ isOpen, onRequestClose, onEnrollSuccess }) => {
   const [selectedCourses, setSelectedCourses] = useState([]);
   const [courses, setCourses] = useState([]);
   const [searchTerm, setSearchTerm] = useState('');
   const [userCourses, setUserCourses] = useState([]);
+  const api = useApi();
 
   const fetchCourses = useCallback(async () => {
     try {
-      const response = await axios.get('http://localhost:8081/courses/courses/get');
+      const response = await api.get('/courses/courses/get');
 
       if (response.status === 200) {
         setCourses(response.data.courses);
@@ -33,7 +34,7 @@ const CourseEnrollmentModal = ({ isOpen, onRequestClose, onEnrollSuccess }) => {
     } catch (error) {
       console.error('Error fetching courses:', error);
     }
-  }, []);
+  }, [api]);
 
   const fetchUserCourses = useCallback(async () => {
     try {
@@ -44,7 +45,7 @@ const CourseEnrollmentModal = ({ isOpen, onRequestClose, onEnrollSuccess }) => {
         return [];
       }
 
-      const response = await axios.get('http://localhost:8081/users/usercourses/get/id', {
+      const response = await api.get('/users/usercourses/get/id', {
         params: { userId: userId },
       });
 
@@ -58,7 +59,7 @@ const CourseEnrollmentModal = ({ isOpen, onRequestClose, onEnrollSuccess }) => {
       console.error('Error fetching user courses:', error);
       return [];
     }
-  }, []);
+  }, [api]);
 
   const fetchUserCoursesAndSetState = useCallback(async () => {
     try {
@@ -106,8 +107,8 @@ const CourseEnrollmentModal = ({ isOpen, onRequestClose, onEnrollSuccess }) => {
 
       // Iterate over nonEnrolledCourses and send individual requests for each course
       for (const courseId of nonEnrolledCourses) {
-        const response = await axios.post(
-          `http://localhost:8081/courses/courses/${courseId}/enroll`,
+        const response = await api.post(
+          `/courses/courses/${courseId}/enroll`,
           {
             userId: userId,
           }
@@ -118,6 +119,7 @@ const CourseEnrollmentModal = ({ isOpen, onRequestClose, onEnrollSuccess }) => {
           return;
         }
       }
+
 
       // If all enrollments are successful
       onEnrollSuccess(nonEnrolledCourses);

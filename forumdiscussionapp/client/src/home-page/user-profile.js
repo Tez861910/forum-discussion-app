@@ -1,7 +1,13 @@
 import React, { useState, useEffect } from 'react';
-import axios from 'axios';
-import { Typography, TextField, Button, Modal, Box } from '@mui/material';
+import {
+  Typography,
+  TextField,
+  Button,
+  Modal,
+  Box
+} from '@mui/material';
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
+import useApi from './Api';
 
 const UserProfile = ({ isOpen, onClose }) => {
   const [newName, setNewName] = useState('');
@@ -9,18 +15,18 @@ const UserProfile = ({ isOpen, onClose }) => {
   const [newPassword, setNewPassword] = useState('');
   const [editing, setEditing] = useState(false);
   const [userData, setUserData] = useState({
-    
     UserName: 'N/A',
     UserEmail: 'N/A',
     RoleName: 'N/A',
   });
+  const api = useApi();
 
   useEffect(() => {
     const storedUserId = localStorage.getItem('userId');
 
     if (storedUserId) {
-      axios
-        .get(`http://localhost:8081/users/users/get/${storedUserId}`)
+      api
+        .get(`/users/users/get/${storedUserId}`)
         .then((response) => {
           const user = response.data.user || {};
 
@@ -37,7 +43,7 @@ const UserProfile = ({ isOpen, onClose }) => {
           console.error('Error fetching user data:', error);
         });
     }
-  }, []);
+  }, [api]);
 
   const handleEdit = () => {
     setEditing(true);
@@ -47,7 +53,7 @@ const UserProfile = ({ isOpen, onClose }) => {
     const userId = localStorage.getItem('userId');
 
     try {
-      await axios.put(`http://localhost:8081/users/users/update/users/${userId}`, {
+      await api.put(`/users/users/update/users/${userId}`, {
         name: newName,
         email: newEmail,
         password: newPassword,

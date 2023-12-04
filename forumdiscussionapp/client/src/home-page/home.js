@@ -3,7 +3,6 @@ import { useRoutes } from 'react-router-dom';
 import { Container, Typography, Paper, Box } from '@mui/material';
 import { useNavigate } from 'react-router-dom';
 import { useCookies } from 'react-cookie';
-import axios from 'axios';
 import Sidebar from './side-bar';
 import Navbar from './nav-bar';
 import AdminCourses from '../admin/Courses/AdminCourses';
@@ -15,8 +14,6 @@ import ForumDiscussion from '../threads/Forumdiscussion';
 import Scheduler from './scheduler';
 import UserProfile from './user-profile';
 import CourseEnrollmentModal from './course-enrollment-modal';
-
-const API_URL = 'http://localhost:8081/home/refresh-token';
 
 const Home = () => {
   const [roleId, setRoleId] = React.useState('');
@@ -33,56 +30,26 @@ const Home = () => {
   const navigate = useNavigate();
 
   const clearUserData = async () => {
-    await new Promise((resolve) => setTimeout(resolve, 100));
-    setCookie('token', '', { path: '/login', expires: new Date(0) });
+    // Clear local storage
     localStorage.removeItem('userId');
     localStorage.removeItem('roleId');
+
+    // Clear cookies
+    setCookie('token', '', { path: '/', expires: new Date(0) });
+    setCookie('refreshToken', '', { path: '/', expires: new Date(0) });
+
+    // Update state
     setIsLoggedIn(false);
+
+    // Redirect to login page
     navigate('/login');
-  };
+};
 
-  const handleTokenRefreshSuccess = (data) => {
-    const newAccessToken = data.accessToken;
-    setCookie('token', newAccessToken, { path: '/login' });
-
-    const storedRoleId = localStorage.getItem('roleId');
-    setRoleId(storedRoleId);
-
-    const storedUserId = localStorage.getItem('userId');
-    setUserId(storedUserId);
-
-    storedRoleId && handleRoleSpecificActions(storedRoleId);
-  };
 
   const handleRoleSpecificActions = (roleId) => {
     if (['1', '2', '3'].includes(roleId)) {
       setIsCoursesEnrolled(true);
     }
-  };
-
-  const handleTokenRefresh = async () => {
-    try {
-      const response = await axios.post(
-        API_URL,
-        {},
-        {
-          headers: {
-            Authorization: `Bearer ${cookies.token}`,
-          },
-        }
-      );
-
-      response.data.success
-        ? handleTokenRefreshSuccess(response.data)
-        : handleTokenRefreshFailure();
-    } catch (error) {
-      console.error(`Token refresh failed: ${error}`);
-      handleTokenRefreshFailure();
-    }
-  };
-
-  const handleTokenRefreshFailure = () => {
-    clearUserData();
   };
 
   React.useEffect(() => {
@@ -106,18 +73,10 @@ const Home = () => {
 
     const token = cookies.token;
 
-    const handleTokenRefreshAndFetch = async () => {
-      if (isLoggedIn && token) {
-        await handleTokenRefresh();
-      }
-
-      if (navigateToPathState && roleId) {
-        navigate(navigateToPathState);
-        setNavigateToPath(null);
-      }
-    };
-
-    handleTokenRefreshAndFetch();
+    if (navigateToPathState && roleId) {
+      navigate(navigateToPathState);
+      setNavigateToPath(null);
+    }
   }, [cookies.token, isLoggedIn, navigateToPathState, roleId, setCookie, navigate]);
 
   const handleDrawerToggle = () => {
@@ -131,7 +90,6 @@ const Home = () => {
   };
 
   const handleLogout = () => {
-    handleTokenRefresh();
     clearUserData();
   };
 

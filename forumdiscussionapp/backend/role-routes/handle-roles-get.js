@@ -2,7 +2,7 @@ const { query } = require('../db');
 
 async function handleRolesGet(req, res) {
   try {
-    const sql = 'SELECT * FROM roles WHERE IsDeleted = 0';
+    const sql = 'SELECT * FROM roles WHERE IsDeleted = false';
     const results = await query(sql);
 
     if (!Array.isArray(results)) {

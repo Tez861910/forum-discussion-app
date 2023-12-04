@@ -1,7 +1,14 @@
 import React, { useState, useEffect, useCallback } from 'react';
-import axios from 'axios';
-import { Typography, TextareaAutosize, Button, Box, TextField } from '@mui/material';
+import {
+  Typography,
+  TextareaAutosize,
+  Button,
+  Modal,
+  Box,
+  TextField
+} from '@mui/material';
 import Responses from './Responses'; 
+import useApi from '../home-page/Api';
 
 function CommentSection({ threadId }) {
   const roleId = localStorage.getItem('roleId');
@@ -13,18 +20,19 @@ function CommentSection({ threadId }) {
   const [editingComment, setEditingComment] = useState(null);
   const [editedContent, setEditedContent] = useState('');
   const [selectedComment, setSelectedComment] = useState(null);
+  const api = useApi();
 
-  const fetchComments = async (threadId) => {
+  const fetchComments = useCallback(async () => {
     try {
-      const response = await axios.get(`http://localhost:8081/comments/comments/get/${threadId}`);
+      const response = await api.get(`/comments/comments/get/${threadId}`);
       const comments = response.data.comments;
       return Array.isArray(comments) ? comments : [comments];  
     } catch (error) {
       console.error('Error fetching comments:', error);
       throw error; 
     }
-  };
-  
+  }, [api, threadId]);
+
   const loadComments = useCallback(async () => {
     setIsLoading(true);
     try {
@@ -36,7 +44,7 @@ function CommentSection({ threadId }) {
       setFetchError('Error loading comments');
     }
     setIsLoading(false);
-  }, [threadId]);
+  }, [fetchComments, threadId]);
 
   useEffect(() => {
     loadComments();
@@ -47,7 +55,7 @@ function CommentSection({ threadId }) {
 
     if (threadId && newComment.trim() !== '') {
       try {
-        await axios.post(`http://localhost:8081/comments/comments/create/${threadId}`, {
+        await api.post(`/comments/comments/create/${threadId}`, {
           CommentContent: newComment,
           userId,
         });
@@ -62,7 +70,7 @@ function CommentSection({ threadId }) {
 
   const handleEditComment = async (commentId) => {
     try {
-      await axios.put(`http://localhost:8081/comments/comments/update/${commentId}`, {
+      await api.put(`/comments/comments/update/${commentId}`, {
         content: editedContent,
       });
 
@@ -76,7 +84,7 @@ function CommentSection({ threadId }) {
 
   const handleDeleteComment = async (commentId) => {
     try {
-      await axios.delete(`http://localhost:8081/comments/comments/delete/${commentId}`);
+      await api.delete(`/comments/comments/delete/${commentId}`);
 
       loadComments();
     } catch (error) {

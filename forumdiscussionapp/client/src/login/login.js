@@ -8,7 +8,7 @@ const Login = () => {
   const [values, setValues] = React.useState({ email: '', password: '' });
   const [error, setError] = React.useState('');
   const navigate = useNavigate();
-  const [cookies, setCookie] = useCookies();
+  const [cookies, setCookie, removeCookie] = useCookies(['token', 'refreshToken']);
 
   const handleInput = (event) => {
     const { name, value } = event.target;
@@ -16,7 +16,8 @@ const Login = () => {
   };
 
   const handleLoginSuccess = (data) => {
-    setCookie('token', data.token, { path: '/login' });
+    setCookie('token', data.token, { path: '/' });
+    setCookie('refreshToken', data.refreshToken, { path: '/' });
     localStorage.setItem('userId', data.userId);
     localStorage.setItem('roleId', data.roleId);
 

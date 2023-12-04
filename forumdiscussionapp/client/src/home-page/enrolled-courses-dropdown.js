@@ -1,12 +1,13 @@
-import * as React from 'react';
-import axios from 'axios';
+import React, { useState, useEffect, useCallback } from 'react';
 import { Select, MenuItem, InputLabel, FormControl, Box } from '@mui/material';
+import useApi from './Api';
 
 const EnrolledCoursesDropdown = ({ onCourseSelect, onCourseChange }) => {
-  const [enrolledCourses, setEnrolledCourses] = React.useState([]);
-  const [userCourses, setUserCourses] = React.useState([]);
-  const [selectedCourse, setSelectedCourse] = React.useState('');
-  const [isLoading, setIsLoading] = React.useState(true);
+  const [enrolledCourses, setEnrolledCourses] = useState([]);
+  const [userCourses, setUserCourses] = useState([]);
+  const [selectedCourse, setSelectedCourse] = useState('');
+  const [isLoading, setIsLoading] = useState(true);
+  const api = useApi();
 
   const handleCourseChange = (courseId) => {
     setSelectedCourse(courseId);
@@ -14,7 +15,7 @@ const EnrolledCoursesDropdown = ({ onCourseSelect, onCourseChange }) => {
     onCourseChange(courseId);
   };
 
-  const fetchUserCourses = async () => {
+  const fetchUserCourses = useCallback(async () => {
     try {
       const userId = localStorage.getItem('userId');
 
@@ -23,7 +24,7 @@ const EnrolledCoursesDropdown = ({ onCourseSelect, onCourseChange }) => {
         return [];
       }
 
-      const response = await axios.get('http://localhost:8081/users/usercourses/get/id', {
+      const response = await api.get('/users/usercourses/get/id', {
         params: { userId: userId },
       });
 
@@ -35,11 +36,11 @@ const EnrolledCoursesDropdown = ({ onCourseSelect, onCourseChange }) => {
     } catch (error) {
       console.error('Error fetching user courses:', error);
     }
-  };
+  }, [api]);
 
-  const fetchEnrolledCourses = async () => {
+  const fetchEnrolledCourses = useCallback(async () => {
     try {
-      const response = await axios.get('http://localhost:8081/courses/courses/get');
+      const response = await api.get('/courses/courses/get');
 
       if (response.status === 200) {
         setEnrolledCourses(response.data.courses);
@@ -49,9 +50,9 @@ const EnrolledCoursesDropdown = ({ onCourseSelect, onCourseChange }) => {
     } catch (error) {
       console.error('Error fetching courses:', error);
     }
-  };
+  }, [api]);
 
-  React.useEffect(() => {
+  useEffect(() => {
     const fetchData = async () => {
       setIsLoading(true);
       await Promise.all([fetchUserCourses(), fetchEnrolledCourses()]);
@@ -59,22 +60,7 @@ const EnrolledCoursesDropdown = ({ onCourseSelect, onCourseChange }) => {
     };
 
     fetchData();
-  }, []);
-
-  const enrolledCoursesOptions = [
-    <MenuItem key="select-option" value="" disabled>
-      Select option
-    </MenuItem>,
-    ...enrolledCourses
-      .filter((enrolledCourse) =>
-        userCourses.some((userCourse) => userCourse.CourseID === enrolledCourse.CourseID)
-      )
-      .map((enrolledCourse) => (
-        <MenuItem key={enrolledCourse.CourseID} value={enrolledCourse.CourseID}>
-          {enrolledCourse.CourseName}
-        </MenuItem>
-      )),
-  ];
+  }, [fetchUserCourses, fetchEnrolledCourses]);
 
   return (
     <Box sx={{ minWidth: 200 }}>
@@ -88,8 +74,16 @@ const EnrolledCoursesDropdown = ({ onCourseSelect, onCourseChange }) => {
         >
           {isLoading ? (
             <MenuItem disabled>Loading...</MenuItem>
-          ) : enrolledCoursesOptions.length > 0 ? (
-            enrolledCoursesOptions
+          ) : enrolledCourses.length > 0 ? (
+            enrolledCourses
+              .filter((enrolledCourse) =>
+                userCourses.some((userCourse) => userCourse.CourseID === enrolledCourse.CourseID)
+              )
+              .map((enrolledCourse) => (
+                <MenuItem key={enrolledCourse.CourseID} value={enrolledCourse.CourseID}>
+                  {enrolledCourse.CourseName}
+                </MenuItem>
+              ))
           ) : (
             <MenuItem disabled>No enrolled courses</MenuItem>
           )}

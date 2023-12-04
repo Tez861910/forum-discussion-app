@@ -3,7 +3,7 @@ const router = express.Router();
 const { query } = require('../db');
 const multer = require('multer');
 const path = require('path');
-const { createToken, verifyJwt, createRefreshToken } = require('../authvalid');
+const { createToken, verifyJwt, createRefreshToken, verifyRefreshToken } = require('../authvalid');
 
 // Set up multer for file uploads
 const storage = multer.diskStorage({
@@ -17,7 +17,7 @@ const storage = multer.diskStorage({
 
 const upload = multer({ storage: storage });
 
-router.post('/home/upload-avatar', upload.single('avatar'), async (req, res) => {
+router.post('/upload-avatar', upload.single('avatar'), async (req, res) => {
   console.log('Upload avatar route hit');
   const filePath = req.file.path;
 
@@ -35,15 +35,6 @@ router.post('/home/upload-avatar', upload.single('avatar'), async (req, res) => 
 });
 
 // Endpoint to refresh access token
-router.post('/refresh-token', verifyJwt, async (req, res) => {
-  try {
-    const newAccessToken = createToken(req.user);
-
-    res.json({ success: true, accessToken: newAccessToken });
-  } catch (error) {
-    console.error('Token refresh failed:', error);
-    res.status(401).json({ error: 'Token refresh failed' });
-  }
-});
+router.post('/refresh-token', verifyRefreshToken);
 
 module.exports = router;
