@@ -29,26 +29,29 @@ function ErrorFallback({ error, resetErrorBoundary }) {
   );
 }
 
+const HomeRoutes = () => (
+  <Routes>
+    <Route path="admin-courses" element={<AdminCourses />} />
+    <Route path="admin-roles" element={<AdminRoles />} />
+    <Route path="admin-users" element={<AdminUsers />} />
+    <Route path="scheduler" element={<Scheduler />} />
+    <Route path="user-profile" element={<UserProfile />} />
+    <Route path="course-enrollment-modal" element={<CourseEnrollmentModal />} />
+    <Route path="forum-discussion" element={<ForumDiscussion />} />
+    <Route path="comment-section" element={<CommentSection />} />
+    <Route path="mcq-form" element={<MCQForm />} />
+    <Route path="mcq-answer-form" element={<MCQAnswerForm />} />
+  </Routes>
+);
+
 const AppRoutes = () => (
   <Routes>
     <Route path="/" element={<Start />} />
     <Route path="/login" element={<Login />} />
     <Route path="/sign-up" element={<Signup />} />
-    <PrivateRoute path="/home/*" element={<Home />}>
-      <Route path="admin-courses" element={<AdminCourses />} />
-      <Route path="admin-roles" element={<AdminRoles />} />
-      <Route path="admin-users" element={<AdminUsers />} />
-      <Route path="scheduler" element={<Scheduler />} />
-      <Route path="user-profile" element={<UserProfile />} />
-      <Route path="course-enrollment-modal" element={<CourseEnrollmentModal />} />
-      <Route path="forum-discussion" element={<ForumDiscussion />} />
-      <Route path="comment-section" element={<CommentSection />} />
-      <Route path="mcq-form" element={<MCQForm />} />
-      <Route path="mcq-answer-form" element={<MCQAnswerForm />} />
-    </PrivateRoute>
+    <PrivateRoute path="/home/*" element={<HomeRoutes />} />
   </Routes>
 );
-
 
 const App = () => (
   <ErrorBoundary FallbackComponent={ErrorFallback}>
