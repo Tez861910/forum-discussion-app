@@ -1,8 +1,21 @@
 import * as React from 'react';
-import axios from 'axios';
-import { Dialog, DialogTitle, DialogContent, DialogActions, TextField, Button, Slide, Autocomplete, List, ListItem, ListItemText, Grid, Typography, Box } from '@mui/material';
+import {
+  Dialog,
+  DialogTitle,
+  DialogContent,
+  DialogActions,
+  TextField,
+  Button,
+  Slide,
+  Autocomplete,
+  List,
+  ListItem,
+  ListItemText,
+  Grid,
+  Typography,
+  Box
+} from '@mui/material';
 import CloseIcon from '@mui/icons-material/Close';
-import ArrowDropDownIcon from '@mui/icons-material/ArrowDropDown';
 import useApi from '../../home-page/Api';
 
 const Transition = React.forwardRef(function Transition(props, ref) {
@@ -10,21 +23,21 @@ const Transition = React.forwardRef(function Transition(props, ref) {
 });
 
 function CourseUserModal({ onClose, selectedCourseId, open }) {
-  const [selectedUsersToAdd, setSelectedUsersToAdd] = React.useState([]);
+  const [selectedUserId, setSelectedUserId] = React.useState(null);
   const [enrolledUsers, setEnrolledUsers] = React.useState([]);
   const [allUsers, setAllUsers] = React.useState([]);
   const [removeConfirmation, setRemoveConfirmation] = React.useState({ open: false, user: null });
 
   const api = useApi();
-  
+
   React.useEffect(() => {
     if (open) {
       fetchCourseEnrollments();
       fetchAllUsers();
     }
-  }, [api,open, selectedCourseId]);
+  }, [api, open, selectedCourseId]);
 
-  const fetchAllUsers = React.useCallback( async () => {
+  const fetchAllUsers = React.useCallback(async () => {
     try {
       const response = await api.get('/users/users/get');
       if (response.data && Array.isArray(response.data.users)) {
@@ -36,13 +49,11 @@ function CourseUserModal({ onClose, selectedCourseId, open }) {
     } catch (error) {
       console.error('Error fetching users:', error);
     }
-  },[api]);
+  }, [api]);
 
-  const fetchCourseEnrollments = React.useCallback( async () => {
+  const fetchCourseEnrollments = React.useCallback(async () => {
     try {
-      const response = await api.get(
-        `/courses/courses/enrollments/${selectedCourseId}`
-      );
+      const response = await api.get(`/courses/courses/enrollments/${selectedCourseId}`);
       if (response.status === 404) {
         console.error('No enrollments found for the course:', response.data.error);
         setEnrolledUsers([]);
@@ -62,44 +73,38 @@ function CourseUserModal({ onClose, selectedCourseId, open }) {
     } catch (error) {
       console.error('Error fetching course enrollments:', error);
     }
-  },[api, selectedCourseId]);
+  }, [api, selectedCourseId]);
 
-  const handleAddUserToCourse =React.useCallback( async () => {
+  const handleAddUserToCourse = React.useCallback(async () => {
     try {
-      if (!selectedUsersToAdd || selectedUsersToAdd.length === 0 || !selectedUsersToAdd[0]?.userId) {
-        console.error('Invalid user selected');
-        return;
-      }
-
-      const userId = selectedUsersToAdd[0].UserID;
-
       const response = await api.post(
         `/courses/courses/${selectedCourseId}/enroll`,
         {
           courseId: selectedCourseId,
-          userId: userId,
+          userId: selectedUserId,
         }
       );
-
+  
       console.log('Enroll Users Response:', response.data);
       fetchCourseEnrollments();
     } catch (error) {
       console.error('Error enrolling users to course:', error);
     }
-  },[api, fetchCourseEnrollments, selectedCourseId, selectedUsersToAdd]);
-
+  }, [api, fetchCourseEnrollments, selectedCourseId, selectedUserId]);
+  
+  
   const handleRemoveUserConfirmation = (user) => {
     setRemoveConfirmation({ open: true, user });
   };
 
   const confirmRemoveUser = React.useCallback(async () => {
     try {
-      if (!removeConfirmation.user || !removeConfirmation.user.userId) {
+      if (!removeConfirmation.user || !removeConfirmation.user.UserId) {
         console.error('Invalid user selected for removal');
         return;
       }
 
-      const userId = removeConfirmation.user.userId;
+      const userId = removeConfirmation.user.UserId;
 
       const response = await api.patch(
         `/courses/courses/${selectedCourseId}/enrollments/${userId}`
@@ -112,17 +117,11 @@ function CourseUserModal({ onClose, selectedCourseId, open }) {
     } finally {
       setRemoveConfirmation({ open: false, user: null });
     }
-  },[api, fetchCourseEnrollments, removeConfirmation, selectedCourseId]);
+  }, [api, fetchCourseEnrollments, removeConfirmation, selectedCourseId]);
 
   const cancelRemoveUser = () => {
     setRemoveConfirmation({ open: false, user: null });
   };
-
-  const DropdownIndicator = ({ isOpen }) => (
-    <Box sx={{ display: 'flex', alignItems: 'center', pr: 1 }}>
-      <ArrowDropDownIcon color={isOpen ? 'primary' : 'action'} />
-    </Box>
-  );
 
   return (
     <Dialog
@@ -151,9 +150,9 @@ function CourseUserModal({ onClose, selectedCourseId, open }) {
           <Grid item xs={12}>
             <Autocomplete
               options={allUsers || []}
-              getOptionLabel={(option) => (option?.UserName) || ''}
-              isOptionEqualToValue={(option, value) => option?.UserID === value?.UserID}
-              onChange={(event, value) => setSelectedUsersToAdd(value)}
+              getOptionLabel={(option) => option?.UserName || ''}
+              isOptionEqualToValue={(option, value) => option?.UserID === value}
+              onChange={(event, value) => setSelectedUserId(value?.UserID || null)}
               renderInput={(params) => (
                 <TextField
                   {...params}
@@ -163,7 +162,7 @@ function CourseUserModal({ onClose, selectedCourseId, open }) {
                   size="small"
                 />
               )}
-              value={selectedUsersToAdd}
+              value={allUsers.find(user => user.UserID === selectedUserId) || null}
               multiple
               renderOption={(props, option) => (
                 <li {...props}>
