@@ -76,6 +76,7 @@ const Signup = () => {
             <Typography variant="h4" align="center" gutterBottom>
               Sign-Up
             </Typography>
+            {successMessage.length > 0 && <Box sx={{ color: 'green' }}>{successMessage}</Box>} 
             <form onSubmit={handleSubmit}>
               <TextField
                 fullWidth

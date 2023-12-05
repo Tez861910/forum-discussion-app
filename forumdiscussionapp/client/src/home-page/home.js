@@ -2,7 +2,7 @@ import * as React from 'react';
 import { useRoutes } from 'react-router-dom';
 import { Container, Typography, Paper, Box } from '@mui/material';
 import { useNavigate } from 'react-router-dom';
-import cookie from 'react-cookie';
+import { useCookies } from 'react-cookie'; 
 import Sidebar from './side-bar';
 import Navbar from './nav-bar';
 import AdminCourses from '../admin/Courses/AdminCourses';
@@ -27,6 +27,7 @@ const Home = () => {
   const [isCoursesEnrolled, setIsCoursesEnrolled] = React.useState(false);
   const [isSidebarOpen, setSidebarOpen] = React.useState(false);
   const navigate = useNavigate();
+  const [cookies, removeCookie] = useCookies(['token', 'refreshToken']); 
 
   const clearUserData = async () => {
     // Clear local storage
@@ -34,16 +35,16 @@ const Home = () => {
     localStorage.removeItem('roleId');
 
     // Clear cookies
-    cookie.remove('token', { path: '/' });
-    cookie.remove('refreshToken', { path: '/' });
-    console.log(`Token after removal: ${cookie.load('token')}`);  // Log the token
+    removeCookie('token', { path: '/' }); 
+    removeCookie('refreshToken', { path: '/' }); 
+    console.log(`Token after removal: ${cookies.token}`);  
 
     // Update state
     setIsLoggedIn(false);
 
     // Redirect to login page
     navigate('/login');
-  };
+  };  
 
   const handleRoleSpecificActions = (roleId) => {
     if (['1', '2', '3'].includes(roleId)) {

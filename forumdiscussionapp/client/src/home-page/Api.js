@@ -1,12 +1,13 @@
 import { useEffect, useState } from 'react';
 import axios from 'axios';
-import cookie from 'react-cookie';
+import { useCookies } from 'react-cookie'; 
 
 export default function useApi() {
   const [api, setApi] = useState(null);
+  const [cookies, setCookie] = useCookies(['token', 'refreshToken']); 
 
   useEffect(() => {
-    const token = cookie.load('token');
+    const token = cookies.token; 
     console.log(`Token: ${token}`);
 
     const apiInstance = axios.create({
@@ -58,12 +59,12 @@ export default function useApi() {
           return new Promise(function(resolve, reject) {
             axios.post('http://localhost:8081/home/refresh-token', {}, {
               headers: {
-                Authorization: `Bearer ${cookie.load('refreshToken')}`,
+                Authorization: `Bearer ${cookies.refreshToken}`, 
               },
             }).then(({data}) => {
               if (data.success) {
-                cookie.save('token', data.token, { path: '/' });
-                cookie.save('refreshToken', data.refreshToken, { path: '/' });
+                setCookie('token', data.token, { path: '/' }); 
+                setCookie('refreshToken', data.refreshToken, { path: '/' });
                 error.config.headers['Authorization'] = 'Bearer ' + data.token;
                 processQueue(null, data.token);
                 resolve(apiInstance(error.config));
@@ -85,7 +86,7 @@ export default function useApi() {
     );
 
     setApi(apiInstance);
-  }, []);
+  }, [cookies, setCookie]);
 
   return api;
 }

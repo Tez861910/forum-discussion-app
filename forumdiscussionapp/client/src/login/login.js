@@ -1,13 +1,14 @@
 import * as React from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import axios from 'axios';
-import cookie from 'react-cookie';
+import { useCookies } from 'react-cookie'; 
 import { Button, Container, Grid, Typography, TextField, Box, Paper, Stack } from '@mui/material';
 
 const Login = () => {
   const [values, setValues] = React.useState({ email: '', password: '' });
   const [error, setError] = React.useState('');
   const navigate = useNavigate();
+  const [cookies, setCookie] = useCookies(['token']); 
 
   const handleInput = (event) => {
     const { name, value } = event.target;
@@ -15,8 +16,8 @@ const Login = () => {
   };
 
   const handleLoginSuccess = (data) => {
-    cookie.save('token', data.token, { path: '/', sameSite: 'lax' });
-    console.log(`Token set: ${cookie.load('token')}`);  // Log the token
+    setCookie('token', data.token, { path: '/', sameSite: 'lax' }); 
+    console.log(`Token set: ${cookies.token}`); 
     localStorage.setItem('userId', data.userId);
     localStorage.setItem('roleId', data.roleId);
 
