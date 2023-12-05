@@ -7,7 +7,7 @@ import {
   Box
 } from '@mui/material';
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
-import useApi from './Api';
+import useApi from './Api'; 
 
 const UserProfile = ({ isOpen, onClose }) => {
   const [newName, setNewName] = useState('');
@@ -19,31 +19,34 @@ const UserProfile = ({ isOpen, onClose }) => {
     UserEmail: 'N/A',
     RoleName: 'N/A',
   });
-  const api = useApi();
+  const api = useApi(); 
 
   useEffect(() => {
-    const storedUserId = localStorage.getItem('userId');
-
-    if (storedUserId) {
-      api
-        .get(`/users/users/get/${storedUserId}`)
-        .then((response) => {
+    const userId = localStorage.getItem('userId');
+  
+    if (userId) {
+      const fetchData = async () => {
+        try {
+          const response = await api.get(`/users/users/get/${userId}`);
           const user = response.data.user || {};
-
+  
           setUserData({
             UserName: user.UserName || 'N/A',
             UserEmail: user.UserEmail || 'N/A',
             RoleName: user.RoleName || 'N/A',
           });
-
+  
           setNewName(user.UserName || '');
           setNewEmail(user.UserEmail || '');
-        })
-        .catch((error) => {
+        } catch (error) {
           console.error('Error fetching user data:', error);
-        });
+        }
+      };
+  
+      fetchData();
     }
   }, [api]);
+  
 
   const handleEdit = () => {
     setEditing(true);
@@ -58,12 +61,13 @@ const UserProfile = ({ isOpen, onClose }) => {
         email: newEmail,
         password: newPassword,
       });
-
+  
       setEditing(false);
     } catch (error) {
       console.error('Error updating user data:', error);
     }
   };
+  
 
   const handleCancel = () => {
     setEditing(false);

@@ -1,8 +1,8 @@
 import React, { Suspense } from 'react';
-import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+import { BrowserRouter as Router, Routes, Route , Navigate } from 'react-router-dom';
 import { ThemeProvider , CssBaseline } from '@mui/material';
-import PrivateRoute from './PrivateRoute';
 import { ErrorBoundary } from 'react-error-boundary';
+import Cookies from 'universal-cookie';
 import theme from './Theme'; 
 const AdminCourses = React.lazy(() => import('./admin/Courses/AdminCourses'));
 const AdminRoles = React.lazy(() => import('./admin/Roles/AdminRoles'));
@@ -29,37 +29,36 @@ function ErrorFallback({ error, resetErrorBoundary }) {
   );
 }
 
-const HomeRoutes = () => (
-  <Routes>
-    <Route path="admin-courses" element={<AdminCourses />} />
-    <Route path="admin-roles" element={<AdminRoles />} />
-    <Route path="admin-users" element={<AdminUsers />} />
-    <Route path="scheduler" element={<Scheduler />} />
-    <Route path="user-profile" element={<UserProfile />} />
-    <Route path="course-enrollment-modal" element={<CourseEnrollmentModal />} />
-    <Route path="forum-discussion" element={<ForumDiscussion />} />
-    <Route path="comment-section" element={<CommentSection />} />
-    <Route path="mcq-form" element={<MCQForm />} />
-    <Route path="mcq-answer-form" element={<MCQAnswerForm />} />
-  </Routes>
-);
+function RequireAuth({ children }) {
+  const cookies = new Cookies();
+  const isAuthenticated = Boolean(cookies.get('token'));
 
-const AppRoutes = () => (
-  <Routes>
-    <Route path="/" element={<Start />} />
-    <Route path="/login" element={<Login />} />
-    <Route path="/sign-up" element={<Signup />} />
-    <PrivateRoute path="/home/*" element={<HomeRoutes />} />
-  </Routes>
-);
+  return isAuthenticated ? children : <Navigate to="/login" replace />;
+};
 
 const App = () => (
   <ErrorBoundary FallbackComponent={ErrorFallback}>
     <ThemeProvider theme={theme}>
-    <CssBaseline />
+      <CssBaseline />
       <Router>
         <Suspense fallback={<div>Loading...</div>}>
-          <AppRoutes />
+          <Routes>
+            <Route path="/" element={<Start />} />
+            <Route path="/login" element={<Login />} />
+            <Route path="/sign-up" element={<Signup />} />
+            <Route path="/home/*" element={<RequireAuth><Home /></RequireAuth>}>
+              <Route path="admin-courses" element={<AdminCourses />} />
+              <Route path="admin-roles" element={<AdminRoles />} />
+              <Route path="admin-users" element={<AdminUsers />} />
+              <Route path="scheduler" element={<Scheduler />} />
+              <Route path="user-profile" element={<UserProfile />} />
+              <Route path="course-enrollment-modal" element={<CourseEnrollmentModal />} />
+              <Route path="forum-discussion" element={<ForumDiscussion />} />
+              <Route path="comment-section" element={<CommentSection />} />
+              <Route path="mcq-form" element={<MCQForm />} />
+              <Route path="mcq-answer-form" element={<MCQAnswerForm />} />
+            </Route>
+          </Routes>
         </Suspense>
       </Router>
     </ThemeProvider>
