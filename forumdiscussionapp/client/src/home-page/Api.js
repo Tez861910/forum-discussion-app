@@ -41,7 +41,7 @@ const useApi = () => {
             return response;
           },
           async (error) => {
-            if (error.response.status === 401 && error.config && !error.config.__isRetryRequest) {
+            if (error.response && error.response.status === 401 && error.config && !error.config.__isRetryRequest) {
               if (isRefreshing) {
                 return new Promise(function(resolve, reject) {
                   setFailedQueue([...failedQueue, {resolve, reject}]);
@@ -63,7 +63,7 @@ const useApi = () => {
                   },
                 });
 
-                if (data.success) {
+                if (data && data.success) {
                   startTransition(() => { 
                     setCookie('token', data.token, { path: '/' }); 
                     setCookie('refreshToken', data.refreshToken, { path: '/' });
