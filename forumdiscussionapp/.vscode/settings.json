@@ -18,5 +18,6 @@
     "docify.commentService.programmingLanguage": "auto-detect",
     "docify.commentService.sidePanelReviewMode": false,
     "docify.commentService.inlineComments": true,
-    "docify.commentService.moreExpressiveComments": true
+    "docify.commentService.moreExpressiveComments": true,
+    "git.ignoreLimitWarning": true
 }
