@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { useRoutes } from 'react-router-dom';
-import { Container, Typography, Paper, Box } from '@mui/material';
+import { Container, Box, Paper, useTheme } from '@mui/material';
 import { useNavigate } from 'react-router-dom';
 import { useCookies } from 'react-cookie'; 
 import Sidebar from './side-bar';
@@ -16,6 +16,7 @@ import UserProfile from './user-profile';
 import CourseEnrollmentModal from './course-enrollment-modal';
 
 const Home = () => {
+  const theme = useTheme();
   const [roleId, setRoleId] = React.useState('');
   const [userId,setUserId]=React.useState('');
   const [navigateToPathState, setNavigateToPath] = React.useState(null);
@@ -25,7 +26,9 @@ const Home = () => {
   const [activeView, setActiveView] = React.useState('scheduler');
   const [selectedCourse, setSelectedCourse] = React.useState(null);
   const [isCoursesEnrolled, setIsCoursesEnrolled] = React.useState(false);
+  const [userName, setUserName] = React.useState('');
   const [isSidebarOpen, setSidebarOpen] = React.useState(false);
+  
   const navigate = useNavigate();
   const [cookies, removeCookie] = useCookies(['token', 'refreshToken']); 
 
@@ -120,48 +123,50 @@ const Home = () => {
     { path: 'mcq-form', element: <Wrapper component={MCQForm} view='mcq-form' /> },
     { path: 'mcq-answer-form', element: <Wrapper component={MCQAnswerForm} view='mcq-answer-form' /> },
   ]);
-
   return (
-    <Container sx={{ mt: 2 }}>
-      
-      <Box sx={{ display: 'flex' }}>
+    <Container sx={{ mt: 2, display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
+      <Box sx={{ flexGrow: 1, p: 2, display: 'flex', flexDirection: 'column' }}>
+        <Navbar
+          userId={userId}
+          roleId={roleId}
+          selectedCourse={selectedCourse}
+          isTeacherOrStudent={['2', '3'].includes(roleId)}
+          onCourseSelect={handleCourseSelect}
+          handleCourseChange={handleCourseChange}
+          handleDrawerToggle={() => setSidebarOpen(!isSidebarOpen)}
+          onButtonClick={(view) => {
+            setActiveView(view);
+            navigate(view, { replace: true });
+          }}
+        />
+  
+        <Paper elevation={3} sx={{ p: 2, flexGrow: 1, overflow: 'auto' }}>
+          {routes}
+        </Paper>
+      </Box>
+  
+      <Box sx={{ display: 'flex', width: '100%', [theme.breakpoints.up('md')]: { maxWidth: 900 } }}>
         <Sidebar
-           open={isSidebarOpen}
-           handleDrawerToggle={() => setSidebarOpen(!isSidebarOpen)}
-           key={isSidebarOpen} 
+          open={isSidebarOpen}
+          handleDrawerToggle={() => setSidebarOpen(!isSidebarOpen)}
+          key={isSidebarOpen} 
           isEnrollmentModalOpen={isEnrollmentModalOpen}
           setEnrollmentModalOpen={setEnrollmentModalOpen}
           handleEnrollmentSuccess={handleEnrollmentSuccess}
           handleLogout={handleLogout}
           isUserProfileOpen={isUserProfileOpen}
           setUserProfileOpen={setUserProfileOpen}
+          userName={userName}
           roleId={roleId}
           isCoursesEnrolled={isCoursesEnrolled}
         />
-        <Box sx={{ flexGrow: 1, p: 2 }}>
-          <Box sx={{ mb: 2 }}>
-            <Navbar
-              userId={userId}
-              roleId={roleId}
-              selectedCourse={selectedCourse}
-              isTeacherOrStudent={['2', '3'].includes(roleId)}
-              onCourseSelect={handleCourseSelect}
-              handleCourseChange={handleCourseChange}
-              handleDrawerToggle={() => setSidebarOpen(!isSidebarOpen)}
-              onButtonClick={(view) => {
-                setActiveView(view);
-                navigate(view, { replace: true });
-              }}
-            />
-          </Box>
-  
-          <Paper elevation={3} sx={{ p: 2 }}>
-            {routes}
-          </Paper>
-        </Box>
       </Box>
   
-      <UserProfile isOpen={isUserProfileOpen} onClose={() => setUserProfileOpen(false)} />
+      <UserProfile 
+        isOpen={isUserProfileOpen} 
+        onClose={() => setUserProfileOpen(false)}
+        setUserName={setUserName}
+      />
       <CourseEnrollmentModal
         isOpen={isEnrollmentModalOpen}
         onRequestClose={() => setEnrollmentModalOpen(false)}
@@ -169,6 +174,7 @@ const Home = () => {
       />
     </Container>
   );
+  
 };
 
 export default Home;

@@ -1,4 +1,5 @@
 import { createTheme } from '@mui/material/styles';
+import backgroundImage from './logobg.png';
 
 const theme = createTheme({
   palette: {
@@ -13,6 +14,7 @@ const theme = createTheme({
     },
     background: {
       default: '#dffff0',
+      backgroundImage: `url(${backgroundImage})`,
     },
     text: {
       primary: '#333333',

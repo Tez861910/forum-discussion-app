@@ -1,11 +1,8 @@
-import * as React from 'react';
+import React from 'react';
 import PropTypes from 'prop-types';
-import { Button, ButtonGroup, Box, Typography, Alert } from '@mui/material';
-import EnrolledCoursesDropdown from './enrolled-courses-dropdown';
-import AppBar from '@mui/material/AppBar';
-import Toolbar from '@mui/material/Toolbar';
-import IconButton from '@mui/material/IconButton';
+import { AppBar, Toolbar, IconButton, Typography, Button, ButtonGroup, Box, Alert } from '@mui/material';
 import MenuIcon from '@mui/icons-material/Menu';
+import EnrolledCoursesDropdown from './enrolled-courses-dropdown';
 
 const Navbar = ({
   userId,
@@ -17,7 +14,6 @@ const Navbar = ({
   handleCourseChange,
   handleDrawerToggle,
 }) => {
-
   const getRoleHeaderText = (roleId) => {
     const roleTitles = {
       '1': 'Admin Home Panel',
@@ -33,7 +29,7 @@ const Navbar = ({
         <IconButton edge="start" color="inherit" aria-label="menu" sx={{ mr: 2 }} onClick={handleDrawerToggle}>
           <MenuIcon />
         </IconButton>
-        <Typography variant="h6" color="inherit" component="div" sx={{ flexGrow: 1 }}>
+        <Typography variant="h6" color="inherit" component="div" sx={{ flexGrow: 1 , mr: 2 }}>
           {getRoleHeaderText(roleId)}
         </Typography>
         <ButtonGroup variant="contained" color="secondary" aria-label="outlined primary button group" sx={{ '& .MuiButton-root': { mx: 1 } }}>
@@ -100,10 +96,11 @@ const Navbar = ({
 };
 
 Navbar.propTypes = {
+  userId: PropTypes.string.isRequired,
   roleId: PropTypes.string.isRequired,
   onButtonClick: PropTypes.func.isRequired,
   selectedCourse: PropTypes.string,
-  isTeacherOrStudent: PropTypes.bool,
+  isTeacherOrStudent: PropTypes.bool.isRequired,
   onCourseSelect: PropTypes.func.isRequired,
   handleCourseChange: PropTypes.func.isRequired,
   handleDrawerToggle: PropTypes.func.isRequired,

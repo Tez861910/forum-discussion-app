@@ -9,7 +9,7 @@ import {
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 import useApi from './Api'; 
 
-const UserProfile = ({ isOpen, onClose }) => {
+const UserProfile = ({ isOpen, onClose ,setUserName }) => {
   const [newName, setNewName] = useState('');
   const [newEmail, setNewEmail] = useState('');
   const [newPassword, setNewPassword] = useState('');
@@ -39,6 +39,7 @@ const UserProfile = ({ isOpen, onClose }) => {
   
           setNewName(user.UserName || '');
           setNewEmail(user.UserEmail || '');
+          setUserName(user.UserName || '');
         } catch (error) {
           console.error('Error fetching user data:', error);
         }

@@ -1,6 +1,6 @@
 import * as React from 'react';
 import PropTypes from 'prop-types';
-import { Button, Box, Stack, Avatar, Typography, Drawer,  IconButton } from '@mui/material';
+import { Button, Box,  Avatar, Typography, Drawer, IconButton } from '@mui/material';
 import LogoutIcon from '@mui/icons-material/Logout';
 import AddIcon from '@mui/icons-material/Add';
 import ChevronLeftIcon from '@mui/icons-material/ChevronLeft';
@@ -17,11 +17,9 @@ const Sidebar = ({
   handleLogout,
   isUserProfileOpen,
   setUserProfileOpen,
+  userName,
   roleId,        
 }) => {
-
-
-  
   const [isAvatarModalOpen, setAvatarModalOpen] = React.useState(false); 
 
   const handleUserProfileClick = () => {
@@ -64,24 +62,25 @@ const Sidebar = ({
         onClose={handleDrawerToggle}
         sx={{
           display: { sm: 'block' },
-          '& .MuiDrawer-paper': { boxSizing: 'border-box', width: 240 },
+          '& .MuiDrawer-paper': { boxSizing: 'border-box', width: 240, bgcolor: 'background.default' },
         }}
         ModalProps={{
           keepMounted: true, 
         }}
       >
-        <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'flex-end', py: 1, px: 2 }}>
-          <IconButton onClick={handleDrawerToggle}>
+        <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'flex-end', py: 1, px: 2, bgcolor: 'primary.main' }}>
+          <IconButton onClick={handleDrawerToggle} sx={{ color: 'white' }}>
             <ChevronLeftIcon />
           </IconButton>
         </Box>
-        <Box sx={{ p: 2 }}>
-          <Stack spacing={2}>
+        <Box sx={{ p: 2, display: 'flex', flexDirection: 'column', gap: 2 }}>
             {/* User Avatar */}
-            <Avatar sx={{ width: 56, height: 56, mb: 2 }} onClick={handleAvatarClick}>U</Avatar>
+            <Avatar sx={{ width: 56, height: 56, alignSelf: 'center' }} onClick={handleAvatarClick}>
+            {userName ? userName[0].toUpperCase() : 'U'}
+            </Avatar>
 
             {/* User Role */}
-            <Typography variant="h6" gutterBottom component="div">
+            <Typography variant="h6" gutterBottom component="div" align="center">
               Welcome, {getRoleName(roleId)}
             </Typography>
 
@@ -115,7 +114,6 @@ const Sidebar = ({
             >
               Logout
             </Button>
-          </Stack>
         </Box>
         {/* Course Enrollment Modal */}
         <CourseEnrollmentModal
