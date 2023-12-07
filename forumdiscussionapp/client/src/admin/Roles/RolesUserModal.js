@@ -1,8 +1,23 @@
 import React, { useState, useEffect, useCallback } from 'react';
-import { Dialog, DialogTitle, DialogContent, DialogActions, TextField, Button, Slide, Autocomplete, List, ListItem, ListItemText, Grid, Typography, Box } from '@mui/material';
+import {
+  Dialog,
+  DialogTitle,
+  DialogContent,
+  DialogActions,
+  TextField,
+  Button,
+  Slide,
+  Autocomplete,
+  List,
+  ListItem,
+  ListItemText,
+  Grid,
+  Typography,
+  Box,
+} from '@mui/material';
 import CloseIcon from '@mui/icons-material/Close';
 import ArrowDropDownIcon from '@mui/icons-material/ArrowDropDown';
-import useApi from '../../home-page/Api'; 
+import useApi from '../../home-page/Api';
 
 const Transition = React.forwardRef(function Transition(props, ref) {
   return <Slide direction="up" ref={ref} {...props} />;
@@ -13,6 +28,7 @@ function RoleUserModal({ open, onClose, selectedRoleId }) {
   const [enrolledUsers, setEnrolledUsers] = useState([]);
   const [allUsers, setAllUsers] = useState([]);
   const [removeConfirmation, setRemoveConfirmation] = useState({ open: false, user: null });
+  const [noEnrollmentsFound, setNoEnrollmentsFound] = useState(false);
 
   const { api } = useApi();
 
@@ -27,10 +43,10 @@ function RoleUserModal({ open, onClose, selectedRoleId }) {
     try {
       const response = await api.get('/users/users/get');
       if (response.data && Array.isArray(response.data.users)) {
-        const filteredUsers = response.data.users;
-        setAllUsers(filteredUsers);
+        setAllUsers(response.data.users);
       } else {
         console.error('Invalid response data format (Users):', response.data);
+        setAllUsers([]); // Set to empty array in case of unexpected data
       }
     } catch (error) {
       console.error('Error fetching users:', error);
@@ -46,13 +62,16 @@ function RoleUserModal({ open, onClose, selectedRoleId }) {
           enrollments.map((user) => ({ UserID: user.UserID, UserName: user.UserName }))
         );
         setEnrolledUsers(roleUsersData);
+        setNoEnrollmentsFound(false);
       } else {
         console.error('Invalid response data format (Role Users):', response.data);
+        setEnrolledUsers([]);
+        setNoEnrollmentsFound(true);
       }
     } catch (error) {
       console.error('Error fetching role users:', error);
     }
-  }, [api, selectedRoleId]);  
+  }, [api, selectedRoleId]);
 
   const handleAddUserToRole = useCallback(async () => {
     try {
@@ -64,7 +83,7 @@ function RoleUserModal({ open, onClose, selectedRoleId }) {
       const userId = selectedUsersToAdd[0].userId;
 
       const response = await api.post(`/roles/roles/${selectedRoleId}/enroll`, {
-        roleId:selectedRoleId,
+        roleId: selectedRoleId,
         userId: userId,
       });
 
@@ -121,40 +140,46 @@ function RoleUserModal({ open, onClose, selectedRoleId }) {
       <DialogContent>
         <Grid container spacing={2}>
           <Grid item xs={12}>
-            <List>
-              {enrolledUsers.map((user) => (
-                <ListItem key={user.UserID}>
-                  <ListItemText primary={user.UserName} />
-                  <Button onClick={() => handleRemoveUserConfirmation(user)}>
-                    <CloseIcon />
-                  </Button>
-                </ListItem>
-              ))}
-            </List>
+            {enrolledUsers && enrolledUsers.length > 0 ? (
+              <List>
+                {enrolledUsers.map((user) => (
+                  <ListItem key={user.UserID}>
+                    <ListItemText primary={user.UserName} />
+                    <Button onClick={() => handleRemoveUserConfirmation(user)}>
+                      <CloseIcon />
+                    </Button>
+                  </ListItem>
+                ))}
+              </List>
+            ) : (
+              <Typography>No users enrolled in this role.</Typography>
+            )}
           </Grid>
           <Grid item xs={12}>
-            <Autocomplete
-              options={allUsers || []}
-              getOptionLabel={(option) => (option?.UserName) || ''}
-              isOptionEqualToValue={(option, value) => option?.UserID === value?.UserID}
-              onChange={(event, value) => setSelectedUsersToAdd(value)}
-              renderInput={(params) => (
-                <TextField
-                  {...params}
-                  label="Add Users"
-                  variant="outlined"
-                  fullWidth
-                  size="small"
-                />
-              )}
-              value={selectedUsersToAdd}
-              multiple
-              renderOption={(props, option) => (
-                <li {...props}>
-                  <Box>{option?.UserName}</Box>
-                </li>
-              )}
-            />
+            {allUsers && (
+              <Autocomplete
+                options={allUsers ?? []} 
+                getOptionLabel={(option) => (option?.UserName) || ''}
+                isOptionEqualToValue={(option, value) => option?.UserID === value?.UserID}
+                onChange={(event, value) => setSelectedUsersToAdd(value)}
+                renderInput={(params) => (
+                  <TextField
+                    {...params}
+                    label="Add Users"
+                    variant="outlined"
+                    fullWidth
+                    size="small"
+                  />
+                )}
+                value={selectedUsersToAdd.length > 0 ? selectedUsersToAdd : undefined}
+                multiple
+                renderOption={(props, option) => (
+                  <li {...props}>
+                    <Box>{option?.UserName}</Box>
+                  </li>
+                )}
+              />
+            )}
           </Grid>
         </Grid>
       </DialogContent>

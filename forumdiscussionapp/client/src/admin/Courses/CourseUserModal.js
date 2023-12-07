@@ -27,6 +27,7 @@ function CourseUserModal({ onClose, selectedCourseId, open }) {
   const [enrolledUsers, setEnrolledUsers] = React.useState([]);
   const [allUsers, setAllUsers] = React.useState([]);
   const [removeConfirmation, setRemoveConfirmation] = React.useState({ open: false, user: null });
+  const [noEnrollmentsFound, setNoEnrollmentsFound] = React.useState(false);
 
   const { api } = useApi();
 
@@ -41,10 +42,10 @@ function CourseUserModal({ onClose, selectedCourseId, open }) {
     try {
       const response = await api.get('/users/users/get');
       if (response.data && Array.isArray(response.data.users)) {
-        const filteredUsers = response.data.users;
-        setAllUsers(filteredUsers);
+        setAllUsers(response.data.users);
       } else {
         console.error('Invalid response data format (Users):', response.data);
+        setAllUsers([]);
       }
     } catch (error) {
       console.error('Error fetching users:', error);
@@ -54,6 +55,7 @@ function CourseUserModal({ onClose, selectedCourseId, open }) {
   const fetchCourseEnrollments = React.useCallback(async () => {
     try {
       const response = await api.get(`/courses/courses/enrollments/${selectedCourseId}`);
+      
       if (response.status === 404) {
         console.error('No enrollments found for the course:', response.data.error);
         setEnrolledUsers([]);
@@ -67,8 +69,11 @@ function CourseUserModal({ onClose, selectedCourseId, open }) {
         );
 
         setEnrolledUsers(enrolledUsersArray);
+        setNoEnrollmentsFound(false);
       } else {
         console.error('Invalid response data format for course enrollments:', response.data);
+        setEnrolledUsers([]);
+        setNoEnrollmentsFound(true);
       }
     } catch (error) {
       console.error('Error fetching course enrollments:', error);
@@ -91,8 +96,7 @@ function CourseUserModal({ onClose, selectedCourseId, open }) {
       console.error('Error enrolling users to course:', error);
     }
   }, [api, fetchCourseEnrollments, selectedCourseId, selectedUserId]);
-  
-  
+
   const handleRemoveUserConfirmation = (user) => {
     setRemoveConfirmation({ open: true, user });
   };
@@ -136,40 +140,50 @@ function CourseUserModal({ onClose, selectedCourseId, open }) {
       <DialogContent>
         <Grid container spacing={2}>
           <Grid item xs={12}>
-            <List>
-              {enrolledUsers.map((user) => (
-                <ListItem key={user.UserID}>
-                  <ListItemText primary={user.UserName} />
-                  <Button onClick={() => handleRemoveUserConfirmation(user)}>
-                    <CloseIcon />
-                  </Button>
-                </ListItem>
-              ))}
-            </List>
+            {enrolledUsers && enrolledUsers.length > 0 ? (
+              <List>
+                {enrolledUsers.map((user) => (
+                  <ListItem key={user.UserID}>
+                    <ListItemText primary={user.UserName} />
+                    <Button onClick={() => handleRemoveUserConfirmation(user)}>
+                      <CloseIcon />
+                    </Button>
+                  </ListItem>
+                ))}
+              </List>
+            ) : (
+              <Typography>No users enrolled in this course.</Typography>
+            )}
           </Grid>
           <Grid item xs={12}>
-            <Autocomplete
-              options={allUsers || []}
-              getOptionLabel={(option) => option?.UserName || ''}
-              isOptionEqualToValue={(option, value) => option?.UserID === value}
-              onChange={(event, value) => setSelectedUserId(value?.UserID || null)}
-              renderInput={(params) => (
-                <TextField
-                  {...params}
-                  label="Add Users"
-                  variant="outlined"
-                  fullWidth
-                  size="small"
-                />
-              )}
-              value={allUsers.find(user => user.UserID === selectedUserId) || null}
-              multiple
-              renderOption={(props, option) => (
-                <li {...props}>
-                  <Box>{option?.UserName}</Box>
-                </li>
-              )}
-            />
+            {allUsers && (
+              <Autocomplete
+                options={allUsers ?? []}
+                getOptionLabel={(option) => option?.UserName || ''}
+                isOptionEqualToValue={(option, value) => option?.UserID === value?.UserID}
+                onChange={(event, value) => setSelectedUserId(value?.UserID || null)}
+                renderInput={(params) => (
+                  <TextField
+                    {...params}
+                    label="Add Users"
+                    variant="outlined"
+                    fullWidth
+                    size="small"
+                  />
+                )}
+                value={
+                  allUsers.find(user => user.UserID === selectedUserId)
+                    ? selectedUserId
+                    : undefined
+                }
+                multiple
+                renderOption={(props, option) => (
+                  <li {...props}>
+                    <Box>{option?.UserName}</Box>
+                  </li>
+                )}
+              />
+            )}
           </Grid>
         </Grid>
       </DialogContent>
@@ -186,7 +200,7 @@ function CourseUserModal({ onClose, selectedCourseId, open }) {
           Enroll Users
         </Button>
       </DialogActions>
-
+  
       <Dialog
         open={removeConfirmation.open}
         TransitionComponent={Transition}
