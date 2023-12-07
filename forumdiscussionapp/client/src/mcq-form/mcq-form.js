@@ -7,7 +7,7 @@ function MCQForm({ selectedCourse: courseId }) {
   const [question, setQuestion] = useState('');
   const [options, setOptions] = useState(['', '', '', '']);
   const [correctAnswer, setCorrectAnswer] = useState('');
-  const api = useApi();
+  const { api } = useApi();
 
   const onSave = (mcqData) => {
     console.log('MCQ Data Saved:', mcqData);

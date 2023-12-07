@@ -20,7 +20,7 @@ function CommentSection({ threadId }) {
   const [editingComment, setEditingComment] = useState(null);
   const [editedContent, setEditedContent] = useState('');
   const [selectedComment, setSelectedComment] = useState(null);
-  const api = useApi();
+  const { api } = useApi();
 
   const fetchComments = useCallback(async () => {
     try {

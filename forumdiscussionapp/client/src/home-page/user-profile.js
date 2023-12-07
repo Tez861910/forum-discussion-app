@@ -19,7 +19,8 @@ const UserProfile = ({ isOpen, onClose }) => {
     UserEmail: 'N/A',
     RoleName: 'N/A',
   });
-  const api = useApi(); 
+  
+  const { api } = useApi(); 
 
   useEffect(() => {
     const userId = localStorage.getItem('userId');

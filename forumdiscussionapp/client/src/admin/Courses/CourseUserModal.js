@@ -28,7 +28,7 @@ function CourseUserModal({ onClose, selectedCourseId, open }) {
   const [allUsers, setAllUsers] = React.useState([]);
   const [removeConfirmation, setRemoveConfirmation] = React.useState({ open: false, user: null });
 
-  const api = useApi();
+  const { api } = useApi();
 
   React.useEffect(() => {
     if (open) {

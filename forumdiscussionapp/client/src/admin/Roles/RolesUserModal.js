@@ -14,7 +14,7 @@ function RoleUserModal({ open, onClose, selectedRoleId }) {
   const [allUsers, setAllUsers] = useState([]);
   const [removeConfirmation, setRemoveConfirmation] = useState({ open: false, user: null });
 
-  const api = useApi();
+  const { api } = useApi();
 
   useEffect(() => {
     if (open) {

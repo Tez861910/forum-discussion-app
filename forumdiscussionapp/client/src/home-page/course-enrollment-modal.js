@@ -20,7 +20,7 @@ const CourseEnrollmentModal = ({ isOpen, onRequestClose, onEnrollSuccess }) => {
   const [courses, setCourses] = useState([]);
   const [searchTerm, setSearchTerm] = useState('');
   const [userCourses, setUserCourses] = useState([]);
-  const api = useApi();
+  const { api } = useApi();
 
   const fetchCourses = useCallback(async () => {
     try {

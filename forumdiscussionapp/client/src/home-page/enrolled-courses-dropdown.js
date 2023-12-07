@@ -7,7 +7,7 @@ const EnrolledCoursesDropdown = ({ onCourseSelect, onCourseChange }) => {
   const [userCourses, setUserCourses] = useState([]);
   const [selectedCourse, setSelectedCourse] = useState('');
   const [isLoading, setIsLoading] = useState(true);
-  const api = useApi();
+  const { api } = useApi();
 
   const handleCourseChange = (courseId) => {
     setSelectedCourse(courseId);

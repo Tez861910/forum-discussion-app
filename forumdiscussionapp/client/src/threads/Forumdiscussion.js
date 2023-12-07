@@ -22,7 +22,7 @@ function ForumDiscussion({ selectedCourse: courseId}) {
   const [newThreadTitle, setNewThreadTitle] = useState('');
   const [newThreadContent, setNewThreadContent] = useState('');
   const [showCreateModal, setShowCreateModal] = useState(false);
-  const api = useApi();
+  const { api } = useApi();
 
   const fetchThreads = useCallback(async () => {
     try {

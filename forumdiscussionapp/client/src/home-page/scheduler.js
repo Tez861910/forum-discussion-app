@@ -32,7 +32,7 @@ const Scheduler = ({ selectedCourse: courseId }) => {
   });
   const [selectedEventId, setSelectedEventId] = useState(null);
   //const [isLoading, setIsLoading] = useState(true);
-  const api = useApi();
+  const { api } = useApi();
 
   const fetchEvents = useCallback(async () => {
     try {

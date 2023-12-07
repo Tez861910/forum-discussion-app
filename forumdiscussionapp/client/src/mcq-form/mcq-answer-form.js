@@ -10,7 +10,7 @@ function MCQAnswerForm({ selectedCourse: courseId }) {
   const [selectedOption, setSelectedOption] = useState('');
   const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
   const [allQuestionsAnswered, setAllQuestionsAnswered] = useState(false);
-  const api = useApi();
+  const { api } = useApi();
 
   useEffect(() => {
     const fetchQuestions = async () => {

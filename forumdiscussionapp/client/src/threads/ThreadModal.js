@@ -20,7 +20,7 @@ function ThreadModal({ courseId, threadId, onClose, roleId, userId }) {
   const [editedTitle, setEditedTitle] = React.useState('');
   const [editedContent, setEditedContent] = React.useState('');
 
-  const api = useApi();
+  const { api } = useApi();
 
   React.useEffect(() => {
     const fetchThread = async () => {

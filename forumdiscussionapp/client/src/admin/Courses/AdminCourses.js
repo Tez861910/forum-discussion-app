@@ -15,7 +15,7 @@ function AdminCourses() {
   const [userModalOpen, setUserModalOpen] = useState(false);
   const [selectedCourseId, setSelectedCourseId] = useState(null);
 
-  const api = useApi();
+  const { api } = useApi();
 
   const fetchCourses = useCallback(async () => {
     setLoading(true);

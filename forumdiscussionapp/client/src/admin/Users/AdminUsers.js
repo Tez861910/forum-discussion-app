@@ -30,7 +30,7 @@ function AdminUsers() {
   const [deleteConfirmation, setDeleteConfirmation] = useState({ open: false, userId: null });
   const [createUserModalOpen, setCreateUserModalOpen] = useState(false);
 
-  const api = useApi();
+  const { api } = useApi();
 
   const fetchUsers = useCallback(async () => {
     try {

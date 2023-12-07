@@ -11,7 +11,7 @@ function Responses({ commentId, open, onClose }) {
   const [editingResponse, setEditingResponse] = useState(null);
   const [editedContent, setEditedContent] = useState('');
 
-  const api = useApi();
+  const { api } = useApi();
 
   const fetchResponses = useCallback(async () => {
     try {

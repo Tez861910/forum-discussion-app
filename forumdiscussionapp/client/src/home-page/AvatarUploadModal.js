@@ -10,7 +10,7 @@ const Input = styled('input')({
 const AvatarUploadModal = ({ isOpen, onRequestClose }) => {
   const [selectedFile, setSelectedFile] = React.useState(null);
   const [fileName, setFileName] = React.useState('');
-  const api = useApi();
+  const { api } = useApi();
 
   const handleFileChange = (event) => {
     setSelectedFile(event.target.files[0]);

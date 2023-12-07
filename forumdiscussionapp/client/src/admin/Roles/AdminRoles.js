@@ -20,7 +20,7 @@ function AdminRoles() {
   const [userModalOpen, setUserModalOpen] = useState(false);
   const [selectedRoleId, setSelectedRoleId] = useState(null);
 
-  const api = useApi();
+  const { api } = useApi();
 
   const fetchRoles = useCallback(async () => {
     setLoading(true);
