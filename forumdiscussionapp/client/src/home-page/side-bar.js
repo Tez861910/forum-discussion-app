@@ -3,7 +3,6 @@ import PropTypes from 'prop-types';
 import { Button, Box, Stack, Avatar, Typography, Drawer,  IconButton } from '@mui/material';
 import LogoutIcon from '@mui/icons-material/Logout';
 import AddIcon from '@mui/icons-material/Add';
-import MenuIcon from '@mui/icons-material/Menu';
 import ChevronLeftIcon from '@mui/icons-material/ChevronLeft';
 import CourseEnrollmentModal from './course-enrollment-modal';
 import UserProfile from './user-profile';
@@ -20,11 +19,13 @@ const Sidebar = ({
   setUserProfileOpen,
   roleId,        
 }) => {
+
+
+  
   const [isAvatarModalOpen, setAvatarModalOpen] = React.useState(false); 
 
   const handleUserProfileClick = () => {
     setUserProfileOpen(true);
-    
   };
 
   const handleEnrollNowClick = () => {
@@ -34,7 +35,6 @@ const Sidebar = ({
   };
 
   const handleModalClose = () => {
-    
     setUserProfileOpen(false);
   };
 
@@ -46,17 +46,17 @@ const Sidebar = ({
     setAvatarModalOpen(false); 
   };
 
+  const getRoleName = (roleId) => {
+    const roleNames = {
+      '1': 'Admin',
+      '2': 'Teacher',
+      '3': 'Student',
+    };
+    return roleNames[roleId] || 'User';
+  };
+
   return (
     <Box sx={{ display: 'flex' }}>
-      <IconButton
-        color="inherit"
-        aria-label="open drawer"
-        edge="start"
-        onClick={handleDrawerToggle}
-        sx={{ marginRight: '36px', ...(open && { display: 'none' }) }}
-      >
-        <MenuIcon />
-      </IconButton>
       <Drawer
         variant="persistent"
         anchor="left"
@@ -70,9 +70,11 @@ const Sidebar = ({
           keepMounted: true, 
         }}
       >
-        <IconButton onClick={handleDrawerToggle}>
-          <ChevronLeftIcon />
-        </IconButton>
+        <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'flex-end', py: 1, px: 2 }}>
+          <IconButton onClick={handleDrawerToggle}>
+            <ChevronLeftIcon />
+          </IconButton>
+        </Box>
         <Box sx={{ p: 2 }}>
           <Stack spacing={2}>
             {/* User Avatar */}
@@ -80,7 +82,7 @@ const Sidebar = ({
 
             {/* User Role */}
             <Typography variant="h6" gutterBottom component="div">
-              {roleId === '1' ? 'Admin' : roleId === '2' ? 'Teacher' : 'Student'}
+              Welcome, {getRoleName(roleId)}
             </Typography>
 
             {/* User Profile Button */}

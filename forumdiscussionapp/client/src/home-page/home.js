@@ -121,26 +121,14 @@ const Home = () => {
     { path: 'mcq-answer-form', element: <Wrapper component={MCQAnswerForm} view='mcq-answer-form' /> },
   ]);
 
-  const getRoleHeaderText = (roleId) => {
-    const roleTitles = {
-      '1': 'Admin Home Panel',
-      '2': 'Teacher Home Panel',
-      '3': 'Student Home Panel',
-    };
-    return roleTitles[roleId] || 'Home Panel';
-  };
-
   return (
     <Container sx={{ mt: 2 }}>
-      <Typography variant="h2" align="center" sx={{ my: 3 }}>
-        {getRoleHeaderText(roleId)}
-      </Typography>
-  
+      
       <Box sx={{ display: 'flex' }}>
         <Sidebar
-          open={isSidebarOpen}
-          handleDrawerToggle={handleDrawerToggle}
-          key={isSidebarOpen} 
+           open={isSidebarOpen}
+           handleDrawerToggle={() => setSidebarOpen(!isSidebarOpen)}
+           key={isSidebarOpen} 
           isEnrollmentModalOpen={isEnrollmentModalOpen}
           setEnrollmentModalOpen={setEnrollmentModalOpen}
           handleEnrollmentSuccess={handleEnrollmentSuccess}
@@ -151,10 +139,6 @@ const Home = () => {
           isCoursesEnrolled={isCoursesEnrolled}
         />
         <Box sx={{ flexGrow: 1, p: 2 }}>
-          <Typography variant="h4" sx={{ my: 3 }}>
-            Welcome, {roleId === '1' ? 'Admin' : roleId === '2' ? 'Teacher' : 'Student'}
-          </Typography>
-  
           <Box sx={{ mb: 2 }}>
             <Navbar
               userId={userId}
@@ -163,6 +147,7 @@ const Home = () => {
               isTeacherOrStudent={['2', '3'].includes(roleId)}
               onCourseSelect={handleCourseSelect}
               handleCourseChange={handleCourseChange}
+              handleDrawerToggle={() => setSidebarOpen(!isSidebarOpen)}
               onButtonClick={(view) => {
                 setActiveView(view);
                 navigate(view, { replace: true });
