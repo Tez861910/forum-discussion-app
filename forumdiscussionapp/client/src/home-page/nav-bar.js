@@ -1,6 +1,8 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { AppBar, Toolbar, IconButton, Typography, Button, ButtonGroup, Box, Alert } from '@mui/material';
+import { useTheme } from '@mui/material/styles';
+import useMediaQuery from '@mui/material/useMediaQuery';
 import MenuIcon from '@mui/icons-material/Menu';
 import EnrolledCoursesDropdown from './enrolled-courses-dropdown';
 
@@ -14,6 +16,9 @@ const Navbar = ({
   handleCourseChange,
   handleDrawerToggle,
 }) => {
+  const theme = useTheme();
+  const matches = useMediaQuery(theme.breakpoints.up('md'));
+
   const getRoleHeaderText = (roleId) => {
     const roleTitles = {
       '1': 'Admin Home Panel',
@@ -22,7 +27,7 @@ const Navbar = ({
     };
     return roleTitles[roleId] || 'Home Panel';
   };
-
+  
   return (
     <AppBar position="static" color="primary" sx={{ mb: 3 }}>
       <Toolbar>
@@ -32,7 +37,7 @@ const Navbar = ({
         <Typography variant="h6" color="inherit" component="div" sx={{ flexGrow: 1 , mr: 2 }}>
           {getRoleHeaderText(roleId)}
         </Typography>
-        <ButtonGroup variant="contained" color="secondary" aria-label="outlined primary button group" sx={{ '& .MuiButton-root': { mx: 1 } }}>
+        <ButtonGroup variant="contained" color="secondary" aria-label="outlined primary button group" sx={{ '& .MuiButton-root': { mx: 1 }, flexDirection: matches ? 'row' : 'column' }}>
           {roleId === '1' && (
             <>
               <Button onClick={() => onButtonClick('/home/admin-courses', userId, selectedCourse)}>
@@ -48,7 +53,7 @@ const Navbar = ({
           )}
 
           {(roleId === '2' || roleId === '3') && (
-            <Box sx={{ display: 'flex', alignItems: 'center' }}>
+            <Box sx={{ display: 'flex', alignItems: 'center', flexDirection: matches ? 'row' : 'column' }}>
               <EnrolledCoursesDropdown
                 onCourseSelect={onCourseSelect}
                 onCourseChange={handleCourseChange}

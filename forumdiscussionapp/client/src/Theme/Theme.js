@@ -1,26 +1,27 @@
 import { createTheme } from '@mui/material/styles';
-import backgroundImage from './logobg.png';
+import logobg from './logobg.jpg';
 
 const theme = createTheme({
   palette: {
     primary: {
-      main: '#2196F3',
+      main: '#3f51b5',
     },
     secondary: {
-      main: '#FF4081',
+      main: '#f50057', 
     },
     error: {
       main: '#FF5252',
     },
     background: {
-      default: '#dffff0',
-      backgroundImage: `url(${backgroundImage})`,
+      default: '#fafafa',
+      backgroundImage: `url(${logobg})`,
     },
     text: {
       primary: '#333333',
       secondary: '#666666',
     },
   },
+
   typography: {
     fontFamily: '"Roboto", "Helvetica", "Arial", sans-serif',
     fontWeightBold: 700,
@@ -54,14 +55,25 @@ const theme = createTheme({
     MuiInputLabel: {
       styleOverrides: {
         root: {
-          // Add additional styling if needed
+          color: 'secondary.main',
+          '&.Mui-focused': {
+            color: 'primary.main',
+          },
         },
       },
     },
     MuiOutlinedInput: {
       styleOverrides: {
         root: {
-          // Add additional styling if needed
+          '& fieldset': {
+            borderColor: 'secondary.main',
+          },
+          '&:hover fieldset': {
+            borderColor: 'primary.main',
+          },
+          '&.Mui-focused fieldset': {
+            borderColor: 'primary.main',
+          },
         },
       },
     },
@@ -69,6 +81,48 @@ const theme = createTheme({
       styleOverrides: {
         root: {
           margin: '8px 0',
+        },
+      },
+    },
+    MuiAppBar: {
+      styleOverrides: {
+        root: {
+          backgroundColor: 'primary.main',
+          color: 'background.default',
+        },
+      },
+    },
+    MuiDrawer: {
+      styleOverrides: {
+        paper: {
+          width: '240px',
+          backgroundColor: 'background.default',
+        },
+      },
+    },
+    MuiCard: {
+      styleOverrides: {
+        root: {
+          padding: '16px',
+          borderRadius: '8px',
+          boxShadow: '0px 4px 12px rgba(0, 0, 0, 0.1)',
+        },
+      },
+    },
+    MuiCardContent: {
+      styleOverrides: {
+        root: {
+          '&:last-child': {
+            paddingBottom: '16px',
+          },
+        },
+      },
+    },
+    MuiDialog: {
+      styleOverrides: {
+        paper: {
+          padding: '16px',
+          borderRadius: '8px',
         },
       },
     },

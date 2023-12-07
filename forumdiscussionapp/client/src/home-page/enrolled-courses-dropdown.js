@@ -2,7 +2,7 @@ import React, { useState, useEffect, useCallback } from 'react';
 import { Select, MenuItem, InputLabel, FormControl, Box } from '@mui/material';
 import useApi from './Api';
 
-const EnrolledCoursesDropdown = ({ onCourseSelect, onCourseChange }) => {
+const EnrolledCoursesDropdown = ({ onCourseSelect, onCourseChange ,refreshCourses }) => {
   const [enrolledCourses, setEnrolledCourses] = useState([]);
   const [userCourses, setUserCourses] = useState([]);
   const [selectedCourse, setSelectedCourse] = useState('');
@@ -60,7 +60,7 @@ const EnrolledCoursesDropdown = ({ onCourseSelect, onCourseChange }) => {
     };
 
     fetchData();
-  }, [fetchUserCourses, fetchEnrolledCourses]);
+  }, [fetchUserCourses, fetchEnrolledCourses,refreshCourses]);
 
   return (
     <Box sx={{ minWidth: 200 }}>

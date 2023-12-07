@@ -12,8 +12,8 @@ import logo from './logo.png';
 
 const Start = () => {
   return (
-    <Container sx={{ height: '100vh', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-      <Paper elevation={3} sx={{ p: 3, borderRadius: 2 }}>
+    <Container sx={{ height: '100vh', display: 'flex', alignItems: 'center', justifyContent: 'center', bgcolor: 'background.default' }}>
+      <Paper elevation={3} sx={{ p: 3, borderRadius: 2, bgcolor: 'background.paper' }}>
         <Grid container spacing={2} alignItems="center" justifyContent="center">
           <Grid item xs={12} md={6} align="center">
             {/* Logo */}
@@ -22,7 +22,7 @@ const Start = () => {
             </Box>
 
             {/* Welcome Message */}
-            <Typography variant="h1" sx={{ mb: 2, fontWeight: 'bold', color: '#333', textAlign: 'center' }}>
+            <Typography variant="h1" sx={{ mb: 2, fontWeight: 'bold', color: 'text.primary', textAlign: 'center' }}>
               Welcome to the Forum Discussion App!
             </Typography>
 

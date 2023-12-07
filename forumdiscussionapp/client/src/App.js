@@ -3,7 +3,7 @@ import { BrowserRouter as Router, Routes, Route , Navigate } from 'react-router-
 import { ThemeProvider , CssBaseline } from '@mui/material';
 import { ErrorBoundary } from 'react-error-boundary';
 import Cookies from 'universal-cookie';
-import theme from './Theme'; 
+import theme from './Theme/Theme'; 
 const AdminCourses = React.lazy(() => import('./admin/Courses/AdminCourses'));
 const AdminRoles = React.lazy(() => import('./admin/Roles/AdminRoles'));
 const AdminUsers = React.lazy(() => import('./admin/Users/AdminUsers'));

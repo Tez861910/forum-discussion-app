@@ -40,6 +40,7 @@ const UserProfile = ({ isOpen, onClose ,setUserName }) => {
           setNewName(user.UserName || '');
           setNewEmail(user.UserEmail || '');
           setUserName(user.UserName || '');
+          
         } catch (error) {
           console.error('Error fetching user data:', error);
         }
@@ -48,7 +49,6 @@ const UserProfile = ({ isOpen, onClose ,setUserName }) => {
       fetchData();
     }
   }, [api]);
-  
 
   const handleEdit = () => {
     setEditing(true);
@@ -56,13 +56,20 @@ const UserProfile = ({ isOpen, onClose ,setUserName }) => {
 
   const handleSave = async () => {
     const userId = localStorage.getItem('userId');
-
+  
     try {
       await api.put(`/users/users/update/users/${userId}`, {
         name: newName,
         email: newEmail,
         password: newPassword,
       });
+  
+      setUserData((prevData) => ({
+        ...prevData,
+        UserName: newName,
+      }));
+  
+      setUserName(newName);
   
       setEditing(false);
     } catch (error) {

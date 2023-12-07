@@ -7,6 +7,8 @@ import ChevronLeftIcon from '@mui/icons-material/ChevronLeft';
 import CourseEnrollmentModal from './course-enrollment-modal';
 import UserProfile from './user-profile';
 import AvatarUploadModal from './AvatarUploadModal'; 
+import { useTheme } from '@mui/material/styles';
+import useMediaQuery from '@mui/material/useMediaQuery';
 
 const Sidebar = ({
   open,
@@ -20,6 +22,9 @@ const Sidebar = ({
   userName,
   roleId,        
 }) => {
+  const theme = useTheme();
+  const matches = useMediaQuery(theme.breakpoints.up('md'));
+
   const [isAvatarModalOpen, setAvatarModalOpen] = React.useState(false); 
 
   const handleUserProfileClick = () => {
@@ -56,7 +61,7 @@ const Sidebar = ({
   return (
     <Box sx={{ display: 'flex' }}>
       <Drawer
-        variant="persistent"
+        variant={matches ? "persistent" : "temporary"}
         anchor="left"
         open={open}
         onClose={handleDrawerToggle}

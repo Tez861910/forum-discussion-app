@@ -1,6 +1,7 @@
 import * as React from 'react';
 import { useRoutes } from 'react-router-dom';
-import { Container, Box, Paper, useTheme } from '@mui/material';
+import { Container, Box, Paper, useTheme} from '@mui/material';
+import useMediaQuery from '@mui/material/useMediaQuery';
 import { useNavigate } from 'react-router-dom';
 import { useCookies } from 'react-cookie'; 
 import Sidebar from './side-bar';
@@ -17,8 +18,10 @@ import CourseEnrollmentModal from './course-enrollment-modal';
 
 const Home = () => {
   const theme = useTheme();
+  const matches = useMediaQuery(theme.breakpoints.up('md'));
   const [roleId, setRoleId] = React.useState('');
   const [userId,setUserId]=React.useState('');
+  const [refreshCourses, setRefreshCourses] = React.useState(false);
   const [navigateToPathState, setNavigateToPath] = React.useState(null);
   const [isUserProfileOpen, setUserProfileOpen] = React.useState(false);
   const [isEnrollmentModalOpen, setEnrollmentModalOpen] = React.useState(false);
@@ -104,6 +107,10 @@ const Home = () => {
     setSelectedCourse(courseId);
   };
 
+  const handleEnrolledCoursesButtonClick = () => {
+    setRefreshCourses((prev) => !prev); 
+  };
+
   const Wrapper = ({ component: Component, view }) => {
     React.useEffect(() => {
       setActiveView(view);
@@ -123,6 +130,7 @@ const Home = () => {
     { path: 'mcq-form', element: <Wrapper component={MCQForm} view='mcq-form' /> },
     { path: 'mcq-answer-form', element: <Wrapper component={MCQAnswerForm} view='mcq-answer-form' /> },
   ]);
+
   return (
     <Container sx={{ mt: 2, display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
       <Box sx={{ flexGrow: 1, p: 2, display: 'flex', flexDirection: 'column' }}>
@@ -145,7 +153,7 @@ const Home = () => {
         </Paper>
       </Box>
   
-      <Box sx={{ display: 'flex', width: '100%', [theme.breakpoints.up('md')]: { maxWidth: 900 } }}>
+      <Box sx={{ display: 'flex', width: matches ? '100%' : 'auto', [theme.breakpoints.up('md')]: { maxWidth: 900 } }}>
         <Sidebar
           open={isSidebarOpen}
           handleDrawerToggle={() => setSidebarOpen(!isSidebarOpen)}
@@ -174,7 +182,6 @@ const Home = () => {
       />
     </Container>
   );
-  
 };
 
 export default Home;
