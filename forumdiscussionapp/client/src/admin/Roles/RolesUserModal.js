@@ -16,7 +16,6 @@ import {
   Box,
 } from '@mui/material';
 import CloseIcon from '@mui/icons-material/Close';
-import ArrowDropDownIcon from '@mui/icons-material/ArrowDropDown';
 import useApi from '../../home-page/Api';
 
 const Transition = React.forwardRef(function Transition(props, ref) {
@@ -24,7 +23,7 @@ const Transition = React.forwardRef(function Transition(props, ref) {
 });
 
 function RoleUserModal({ open, onClose, selectedRoleId }) {
-  const [selectedUsersToAdd, setSelectedUsersToAdd] = useState([]);
+  const [selectedUserIds, setSelectedUserIds] = useState([]);
   const [enrolledUsers, setEnrolledUsers] = useState([]);
   const [allUsers, setAllUsers] = useState([]);
   const [removeConfirmation, setRemoveConfirmation] = useState({ open: false, user: null });
@@ -46,7 +45,7 @@ function RoleUserModal({ open, onClose, selectedRoleId }) {
         setAllUsers(response.data.users);
       } else {
         console.error('Invalid response data format (Users):', response.data);
-        setAllUsers([]); // Set to empty array in case of unexpected data
+        setAllUsers([]);
       }
     } catch (error) {
       console.error('Error fetching users:', error);
@@ -56,6 +55,13 @@ function RoleUserModal({ open, onClose, selectedRoleId }) {
   const fetchRoleUsers = useCallback(async () => {
     try {
       const response = await api.get(`/roles/roles/enrollments/${selectedRoleId}`);
+      
+      if (response.status === 404) {
+        console.error('No enrollments found for the role:', response.data.error);
+        setEnrolledUsers([]);
+        return;
+      }
+
       if (response.data && typeof response.data.enrollments === 'object') {
         const enrollmentsData = response.data.enrollments;
         const roleUsersData = Object.values(enrollmentsData).flatMap((enrollments) =>
@@ -75,24 +81,28 @@ function RoleUserModal({ open, onClose, selectedRoleId }) {
 
   const handleAddUserToRole = useCallback(async () => {
     try {
-      if (!selectedUsersToAdd || selectedUsersToAdd.length === 0 || !selectedUsersToAdd[0]?.userId) {
-        console.error('Invalid user selected');
+
+      console.log('Before API request - selectedUserIds:', selectedUserIds);
+
+      if (selectedUserIds.length === 0) {
+        console.error('No users selected. Cannot enroll.');
         return;
       }
 
-      const userId = selectedUsersToAdd[0].userId;
+      console.log('Enrolling users with IDs:', selectedUserIds);
 
       const response = await api.post(`/roles/roles/${selectedRoleId}/enroll`, {
         roleId: selectedRoleId,
-        userId: userId,
+        userIds: selectedUserIds,
       });
 
       console.log('Add User Response:', response.data);
       fetchRoleUsers();
+      setEnrolledUsers([]);
     } catch (error) {
       console.error('Error adding user to role:', error);
     }
-  }, [api, fetchRoleUsers, selectedRoleId, selectedUsersToAdd]);
+  }, [api, fetchRoleUsers, selectedRoleId, selectedUserIds]);
 
   const handleRemoveUserConfirmation = (user) => {
     setRemoveConfirmation({ open: true, user });
@@ -100,12 +110,12 @@ function RoleUserModal({ open, onClose, selectedRoleId }) {
 
   const confirmRemoveUser = useCallback(async () => {
     try {
-      if (!removeConfirmation.user || !removeConfirmation.user.userId) {
+      if (!removeConfirmation.user || !removeConfirmation.user.UserID) {
         console.error('Invalid user selected for removal');
         return;
       }
 
-      const userId = removeConfirmation.user.userId;
+      const userId = removeConfirmation.user.UserID;
 
       const response = await api.delete(`/roles/roles/${selectedRoleId}/enrollments/${userId}`);
       console.log('Delete User Response:', response.data);
@@ -121,12 +131,6 @@ function RoleUserModal({ open, onClose, selectedRoleId }) {
     setRemoveConfirmation({ open: false, user: null });
   };
 
-  const DropdownIndicator = ({ isOpen }) => (
-    <Box sx={{ display: 'flex', alignItems: 'center', pr: 1 }}>
-      <ArrowDropDownIcon color={isOpen ? 'primary' : 'action'} />
-    </Box>
-  );
-
   return (
     <Dialog
       open={open}
@@ -136,7 +140,7 @@ function RoleUserModal({ open, onClose, selectedRoleId }) {
       aria-labelledby="user-modal-title"
       aria-describedby="user-modal-description"
     >
-      <DialogTitle id="user-modal-title">{`Users in Role `}</DialogTitle>
+      <DialogTitle id="user-modal-title">Users in Role</DialogTitle>
       <DialogContent>
         <Grid container spacing={2}>
           <Grid item xs={12}>
@@ -158,10 +162,14 @@ function RoleUserModal({ open, onClose, selectedRoleId }) {
           <Grid item xs={12}>
             {allUsers && (
               <Autocomplete
-                options={allUsers ?? []} 
-                getOptionLabel={(option) => (option?.UserName) || ''}
+                options={allUsers ?? []}
+                getOptionLabel={(option) => option?.UserName || ''}
                 isOptionEqualToValue={(option, value) => option?.UserID === value?.UserID}
-                onChange={(event, value) => setSelectedUsersToAdd(value)}
+                onChange={(event, value) => {
+                  console.log('Autocomplete onChange - event:', event);
+                  console.log('Autocomplete onChange - value:', value);
+                  setSelectedUserIds(value.map(user => user.UserID));
+                }}
                 renderInput={(params) => (
                   <TextField
                     {...params}
@@ -171,11 +179,21 @@ function RoleUserModal({ open, onClose, selectedRoleId }) {
                     size="small"
                   />
                 )}
-                value={selectedUsersToAdd.length > 0 ? selectedUsersToAdd : undefined}
+                value={allUsers.filter((user) => selectedUserIds.includes(user.UserID))}
                 multiple
-                renderOption={(props, option) => (
-                  <li {...props}>
-                    <Box>{option?.UserName}</Box>
+                renderOption={(props, option, { selected }) => (
+                  <li key={option.UserID} {...props}>
+                    <Box>
+                      {option?.UserName}
+                      {selected && (
+                        <Button onClick={(e) => {
+                          e.stopPropagation(); 
+                          handleRemoveUserConfirmation(option);
+                        }}>
+                          <CloseIcon />
+                        </Button>
+                      )}
+                    </Box>
                   </li>
                 )}
               />

@@ -4,7 +4,6 @@ const { hashPassword } = require('../authvalid');
 async function handleUsersUpdateId(req, res) {
   const { id } = req.params;
   const userData = req.body;
-  const userCourseData = userData.usercourses;
   const userRoleData = userData.userroles;
 
   try {
@@ -45,14 +44,7 @@ async function handleUsersUpdateId(req, res) {
     if (result.affectedRows === 1) {
       console.log('User updated successfully');
 
-      // Update usercourses table
-      if (userCourseData && userCourseData.length > 0) {
-        const userCoursesSql = 'UPDATE usercourses SET CourseID = ? WHERE UserID = ? AND IsDeleted = FALSE';
-        for (const course of userCourseData) {
-          await query(userCoursesSql, [course.CourseID, id]);
-        }
-      }
-
+    
       // Update userroles table
       if (userRoleData && userRoleData.length > 0) {
         const userRolesSql = 'UPDATE userroles SET RoleID = ? WHERE UserID = ? AND IsDeleted = FALSE';

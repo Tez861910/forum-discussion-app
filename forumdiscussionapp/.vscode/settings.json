@@ -15,9 +15,10 @@
             "password": ""
         }
     ],
-    "docify.commentService.programmingLanguage": "auto-detect",
+    "docify.commentService.programmingLanguage": "javascript",
     "docify.commentService.sidePanelReviewMode": false,
     "docify.commentService.inlineComments": true,
     "docify.commentService.moreExpressiveComments": true,
-    "git.ignoreLimitWarning": true
+    "git.ignoreLimitWarning": true,
+    "docify.commentService.docstringFormat": "JsDoc"
 }

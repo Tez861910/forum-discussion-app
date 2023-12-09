@@ -1,6 +1,6 @@
 import * as React from 'react';
 import {
-  Button,
+  IconButton,
   Table,
   TableBody,
   TableCell,
@@ -9,6 +9,8 @@ import {
   TableRow,
   Paper,
 } from '@mui/material';
+import EditIcon from '@mui/icons-material/Edit';
+import DeleteIcon from '@mui/icons-material/Delete';
 
 function UserTable({ users, handleEditUser, handleDeleteUser, getRoleName }) {
     return (
@@ -34,28 +36,27 @@ function UserTable({ users, handleEditUser, handleDeleteUser, getRoleName }) {
                 <TableCell>{user.UserEmail}</TableCell>
                 <TableCell>{getRoleName(user.RoleID)}</TableCell>
                 <TableCell>
-                  <Button
-                    variant="contained"
-                    color="primary"
-                    onClick={() => handleEditUser(user)}
-                    sx={{ mr: 1 }}
-                  >
-                    Edit
-                  </Button>
-                  <Button
-                    variant="contained"
-                    color="secondary"
-                    onClick={() => handleDeleteUser(user.UserID)}
-                  >
-                    Delete
-                  </Button>
-                </TableCell>
-              </TableRow>
-            ))}
-          </TableBody>
-        </Table>
-      </TableContainer>
-    );
-  }
-  
-  export default UserTable;
+                <IconButton
+                  color="primary"
+                  onClick={() => handleEditUser(user)}
+                  sx={{ mr: 1 }}
+                >
+                  <EditIcon />
+                </IconButton>
+                <IconButton
+                  color="secondary"
+                  onClick={() => handleDeleteUser(user.UserID)}
+                >
+                  <DeleteIcon />
+                </IconButton>
+              </TableCell>
+            </TableRow>
+          ))}
+        </TableBody>
+      </Table>
+    </TableContainer>
+  );
+}
+
+export default UserTable;
+

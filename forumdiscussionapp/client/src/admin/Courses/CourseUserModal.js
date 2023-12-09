@@ -23,7 +23,7 @@ const Transition = React.forwardRef(function Transition(props, ref) {
 });
 
 function CourseUserModal({ onClose, selectedCourseId, open }) {
-  const [selectedUserId, setSelectedUserId] = React.useState(null);
+  const [selectedUserIds, setSelectedUserIds] = React.useState([]);
   const [enrolledUsers, setEnrolledUsers] = React.useState([]);
   const [allUsers, setAllUsers] = React.useState([]);
   const [removeConfirmation, setRemoveConfirmation] = React.useState({ open: false, user: null });
@@ -82,39 +82,54 @@ function CourseUserModal({ onClose, selectedCourseId, open }) {
 
   const handleAddUserToCourse = React.useCallback(async () => {
     try {
+      console.log('Before API request - selectedUserIds:', selectedUserIds);
+
+      if (selectedUserIds.length === 0) {
+        console.error('No users selected. Cannot enroll.');
+        return;
+      }
+
+      console.log('Enrolling users with IDs:', selectedUserIds);
+  
       const response = await api.post(
         `/courses/courses/${selectedCourseId}/enroll`,
         {
           courseId: selectedCourseId,
-          userId: selectedUserId,
+          userIds: selectedUserIds,
         }
       );
   
       console.log('Enroll Users Response:', response.data);
       fetchCourseEnrollments();
+      setSelectedUserIds([]);
     } catch (error) {
       console.error('Error enrolling users to course:', error);
     }
-  }, [api, fetchCourseEnrollments, selectedCourseId, selectedUserId]);
+  }, [api, fetchCourseEnrollments, selectedCourseId, selectedUserIds]);  
 
   const handleRemoveUserConfirmation = (user) => {
-    setRemoveConfirmation({ open: true, user });
+      setRemoveConfirmation({ open: true, user });
   };
-
+    
   const confirmRemoveUser = React.useCallback(async () => {
     try {
-      if (!removeConfirmation.user || !removeConfirmation.user.UserId) {
-        console.error('Invalid user selected for removal');
+      console.log('Removing user:', removeConfirmation.user);
+  
+      if (!removeConfirmation.user || !removeConfirmation.user.UserID) {
+        console.error('Invalid user selected for removal', removeConfirmation.user);
         return;
       }
-
-      const userId = removeConfirmation.user.UserId;
-
+  
+      const userId = removeConfirmation.user.UserID;
+  
+      console.log('Before API request - userId:', userId);
+  
       const response = await api.patch(
         `/courses/courses/${selectedCourseId}/enrollments/${userId}`
       );
-
-      console.log('Delete User Response:', response.data);
+  
+      console.log('API response:', response);
+  
       fetchCourseEnrollments();
     } catch (error) {
       console.error('Error removing user from course:', error);
@@ -122,7 +137,8 @@ function CourseUserModal({ onClose, selectedCourseId, open }) {
       setRemoveConfirmation({ open: false, user: null });
     }
   }, [api, fetchCourseEnrollments, removeConfirmation, selectedCourseId]);
-
+  
+  
   const cancelRemoveUser = () => {
     setRemoveConfirmation({ open: false, user: null });
   };
@@ -158,31 +174,41 @@ function CourseUserModal({ onClose, selectedCourseId, open }) {
           <Grid item xs={12}>
             {allUsers && (
               <Autocomplete
-                options={allUsers ?? []}
-                getOptionLabel={(option) => option?.UserName || ''}
-                isOptionEqualToValue={(option, value) => option?.UserID === value?.UserID}
-                onChange={(event, value) => setSelectedUserId(value?.UserID || null)}
-                renderInput={(params) => (
-                  <TextField
-                    {...params}
-                    label="Add Users"
-                    variant="outlined"
-                    fullWidth
-                    size="small"
-                  />
-                )}
-                value={
-                  allUsers.find(user => user.UserID === selectedUserId)
-                    ? selectedUserId
-                    : undefined
-                }
-                multiple
-                renderOption={(props, option) => (
-                  <li {...props}>
-                    <Box>{option?.UserName}</Box>
-                  </li>
-                )}
-              />
+              options={allUsers ?? []}
+              getOptionLabel={(option) => option?.UserName || ''}
+              isOptionEqualToValue={(option, value) => option?.UserID === value?.UserID}
+              onChange={(event, value) => {
+                console.log('Autocomplete onChange - event:', event);
+                console.log('Autocomplete onChange - value:', value);
+                setSelectedUserIds(value.map((user) => user.UserID));
+              }}
+              renderInput={(params) => (
+                <TextField
+                  {...params}
+                  label="Add Users"
+                  variant="outlined"
+                  fullWidth
+                  size="small"
+                />
+              )}
+              value={allUsers.filter((user) => selectedUserIds.includes(user.UserID))}
+              multiple
+              renderOption={(props, option, { selected }) => (
+                <li {...props}>
+                  <Box>
+                    {option?.UserName}
+                    {selected && (
+                      <Button onClick={(e) => {
+                        e.stopPropagation(); 
+                        handleRemoveUserConfirmation(option);
+                      }}>
+                        <CloseIcon />
+                      </Button>
+                    )}
+                  </Box>
+                </li>
+              )}
+            />
             )}
           </Grid>
         </Grid>

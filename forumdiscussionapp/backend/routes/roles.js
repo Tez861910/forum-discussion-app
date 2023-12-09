@@ -61,7 +61,7 @@ router.get('/roles/enrollments/:roleId', verifyJwt, validate(Joi.object({
 // Enroll user in a role
 router.post('/roles/:roleId/enroll', verifyJwt, validate(Joi.object({
   roleId: Joi.number().integer().min(1).required(),
-  userId: Joi.number().integer().min(1).required()
+  userIds: Joi.number().integer().min(1).required()
 })), handleRolesIdEnroll);
 
 // Patch (soft delete) removing user from a role

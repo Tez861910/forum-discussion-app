@@ -81,6 +81,7 @@ function AdminUsers() {
           UserPassword: '',
           RoleID: '',
         });
+        fetchUsers();
         setCreateUserModalOpen(false);
         fetchUsers();
       } else {
@@ -120,7 +121,7 @@ function AdminUsers() {
     }
 
     try {
-      const response = await api.put(`/users/users/update/${editingUserId}`, updatedUserData);
+      const response = await api.put(`/users/users/update${editingUserId}`, updatedUserData);
 
       console.log('Edit User Response:', response.data);
   
@@ -168,10 +169,6 @@ function AdminUsers() {
     }
   }, [api, deleteConfirmation, fetchUsers]);
 
-  const cancelDelete = () => {
-    setDeleteConfirmation({ open: false, userId: null });
-  };
-
   const handleInputChange = (key, value) => {
     setUpdatedUserData((prevData) => ({
       ...prevData,
@@ -197,7 +194,7 @@ function AdminUsers() {
       >
         Create User
       </Button>
-      <UserTable users={users} handleEditUser={handleEditUser} handleDeleteUser={handleDeleteUser} getRoleName={getRoleName} />
+      <UserTable key={users.length} users={users} handleEditUser={handleEditUser} handleDeleteUser={handleDeleteUser} getRoleName={getRoleName} />
       <CreateUserDialog open={createUserModalOpen} handleClose={() => setCreateUserModalOpen(false)} handleCreateUser={handleCreateUser} newUser={newUser} setNewUser={setNewUser} roles={roles} TransitionComponent={Transition} />
       <DeleteConfirmationDialog open={deleteConfirmation.open} handleClose={() => setDeleteConfirmation({ open: false, userId: null })} handleDelete={confirmDelete} TransitionComponent={Transition} />
       <EditUserDialog open={editingUserId !== null} handleClose={() => setEditingUserId(null)} handleUpdateUser={handleUpdateUser} updatedUserData={updatedUserData} handleInputChange={handleInputChange} roles={roles} TransitionComponent={Transition} />

@@ -1,7 +1,5 @@
-import { useState } from 'react';
-
 function SignUpValidation(values) {
-  const [errors, setErrors] = useState({});
+  const errors = {};
 
   const fields = [
     { field: 'name', label: 'Name' },
@@ -17,16 +15,9 @@ function SignUpValidation(values) {
 
   fields.forEach(({ field, label, pattern, message }) => {
     if (!values[field]) {
-      setErrors(prevErrors => ({ ...prevErrors, [field]: `${label} should not be empty` }));
+      errors[field] = `${label} should not be empty`;
     } else if (pattern && !pattern.test(values[field])) {
-      setErrors(prevErrors => ({ ...prevErrors, [field]: message }));
-    } else {
-      // Clear the error message if the field is valid
-      setErrors(prevErrors => {
-        const newErrors = { ...prevErrors };
-        delete newErrors[field];
-        return newErrors;
-      });
+      errors[field] = message;
     }
   });
 
@@ -34,3 +25,4 @@ function SignUpValidation(values) {
 }
 
 export default SignUpValidation;
+
