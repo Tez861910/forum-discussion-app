@@ -13,7 +13,9 @@ const { handleCoursesUpdateId } = require('../course-routes/handle-courses-updat
 const { handleCoursesPatchId } = require('../course-routes/handle-courses-patch-id');
 const { handleCoursesEnrollmentsId } = require('../course-routes/handle-courses-enrollments-id');
 const { handleCoursesIdEnroll } = require('../course-routes/handle-courses-id-enroll');
+const { handleRemoveUsersFromCourse } = require('../course-routes/handle-remove-users-from-course');
 const { handleCIDEnrollmentsEID } = require('../course-routes/handle-courses-cid-enrollments-eid');
+
 
 // Create a new course
 router.post('/courses/create', verifyJwt, async (req, res) => handleCoursesCreate(req, res));
@@ -36,7 +38,11 @@ router.put('/courses/update/:id', verifyJwt, async (req, res) =>handleCoursesUpd
 // Patch (soft delete) a course by ID
 router.patch('/courses/delete/:id', verifyJwt, async (req, res) => handleCoursesPatchId(req, res));
 
+// Patch (soft delete) removing users from a course
+router.patch('/courses/:courseId/enrollments', verifyJwt, async (req, res) => handleRemoveUsersFromCourse(req, res));
+
 // Patch (soft delete) removing user from a course
 router.patch('/courses/:courseId/enrollments/:userId', verifyJwt, async (req, res) => handleCIDEnrollmentsEID(req, res));
+
 
 module.exports = router;

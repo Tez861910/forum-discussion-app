@@ -1,5 +1,24 @@
-import * as React from 'react';
-import { Dialog, DialogTitle, DialogContent, DialogActions, TextField, Button, Slide, Autocomplete, List, ListItem, ListItemText, ListItemSecondaryAction, Checkbox, Grid, Typography, Box, IconButton } from '@mui/material';
+import React, { useState, useEffect, useCallback } from 'react';
+import {
+  Dialog,
+  DialogTitle,
+  DialogContent,
+  DialogActions,
+  TextField,
+  Button,
+  Slide,
+  Autocomplete,
+  List,
+  ListItem,
+  ListItemText,
+  ListItemSecondaryAction,
+  Checkbox,
+  Typography,
+  Box,
+  IconButton,
+  Divider,
+  styled,
+} from '@mui/material';
 import DeleteIcon from '@mui/icons-material/Delete';
 import useApi from '../../home-page/Api';
 
@@ -7,23 +26,38 @@ const Transition = React.forwardRef(function Transition(props, ref) {
   return <Slide direction="up" ref={ref} {...props} />;
 });
 
-function CourseUserModal({ onClose, selectedCourseId, open }) {
-  const [selectedUserIds, setSelectedUserIds] = React.useState([]);
-  const [enrolledUsers, setEnrolledUsers] = React.useState([]);
-  const [allUsers, setAllUsers] = React.useState([]);
-  const [removeConfirmation, setRemoveConfirmation] = React.useState({ open: false, user: null });
-  const [noEnrollmentsFound, setNoEnrollmentsFound] = React.useState(false);
+const StyledAutocomplete = styled(Autocomplete)({
+  marginBottom: 2,
+});
 
+const StyledList = styled(List)({
+  maxHeight: 300,
+  overflow: 'auto',
+});
+
+const StyledButton = styled(Button)({
+  marginLeft: 2,
+});
+
+function CourseUserModal({ onClose, selectedCourseId, open }) {
+  const [enrolledUsers, setEnrolledUsers] = useState([]);
+  const [allUsers, setAllUsers] = useState([]);
+  const [removeConfirmation, setRemoveConfirmation] = useState({ open: false, user: null });
+  const [noEnrollmentsFound, setNoEnrollmentsFound] = useState(false);
+  const [searchText, setSearchText] = useState('');
+  const [selectedEnrolledUserIds, setSelectedEnrolledUserIds] = useState([]);
+  const [selectedAutocompleteUserIds, setSelectedAutocompleteUserIds] = useState([]);
+  const [autocompleteValue, setAutocompleteValue] = useState([]);
   const { api } = useApi();
 
-  React.useEffect(() => {
+  useEffect(() => {
     if (open) {
       fetchCourseEnrollments();
       fetchAllUsers();
     }
   }, [api, open, selectedCourseId]);
 
-  const fetchAllUsers = React.useCallback(async () => {
+  const fetchAllUsers = useCallback(async () => {
     try {
       const response = await api.get('/users/users/get');
       if (response.data && Array.isArray(response.data.users)) {
@@ -37,22 +71,19 @@ function CourseUserModal({ onClose, selectedCourseId, open }) {
     }
   }, [api]);
 
-  const fetchCourseEnrollments = React.useCallback(async () => {
+  const fetchCourseEnrollments = useCallback(async () => {
     try {
       const response = await api.get(`/courses/courses/enrollments/${selectedCourseId}`);
-      
       if (response.status === 404) {
         console.error('No enrollments found for the course:', response.data.error);
         setEnrolledUsers([]);
         return;
       }
-
       if (response.data && typeof response.data.enrollments === 'object') {
         const enrollmentsData = response.data.enrollments;
         const enrolledUsersArray = Object.values(enrollmentsData).flatMap((enrollments) =>
           enrollments.map((user) => ({ UserID: user.UserID, UserName: user.UserName }))
         );
-
         setEnrolledUsers(enrolledUsersArray);
         setNoEnrollmentsFound(false);
       } else {
@@ -65,56 +96,56 @@ function CourseUserModal({ onClose, selectedCourseId, open }) {
     }
   }, [api, selectedCourseId]);
 
-  const handleAddUserToCourse = React.useCallback(async () => {
+  const handleAddUserToCourse = useCallback(async () => {
     try {
-      console.log('Before API request - selectedUserIds:', selectedUserIds);
-
-      if (selectedUserIds.length === 0) {
+      if (selectedAutocompleteUserIds.length === 0) {
         console.error('No users selected. Cannot enroll.');
         return;
       }
-
-      console.log('Enrolling users with IDs:', selectedUserIds);
-  
-      const response = await api.post(
-        `/courses/courses/${selectedCourseId}/enroll`,
-        {
-          courseId: selectedCourseId,
-          userIds: selectedUserIds,
-        }
-      );
-  
+      const response = await api.post(`/courses/courses/${selectedCourseId}/enroll`, {
+        courseId: selectedCourseId,
+        userIds: selectedAutocompleteUserIds,
+      });
       console.log('Enroll Users Response:', response.data);
       fetchCourseEnrollments();
-      setSelectedUserIds([]);
+      setSelectedAutocompleteUserIds([]);
+      setAutocompleteValue([]);
     } catch (error) {
       console.error('Error enrolling users to course:', error);
     }
-  }, [api, fetchCourseEnrollments, selectedCourseId, selectedUserIds]);  
+  }, [api, fetchCourseEnrollments, selectedCourseId, selectedAutocompleteUserIds]);
+
+  const handleRemoveSelected = useCallback(async () => {
+    if (selectedEnrolledUserIds.length === 0) {
+      console.error('No users selected for removal.');
+      return;
+    }
+    try {
+      const response = await api.patch(`/courses/courses/${selectedCourseId}/enrollments`, {
+        userIds: selectedEnrolledUserIds,
+      });
+      console.log('API response:', response);
+      fetchCourseEnrollments();
+    } catch (error) {
+      console.error('Error removing users from course:', error);
+    } finally {
+      setSelectedEnrolledUserIds([]);
+    }
+  }, [api, fetchCourseEnrollments, selectedCourseId, selectedEnrolledUserIds]);
 
   const handleRemoveUserConfirmation = (user) => {
-      setRemoveConfirmation({ open: true, user });
+    setRemoveConfirmation({ open: true, user });
   };
-    
-  const confirmRemoveUser = React.useCallback(async () => {
+
+  const confirmRemoveUser = useCallback(async () => {
     try {
-      console.log('Removing user:', removeConfirmation.user);
-  
       if (!removeConfirmation.user || !removeConfirmation.user.UserID) {
         console.error('Invalid user selected for removal', removeConfirmation.user);
         return;
       }
-  
       const userId = removeConfirmation.user.UserID;
-  
-      console.log('Before API request - userId:', userId);
-  
-      const response = await api.patch(
-        `/courses/courses/${selectedCourseId}/enrollments/${userId}`
-      );
-  
+      const response = await api.patch(`/courses/courses/${selectedCourseId}/enrollments/${userId}`);
       console.log('API response:', response);
-  
       fetchCourseEnrollments();
     } catch (error) {
       console.error('Error removing user from course:', error);
@@ -122,11 +153,26 @@ function CourseUserModal({ onClose, selectedCourseId, open }) {
       setRemoveConfirmation({ open: false, user: null });
     }
   }, [api, fetchCourseEnrollments, removeConfirmation, selectedCourseId]);
-  
-  
+
   const cancelRemoveUser = () => {
     setRemoveConfirmation({ open: false, user: null });
   };
+
+  const handleUserCheckboxChange = (userId) => {
+    setSelectedEnrolledUserIds((prevSelectedUserIds) => {
+      if (prevSelectedUserIds.includes(userId)) {
+        // User is already selected, so remove them
+        return prevSelectedUserIds.filter((id) => id !== userId);
+      } else {
+        // User is not selected, so add them
+        return [...prevSelectedUserIds, userId];
+      }
+    });
+  };
+
+  const filteredEnrolledUsers = enrolledUsers.filter(
+    (user) => user.UserName.toLowerCase().includes(searchText.toLowerCase())
+  );
 
   return (
     <Dialog
@@ -138,105 +184,106 @@ function CourseUserModal({ onClose, selectedCourseId, open }) {
       aria-describedby="user-modal-description"
       PaperProps={{
         sx: {
-          borderRadius: 2,
-          p: 3,
+          borderRadius: 16,
+          p: 4,
+          minWidth: 400,
         },
       }}
     >
-      <DialogTitle id="user-modal-title" sx={{ textAlign: 'center', mb: 3 }}>Users in Course</DialogTitle>
+      <DialogTitle id="user-modal-title" sx={{ textAlign: 'center', mb: 3 }}>
+        Users in Course
+      </DialogTitle>
       <DialogContent>
-        <Grid container spacing={2}>
-          <Grid item xs={12}>
-            {enrolledUsers && enrolledUsers.length > 0 ? (
-              <List>
-                {enrolledUsers.map((user) => (
-                  <ListItem key={user.UserID}>
-                    <ListItemText primary={user.UserName} />
-                    <ListItemSecondaryAction>
-                      <IconButton 
-                       edge="end"
-                       aria-label="delete"
-                       size="small"
-                       onClick={() => handleRemoveUserConfirmation(user)}
-                       sx={{ color: 'secondary.main' }}
-                      >
-                       <DeleteIcon />
-                      </IconButton>
-                    </ListItemSecondaryAction>
-                  </ListItem>
-                ))}
-              </List>
-            ) : (
-              <Typography>No users enrolled in this course.</Typography>
-            )}
-          </Grid>
-          <Grid item xs={12}>
-            {allUsers && (
-              <Autocomplete
-              options={allUsers ?? []}
-              getOptionLabel={(option) => option?.UserName || ''}
-              isOptionEqualToValue={(option, value) => option?.UserID === value?.UserID}
-              onChange={(event, value) => {
-                console.log('Autocomplete onChange - event:', event);
-                console.log('Autocomplete onChange - value:', value);
-                setSelectedUserIds(value.map((user) => user.UserID));
-              }}
-              renderInput={(params) => (
-                <TextField
-                  {...params}
-                  label="Add Users"
-                  variant="outlined"
-                  fullWidth
-                  size="small"
-                />
-              )}
-              value={allUsers.filter((user) => selectedUserIds.includes(user.UserID))}
-              multiple
-              renderOption={(props, option, { selected }) => (
-                <ListItem {...props}>
-                <Box>
-                  {option?.UserName}
-                  {selected && (
-                    <IconButton 
-                    edge="end"
-                    aria-label="delete"
-                    size="small"
-                    onClick={(e) => {
-                      e.stopPropagation(); 
-                      handleRemoveUserConfirmation(option);
-                    }}
-                    sx={{ color: 'secondary.main' }}
-                  >
-                    <DeleteIcon />
-                  </IconButton>                  
-                  )}
-                </Box>
-              </ListItem>              
-              )}
+        {/* Search bar for enrolled user list */}
+        <TextField
+          label="Search Enrolled Users"
+          variant="outlined"
+          fullWidth
+          size="small"
+          value={searchText}
+          onChange={(e) => setSearchText(e.target.value)}
+          sx={{ mb: 2 }}
+        />
+        {/* Enrolled Users List */}
+        <StyledList>
+          {filteredEnrolledUsers.length > 0 ? (
+            filteredEnrolledUsers.map((user) => (
+              <React.Fragment key={user.UserID}>
+                <ListItem button>
+                  <Checkbox
+                    edge="start"
+                    checked={selectedEnrolledUserIds.includes(user.UserID)}
+                    tabIndex={-1}
+                    disableRipple
+                    onChange={() => handleUserCheckboxChange(user.UserID)}
+                  />
+                  <ListItemText primary={user.UserName} />
+                  <ListItemSecondaryAction>
+                    <IconButton
+                      edge="end"
+                      aria-label="delete"
+                      size="small"
+                      onClick={() => handleRemoveUserConfirmation(user)}
+                      sx={{ color: 'secondary.main' }}
+                    >
+                      <DeleteIcon />
+                    </IconButton>
+                  </ListItemSecondaryAction>
+                </ListItem>
+                <Divider />
+              </React.Fragment>
+            ))
+          ) : (
+            <Typography>No matching users found.</Typography>
+          )}
+        </StyledList>
+      </DialogContent>
+      {/* Add Users Autocomplete */}
+      <DialogContent>
+        <StyledAutocomplete
+          options={allUsers ?? []}
+          getOptionLabel={(option) => option?.UserName || ''}
+          isOptionEqualToValue={(option, value) => option?.UserID === value?.UserID}
+          onChange={(event, value) => {
+            setAutocompleteValue(value);
+            setSelectedAutocompleteUserIds(value.map((user) => user.UserID));
+          }}
+          renderInput={(params) => (
+            <TextField
+              {...params}
+              label="Add Users"
+              variant="outlined"
+              fullWidth
+              size="small"
             />
-            )}
-          </Grid>
-        </Grid>
+          )}
+          value={autocompleteValue}
+          multiple
+          renderOption={(props, option) => (
+            <ListItem {...props}>
+              <Box>{option?.UserName}</Box>
+            </ListItem>
+          )}
+        />
       </DialogContent>
       <DialogActions sx={{ justifyContent: 'center', mt: 3 }}>
-        <Button
-          variant="contained"
-          color="primary"
-          onClick={onClose}
-          size="small"
-        >
+        <Button variant="contained" color="primary" onClick={onClose} size="small">
           Close
         </Button>
-        <Button
-          variant="contained"
-          color="secondary"
-          onClick={handleAddUserToCourse}
-          size="small"
-        >
+        <Button variant="contained" color="secondary" onClick={handleAddUserToCourse} size="small">
           Enroll Users
         </Button>
+        {selectedEnrolledUserIds.length > 0 && (
+          <StyledButton
+            variant="outlined"
+            color="secondary"
+            size="small"
+            onClick={handleRemoveSelected}
+          >
+            Remove Selected
+          </StyledButton>
+        )}
       </DialogActions>
-  
       <Dialog
         open={removeConfirmation.open}
         TransitionComponent={Transition}
@@ -246,8 +293,9 @@ function CourseUserModal({ onClose, selectedCourseId, open }) {
         aria-describedby="alert-dialog-slide-description"
         PaperProps={{
           sx: {
-            borderRadius: 2,
-            p: 3,
+            borderRadius: 16,
+            p: 4,
+            minWidth: 300,
           },
         }}
       >
