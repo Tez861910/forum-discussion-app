@@ -138,10 +138,19 @@ function RoleUserModal({ open, onClose, selectedRoleId }) {
       TransitionComponent={Transition}
       keepMounted
       onClose={onClose}
-      aria-labelledby="user-modal-title"
-      aria-describedby="user-modal-description"
+      aria-labelledby="role-modal-title"
+      aria-describedby="role-modal-description"
+      PaperProps={{
+        sx: {
+          borderRadius: 16,
+          p: 4,
+          minWidth: 400,
+        },
+      }}
     >
-      <DialogTitle id="user-modal-title">Users in Role</DialogTitle>
+      <DialogTitle id="role-modal-title" sx={{ textAlign: 'center', mb: 3 }}>
+        Users in Role
+      </DialogTitle>
       <DialogContent>
         <Grid container spacing={2}>
           <Grid item xs={12}>
@@ -200,18 +209,23 @@ function RoleUserModal({ open, onClose, selectedRoleId }) {
           </Grid>
         </Grid>
       </DialogContent>
-      <DialogActions>
-        <Button onClick={onClose} color="primary" size="small">
-          <CloseIcon />
+      <DialogActions sx={{ justifyContent: 'center', mt: 3 }}>
+        <Button variant="contained" color="primary" onClick={onClose} size="small">
+          Close
         </Button>
-        <Button
-          variant="contained"
-          color="secondary"
-          onClick={handleAddUserToRole}
-          size="small"
-        >
+        <Button variant="contained" color="secondary" onClick={handleAddUserToRole} size="small">
           Enroll Users
         </Button>
+        {selectedUserIds.length > 0 && (
+          <Button
+            variant="outlined"
+            color="secondary"
+            size="small"
+            onClick={handleRemoveUserConfirmation}
+          >
+            Remove Selected
+          </Button>
+        )}
       </DialogActions>
 
       <Dialog
@@ -221,6 +235,13 @@ function RoleUserModal({ open, onClose, selectedRoleId }) {
         onClose={cancelRemoveUser}
         aria-labelledby="alert-dialog-slide-title"
         aria-describedby="alert-dialog-slide-description"
+        PaperProps={{
+          sx: {
+            borderRadius: 16,
+            p: 4,
+            minWidth: 300,
+          },
+        }}
       >
         <DialogTitle id="alert-dialog-slide-title">Confirm Removal</DialogTitle>
         <DialogContent>
