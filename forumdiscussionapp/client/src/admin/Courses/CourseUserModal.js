@@ -1,6 +1,6 @@
 import * as React from 'react';
-import { Dialog, DialogTitle, DialogContent, DialogActions, TextField, Button, Slide, Autocomplete, List, ListItem, ListItemText, Grid, Typography, Box } from '@mui/material';
-import CloseIcon from '@mui/icons-material/Close';
+import { Dialog, DialogTitle, DialogContent, DialogActions, TextField, Button, Slide, Autocomplete, List, ListItem, ListItemText, ListItemSecondaryAction, Checkbox, Grid, Typography, Box, IconButton } from '@mui/material';
+import DeleteIcon from '@mui/icons-material/Delete';
 import useApi from '../../home-page/Api';
 
 const Transition = React.forwardRef(function Transition(props, ref) {
@@ -152,9 +152,17 @@ function CourseUserModal({ onClose, selectedCourseId, open }) {
                 {enrolledUsers.map((user) => (
                   <ListItem key={user.UserID}>
                     <ListItemText primary={user.UserName} />
-                    <Button onClick={() => handleRemoveUserConfirmation(user)}>
-                      <CloseIcon />
-                    </Button>
+                    <ListItemSecondaryAction>
+                      <IconButton 
+                       edge="end"
+                       aria-label="delete"
+                       size="small"
+                       onClick={() => handleRemoveUserConfirmation(user)}
+                       sx={{ color: 'secondary.main' }}
+                      >
+                       <DeleteIcon />
+                      </IconButton>
+                    </ListItemSecondaryAction>
                   </ListItem>
                 ))}
               </List>
@@ -185,19 +193,25 @@ function CourseUserModal({ onClose, selectedCourseId, open }) {
               value={allUsers.filter((user) => selectedUserIds.includes(user.UserID))}
               multiple
               renderOption={(props, option, { selected }) => (
-                <li {...props}>
-                  <Box>
-                    {option?.UserName}
-                    {selected && (
-                      <Button onClick={(e) => {
-                        e.stopPropagation(); 
-                        handleRemoveUserConfirmation(option);
-                      }}>
-                        <CloseIcon />
-                      </Button>
-                    )}
-                  </Box>
-                </li>
+                <ListItem {...props}>
+                <Box>
+                  {option?.UserName}
+                  {selected && (
+                    <IconButton 
+                    edge="end"
+                    aria-label="delete"
+                    size="small"
+                    onClick={(e) => {
+                      e.stopPropagation(); 
+                      handleRemoveUserConfirmation(option);
+                    }}
+                    sx={{ color: 'secondary.main' }}
+                  >
+                    <DeleteIcon />
+                  </IconButton>                  
+                  )}
+                </Box>
+              </ListItem>              
               )}
             />
             )}
@@ -205,12 +219,17 @@ function CourseUserModal({ onClose, selectedCourseId, open }) {
         </Grid>
       </DialogContent>
       <DialogActions sx={{ justifyContent: 'center', mt: 3 }}>
-        <Button onClick={onClose} color="primary" size="small">
-          <CloseIcon />
-        </Button>
         <Button
           variant="contained"
           color="primary"
+          onClick={onClose}
+          size="small"
+        >
+          Close
+        </Button>
+        <Button
+          variant="contained"
+          color="secondary"
           onClick={handleAddUserToCourse}
           size="small"
         >

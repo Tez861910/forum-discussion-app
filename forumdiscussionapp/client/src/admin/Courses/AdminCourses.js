@@ -1,5 +1,5 @@
-import React, { useState, useEffect, useCallback } from 'react';
-import { Typography, CircularProgress, Box } from '@mui/material';
+import * as React from 'react';
+import { Typography, CircularProgress, Box, Container, Stack } from '@mui/material';
 import CourseList from './CourseList';
 import CreateCourseSection from './CreateCourseSection';
 import DeleteConfirmationDialog from './DeleteConfirmationDialog2';
@@ -7,17 +7,17 @@ import CourseUserModal from './CourseUserModal';
 import useApi from '../../home-page/Api';
 
 function AdminCourses() {
-  const [courses, setCourses] = useState([]);
-  const [newCourseName, setNewCourseName] = useState('');
-  const [deleteConfirmation, setDeleteConfirmation] = useState({ open: false, courseId: null });
-  const [error, setError] = useState(null);
-  const [loading, setLoading] = useState(false);
-  const [userModalOpen, setUserModalOpen] = useState(false);
-  const [selectedCourseId, setSelectedCourseId] = useState(null);
+  const [courses, setCourses] = React.useState([]);
+  const [newCourseName, setNewCourseName] = React.useState('');
+  const [deleteConfirmation, setDeleteConfirmation] = React.useState({ open: false, courseId: null });
+  const [error, setError] = React.useState(null);
+  const [loading, setLoading] = React.useState(false);
+  const [userModalOpen, setUserModalOpen] = React.useState(false);
+  const [selectedCourseId, setSelectedCourseId] = React.useState(null);
 
   const { api } = useApi();
 
-  const fetchCourses = useCallback(async () => {
+  const fetchCourses = React.useCallback(async () => {
     setLoading(true);
     try {
       const response = await api.get('/courses/courses/get');
@@ -39,7 +39,7 @@ function AdminCourses() {
     }
   }, [api]);
 
-  useEffect(() => {
+  React.useEffect(() => {
     fetchCourses();
   }, [fetchCourses]);
 
@@ -110,23 +110,25 @@ function AdminCourses() {
   };
 
   return (
-    <Box sx={{ padding: 2, backgroundColor: '#fff0de', minHeight: '100vh' }}>
+    <Container maxWidth="md" sx={{ py: 4, backgroundColor: '#fff0de', minHeight: '100vh' }}>
       <Typography variant="h4" sx={{ marginBottom: 2 }}>
         Admin Courses Management
       </Typography>
       {error && <Typography variant="body1" color="error" sx={{ marginBottom: 2 }}>{error}</Typography>}
       {loading && <CircularProgress sx={{ marginBottom: 2 }} />}
-      <CreateCourseSection
-        handleCreateCourse={handleCreateCourse}
-        newCourseName={newCourseName}
-        setNewCourseName={setNewCourseName}
-      />
-      <CourseList
-        courses={courses}
-        handleEditCourse={handleEditCourse}
-        handleDeleteCourse={handleDeleteCourse}
-        handleCourseUserModal={handleCourseUserModal}
-      />
+      <Stack spacing={2}>
+        <CreateCourseSection
+          handleCreateCourse={handleCreateCourse}
+          newCourseName={newCourseName}
+          setNewCourseName={setNewCourseName}
+        />
+        <CourseList
+          courses={courses}
+          handleEditCourse={handleEditCourse}
+          handleDeleteCourse={handleDeleteCourse}
+          handleCourseUserModal={handleCourseUserModal}
+        />
+      </Stack>
       <DeleteConfirmationDialog
         open={deleteConfirmation.open}
         handleClose={handleDeleteConfirmationClose}
@@ -139,7 +141,7 @@ function AdminCourses() {
           open={userModalOpen}
         />
       )}
-    </Box>
+    </Container>
   );
 }
 
