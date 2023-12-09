@@ -1,8 +1,8 @@
-import React, { useState } from 'react';
+import * as React from 'react';
 import { Typography, TextField, Button, Box } from '@mui/material';
 
 const CreateRoleSection = ({ handleCreateRole }) => {
-  const [newRoleName, setNewRoleName] = useState('');
+  const [newRoleName, setNewRoleName] = React.useState('');
 
   const handleCreate = () => {
     if (newRoleName.trim() !== '') {
@@ -14,7 +14,7 @@ const CreateRoleSection = ({ handleCreateRole }) => {
   return (
     <Box sx={{ marginBottom: 2 }}>
       <Typography variant="h6" sx={{ marginBottom: 1 }}>
-        Create Role
+        {"Create Role"}
       </Typography>
       <TextField
         type="text"
@@ -28,11 +28,11 @@ const CreateRoleSection = ({ handleCreateRole }) => {
       />
       <Button
         variant="contained"
-        color="primary"
+        color="secondary"
         onClick={handleCreate}
         size="small"
       >
-        Create
+        {"Create"}
       </Button>
     </Box>
   );

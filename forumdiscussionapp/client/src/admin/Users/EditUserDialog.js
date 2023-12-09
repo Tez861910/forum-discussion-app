@@ -60,7 +60,7 @@ function EditUserDialog({ open, handleClose, handleUpdateUser, updatedUserData, 
           <Button onClick={handleClose} color="primary">
             Cancel
           </Button>
-          <Button onClick={handleUpdateUser} color="primary">
+          <Button onClick={handleUpdateUser} color="secondary">
             Update
           </Button>
         </DialogActions>

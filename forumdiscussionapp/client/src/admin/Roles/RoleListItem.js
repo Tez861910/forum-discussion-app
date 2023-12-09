@@ -1,4 +1,4 @@
-import React, { useState, startTransition } from 'react';
+import * as React from 'react';
 import {
   TextField,
   Button,
@@ -8,18 +8,20 @@ import {
   IconButton,
   Grid,
   Box,
+  Typography,
 } from '@mui/material';
 import DeleteIcon from '@mui/icons-material/Delete';
 import EditIcon from '@mui/icons-material/Edit';
 import SaveIcon from '@mui/icons-material/Save';
 import CancelIcon from '@mui/icons-material/Cancel';
+import GroupIcon from '@mui/icons-material/Group';
 
 function RoleListItem({ role, handleEditRole, handleDeleteRole, handleRoleUserModal }) {
-  const [isEditing, setIsEditing] = useState(false);
-  const [updatedRoleName, setUpdatedRoleName] = useState(role.roleName);
+  const [isEditing, setIsEditing] = React.useState(false);
+  const [updatedRoleName, setUpdatedRoleName] = React.useState(role.roleName);
 
   const handleSaveEdit = () => {
-    startTransition(() => {
+    React.startTransition(() => {
       handleEditRole(role.roleId, updatedRoleName);
       setIsEditing(false);
     });
@@ -40,9 +42,12 @@ function RoleListItem({ role, handleEditRole, handleDeleteRole, handleRoleUserMo
             />
           ) : (
             <ListItemText
-              primary={role.roleName}
+              primary={
+                <Typography variant="body1" sx={{ cursor: 'pointer', color: 'primary.main' }}>
+                  {role.roleName}
+                </Typography>
+              }
               onClick={() => handleRoleUserModal(role.roleId)}
-              sx={{ cursor: 'pointer', color: 'primary.main' }}
             />
           )}
         </Grid>
@@ -74,6 +79,7 @@ function RoleListItem({ role, handleEditRole, handleDeleteRole, handleRoleUserMo
               <IconButton
                 edge="end"
                 aria-label="edit"
+                color="primary"
                 onClick={() => setIsEditing(true)}
                 size="small"
               >
@@ -82,6 +88,7 @@ function RoleListItem({ role, handleEditRole, handleDeleteRole, handleRoleUserMo
               <IconButton
                 edge="end"
                 aria-label="delete"
+                color="secondary"
                 onClick={() => handleDeleteRole(role.roleId)}
                 size="small"
               >
@@ -93,7 +100,7 @@ function RoleListItem({ role, handleEditRole, handleDeleteRole, handleRoleUserMo
                 onClick={() => handleRoleUserModal(role.roleId)}
                 size="small"
               >
-                {/* Add appropriate icon for managing users in the role */}
+                <GroupIcon />
               </IconButton>
             </ListItemSecondaryAction>
           )}

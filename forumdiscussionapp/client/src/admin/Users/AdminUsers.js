@@ -113,16 +113,24 @@ function AdminUsers() {
       setEditingUserId(null);
       return;
     }
-
+  
     // Ensure editingUserId is not null or undefined
     if (editingUserId === null || editingUserId === undefined) {
       console.error('Invalid user ID for update');
       return;
     }
-
+  
     try {
-      const response = await api.put(`/users/users/update${editingUserId}`, updatedUserData);
-
+      // Create an object with only the edited fields
+      const editedFields = {};
+      Object.keys(updatedUserData).forEach((key) => {
+        if (updatedUserData[key] !== null && updatedUserData[key] !== undefined) {
+          editedFields[key] = updatedUserData[key];
+        }
+      });
+  
+      const response = await api.put(`/users/users/update/${editingUserId}`, editedFields);
+  
       console.log('Edit User Response:', response.data);
   
       if (response.data && response.data.message === 'User updated successfully') {
@@ -141,7 +149,7 @@ function AdminUsers() {
       console.error('Error updating user:', error);
     }
   }, [api, fetchUsers, updatedUserData, editingUserId]);
-
+  
   const handleDeleteUser = (userId) => {
     setDeleteConfirmation({ open: true, userId });
   };
@@ -174,7 +182,7 @@ function AdminUsers() {
       ...prevData,
       [key]: value,
     }));
-  };
+  }; 
 
   const getRoleName = (roleID) => {
     const role = roles.find((r) => r.roleId === roleID);

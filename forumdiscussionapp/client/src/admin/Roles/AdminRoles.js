@@ -1,5 +1,5 @@
-import React, { useState, useEffect, useCallback } from 'react';
-import { Typography, Slide, CircularProgress, Box } from '@mui/material';
+import * as React from 'react';
+import { Typography, CircularProgress, Box, Slide } from '@mui/material';
 import RoleList from './RoleList';
 import RoleUserModal from './RolesUserModal';
 import DeleteConfirmationDialog from './DeleteConfirmationDialog3';
@@ -11,18 +11,18 @@ const Transition = React.forwardRef(function Transition(props, ref) {
 });
 
 function AdminRoles() {
-  const [roles, setRoles] = useState([]);
-  const [newRoleName, setNewRoleName] = useState('');
-  const [updatedRoleName, setUpdatedRoleName] = useState('');
-  const [deleteConfirmation, setDeleteConfirmation] = useState({ open: false, roleId: null });
-  const [error, setError] = useState(null);
-  const [loading, setLoading] = useState(false);
-  const [userModalOpen, setUserModalOpen] = useState(false);
-  const [selectedRoleId, setSelectedRoleId] = useState(null);
+  const [roles, setRoles] = React.useState([]);
+  const [newRoleName, setNewRoleName] = React.useState('');
+  const [updatedRoleName, setUpdatedRoleName] = React.useState('');
+  const [deleteConfirmation, setDeleteConfirmation] = React.useState({ open: false, roleId: null });
+  const [error, setError] = React.useState(null);
+  const [loading, setLoading] = React.useState(false);
+  const [userModalOpen, setUserModalOpen] = React.useState(false);
+  const [selectedRoleId, setSelectedRoleId] = React.useState(null);
 
   const { api } = useApi();
 
-  const fetchRoles = useCallback(async () => {
+  const fetchRoles = React.useCallback(async () => {
     setLoading(true);
     try {
       const response = await api.get('/roles/roles/get');
@@ -40,11 +40,11 @@ function AdminRoles() {
     }
   }, [api]);
 
-  useEffect(() => {
+  React.useEffect(() => {
     fetchRoles();
   }, [fetchRoles]);
 
-  const handleCreateRole = useCallback(async (newRoleName) => {
+  const handleCreateRole = React.useCallback(async (newRoleName) => {
     try {
       const trimmedRoleName = newRoleName.trim();
   
@@ -78,7 +78,7 @@ function AdminRoles() {
     }
   }, [api, fetchRoles]);
 
-  const handleEditRole = useCallback(async (roleId, updatedRoleName) => {
+  const handleEditRole = React.useCallback(async (roleId, updatedRoleName) => {
     try {
       const response = await api.put(`/roles/roles/update/${roleId}`, {
         roleName: updatedRoleName,
@@ -95,7 +95,7 @@ function AdminRoles() {
     setDeleteConfirmation({ open: true, roleId });
   };
 
-  const confirmDelete = useCallback(async () => {
+  const confirmDelete = React.useCallback(async () => {
     try {
       const response = await api.patch(`/roles/roles/delete/${deleteConfirmation.roleId}`);
       if (response.data.message === 'Role soft-deleted successfully') {
@@ -123,7 +123,7 @@ function AdminRoles() {
   };
 
   return (
-    <Box sx={{ padding: 2, backgroundColor: '#f0deff', minHeight: '100vh' }}>
+    <Box sx={{ padding: 2, bgcolor: 'background.default', minHeight: '100vh' }}>
       <Typography variant="h4" sx={{ marginBottom: 2 }}>
         Admin Roles Management
       </Typography>
@@ -135,12 +135,14 @@ function AdminRoles() {
         open={deleteConfirmation.open}
         handleCancel={cancelDelete}
         handleConfirm={confirmDelete}
+        TransitionComponent={Transition}
       />
       {userModalOpen && (
         <RoleUserModal
           onClose={() => setUserModalOpen(false)}
           selectedRoleId={selectedRoleId}
           open={userModalOpen}
+          TransitionComponent={Transition}
         />
       )}
     </Box>

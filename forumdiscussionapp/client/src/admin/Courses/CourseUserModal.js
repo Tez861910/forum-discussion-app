@@ -1,20 +1,5 @@
 import * as React from 'react';
-import {
-  Dialog,
-  DialogTitle,
-  DialogContent,
-  DialogActions,
-  TextField,
-  Button,
-  Slide,
-  Autocomplete,
-  List,
-  ListItem,
-  ListItemText,
-  Grid,
-  Typography,
-  Box
-} from '@mui/material';
+import { Dialog, DialogTitle, DialogContent, DialogActions, TextField, Button, Slide, Autocomplete, List, ListItem, ListItemText, Grid, Typography, Box } from '@mui/material';
 import CloseIcon from '@mui/icons-material/Close';
 import useApi from '../../home-page/Api';
 
@@ -151,8 +136,14 @@ function CourseUserModal({ onClose, selectedCourseId, open }) {
       onClose={onClose}
       aria-labelledby="user-modal-title"
       aria-describedby="user-modal-description"
+      PaperProps={{
+        sx: {
+          borderRadius: 2,
+          p: 3,
+        },
+      }}
     >
-      <DialogTitle id="user-modal-title">Users in Course</DialogTitle>
+      <DialogTitle id="user-modal-title" sx={{ textAlign: 'center', mb: 3 }}>Users in Course</DialogTitle>
       <DialogContent>
         <Grid container spacing={2}>
           <Grid item xs={12}>
@@ -213,7 +204,7 @@ function CourseUserModal({ onClose, selectedCourseId, open }) {
           </Grid>
         </Grid>
       </DialogContent>
-      <DialogActions>
+      <DialogActions sx={{ justifyContent: 'center', mt: 3 }}>
         <Button onClick={onClose} color="primary" size="small">
           <CloseIcon />
         </Button>
@@ -234,6 +225,12 @@ function CourseUserModal({ onClose, selectedCourseId, open }) {
         onClose={cancelRemoveUser}
         aria-labelledby="alert-dialog-slide-title"
         aria-describedby="alert-dialog-slide-description"
+        PaperProps={{
+          sx: {
+            borderRadius: 2,
+            p: 3,
+          },
+        }}
       >
         <DialogTitle id="alert-dialog-slide-title">Confirm Removal</DialogTitle>
         <DialogContent>

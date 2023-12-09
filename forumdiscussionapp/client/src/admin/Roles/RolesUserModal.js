@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useCallback } from 'react';
+import * as React from 'react';
 import {
   Dialog,
   DialogTitle,
@@ -23,22 +23,22 @@ const Transition = React.forwardRef(function Transition(props, ref) {
 });
 
 function RoleUserModal({ open, onClose, selectedRoleId }) {
-  const [selectedUserIds, setSelectedUserIds] = useState([]);
-  const [enrolledUsers, setEnrolledUsers] = useState([]);
-  const [allUsers, setAllUsers] = useState([]);
-  const [removeConfirmation, setRemoveConfirmation] = useState({ open: false, user: null });
-  const [noEnrollmentsFound, setNoEnrollmentsFound] = useState(false);
+  const [selectedUserIds, setSelectedUserIds] = React.useState([]);
+  const [enrolledUsers, setEnrolledUsers] = React.useState([]);
+  const [allUsers, setAllUsers] = React.useState([]);
+  const [removeConfirmation, setRemoveConfirmation] = React.useState({ open: false, user: null });
+  const [noEnrollmentsFound, setNoEnrollmentsFound] = React.useState(false);
 
   const { api } = useApi();
 
-  useEffect(() => {
+  React.useEffect(() => {
     if (open) {
       fetchRoleUsers();
       fetchAllUsers();
     }
   }, [api, open, selectedRoleId]);
 
-  const fetchAllUsers = useCallback(async () => {
+  const fetchAllUsers = React.useCallback(async () => {
     try {
       const response = await api.get('/users/users/get');
       if (response.data && Array.isArray(response.data.users)) {
@@ -52,7 +52,7 @@ function RoleUserModal({ open, onClose, selectedRoleId }) {
     }
   }, [api]);
 
-  const fetchRoleUsers = useCallback(async () => {
+  const fetchRoleUsers = React.useCallback(async () => {
     try {
       const response = await api.get(`/roles/roles/enrollments/${selectedRoleId}`);
       
@@ -79,28 +79,26 @@ function RoleUserModal({ open, onClose, selectedRoleId }) {
     }
   }, [api, selectedRoleId]);
 
-  const handleAddUserToRole = useCallback(async () => {
+  const handleAddUserToRole = React.useCallback(async () => {
     try {
-
-      console.log('Before API request - selectedUserIds:', selectedUserIds);
-
       if (selectedUserIds.length === 0) {
         console.error('No users selected. Cannot enroll.');
         return;
       }
-
-      console.log('Enrolling users with IDs:', selectedUserIds);
 
       const response = await api.post(`/roles/roles/${selectedRoleId}/enroll`, {
         roleId: selectedRoleId,
         userIds: selectedUserIds,
       });
 
-      console.log('Add User Response:', response.data);
-      fetchRoleUsers();
-      setEnrolledUsers([]);
+      if (response.data && response.data.message === 'Role created successfully') {
+        setSelectedUserIds([]);
+        fetchRoleUsers();
+      } else {
+        console.error('Error creating role:', response.data);
+      }
     } catch (error) {
-      console.error('Error adding user to role:', error);
+      console.error('Error creating role:', error);
     }
   }, [api, fetchRoleUsers, selectedRoleId, selectedUserIds]);
 
@@ -108,7 +106,7 @@ function RoleUserModal({ open, onClose, selectedRoleId }) {
     setRemoveConfirmation({ open: true, user });
   };
 
-  const confirmRemoveUser = useCallback(async () => {
+  const confirmRemoveUser = React.useCallback(async () => {
     try {
       if (!removeConfirmation.user || !removeConfirmation.user.UserID) {
         console.error('Invalid user selected for removal');
@@ -118,15 +116,18 @@ function RoleUserModal({ open, onClose, selectedRoleId }) {
       const userId = removeConfirmation.user.UserID;
 
       const response = await api.delete(`/roles/roles/${selectedRoleId}/enrollments/${userId}`);
-      console.log('Delete User Response:', response.data);
-      fetchRoleUsers();
+      if (response.data.message === 'Role soft-deleted successfully') {
+        fetchRoleUsers();
+      } else {
+        console.error('Role soft-deletion failed');
+      }
     } catch (error) {
-      console.error('Error removing user from role:', error);
+      console.error('Error soft-deleting role:', error);
     } finally {
       setRemoveConfirmation({ open: false, user: null });
     }
   }, [api, fetchRoleUsers, removeConfirmation, selectedRoleId]);
-
+  
   const cancelRemoveUser = () => {
     setRemoveConfirmation({ open: false, user: null });
   };
@@ -166,8 +167,6 @@ function RoleUserModal({ open, onClose, selectedRoleId }) {
                 getOptionLabel={(option) => option?.UserName || ''}
                 isOptionEqualToValue={(option, value) => option?.UserID === value?.UserID}
                 onChange={(event, value) => {
-                  console.log('Autocomplete onChange - event:', event);
-                  console.log('Autocomplete onChange - value:', value);
                   setSelectedUserIds(value.map(user => user.UserID));
                 }}
                 renderInput={(params) => (
@@ -207,7 +206,7 @@ function RoleUserModal({ open, onClose, selectedRoleId }) {
         </Button>
         <Button
           variant="contained"
-          color="primary"
+          color="secondary"
           onClick={handleAddUserToRole}
           size="small"
         >

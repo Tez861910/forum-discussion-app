@@ -80,7 +80,7 @@ function CreateUserDialog({ open, handleClose, handleCreateUser, newUser, setNew
           <Button onClick={handleClose} color="primary">
             Cancel
           </Button>
-          <Button onClick={handleCreateUser} color="primary">
+          <Button onClick={handleCreateUser} color="secondary">
             Create
           </Button>
         </DialogActions>

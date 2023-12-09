@@ -17,9 +17,12 @@ async function handleUsersUpdateId(req, res) {
     const values = [];
 
     for (const key in userData) {
-      if (userData.hasOwnProperty(key) && key !== 'UserID') {
-        updateFields.push(`${key} = ?`);
-        values.push(userData[key]);
+      if (userData.hasOwnProperty(key) && key !== 'UserID' && key !== 'UserPassword') {
+        // Check if the field is provided and not empty (for fields like UserPassword)
+        if (userData[key] !== null && userData[key] !== undefined) {
+          updateFields.push(`${key} = ?`);
+          values.push(userData[key]);
+        }
       }
     }
 
@@ -44,7 +47,6 @@ async function handleUsersUpdateId(req, res) {
     if (result.affectedRows === 1) {
       console.log('User updated successfully');
 
-    
       // Update userroles table
       if (userRoleData && userRoleData.length > 0) {
         const userRolesSql = 'UPDATE userroles SET RoleID = ? WHERE UserID = ? AND IsDeleted = FALSE';

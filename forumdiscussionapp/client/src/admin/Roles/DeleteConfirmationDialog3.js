@@ -1,4 +1,4 @@
-import React from 'react';
+import * as React from 'react';
 import { Dialog, DialogTitle, DialogContent, DialogActions, Button, Typography } from '@mui/material';
 
 const DeleteConfirmationDialog = ({ open, handleCancel, handleConfirm }) => {
@@ -9,18 +9,18 @@ const DeleteConfirmationDialog = ({ open, handleCancel, handleConfirm }) => {
       aria-labelledby="alert-dialog-slide-title"
       aria-describedby="alert-dialog-slide-description"
     >
-      <DialogTitle id="alert-dialog-slide-title">Confirm Deletion</DialogTitle>
+      <DialogTitle id="alert-dialog-slide-title">{"Confirm Deletion"}</DialogTitle>
       <DialogContent>
         <Typography variant="body1" gutterBottom>
-          Are you sure you want to delete this role?
+          {"Are you sure you want to delete this role?"}
         </Typography>
       </DialogContent>
       <DialogActions>
         <Button onClick={handleCancel} color="primary">
-          Cancel
+          {"Cancel"}
         </Button>
-        <Button onClick={handleConfirm} color="primary">
-          Confirm
+        <Button onClick={handleConfirm} color="secondary" autoFocus>
+          {"Confirm"}
         </Button>
       </DialogActions>
     </Dialog>
