@@ -15,7 +15,7 @@ const theme = createTheme({
     background: {
       default: '#fafafa',
       backgroundImage: `url(${logobg})`,
-    },
+    },    
     text: {
       primary: '#333333',
       secondary: '#666666',

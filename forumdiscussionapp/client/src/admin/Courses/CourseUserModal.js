@@ -111,7 +111,7 @@ function CourseUserModal({ onClose, selectedCourseId, open }) {
       setSelectedAutocompleteUserIds([]);
       setAutocompleteValue([]);
     } catch (error) {
-      console.error('Error enrolling users to course:', error);
+      console.error('Error enrolling users in the course:', error);
     }
   }, [api, fetchCourseEnrollments, selectedCourseId, selectedAutocompleteUserIds]);
 
@@ -127,7 +127,7 @@ function CourseUserModal({ onClose, selectedCourseId, open }) {
       console.log('API response:', response);
       fetchCourseEnrollments();
     } catch (error) {
-      console.error('Error removing users from course:', error);
+      console.error('Error removing users from the course:', error);
     } finally {
       setSelectedEnrolledUserIds([]);
     }
@@ -148,7 +148,7 @@ function CourseUserModal({ onClose, selectedCourseId, open }) {
       console.log('API response:', response);
       fetchCourseEnrollments();
     } catch (error) {
-      console.error('Error removing user from course:', error);
+      console.error('Error removing user from the course:', error);
     } finally {
       setRemoveConfirmation({ open: false, user: null });
     }
@@ -174,6 +174,10 @@ function CourseUserModal({ onClose, selectedCourseId, open }) {
     (user) => user.UserName.toLowerCase().includes(searchText.toLowerCase())
   );
 
+  const nonEnrolledUsers = allUsers.filter(
+    (user) => !enrolledUsers.some((enrolledUser) => enrolledUser.UserID === user.UserID)
+  );
+
   return (
     <Dialog
       open={open}
@@ -187,14 +191,14 @@ function CourseUserModal({ onClose, selectedCourseId, open }) {
           borderRadius: 16,
           p: 4,
           minWidth: 400,
+          backgroundColor: '#f3f2f1',
         },
       }}
     >
-      <DialogTitle id="user-modal-title" sx={{ textAlign: 'center', mb: 3 }}>
+      <DialogTitle id="user-modal-title" sx={{ textAlign: 'center', mb: 3, color: '#5c6bc0' }}>
         Users in Course
       </DialogTitle>
       <DialogContent>
-        {/* Search bar for enrolled user list */}
         <TextField
           label="Search Enrolled Users"
           variant="outlined"
@@ -202,9 +206,8 @@ function CourseUserModal({ onClose, selectedCourseId, open }) {
           size="small"
           value={searchText}
           onChange={(e) => setSearchText(e.target.value)}
-          sx={{ mb: 2 }}
+          sx={{ mb: 2, color: '#3949ab' }}
         />
-        {/* Enrolled Users List */}
         <StyledList>
           {filteredEnrolledUsers.length > 0 ? (
             filteredEnrolledUsers.map((user) => (
@@ -216,8 +219,9 @@ function CourseUserModal({ onClose, selectedCourseId, open }) {
                     tabIndex={-1}
                     disableRipple
                     onChange={() => handleUserCheckboxChange(user.UserID)}
+                    sx={{ color: '#3f51b5' }}
                   />
-                  <ListItemText primary={user.UserName} />
+                  <ListItemText primary={user.UserName} sx={{ color: '#303f9f' }} />
                   <ListItemSecondaryAction>
                     <IconButton
                       edge="end"
@@ -234,14 +238,13 @@ function CourseUserModal({ onClose, selectedCourseId, open }) {
               </React.Fragment>
             ))
           ) : (
-            <Typography>No matching users found.</Typography>
+            <Typography sx={{ color: '#283593' }}>No matching users found.</Typography>
           )}
         </StyledList>
       </DialogContent>
-      {/* Add Users Autocomplete */}
       <DialogContent>
         <StyledAutocomplete
-          options={allUsers ?? []}
+          options={nonEnrolledUsers ?? []}
           getOptionLabel={(option) => option?.UserName || ''}
           isOptionEqualToValue={(option, value) => option?.UserID === value?.UserID}
           onChange={(event, value) => {
@@ -249,19 +252,13 @@ function CourseUserModal({ onClose, selectedCourseId, open }) {
             setSelectedAutocompleteUserIds(value.map((user) => user.UserID));
           }}
           renderInput={(params) => (
-            <TextField
-              {...params}
-              label="Add Users"
-              variant="outlined"
-              fullWidth
-              size="small"
-            />
+            <TextField {...params} label="Add Users" variant="outlined" fullWidth size="small" sx={{ color: '#1a237e' }} />
           )}
           value={autocompleteValue}
           multiple
           renderOption={(props, option) => (
             <ListItem {...props}>
-              <Box>{option?.UserName}</Box>
+              <Box sx={{ color: '#1a237e' }}>{option?.UserName}</Box>
             </ListItem>
           )}
         />
@@ -274,12 +271,7 @@ function CourseUserModal({ onClose, selectedCourseId, open }) {
           Enroll Users
         </Button>
         {selectedEnrolledUserIds.length > 0 && (
-          <StyledButton
-            variant="outlined"
-            color="secondary"
-            size="small"
-            onClick={handleRemoveSelected}
-          >
+          <StyledButton variant="outlined" color="secondary" size="small" onClick={handleRemoveSelected}>
             Remove Selected
           </StyledButton>
         )}
@@ -295,21 +287,24 @@ function CourseUserModal({ onClose, selectedCourseId, open }) {
           sx: {
             borderRadius: 16,
             p: 4,
-            minWidth: 300,
+            minWidth: 400,
+            backgroundColor: '#f3f2f1',
           },
         }}
       >
-        <DialogTitle id="alert-dialog-slide-title">Confirm Removal</DialogTitle>
-        <DialogContent>
-          <Typography variant="body1" gutterBottom>
+        <DialogTitle id="alert-dialog-slide-title" sx={{ textAlign: 'center', bgcolor: '#5c6bc0', color: 'common.white', py: 2 }}>
+          Confirm Removal
+        </DialogTitle>
+        <DialogContent sx={{ py: 3 }}>
+          <Typography variant="body1" gutterBottom sx={{ textAlign: 'center', color: '#3949ab' }}>
             Are you sure you want to remove this user from the course?
           </Typography>
         </DialogContent>
-        <DialogActions>
-          <Button onClick={cancelRemoveUser} color="primary" size="small">
+        <DialogActions sx={{ justifyContent: 'center', bgcolor: 'background.default', py: 2 }}>
+          <Button onClick={cancelRemoveUser} color="primary" variant="contained" sx={{ textTransform: 'none', mr: 1, px: 3 }}>
             Cancel
           </Button>
-          <Button onClick={confirmRemoveUser} color="secondary" size="small">
+          <Button onClick={confirmRemoveUser} color="secondary" variant="contained" sx={{ textTransform: 'none', px: 3 }}>
             Remove
           </Button>
         </DialogActions>

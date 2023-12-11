@@ -1,14 +1,11 @@
 import * as React from 'react';
-import { Typography, CircularProgress, Box, Slide } from '@mui/material';
+import { Typography, CircularProgress,  Container, Stack  } from '@mui/material';
 import RoleList from './RoleList';
 import RoleUserModal from './RolesUserModal';
 import DeleteConfirmationDialog from './DeleteConfirmationDialog3';
 import CreateRoleSection from './CreateRoleSection';
 import useApi from '../../home-page/Api'; 
 
-const Transition = React.forwardRef(function Transition(props, ref) {
-  return <Slide direction="up" ref={ref} {...props} />;
-});
 
 function AdminRoles() {
   const [roles, setRoles] = React.useState([]);
@@ -123,29 +120,38 @@ function AdminRoles() {
   };
 
   return (
-    <Box sx={{ padding: 2, bgcolor: 'background.default', minHeight: '100vh' }}>
+    <Container maxWidth="md" sx={{ py: 4, backgroundColor: '#afabff', minHeight: '100vh' }}>
       <Typography variant="h4" sx={{ marginBottom: 2 }}>
         Admin Roles Management
       </Typography>
       {error && <Typography variant="body1" color="error" sx={{ marginBottom: 2 }}>{error}</Typography>}
       {loading && <CircularProgress sx={{ marginBottom: 2 }} />}
-      <CreateRoleSection handleCreateRole={handleCreateRole} />
-      <RoleList roles={roles} handleEditRole={handleEditRole} handleDeleteRole={handleDeleteRole} handleRoleUserModal={handleRoleUserModal} />
+      <Stack spacing={2}>
+        <CreateRoleSection
+          handleCreateRole={handleCreateRole}
+          newRoleName={newRoleName}
+          setNewRoleName={setNewRoleName}
+        />
+        <RoleList
+          roles={roles}
+          handleEditRole={handleEditRole}
+          handleDeleteRole={handleDeleteRole}
+          handleRoleUserModal={handleRoleUserModal}
+        />
+      </Stack>
       <DeleteConfirmationDialog
         open={deleteConfirmation.open}
         handleCancel={cancelDelete}
         handleConfirm={confirmDelete}
-        TransitionComponent={Transition}
       />
       {userModalOpen && (
         <RoleUserModal
           onClose={() => setUserModalOpen(false)}
           selectedRoleId={selectedRoleId}
           open={userModalOpen}
-          TransitionComponent={Transition}
         />
       )}
-    </Box>
+    </Container>
   );
 }
 

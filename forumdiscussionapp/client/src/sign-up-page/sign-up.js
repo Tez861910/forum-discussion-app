@@ -70,7 +70,7 @@ const Signup = () => {
 
   return (
     <Container maxWidth="xs" sx={{ mt: 8, mb: 4 }}>
-      <Paper elevation={3} sx={{ p: 3, backgroundColor: 'background.paper', borderRadius: 2 }}>
+      <Paper elevation={3} sx={{ p: 3, backgroundColor: 'background.paper', borderRadius: 2, opacity: 0.9, transition: 'opacity .3s', '&:hover': { opacity: 1 } }}>
         <Stack spacing={2} justifyContent="center" alignItems="center">
           <Grid item xs={12}>
             <Typography variant="h4" align="center" gutterBottom>
@@ -88,9 +88,9 @@ const Signup = () => {
                 error={!!errors.name}
                 helperText={errors.name}
                 margin="normal"
-                sx={{ '.MuiInputBase-input': { fontSize: '1rem' } }}
+                sx={{ '.MuiInputBase-input': { fontSize: '1rem' }, '.MuiOutlinedInput-root': { '& fieldset': { borderColor: 'primary.main' }, '&:hover fieldset': { borderColor: 'secondary.main' }, '&.Mui-focused fieldset': { borderColor: 'primary.main' } } }}
               />
-
+  
               <TextField
                 fullWidth
                 label="User Email"
@@ -101,9 +101,9 @@ const Signup = () => {
                 error={!!errors.email}
                 helperText={errors.email}
                 margin="normal"
-                sx={{ '.MuiInputBase-input': { fontSize: '1rem' } }}
+                sx={{ '.MuiInputBase-input': { fontSize: '1rem' }, '.MuiOutlinedInput-root': { '& fieldset': { borderColor: 'primary.main' }, '&:hover fieldset': { borderColor: 'secondary.main' }, '&.Mui-focused fieldset': { borderColor: 'primary.main' } } }}
               />
-
+  
               <TextField
                 fullWidth
                 label="Password"
@@ -115,9 +115,9 @@ const Signup = () => {
                 error={!!errors.password}
                 helperText={errors.password}
                 margin="normal"
-                sx={{ '.MuiInputBase-input': { fontSize: '1rem' } }}
+                sx={{ '.MuiInputBase-input': { fontSize: '1rem' }, '.MuiOutlinedInput-root': { '& fieldset': { borderColor: 'primary.main' }, '&:hover fieldset': { borderColor: 'secondary.main' }, '&.Mui-focused fieldset': { borderColor: 'primary.main' } } }}
               />
-
+  
               <RoleDropdown
                 name="roleId"
                 value={formData.roleId}
@@ -126,17 +126,17 @@ const Signup = () => {
                 error={!!errors.roleId}
                 helperText={errors.roleId}
               />
-
+  
               <Button
                 type="submit"
                 variant="contained"
                 color="primary"
                 fullWidth
-                sx={{ mt: 3, mb: 2 }}
+                sx={{ mt: 3, mb: 2, opacity: 0.8 }}
               >
                 Sign Up
               </Button>
-
+  
               <Grid container justifyContent="flex-end">
                 <Grid item>
                   <RouterLink to="/login">
@@ -144,14 +144,14 @@ const Signup = () => {
                   </RouterLink>
                 </Grid>
               </Grid>
-
+  
               <Grid container justifyContent="flex-end">
                 <Button
                   type="button"
                   variant="contained"
                   color="secondary"
                   fullWidth
-                  sx={{ mt: 3, mb: 2 }}
+                  sx={{ mt: 3, mb: 2, opacity: 0.8 }}
                   onClick={() => navigate('/')}
                 >
                   Go back to start
@@ -165,4 +165,5 @@ const Signup = () => {
   );
 };
 
-export default Signup;
+  export default Signup;
+  

@@ -3,7 +3,7 @@ const { query } = require('../db');
  async function handleCoursesGet(req, res) {
     {
         try {
-          const sql = 'SELECT * FROM courses WHERE IsDeleted = FALSE';
+          const sql = 'SELECT * FROM courses WHERE IsDeleted = 0';
           const results = await query(sql);
       
           console.log(results)

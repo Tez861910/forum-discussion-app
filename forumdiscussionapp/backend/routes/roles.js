@@ -15,6 +15,7 @@ const { handleRolesPatchId } = require('../role-routes/handle-roles-patch-id');
 const { handleRolesEnrollmentsId } = require('../role-routes/handle-roles-enrollments-id');
 const { handleRolesIdEnroll } = require('../role-routes/handle-roles-id-enroll');
 const { handleRIDEnrollmentsUID } = require('../role-routes/handle-roles-rid-enrollments-uid');
+const { handleRemoveUsersFromRole } = require('../role-routes/handle-remove-users-from-roles');
 const { verifyJwt } = require('../authvalid');
 
 // Validate request parameters and body
@@ -69,5 +70,8 @@ router.patch('/roles/:roleId/enrollments/:userId', verifyJwt, validate(Joi.objec
   roleId: Joi.number().integer().min(1).required(),
   userId: Joi.number().integer().min(1).required()
 })), handleRIDEnrollmentsUID);
+
+// Patch (soft delete) removing users from a role
+router.patch('/roles/:roleId/enrollments', verifyJwt, async (req, res) => handleRemoveUsersFromRole(req, res));
 
 module.exports = router;

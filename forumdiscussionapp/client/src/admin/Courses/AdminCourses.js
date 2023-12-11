@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { Typography, CircularProgress, Box, Container, Stack } from '@mui/material';
+import { Typography, CircularProgress,  Container, Stack } from '@mui/material';
 import CourseList from './CourseList';
 import CreateCourseSection from './CreateCourseSection';
 import DeleteConfirmationDialog from './DeleteConfirmationDialog2';
@@ -110,7 +110,7 @@ function AdminCourses() {
   };
 
   return (
-    <Container maxWidth="md" sx={{ py: 4, backgroundColor: '#fff0de', minHeight: '100vh' }}>
+    <Container maxWidth="md" sx={{ py: 4, backgroundColor: '#ffd9ab', minHeight: '100vh' }}>
       <Typography variant="h4" sx={{ marginBottom: 2 }}>
         Admin Courses Management
       </Typography>

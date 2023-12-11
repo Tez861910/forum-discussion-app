@@ -1,4 +1,4 @@
-import * as React from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import {
   Dialog,
   DialogTitle,
@@ -11,34 +11,53 @@ import {
   List,
   ListItem,
   ListItemText,
-  Grid,
+  ListItemSecondaryAction,
+  Checkbox,
   Typography,
   Box,
+  IconButton,
+  Divider,
+  styled,
 } from '@mui/material';
-import CloseIcon from '@mui/icons-material/Close';
+import DeleteIcon from '@mui/icons-material/Delete';
 import useApi from '../../home-page/Api';
 
 const Transition = React.forwardRef(function Transition(props, ref) {
   return <Slide direction="up" ref={ref} {...props} />;
 });
 
-function RoleUserModal({ open, onClose, selectedRoleId }) {
-  const [selectedUserIds, setSelectedUserIds] = React.useState([]);
-  const [enrolledUsers, setEnrolledUsers] = React.useState([]);
-  const [allUsers, setAllUsers] = React.useState([]);
-  const [removeConfirmation, setRemoveConfirmation] = React.useState({ open: false, user: null });
-  const [noEnrollmentsFound, setNoEnrollmentsFound] = React.useState(false);
+const StyledAutocomplete = styled(Autocomplete)({
+  marginBottom: 2,
+});
 
+const StyledList = styled(List)({
+  maxHeight: 300,
+  overflow: 'auto',
+});
+
+const StyledButton = styled(Button)({
+  marginLeft: 2,
+});
+
+function RoleUserModal({ open, onClose, selectedRoleId }) {
+  const [enrolledUsers, setEnrolledUsers] = useState([]);
+  const [allUsers, setAllUsers] = useState([]);
+  const [removeConfirmation, setRemoveConfirmation] = useState({ open: false, user: null });
+  const [noEnrollmentsFound, setNoEnrollmentsFound] = useState(false);
+  const [searchText, setSearchText] = useState('');
+  const [selectedEnrolledUserIds, setSelectedEnrolledUserIds] = useState([]);
+  const [selectedAutocompleteUserIds, setSelectedAutocompleteUserIds] = useState([]);
+  const [autocompleteValue, setAutocompleteValue] = useState([]);
   const { api } = useApi();
 
-  React.useEffect(() => {
+  useEffect(() => {
     if (open) {
       fetchRoleUsers();
       fetchAllUsers();
     }
   }, [api, open, selectedRoleId]);
 
-  const fetchAllUsers = React.useCallback(async () => {
+  const fetchAllUsers = useCallback(async () => {
     try {
       const response = await api.get('/users/users/get');
       if (response.data && Array.isArray(response.data.users)) {
@@ -52,10 +71,10 @@ function RoleUserModal({ open, onClose, selectedRoleId }) {
     }
   }, [api]);
 
-  const fetchRoleUsers = React.useCallback(async () => {
+  const fetchRoleUsers = useCallback(async () => {
     try {
       const response = await api.get(`/roles/roles/enrollments/${selectedRoleId}`);
-      
+
       if (response.status === 404) {
         console.error('No enrollments found for the role:', response.data.error);
         setEnrolledUsers([]);
@@ -79,20 +98,21 @@ function RoleUserModal({ open, onClose, selectedRoleId }) {
     }
   }, [api, selectedRoleId]);
 
-  const handleAddUserToRole = React.useCallback(async () => {
+  const handleAddUserToRole = useCallback(async () => {
     try {
-      if (selectedUserIds.length === 0) {
+      if (selectedAutocompleteUserIds.length === 0) {
         console.error('No users selected. Cannot enroll.');
         return;
       }
 
       const response = await api.post(`/roles/roles/${selectedRoleId}/enroll`, {
         roleId: selectedRoleId,
-        userIds: selectedUserIds,
+        userIds: selectedAutocompleteUserIds,
       });
 
       if (response.data && response.data.message === 'Role created successfully') {
-        setSelectedUserIds([]);
+        setSelectedAutocompleteUserIds([]);
+        setAutocompleteValue([]);
         fetchRoleUsers();
       } else {
         console.error('Error creating role:', response.data);
@@ -100,37 +120,70 @@ function RoleUserModal({ open, onClose, selectedRoleId }) {
     } catch (error) {
       console.error('Error creating role:', error);
     }
-  }, [api, fetchRoleUsers, selectedRoleId, selectedUserIds]);
+  }, [api, fetchRoleUsers, selectedRoleId, selectedAutocompleteUserIds]);
+
+  const handleRemoveSelected = useCallback(async () => {
+    if (selectedEnrolledUserIds.length === 0) {
+      console.error('No users selected for removal.');
+      return;
+    }
+    try {
+      const response = await api.patch(`/roles/roles/${selectedRoleId}/enrollments`, {
+        userIds: selectedEnrolledUserIds,
+      });
+      console.log('API response:', response);
+      fetchRoleUsers();
+    } catch (error) {
+      console.error('Error removing users from role:', error);
+    } finally {
+      setSelectedEnrolledUserIds([]);
+    }
+  }, [api, fetchRoleUsers, selectedRoleId, selectedEnrolledUserIds]);
 
   const handleRemoveUserConfirmation = (user) => {
     setRemoveConfirmation({ open: true, user });
   };
 
-  const confirmRemoveUser = React.useCallback(async () => {
+  const confirmRemoveUser = useCallback(async () => {
     try {
       if (!removeConfirmation.user || !removeConfirmation.user.UserID) {
-        console.error('Invalid user selected for removal');
+        console.error('Invalid user selected for removal', removeConfirmation.user);
         return;
       }
-
       const userId = removeConfirmation.user.UserID;
-
-      const response = await api.delete(`/roles/roles/${selectedRoleId}/enrollments/${userId}`);
-      if (response.data.message === 'Role soft-deleted successfully') {
-        fetchRoleUsers();
-      } else {
-        console.error('Role soft-deletion failed');
-      }
+      const response = await api.patch(`/roles/roles/${selectedRoleId}/enrollments/${userId}`);
+      console.log('API response:', response);
+      fetchRoleUsers();
     } catch (error) {
-      console.error('Error soft-deleting role:', error);
+      console.error('Error removing user from role:', error);
     } finally {
       setRemoveConfirmation({ open: false, user: null });
     }
   }, [api, fetchRoleUsers, removeConfirmation, selectedRoleId]);
-  
+
   const cancelRemoveUser = () => {
     setRemoveConfirmation({ open: false, user: null });
   };
+
+  const handleUserCheckboxChange = (userId) => {
+    setSelectedEnrolledUserIds((prevSelectedUserIds) => {
+      if (prevSelectedUserIds.includes(userId)) {
+        // User is already selected, so remove them
+        return prevSelectedUserIds.filter((id) => id !== userId);
+      } else {
+        // User is not selected, so add them
+        return [...prevSelectedUserIds, userId];
+      }
+    });
+  };
+
+  const filteredEnrolledUsers = enrolledUsers.filter(
+    (user) => user.UserName.toLowerCase().includes(searchText.toLowerCase())
+  );
+
+  const nonEnrolledUsers = allUsers.filter(
+    (user) => !enrolledUsers.some((enrolledUser) => enrolledUser.UserID === user.UserID)
+  );
 
   return (
     <Dialog
@@ -152,82 +205,95 @@ function RoleUserModal({ open, onClose, selectedRoleId }) {
         Users in Role
       </DialogTitle>
       <DialogContent>
-        <Grid container spacing={2}>
-          <Grid item xs={12}>
-            {enrolledUsers && enrolledUsers.length > 0 ? (
-              <List>
-                {enrolledUsers.map((user) => (
-                  <ListItem key={user.UserID}>
-                    <ListItemText primary={user.UserName} />
-                    <Button onClick={() => handleRemoveUserConfirmation(user)}>
-                      <CloseIcon />
-                    </Button>
-                  </ListItem>
-                ))}
-              </List>
-            ) : (
-              <Typography>No users enrolled in this role.</Typography>
-            )}
-          </Grid>
-          <Grid item xs={12}>
-            {allUsers && (
-              <Autocomplete
-                options={allUsers ?? []}
-                getOptionLabel={(option) => option?.UserName || ''}
-                isOptionEqualToValue={(option, value) => option?.UserID === value?.UserID}
-                onChange={(event, value) => {
-                  setSelectedUserIds(value.map(user => user.UserID));
-                }}
-                renderInput={(params) => (
-                  <TextField
-                    {...params}
-                    label="Add Users"
-                    variant="outlined"
-                    fullWidth
-                    size="small"
+        {/* Search bar for enrolled user list */}
+        <TextField
+          label="Search Enrolled Users"
+          variant="outlined"
+          fullWidth
+          size="small"
+          value={searchText}
+          onChange={(e) => setSearchText(e.target.value)}
+          sx={{ mb: 2 }}
+        />
+        {/* Enrolled Users List */}
+        <StyledList>
+          {filteredEnrolledUsers.length > 0 ? (
+            filteredEnrolledUsers.map((user) => (
+              <React.Fragment key={user.UserID}>
+                <ListItem button>
+                  <Checkbox
+                    edge="start"
+                    checked={selectedEnrolledUserIds.includes(user.UserID)}
+                    tabIndex={-1}
+                    disableRipple
+                    onChange={() => handleUserCheckboxChange(user.UserID)}
                   />
-                )}
-                value={allUsers.filter((user) => selectedUserIds.includes(user.UserID))}
-                multiple
-                renderOption={(props, option, { selected }) => (
-                  <li key={option.UserID} {...props}>
-                    <Box>
-                      {option?.UserName}
-                      {selected && (
-                        <Button onClick={(e) => {
-                          e.stopPropagation(); 
-                          handleRemoveUserConfirmation(option);
-                        }}>
-                          <CloseIcon />
-                        </Button>
-                      )}
-                    </Box>
-                  </li>
-                )}
-              />
-            )}
-          </Grid>
-        </Grid>
+                  <ListItemText primary={user.UserName} />
+                  <ListItemSecondaryAction>
+                    <IconButton
+                      edge="end"
+                      aria-label="delete"
+                      size="small"
+                      onClick={() => handleRemoveUserConfirmation(user)}
+                      sx={{ color: 'secondary.main' }}
+                    >
+                      <DeleteIcon />
+                    </IconButton>
+                  </ListItemSecondaryAction>
+                </ListItem>
+                <Divider />
+              </React.Fragment>
+            ))
+          ) : (
+            <Typography>No matching users found.</Typography>
+          )}
+        </StyledList>
+      </DialogContent>
+      {/* Add Users Autocomplete */}
+      <DialogContent>
+        <StyledAutocomplete
+          options={nonEnrolledUsers ?? []}
+          getOptionLabel={(option) => option?.UserName || ''}
+          isOptionEqualToValue={(option, value) => option?.UserID === value?.UserID}
+          onChange={(event, value) => {
+            setAutocompleteValue(value);
+            setSelectedAutocompleteUserIds(value.map((user) => user.UserID));
+          }}
+          renderInput={(params) => (
+            <TextField {...params} label="Add Users" variant="outlined" fullWidth size="small" />
+          )}
+          value={autocompleteValue}
+          multiple
+          renderOption={(props, option) => (
+            <ListItem {...props}>
+              <Box>{option?.UserName}</Box>
+            </ListItem>
+          )}
+        />
       </DialogContent>
       <DialogActions sx={{ justifyContent: 'center', mt: 3 }}>
         <Button variant="contained" color="primary" onClick={onClose} size="small">
           Close
         </Button>
-        <Button variant="contained" color="secondary" onClick={handleAddUserToRole} size="small">
+        <Button
+          variant="contained"
+          color="secondary"
+          onClick={handleAddUserToRole}
+          size="small"
+        >
           Enroll Users
         </Button>
-        {selectedUserIds.length > 0 && (
-          <Button
+        {selectedEnrolledUserIds.length > 0 && (
+          <StyledButton
             variant="outlined"
             color="secondary"
             size="small"
-            onClick={handleRemoveUserConfirmation}
+            onClick={handleRemoveSelected}
           >
             Remove Selected
-          </Button>
+          </StyledButton>
         )}
       </DialogActions>
-
       <Dialog
         open={removeConfirmation.open}
         TransitionComponent={Transition}

@@ -1,71 +1,66 @@
 import * as React from 'react';
-import {
-  TextField,
-  Select,
-  MenuItem,
-  Box,
-  Dialog,
-  DialogTitle,
-  DialogContent,
-  DialogActions,
-  Button,
-} from '@mui/material';
+import { Button, Dialog, DialogActions, DialogContent, DialogTitle, TextField, Select, MenuItem, Stack } from '@mui/material';
 
 function EditUserDialog({ open, handleClose, handleUpdateUser, updatedUserData, handleInputChange, roles }) {
-    return (
-      <Dialog
-        open={open}
-        onClose={handleClose}
-        aria-labelledby="edit-dialog-title"
-      >
-        <DialogTitle id="edit-dialog-title">Edit User</DialogTitle>
-        <DialogContent>
-          <Box className="dialog-edit-user-form" sx={{ display: 'flex', flexDirection: 'column', gap: 2 }}>
-            <TextField
-              label="Name"
-              type="text"
-              value={updatedUserData.UserName}
-              onChange={(e) => handleInputChange('UserName', e.target.value)}
-            />
-            <TextField
-              label="Email"
-              type="email"
-              value={updatedUserData.UserEmail}
-              onChange={(e) => handleInputChange('UserEmail', e.target.value)}
-            />
-            <Select
-              label="Role"
-              value={updatedUserData.RoleID}
-              onChange={(e) => handleInputChange('RoleID', e.target.value)}
-            >
-              <MenuItem value="">
-                <em>Choose Role</em>
+  return (
+    <Dialog
+      open={open}
+      onClose={handleClose}
+      aria-labelledby="edit-dialog-title"
+      fullWidth
+      maxWidth="sm"
+    >
+      <DialogTitle id="edit-dialog-title">Edit User</DialogTitle>
+      <DialogContent sx={{ pt: 2}}>
+        <Stack spacing={2} sx={{ width: '100%' }}>
+          <TextField
+            label="Name"
+            type="text"
+            value={updatedUserData.UserName}
+            onChange={(e) => handleInputChange('UserName', e.target.value)}
+            fullWidth
+          />
+          <TextField
+            label="Email"
+            type="email"
+            value={updatedUserData.UserEmail}
+            onChange={(e) => handleInputChange('UserEmail', e.target.value)}
+            fullWidth
+          />
+          <Select
+            label="Role"
+            value={updatedUserData.RoleID}
+            onChange={(e) => handleInputChange('RoleID', e.target.value)}
+            fullWidth
+          >
+            <MenuItem value="">
+              <em>Choose Role</em>
+            </MenuItem>
+            {roles.map((role) => (
+              <MenuItem key={role.roleId} value={role.roleId}>
+                {role.roleName}
               </MenuItem>
-              {roles.map((role) => (
-                <MenuItem key={role.roleId} value={role.roleId}>
-                  {role.roleName}
-                </MenuItem>
-              ))}
-            </Select>
-            {/* Password Field */}
-            <TextField
-              label="Password"
-              type="password"
-              value={updatedUserData.UserPassword}
-              onChange={(e) => handleInputChange('UserPassword', e.target.value)}
-            />
-          </Box>
-        </DialogContent>
-        <DialogActions>
-          <Button onClick={handleClose} color="primary">
-            Cancel
-          </Button>
-          <Button onClick={handleUpdateUser} color="secondary">
-            Update
-          </Button>
-        </DialogActions>
-      </Dialog>
-    );
-  }
+            ))}
+          </Select>
+          <TextField
+            label="Password"
+            type="password"
+            value={updatedUserData.UserPassword}
+            onChange={(e) => handleInputChange('UserPassword', e.target.value)}
+            fullWidth
+          />
+        </Stack>
+      </DialogContent>
+      <DialogActions>
+        <Button onClick={handleClose} variant="contained" color="primary">
+          Cancel
+        </Button>
+        <Button onClick={handleUpdateUser} variant="contained" color="secondary">
+          Update
+        </Button>
+      </DialogActions>
+    </Dialog>
+  );
+}
 
-  export default EditUserDialog;
+export default EditUserDialog;

@@ -1,20 +1,17 @@
 const { query } = require('../db');
 
 async function handleRolesIdEnroll(req, res) {
-  const { userIds, roleId } = req.body; 
 
   try {
-    if (!userIds || !Array.isArray(userIds) || userIds.length === 0) {
-      return res.status(400).json({ error: 'Invalid user IDs provided' });
-    }
+    const userIds = req.body.userIds; 
+    const roleId = req.params.courseId;
 
     // Check if any of the users already has the role
-    const existingRolesSql = 'SELECT UserID FROM userroles WHERE RoleID = ? AND UserID IN (?)';
+    const existingRolesSql = 'SELECT UserRoleID FROM userroles WHERE RoleID = ? AND UserID IN (?)';
     const [existingRolesResult] = await query(existingRolesSql, [roleId, userIds]);
 
     // Check if the role assignment already exists for any user
     if (existingRolesResult && existingRolesResult.length > 0) {
-      const existingUserIds = existingRolesResult.map((result) => result.UserID);
       return res.status(400).json({ error: 'Some users already have the specified role', existingUserIds });
     }
 

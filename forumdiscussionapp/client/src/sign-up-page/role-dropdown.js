@@ -5,16 +5,16 @@ const RoleDropdown = ({ roles, value, onChange, error, helperText }) => {
   const isRolesFetched = Array.isArray(roles) && roles.length > 0;
 
   return (
-    <FormControl fullWidth variant="outlined" margin="normal" className="mb-3">
+    <FormControl fullWidth variant="outlined" margin="normal" sx={{ mb: 3, '.MuiOutlinedInput-root': { borderRadius: 2 } }}>
       <InputLabel htmlFor="roleId">Select User Role</InputLabel>
       <Select
         label="Select User Role"
         id="roleId"
         name="roleId"
         value={value}
-        error={error}
+        error={!!error}
         onChange={onChange}
-        className="rounded-0"
+        sx={{ '.MuiSelect-select': { fontSize: '1rem' } }}
       >
         <MenuItem value="">
           Select a Role

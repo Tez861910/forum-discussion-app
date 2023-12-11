@@ -1,14 +1,20 @@
 import React, { useState, useEffect, useCallback } from 'react';
-import { Button, Box, Typography , Slide} from '@mui/material';
+import {
+  Button,
+  Container,
+  Stack,
+  Typography,
+  Slide,
+} from '@mui/material';
 import UserTable from './UserTable';
 import CreateUserDialog from './CreateUserDialog';
 import EditUserDialog from './EditUserDialog';
 import DeleteConfirmationDialog from './DeleteConfirmationDialog';
 import useApi from '../../home-page/Api';
 
-const Transition = React.forwardRef(function Transition(props, ref) {
-  return <Slide direction="up" ref={ref} {...props} />;
-});
+const Transition = React.forwardRef((props, ref) => (
+  <Slide direction="up" ref={ref} {...props} />
+));
 
 function AdminUsers() {
   const [users, setUsers] = useState([]);
@@ -27,7 +33,10 @@ function AdminUsers() {
     RoleID: '',
     UserPassword: '',
   });
-  const [deleteConfirmation, setDeleteConfirmation] = useState({ open: false, userId: null });
+  const [deleteConfirmation, setDeleteConfirmation] = useState({
+    open: false,
+    userId: null,
+  });
   const [createUserModalOpen, setCreateUserModalOpen] = useState(false);
 
   const { api } = useApi();
@@ -71,8 +80,6 @@ function AdminUsers() {
         roleId: newUser.RoleID,
       });
 
-      console.log('Create User Response:', response.data);
-  
       if (response.data && response.data.message === 'User created successfully') {
         console.log('User created successfully');
         setNewUser({
@@ -81,11 +88,12 @@ function AdminUsers() {
           UserPassword: '',
           RoleID: '',
         });
-        fetchUsers();
+        
         setCreateUserModalOpen(false);
         fetchUsers();
       } else {
         console.error('Error creating user:', response.data);
+        setCreateUserModalOpen(false);
         if (response.data && response.data.error) {
           setError(response.data.error);
         } else {
@@ -95,7 +103,7 @@ function AdminUsers() {
     } catch (error) {
       console.error('Error creating user:', error);
     }
-  }, [api, fetchUsers, newUser]);
+  }, [api, fetchUsers, newUser, setCreateUserModalOpen]);
 
   const handleEditUser = (user) => {
     setEditingUserId(user.UserID);
@@ -108,34 +116,48 @@ function AdminUsers() {
   };
 
   const handleUpdateUser = useCallback(async () => {
-    // Ensure updatedUserData is valid
-    if (!updatedUserData.UserName || !updatedUserData.UserEmail || updatedUserData.RoleID === '') {
+    if (
+      !updatedUserData.UserName ||
+      !updatedUserData.UserEmail ||
+      updatedUserData.RoleID === ''
+    ) {
       setEditingUserId(null);
       return;
     }
-  
-    // Ensure editingUserId is not null or undefined
+
     if (editingUserId === null || editingUserId === undefined) {
       console.error('Invalid user ID for update');
       return;
     }
-  
+
     try {
-      // Create an object with only the edited fields
       const editedFields = {};
       Object.keys(updatedUserData).forEach((key) => {
-        if (updatedUserData[key] !== null && updatedUserData[key] !== undefined) {
+        if (
+          updatedUserData[key] !== null &&
+          updatedUserData[key] !== undefined
+        ) {
           editedFields[key] = updatedUserData[key];
         }
       });
-  
-      const response = await api.put(`/users/users/update/${editingUserId}`, editedFields);
-  
-      console.log('Edit User Response:', response.data);
-  
-      if (response.data && response.data.message === 'User updated successfully') {
+
+      const response = await api.put(
+        `/users/users/update/${editingUserId}`,
+        editedFields
+      );
+
+      if (
+        response.data &&
+        response.data.message === 'User updated successfully'
+      ) {
         console.log('User updated successfully');
         setEditingUserId(null);
+        setUpdatedUserData({
+          UserName: '',
+          UserEmail: '',
+          RoleID: '',
+          UserPassword: '',
+        });
         fetchUsers();
       } else {
         console.error('Error updating user:', response.data);
@@ -149,18 +171,21 @@ function AdminUsers() {
       console.error('Error updating user:', error);
     }
   }, [api, fetchUsers, updatedUserData, editingUserId]);
-  
+
   const handleDeleteUser = (userId) => {
     setDeleteConfirmation({ open: true, userId });
   };
 
   const confirmDelete = useCallback(async () => {
     try {
-      const response = await api.delete(`/users/users/delete/${deleteConfirmation.userId}`);
+      const response = await api.delete(
+        `/users/users/delete/${deleteConfirmation.userId}`
+      );
 
-      console.log('Delete User Response:', response.data);
-  
-      if (response.data && response.data.message === 'User deleted successfully') {
+      if (
+        response.data &&
+        response.data.message === 'User deleted successfully'
+      ) {
         console.log('User deleted successfully');
         setDeleteConfirmation({ open: false, userId: null });
         fetchUsers();
@@ -182,7 +207,7 @@ function AdminUsers() {
       ...prevData,
       [key]: value,
     }));
-  }; 
+  };
 
   const getRoleName = (roleID) => {
     const role = roles.find((r) => r.roleId === roleID);
@@ -190,23 +215,61 @@ function AdminUsers() {
   };
 
   return (
-    <Box sx={{ p: 2 }}>
-      <Typography variant="h4" gutterBottom component="div">
-        User Management
+    <Container maxWidth="md" sx={{ py: 4, backgroundColor: '#afabff', minHeight: '100vh' }}>
+      <Typography variant="h4" gutterBottom component="div" sx={{ color: 'text.primary' }}>
+        Admin User Management
       </Typography>
-      <Button
-        variant="contained"
-        color="primary"
-        onClick={() => setCreateUserModalOpen(true)}
-        sx={{ mb: 2 }}
-      >
-        Create User
-      </Button>
-      <UserTable key={users.length} users={users} handleEditUser={handleEditUser} handleDeleteUser={handleDeleteUser} getRoleName={getRoleName} />
-      <CreateUserDialog open={createUserModalOpen} handleClose={() => setCreateUserModalOpen(false)} handleCreateUser={handleCreateUser} newUser={newUser} setNewUser={setNewUser} roles={roles} TransitionComponent={Transition} />
-      <DeleteConfirmationDialog open={deleteConfirmation.open} handleClose={() => setDeleteConfirmation({ open: false, userId: null })} handleDelete={confirmDelete} TransitionComponent={Transition} />
-      <EditUserDialog open={editingUserId !== null} handleClose={() => setEditingUserId(null)} handleUpdateUser={handleUpdateUser} updatedUserData={updatedUserData} handleInputChange={handleInputChange} roles={roles} TransitionComponent={Transition} />
-    </Box>
+      <Stack spacing={2} sx={{ 
+        p: 2, 
+        overflowY: 'scroll', 
+        maxHeight: '100vh',
+        '&::-webkit-scrollbar': {
+          width: '0.4em',
+        },
+        '&::-webkit-scrollbar-track': {
+          boxShadow: 'inset 0 0 6px rgba(0,0,0,0.00)',
+        },
+        '&::-webkit-scrollbar-thumb': {
+          backgroundColor: 'rgba(0,0,0,.1)',
+          outline: '1px solid slategrey',
+        },
+      }}>
+        <Button variant="contained" color="secondary" sx={{ marginBottom: 2 }} onClick={() => setCreateUserModalOpen(true)}>
+          Create 
+        </Button>
+        <UserTable
+          key={users.length}
+          users={users}
+          handleEditUser={handleEditUser}
+          handleDeleteUser={handleDeleteUser}
+          getRoleName={getRoleName}
+        />
+      </Stack>
+      <CreateUserDialog
+        open={createUserModalOpen}
+        handleClose={() => setCreateUserModalOpen(false)}
+        handleCreateUser={handleCreateUser}
+        newUser={newUser}
+        setNewUser={setNewUser}
+        roles={roles}
+        TransitionComponent={Transition}
+      />
+      <DeleteConfirmationDialog
+        open={deleteConfirmation.open}
+        handleClose={() => setDeleteConfirmation({ open: false, userId: null })}
+        handleDelete={confirmDelete}
+        TransitionComponent={Transition}
+      />
+      <EditUserDialog
+        open={editingUserId !== null}
+        handleClose={() => setEditingUserId(null)}
+        handleUpdateUser={handleUpdateUser}
+        updatedUserData={updatedUserData}
+        handleInputChange={handleInputChange}
+        roles={roles}
+        TransitionComponent={Transition}
+      />
+    </Container>
   );
 }
 

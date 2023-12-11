@@ -64,15 +64,20 @@ const CourseEnrollmentModal = ({ isOpen, onRequestClose, onEnrollSuccess }) => {
   const fetchUserCoursesAndSetState = useCallback(async () => {
     try {
       const userCoursesData = await fetchUserCourses();
-      setUserCourses(userCoursesData);
-
-      const enrolledCourseIds = userCoursesData.map((course) => course.CourseID);
-      setSelectedCourses(enrolledCourseIds);
+  
+      if (userCoursesData) {
+        setUserCourses(userCoursesData);
+  
+        const enrolledCourseIds = userCoursesData.map((course) => course.CourseID);
+        setSelectedCourses(enrolledCourseIds);
+      } else {
+        // Handle the case where userCoursesData is undefined or empty
+      }
     } catch (error) {
       console.error('Error fetching user courses:', error);
     }
   }, [fetchUserCourses]);
-
+  
   useEffect(() => {
     const fetchCoursesAndUserCourses = async () => {
       await Promise.all([fetchCourses(), fetchUserCoursesAndSetState()]);
@@ -100,59 +105,48 @@ const CourseEnrollmentModal = ({ isOpen, onRequestClose, onEnrollSuccess }) => {
         return;
       }
 
-      // Filter out already enrolled courses
-      const nonEnrolledCourses = selectedCourses.filter(
-        (courseId) => !userCourses.some((userCourse) => userCourse.CourseID === courseId)
+      const response = await api.post(
+        '/courses/courses/enroll',
+        {
+          userId: userId,
+          courseIds: selectedCourses,
+        }
       );
 
-      // Iterate over nonEnrolledCourses and send individual requests for each course
-      for (const courseId of nonEnrolledCourses) {
-        const response = await api.post(
-          `/courses/courses/${courseId}/enroll`,
-          {
-            userId: userId,
-          }
-        );
-
-        if (response.status !== 200) {
-          console.error(`Enrollment failed for course ${courseId}:`, response.status);
-          return;
-        }
+      if (response.status === 200) {
+        // If enrollment is successful
+        onEnrollSuccess(selectedCourses);
+        fetchUserCoursesAndSetState();
+      } else {
+        console.error('Enrollment failed:', response.status);
       }
-
-
-      // If all enrollments are successful
-      onEnrollSuccess(nonEnrolledCourses);
-      fetchUserCoursesAndSetState();
     } catch (error) {
       console.error('Error enrolling in courses:', error);
     }
   };
 
-  const enrolledCoursesList = userCourses.map((userCourse) => {
-    const enrolledCourse = courses.find((course) => course.CourseID === userCourse.CourseID);
+  const enrolledCoursesList = userCourses
+    .map((userCourse) => {
+      const enrolledCourse = courses.find((course) => course.CourseID === userCourse.CourseID);
 
-    if (enrolledCourse) {
-      return (
-        <ListItem key={enrolledCourse.CourseID} disablePadding>
-          <ListItemText primary={enrolledCourse.CourseName} />
-        </ListItem>
-      );
-    } else {
-      return null;
-    }
-  });
+      if (enrolledCourse) {
+        return enrolledCourse; // Return the course object instead of a ListItem
+      } else {
+        return null;
+      }
+    })
+    .filter((course, index, self) => course && index === self.findIndex((c) => c.CourseID === course.CourseID));
 
   const selectableCoursesList = courses
-    .filter((course) => !selectedCourses.includes(course.CourseID))
-    .filter((course) => course.CourseName.toLowerCase().includes(searchTerm.toLowerCase()))
+    .filter((course) => !selectedCourses.includes(course?.CourseID))
+    .filter((course) => course?.CourseName.toLowerCase().includes(searchTerm.toLowerCase()))
     .map((course) => (
-      <ListItem key={course.CourseID} disablePadding>
+      <ListItem key={course?.CourseID} disablePadding>
         <Checkbox
-          checked={selectedCourses.includes(course.CourseID)}
-          onChange={() => handleCourseSelection(course.CourseID)}
+          checked={selectedCourses.includes(course?.CourseID)}
+          onChange={() => handleCourseSelection(course?.CourseID)}
         />
-        <ListItemText primary={course.CourseName} />
+        <ListItemText primary={course?.CourseName} />
       </ListItem>
     ));
 
@@ -168,7 +162,13 @@ const CourseEnrollmentModal = ({ isOpen, onRequestClose, onEnrollSuccess }) => {
         {enrolledCoursesList.length > 0 && (
           <Box sx={{ marginBottom: 2 }}>
             <Typography variant="h6">Enrolled Courses</Typography>
-            <List>{enrolledCoursesList}</List>
+            <List>
+              {enrolledCoursesList.map((enrolledCourse) => (
+                <ListItem key={enrolledCourse.CourseID} disablePadding>
+                  <ListItemText primary={enrolledCourse.CourseName} />
+                </ListItem>
+              ))}
+            </List>
           </Box>
         )}
 

@@ -10,7 +10,7 @@ async function handleUserCoursesGetId(req, res) {
     }
 
     // Query to retrieve courses for a specific user
-    const userCoursesQuery = 'SELECT * FROM UserCourses WHERE UserID = ?';
+    const userCoursesQuery = 'SELECT * FROM UserCourses WHERE UserID = ? AND IsDeleted = FALSE';
     const userCourses = await query(userCoursesQuery, [userId]);
 
     res.json({ userCourses });

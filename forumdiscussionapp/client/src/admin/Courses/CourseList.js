@@ -15,7 +15,7 @@ function CourseList({ courses, handleEditCourse, handleDeleteCourse, handleCours
   );
 
   return (
-    <Box sx={{ width: '100%', bgcolor: 'background.paper', p: 2 }}>
+    <Box sx={{ width: '100%', bgcolor: '#fff0de', p: 2 }}>
       <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 2 }}>
         <Typography variant="h6">Course List</Typography>
         <Box sx={{ display: 'flex', alignItems: 'center' }}>
