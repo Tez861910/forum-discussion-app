@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useCallback } from 'react';
+import * as React from 'react';
 import {
   Button,
   Container,
@@ -17,31 +17,31 @@ const Transition = React.forwardRef((props, ref) => (
 ));
 
 function AdminUsers() {
-  const [users, setUsers] = useState([]);
-  const [newUser, setNewUser] = useState({
+  const [users, setUsers] = React.useState([]);
+  const [newUser, setNewUser] = React.useState({
     UserName: '',
     UserEmail: '',
     RoleID: '',
     UserPassword: '',
   });
-  const [roles, setRoles] = useState([]);
-  const [error, setError] = useState(null);
-  const [editingUserId, setEditingUserId] = useState(null);
-  const [updatedUserData, setUpdatedUserData] = useState({
+  const [roles, setRoles] = React.useState([]);
+  const [error, setError] = React.useState(null);
+  const [editingUserId, setEditingUserId] = React.useState(null);
+  const [updatedUserData, setUpdatedUserData] = React.useState({
     UserName: '',
     UserEmail: '',
     RoleID: '',
     UserPassword: '',
   });
-  const [deleteConfirmation, setDeleteConfirmation] = useState({
+  const [deleteConfirmation, setDeleteConfirmation] = React.useState({
     open: false,
     userId: null,
   });
-  const [createUserModalOpen, setCreateUserModalOpen] = useState(false);
+  const [createUserModalOpen, setCreateUserModalOpen] = React.useState(false);
 
   const { api } = useApi();
 
-  const fetchUsers = useCallback(async () => {
+  const fetchUsers = React.useCallback(async () => {
     try {
       const response = await api.get('/users/users/get');
       setUsers(response.data.users);
@@ -51,7 +51,7 @@ function AdminUsers() {
     }
   }, [api]);
 
-  const fetchRoles = useCallback(async () => {
+  const fetchRoles = React.useCallback(async () => {
     try {
       const response = await api.get('/roles/roles/get');
       setRoles(response.data.roles);
@@ -61,12 +61,12 @@ function AdminUsers() {
     }
   }, [api]);
 
-  useEffect(() => {
+  React.useEffect(() => {
     fetchUsers();
     fetchRoles();
   }, [fetchUsers, fetchRoles]);
 
-  const handleCreateUser = useCallback(async () => {
+  const handleCreateUser = React.useCallback(async () => {
     if (!newUser.UserName || !newUser.UserEmail || newUser.RoleID === '') {
       console.error('Name, email, and roleId are required.');
       return;
@@ -89,8 +89,8 @@ function AdminUsers() {
           RoleID: '',
         });
         
+        await fetchUsers();
         setCreateUserModalOpen(false);
-        fetchUsers();
       } else {
         console.error('Error creating user:', response.data);
         setCreateUserModalOpen(false);
@@ -115,7 +115,7 @@ function AdminUsers() {
     });
   };
 
-  const handleUpdateUser = useCallback(async () => {
+  const handleUpdateUser = React.useCallback(async () => {
     if (
       !updatedUserData.UserName ||
       !updatedUserData.UserEmail ||
@@ -158,7 +158,7 @@ function AdminUsers() {
           RoleID: '',
           UserPassword: '',
         });
-        fetchUsers();
+        await fetchUsers();
       } else {
         console.error('Error updating user:', response.data);
         if (response.data && response.data.error) {
@@ -176,7 +176,7 @@ function AdminUsers() {
     setDeleteConfirmation({ open: true, userId });
   };
 
-  const confirmDelete = useCallback(async () => {
+  const confirmDelete = React.useCallback(async () => {
     try {
       const response = await api.delete(
         `/users/users/delete/${deleteConfirmation.userId}`
@@ -188,7 +188,7 @@ function AdminUsers() {
       ) {
         console.log('User deleted successfully');
         setDeleteConfirmation({ open: false, userId: null });
-        fetchUsers();
+        await fetchUsers();
       } else {
         console.error('Error deleting user:', response.data);
         if (response.data && response.data.error) {

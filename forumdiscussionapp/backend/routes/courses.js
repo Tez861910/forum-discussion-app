@@ -12,6 +12,7 @@ const { handleCoursesGetId } = require('../course-routes/handle-courses-get-id')
 const { handleCoursesUpdateId } = require('../course-routes/handle-courses-update-id');
 const { handleCoursesPatchId } = require('../course-routes/handle-courses-patch-id');
 const { handleCoursesEnrollmentsId } = require('../course-routes/handle-courses-enrollments-id');
+const { handleCoursesEnroll } = require('../course-routes/handle-courses-enroll');
 const { handleCoursesIdEnroll } = require('../course-routes/handle-courses-id-enroll');
 const { handleRemoveUsersFromCourse } = require('../course-routes/handle-remove-users-from-course');
 const { handleCIDEnrollmentsEID } = require('../course-routes/handle-courses-cid-enrollments-eid');
@@ -26,8 +27,11 @@ router.get('/courses/enrollments/:courseId', verifyJwt, async (req, res) =>handl
 // Get all courses
 router.get('/courses/get', verifyJwt, async (req, res) => handleCoursesGet(req, res));
 
-// Enroll  courses in users
-router.post('/courses/enroll', verifyJwt, async (req, res) =>handleCoursesIdEnroll(req, res));
+// Enroll  courses in user
+router.post('/courses/enroll', verifyJwt, async (req, res) =>handleCoursesEnroll(req, res));
+
+// Enroll  users in course
+router.post('/courses/:courseId/enroll', verifyJwt, async (req, res) =>handleCoursesIdEnroll(req, res));
 
 // Get a course by ID
 router.get('/courses/get/:id', verifyJwt, async (req, res) =>handleCoursesGetId(req, res));

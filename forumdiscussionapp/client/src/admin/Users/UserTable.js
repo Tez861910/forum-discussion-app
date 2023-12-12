@@ -12,7 +12,6 @@ import {
   Typography,
   Paper,
   TextField,
-  InputAdornment,
 } from '@mui/material';
 import SearchIcon from '@mui/icons-material/Search';
 import EditIcon from '@mui/icons-material/Edit';
@@ -34,26 +33,28 @@ function UserTable({ users, handleEditUser, handleDeleteUser, getRoleName }) {
   );
 
   return (
-    <TableContainer component={Paper} sx={{ mt: 3, overflowX: 'auto' }}>
-      <Box sx={{ p: 2 }}>
+    <TableContainer component={Paper} sx={{ mt: 3, maxHeight: 800 }}>
+      <Box sx={{ display: 'flex', justifyContent: 'space-between', p: 2 }}>
         <Typography variant="h6" component="div">
           User Table
         </Typography>
+        <Box sx={{ display: 'flex', alignItems: 'center' }}>
         <TextField
           id="search"
           type="search"
           label="Search"
           value={searchTerm}
           onChange={handleChange}
-          sx={{ width: '100%' }}
-          InputProps={{
-            endAdornment: (
-              <InputAdornment position="end">
-                <SearchIcon />
-              </InputAdornment>
-            ),
-          }}
-        />
+          variant="outlined"
+          size="small"
+          placeholder="Search users"
+          />
+          <IconButton color="primary" size="small" sx={{ ml: 1 }}>
+            <SearchIcon />
+          </IconButton>
+          </Box>
+      </Box>
+      <Box sx={{ overflow: 'auto' }}>
         <Table sx={{ minWidth: 650 }} aria-label="simple table">
           <TableHead>
             <TableRow>
