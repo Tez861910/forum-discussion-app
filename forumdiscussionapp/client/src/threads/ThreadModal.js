@@ -1,6 +1,6 @@
-import * as React from 'react';
-import { startTransition } from 'react';
-import { Dialog, DialogTitle, DialogContent, DialogActions, Button, TextField, styled, Card, CardContent, CardHeader, Box } from '@mui/material';
+import React from 'react';
+import { Dialog, DialogTitle, DialogContent, DialogActions, TextField, Button, styled, Card, CardContent, CardHeader, Box, IconButton, Typography } from '@mui/material';
+import CloseIcon from '@mui/icons-material/Close';
 import CommentSection from './comment-section';
 import useApi from '../home-page/Api';
 
@@ -13,13 +13,14 @@ const StyledButton = styled(Button)(({ theme }) => ({
 
 const StyledCard = styled(Card)(({ theme }) => ({
   marginBottom: theme.spacing(2),
+  border: `1px solid ${theme.palette.divider}`,
+  borderRadius: theme.shape.borderRadius,
 }));
 
 function ThreadModal({ courseId, threadId, onClose, roleId, userId }) {
   const [thread, setThread] = React.useState({ title: '', content: '' });
   const [editedTitle, setEditedTitle] = React.useState('');
   const [editedContent, setEditedContent] = React.useState('');
-
   const { api } = useApi();
 
   React.useEffect(() => {
@@ -28,16 +29,11 @@ function ThreadModal({ courseId, threadId, onClose, roleId, userId }) {
         if (threadId) {
           const response = await api.get(`/threads/threads/getThread/${threadId}`);
           const threadData = response.data?.thread;
-  
-          console.log('API Response:', response.data);
-  
+
           if (threadData) {
-            console.log('Thread Data:', threadData);
-            startTransition(() => {
-              setThread(threadData);
-              setEditedTitle(threadData.ThreadTitle || '');
-              setEditedContent(threadData.ThreadContent || '');
-            });
+            setThread(threadData);
+            setEditedTitle(threadData.ThreadTitle || '');
+            setEditedContent(threadData.ThreadContent || '');
           } else {
             console.error('Thread data not found');
           }
@@ -46,7 +42,7 @@ function ThreadModal({ courseId, threadId, onClose, roleId, userId }) {
         console.error('Error fetching thread:', error);
       }
     };
-  
+
     fetchThread();
   }, [api, threadId]);
 
@@ -61,16 +57,13 @@ function ThreadModal({ courseId, threadId, onClose, roleId, userId }) {
         courseId: courseId,
       });
 
-      const response = await api.get(`/threads/threads/getthread/${threadId}`);
-      const updatedThreadData = response.data?.thread;
-
-      if (updatedThreadData) {
-        startTransition(() => {
-          setThread(updatedThreadData);
-        });
-      } else {
-        console.error('Updated thread data not found');
-      }
+      // Directly update state with edited values
+      setThread((prevThread) => ({
+        ...prevThread,
+        ThreadTitle: editedTitle,
+        ThreadContent: editedContent,
+      }));
+      onClose();
     } catch (error) {
       console.error('Error updating thread:', error);
     }
@@ -89,12 +82,17 @@ function ThreadModal({ courseId, threadId, onClose, roleId, userId }) {
     <Dialog open={!!threadId} onClose={onClose} fullWidth maxWidth="md">
       {threadId && (
         <>
-          <DialogTitle>{thread.title}</DialogTitle>
+          <DialogTitle>
+            {editedTitle}
+            <IconButton edge="end" color="inherit" onClick={onClose} aria-label="close">
+              <CloseIcon />
+            </IconButton>
+          </DialogTitle>
           <DialogContent dividers>
             <StyledCard>
               <CardHeader title="Thread Details" />
               <CardContent>
-                <TextField
+              <TextField
                   label="Title"
                   value={editedTitle}
                   onChange={(e) => setEditedTitle(e.target.value)}

@@ -1,34 +1,72 @@
-import * as React from 'react';
-import { Button, Typography, styled, List, ListItem,Box } from '@mui/material';
+import React, { useState, useEffect } from 'react';
+import { Button, Typography, List, ListItem, Paper, CircularProgress, Box } from '@mui/material';
+import useApi from '../home-page/Api';
 
-const StyledButton = styled(Button)(({ theme }) => ({
-  margin: theme.spacing(1),
-  '&.MuiButton-outlinedPrimary': {
-    borderColor: theme.palette.primary.main,
-  },
-}));
+const ThreadList = ({ threads, onThreadSelect }) => {
+  const [loadingUsernames, setLoadingUsernames] = useState(true);
+  const [usernamesMap, setUsernamesMap] = useState({});
+  const { api } = useApi();
 
-function ThreadList({ threads, onThreadSelect }) {
-  console.log(threads); 
-  
-  const threadArray = Array.isArray(threads) ? threads : [];
+  useEffect(() => {
+    const fetchUsernames = async () => {
+      try {
+        const userIds = Array.from(new Set(threads.map((thread) => thread.UserID)));
+        const usernamesResponse = await api.post('/users/getUsernames', { userIds });
+        const usernames = usernamesResponse.data.usernames;
+
+        const usernameMap = {};
+        userIds.forEach((userId) => {
+          usernameMap[userId] = usernames[userId] || 'Unknown User';
+        });
+
+        setUsernamesMap(usernameMap);
+        setLoadingUsernames(false);
+      } catch (error) {
+        console.error('Error fetching usernames for threads:', error);
+        // Handle error gracefully, maybe show a notification to the user
+      }
+    };
+
+    if (threads.length > 0) {
+      fetchUsernames();
+    }
+  }, [api, threads]);
 
   return (
-    <Box>
-      <Typography variant="h3" component="div" gutterBottom>
+    <Paper elevation={3} sx={{ padding: 2, mt: 2 }}>
+      <Typography variant="h4" component="div" gutterBottom>
         Thread List
       </Typography>
       <List>
-        {threadArray.map((thread) => (
-          <ListItem key={thread.ThreadID}>
-            <StyledButton onClick={() => onThreadSelect(thread.ThreadID)}>
-              {thread.ThreadTitle || 'Untitled Thread'}
-            </StyledButton>
-          </ListItem>
-        ))}
+        {loadingUsernames ? (
+          <CircularProgress />
+        ) : (
+          threads.map((thread) => (
+            <ListItem key={thread.ThreadID}>
+              <Button
+                variant="outlined"
+                color="primary"
+                fullWidth
+                onClick={() => onThreadSelect(thread.ThreadID)}
+                sx={{ textTransform: 'none', justifyContent: 'space-between', textAlign: 'left', my: 1 }}
+              >
+                <Box>
+                  <Typography variant="h6">
+                    {thread.ThreadTitle || 'Untitled Thread'}
+                  </Typography>
+                </Box>
+                <Box>
+                  <Typography variant="body2" color="text.secondary" align="right">
+                    by {usernamesMap[thread.UserID]}
+                  </Typography>
+                </Box>
+              </Button>
+            </ListItem>
+          ))
+        )}
       </List>
-    </Box>
+    </Paper>
   );
-}
+};
 
 export default ThreadList;

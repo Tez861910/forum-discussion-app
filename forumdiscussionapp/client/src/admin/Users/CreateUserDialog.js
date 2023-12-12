@@ -1,7 +1,23 @@
 import * as React from 'react';
-import { Button, Dialog, DialogActions, DialogContent, DialogTitle, TextField, Select, MenuItem, Stack } from '@mui/material';
+import {
+  Button,
+  Dialog,
+  DialogActions,
+  DialogContent,
+  DialogTitle,
+  TextField,
+  Select,
+  MenuItem,
+  Stack,
+} from '@mui/material';
 
-function CreateUserDialog({ open, handleClose, handleCreateUser, newUser, setNewUser, roles }) {
+function CreateUserDialog({
+  open,
+  handleClose,
+  handleCreateUser,
+  newUser,
+  setNewUser,
+}) {
   return (
     <Dialog
       open={open}
@@ -37,26 +53,6 @@ function CreateUserDialog({ open, handleClose, handleCreateUser, newUser, setNew
             }
             fullWidth
           />
-          <Select
-            label="Role"
-            value={newUser.RoleID}
-            onChange={(e) =>
-              setNewUser((prevData) => ({
-                ...prevData,
-                RoleID: e.target.value,
-              }))
-            }
-            fullWidth
-          >
-            <MenuItem value="">
-              <em>Choose Role</em>
-            </MenuItem>
-            {roles.map((role) => (
-              <MenuItem key={role.roleId} value={role.roleId}>
-                {role.roleName}
-              </MenuItem>
-            ))}
-          </Select>
           <TextField
             label="Password"
             type="password"
@@ -65,6 +61,69 @@ function CreateUserDialog({ open, handleClose, handleCreateUser, newUser, setNew
               setNewUser((prevData) => ({
                 ...prevData,
                 UserPassword: e.target.value,
+              }))
+            }
+            fullWidth
+          />
+          <TextField
+            label="Address"
+            type="text"
+            value={newUser.Address}
+            onChange={(e) =>
+              setNewUser((prevData) => ({
+                ...prevData,
+                Address: e.target.value,
+              }))
+            }
+            fullWidth
+          />
+          <TextField
+            label="Phone Number"
+            type="text"
+            value={newUser.PhoneNumber}
+            onChange={(e) =>
+              setNewUser((prevData) => ({
+                ...prevData,
+                PhoneNumber: e.target.value,
+              }))
+            }
+            fullWidth
+          />
+          <TextField
+            label="Date of Birth"
+            type="date"
+            value={newUser.DateOfBirth}
+            onChange={(e) =>
+              setNewUser((prevData) => ({
+                ...prevData,
+                DateOfBirth: e.target.value,
+              }))
+            }
+            fullWidth
+          />
+          <Select
+            label="Gender"
+            value={newUser.Gender}
+            onChange={(e) =>
+              setNewUser((prevData) => ({
+                ...prevData,
+                Gender: e.target.value,
+              }))
+            }
+            fullWidth
+          >
+            <MenuItem value="Male">Male</MenuItem>
+            <MenuItem value="Female">Female</MenuItem>
+            <MenuItem value="Other">Other</MenuItem>
+          </Select>
+          <TextField
+            label="Avatar Path"
+            type="text"
+            value={newUser.AvatarPath}
+            onChange={(e) =>
+              setNewUser((prevData) => ({
+                ...prevData,
+                AvatarPath: e.target.value,
               }))
             }
             fullWidth

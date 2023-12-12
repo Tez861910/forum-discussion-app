@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useCallback , startTransition } from 'react';
+import React, { useState, useEffect, useCallback, startTransition } from 'react';
 import {
   Typography,
   Button,
@@ -8,12 +8,13 @@ import {
   DialogContent,
   DialogActions,
   Box,
+  Paper,
 } from '@mui/material';
 import ThreadList from './ThreadList'; 
 import ThreadModal from './ThreadModal';
 import useApi from '../home-page/Api';
 
-function ForumDiscussion({ selectedCourse: courseId}) {
+function ForumDiscussion({ selectedCourse: courseId }) {
   const roleId = localStorage.getItem('roleId');
   const userId = localStorage.getItem('userId');
   const [threads, setThreads] = useState([]);
@@ -27,7 +28,6 @@ function ForumDiscussion({ selectedCourse: courseId}) {
   const fetchThreads = useCallback(async () => {
     try {
       const response = await api.get(`/threads/threads/get/${courseId}`);
-      console.log('API Response:', response.data);
       startTransition(() => {
         setThreads(response.data[0]); 
       });
@@ -81,8 +81,8 @@ function ForumDiscussion({ selectedCourse: courseId}) {
   };
 
   return (
-    <Box sx={{ my: 3 }}>
-      <Typography variant="h2" component="div" gutterBottom>
+    <Box sx={{ my: 3, padding: 3 }}>
+      <Typography variant="h3" component="div" gutterBottom>
         Forum Discussion
       </Typography>
       {roleId === '2' && (
@@ -90,7 +90,7 @@ function ForumDiscussion({ selectedCourse: courseId}) {
           <Button variant="contained" color="primary" onClick={handleOpenCreateModal} sx={{ mb: 2 }}>
             Create Thread
           </Button>
-          <Dialog open={showCreateModal} onClose={handleCloseCreateModal}>
+          <Dialog open={showCreateModal} onClose={handleCloseCreateModal} maxWidth="sm" fullWidth>
             <DialogTitle>Create New Thread</DialogTitle>
             <DialogContent>
               <TextField
@@ -121,8 +121,10 @@ function ForumDiscussion({ selectedCourse: courseId}) {
           </Dialog>
         </Box>
       )}
-      <ThreadList  threads={threads} onThreadSelect={handleThreadSelection} roleId={roleId} />
-      {selectedThread && showModal && <ThreadModal threadId={selectedThread} onClose={handleModalClose} roleId={roleId} courseId={courseId} />}
+        <ThreadList threads={threads} onThreadSelect={handleThreadSelection} roleId={roleId} />
+      {selectedThread && showModal && (
+        <ThreadModal threadId={selectedThread} onClose={handleModalClose} roleId={roleId} courseId={courseId} />
+      )}
     </Box>
   );
 }

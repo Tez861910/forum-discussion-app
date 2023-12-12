@@ -2,18 +2,49 @@ import React, { useState, useEffect, useCallback } from 'react';
 import {
   Typography,
   TextareaAutosize,
-  Button,
-  Modal,
   Box,
-  TextField
+  styled,
+  IconButton,
+  Button,
+  CircularProgress,
 } from '@mui/material';
-import Responses from './Responses'; 
+import {
+  Send as SendIcon,
+  Close as CloseIcon,
+  Edit as EditIcon,
+  Save as SaveIcon,
+  Delete as DeleteIcon,
+} from '@mui/icons-material';
+import Responses from './Responses';
 import useApi from '../home-page/Api';
 
-function CommentSection({ threadId }) {
+const StyledIconButton = styled(IconButton)(({ theme }) => ({
+  margin: theme.spacing(1),
+  '&.MuiIconButton-root': {
+    marginRight: theme.spacing(1),
+  },
+}));
+
+const CommentItem = styled(Box)(({ theme }) => ({
+  marginBottom: theme.spacing(2),
+  border: `1px solid ${theme.palette.divider}`,
+  borderRadius: theme.shape.borderRadius,
+  padding: theme.spacing(2),
+  display: 'flex',
+  flexDirection: 'column',
+  alignItems: 'start',
+  position: 'relative',
+}));
+
+const EditDeleteWrapper = styled(Box)({
+  marginLeft: 'auto',
+});
+
+const CommentSection = ({ threadId }) => {
   const roleId = localStorage.getItem('roleId');
   const userId = localStorage.getItem('userId');
   const [comments, setComments] = useState([]);
+  const [usernamesMap, setUsernamesMap] = useState({});
   const [newComment, setNewComment] = useState('');
   const [fetchError, setFetchError] = useState(null);
   const [isLoading, setIsLoading] = useState(false);
@@ -25,34 +56,36 @@ function CommentSection({ threadId }) {
   const fetchComments = useCallback(async () => {
     try {
       const response = await api.get(`/comments/comments/get/${threadId}`);
-      const comments = response.data.comments;
-      return Array.isArray(comments) ? comments : [comments];  
-    } catch (error) {
-      console.error('Error fetching comments:', error);
-      throw error; 
-    }
-  }, [api, threadId]);
-
-  const loadComments = useCallback(async () => {
-    setIsLoading(true);
-    try {
-      const comments = await fetchComments(threadId);
+      const comments = Array.isArray(response.data.comments)
+        ? response.data.comments
+        : [response.data.comments];
       setComments(comments);
       setFetchError(null);
     } catch (error) {
-      console.error('Error loading comments:', error);
+      console.error('Error fetching comments:', error);
       setFetchError('Error loading comments');
     }
-    setIsLoading(false);
-  }, [fetchComments, threadId]);
+  }, [api, threadId]);
 
-  useEffect(() => {
-    loadComments();
-  }, [loadComments]);
+  const fetchUsernames = useCallback(async (commentsToFetchUsernames) => {
+    try {
+      const userIds = Array.from(new Set(commentsToFetchUsernames.map((comment) => comment.UserID)));
+      const usernamesResponse = await api.post('/users/getUsernames', { userIds });
+      const usernames = usernamesResponse.data.usernames;
 
-  const handleCommentSubmit = async (event) => {
-    event.preventDefault();
+      const usernameMap = {};
+      userIds.forEach((userId) => {
+        usernameMap[userId] = usernames[userId] || 'Unknown User';
+      });
 
+      setUsernamesMap((prevUsernamesMap) => ({ ...prevUsernamesMap, ...usernameMap }));
+    } catch (error) {
+      console.error('Error fetching usernames:', error);
+      // Handle error gracefully, maybe show a notification to the user
+    }
+  }, [api]);
+
+  const createComment = async () => {
     if (threadId && newComment.trim() !== '') {
       try {
         await api.post(`/comments/comments/create/${threadId}`, {
@@ -61,98 +94,147 @@ function CommentSection({ threadId }) {
         });
 
         setNewComment('');
-        loadComments();
       } catch (error) {
         console.error('Error adding comment:', error);
       }
     }
   };
 
-  const handleEditComment = async (commentId) => {
+  const editComment = async (commentId) => {
     try {
-      await api.put(`/comments/comments/update/${commentId}`, {
-        content: editedContent,
-      });
+      const editedComment = comments.find((comment) => comment.CommentID === commentId);
 
-      loadComments();
-      setEditingComment(null);
-      setEditedContent('');
+      if (editedComment) {
+        await api.put(`/comments/comments/update/${commentId}`, {
+          content: editedContent,
+        });
+
+        setEditingComment(null);
+        setEditedContent('');
+      } else {
+        console.error('Comment not found for editing:', commentId);
+      }
     } catch (error) {
       console.error('Error updating comment:', error);
     }
   };
 
-  const handleDeleteComment = async (commentId) => {
+  const deleteComment = async (commentId) => {
     try {
       await api.delete(`/comments/comments/delete/${commentId}`);
-
-      loadComments();
     } catch (error) {
       console.error('Error deleting comment:', error);
     }
   };
 
+  const handleCommentSubmit = async (event) => {
+    event.preventDefault();
+    await createComment();
+    await fetchComments();
+    await fetchUsernames(comments); // Fetch usernames after comments are updated
+  };
+
+  const handleEditComment = async (commentId) => {
+    await editComment(commentId);
+    await fetchComments();
+    await fetchUsernames(comments); // Fetch usernames after comments are updated
+  };
+
+  const handleDeleteComment = async (commentId) => {
+    await deleteComment(commentId);
+    await fetchComments();
+    await fetchUsernames(comments); // Fetch usernames after comments are updated
+  };
+
+  useEffect(() => {
+    if (!isLoading && comments.length === 0) {
+      setIsLoading(true);
+      fetchComments();
+      setIsLoading(false);
+    }
+    if (comments.length > 0) {
+      fetchUsernames(comments); // Fetch usernames after comments are updated
+    }
+  }, [fetchComments, fetchUsernames, comments, isLoading]);
+
   return (
-    <Box className="comment-section-container" sx={{ p: 2 }}>
+    <Box sx={{ p: 2 }}>
       <Typography variant="h2">Comment Section</Typography>
 
       {fetchError && <p>{fetchError}</p>}
-
-      {isLoading ? (
-        <p>Loading comments...</p>
-      ) : (
-        <Box className="comment-list" sx={{ mt: 2 }}>
-          {comments.length > 0 ? (
-            comments.map((comment) => (
-              <Box key={comment?.CommentID} className="comment-item" sx={{ mb: 2 }}>
-                {editingComment === comment?.CommentID ? (
-                  <Box>
-                    <TextField
-                      value={editedContent}
-                      onChange={(e) => setEditedContent(e.target.value)}
-                    />
-                    <Button onClick={() => handleEditComment(comment?.CommentID)}>
-                      Save
-                    </Button>
-                    <Button onClick={() => setEditingComment(null)}>
-                      Cancel
-                    </Button>
-                  </Box>
-                ) : (
-                  <>
-                    {comment?.CommentContent}
-                    {(roleId === '2' || (roleId === '3' && userId === comment?.UserID)) && (
-                      <Box sx={{ mt: 1 }}>
-                        <Button onClick={() => { setEditingComment(comment?.CommentID); setEditedContent(comment?.CommentContent); }}>
-                          Edit
-                        </Button>
-                        <Button onClick={() => handleDeleteComment(comment?.CommentID)}>Delete</Button>
-                      </Box>
-                    )}
-                  </>
-                )}
-                <Button onClick={() => setSelectedComment(comment)}>View Responses</Button>
-              </Box>
-            ))
-          ) : (
-            <p>No comments to display</p>
-          )}
-        </Box>
-      )}
 
       {(roleId === '2' || roleId === '3') && (
         <form onSubmit={handleCommentSubmit}>
           <TextareaAutosize
             value={newComment}
             onChange={(e) => setNewComment(e.target.value)}
+            aria-label="new comment"
+            minRows={4}
             placeholder="Add a comment..."
-            className="comment-input"
-            sx={{ mt: 2 }}
+            sx={{ width: '100%', marginTop: 2 }}
           />
-          <Button type="submit" variant="contained" color="primary" className="submit-button" sx={{ mt: 2 }}>
-            Submit Comment
-          </Button>
+          {newComment.trim() !== '' && (
+            <>
+              <StyledIconButton type="submit" color="primary">
+                <SendIcon />
+              </StyledIconButton>
+              <StyledIconButton onClick={() => setNewComment('')}>
+                <CloseIcon />
+              </StyledIconButton>
+            </>
+          )}
         </form>
+      )}
+
+      {isLoading ? (
+        <CircularProgress />
+      ) : (
+        <Box sx={{ mt: 2 }}>
+          {comments.map((comment) => (
+            <CommentItem key={comment?.CommentID}>
+              {editingComment === comment?.CommentID ? (
+                <Box>
+                  <TextareaAutosize
+                    value={editedContent}
+                    onChange={(e) => setEditedContent(e.target.value)}
+                    aria-label="edit comment"
+                    minRows={4}
+                    placeholder="Edit your comment..."
+                    sx={{ width: '100%', marginBottom: 2 }}
+                  />
+                  <StyledIconButton onClick={() => handleEditComment(comment?.CommentID)}>
+                    <SaveIcon />
+                  </StyledIconButton>
+                  <StyledIconButton onClick={() => setEditingComment(null)}>
+                    <CloseIcon />
+                  </StyledIconButton>
+                </Box>
+              ) : (
+                <>
+                  <Typography variant="body1" mb={2}>
+                    {comment?.CommentContent}
+                  </Typography>
+                  <Typography variant="body2" color="textSecondary">
+                    by {usernamesMap[comment.UserID]}
+                  </Typography>
+                  {(roleId === '2' || (roleId === '3' && userId === comment?.UserID)) && (
+                    <EditDeleteWrapper>
+                      <StyledIconButton onClick={() => { setEditingComment(comment?.CommentID); setEditedContent(comment?.CommentContent); }}>
+                        <EditIcon />
+                      </StyledIconButton>
+                      <StyledIconButton onClick={() => handleDeleteComment(comment?.CommentID)}>
+                        <DeleteIcon />
+                      </StyledIconButton>
+                    </EditDeleteWrapper>
+                  )}
+                  <Button onClick={() => setSelectedComment(comment)}>
+                    Responses
+                  </Button>
+                </>
+              )}
+            </CommentItem>
+          ))}
+        </Box>
       )}
 
       {selectedComment && (
@@ -164,6 +246,6 @@ function CommentSection({ threadId }) {
       )}
     </Box>
   );
-}
+};
 
 export default CommentSection;

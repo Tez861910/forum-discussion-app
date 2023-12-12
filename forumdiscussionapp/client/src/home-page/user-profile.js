@@ -23,6 +23,7 @@ const UserProfile = ({ isOpen, onClose, setUserName }) => {
     DateOfBirth: 'N/A',
     Gender: 'N/A',
     UserID: 'N/A',
+    RoleID: 'N/A',
   });
 
   const { api } = useApi();
@@ -45,6 +46,7 @@ const UserProfile = ({ isOpen, onClose, setUserName }) => {
             DateOfBirth: user.DateOfBirth ? new Date(user.DateOfBirth).toLocaleDateString() : 'N/A',
             Gender: user.Gender || 'N/A',
             UserID: user.UserID || 'N/A',
+            RoleID: user.RoleID || 'N/A',
           });
 
           setNewName(user.UserName || '');
@@ -106,16 +108,16 @@ const UserProfile = ({ isOpen, onClose, setUserName }) => {
     onClose();
   };
 
-  const getUserIDLabel = (roleID, userID) => {
-    switch (roleID) {
+  const getUserIDLabel = (roleId, userId) => {
+    switch (roleId) {
       case 1: // Admin
-        return `AID: ${userID}`;
+        return `AID: ${userId}`;
       case 2: // Teacher
-        return `TID: ${userID}`;
+        return `TID: ${userId}`;
       case 3: // Student
-        return `SID: ${userID}`;
+        return `SID: ${userId}`;
       default:
-        return `ID: ${userID}`;
+        return `ID: ${userId}`;
     }
   };
 
@@ -128,6 +130,8 @@ const UserProfile = ({ isOpen, onClose, setUserName }) => {
 
         {editing ? (
           <>
+            <Typography mb={1} sx={{ fontWeight: 'medium' }}>Role: {userData.RoleName}</Typography>
+            <Typography mb={1} sx={{ fontWeight: 'medium' }}>{getUserIDLabel(userData.RoleID, userData.UserID)}</Typography>
             <TextField
               fullWidth
               label="Name"
@@ -153,8 +157,6 @@ const UserProfile = ({ isOpen, onClose, setUserName }) => {
               mb={2}
               sx={{ mb: 2 }}
             />
-            <Typography mb={1} sx={{ fontWeight: 'medium' }}>Role: {userData.RoleName}</Typography>
-            <Typography mb={1} sx={{ fontWeight: 'medium' }}>User ID: {getUserIDLabel(1, userData.UserID)}</Typography>
             <TextField
               fullWidth
               label="Address"
@@ -194,7 +196,7 @@ const UserProfile = ({ isOpen, onClose, setUserName }) => {
           </>
         ) : (
           <>
-            <Typography mb={1} sx={{ fontWeight: 'medium' }}>{getUserIDLabel(1, userData.UserID)}</Typography>
+            <Typography mb={1} sx={{ fontWeight: 'medium' }}>{getUserIDLabel(userData.RoleID, userData.UserID)}</Typography>
             <Typography mb={1} sx={{ fontWeight: 'medium' }}>Name: {userData.UserName}</Typography>
             <Typography mb={1} sx={{ fontWeight: 'medium' }}>Email: {userData.UserEmail}</Typography>
             <Typography mb={1} sx={{ fontWeight: 'medium' }}>Role: {userData.RoleName}</Typography>

@@ -5,6 +5,7 @@ const { verifyJwt } = require('../authvalid');
 router.use(express.json());
 
 const { handleUsersGet } = require('../user-routes/handle-users-get');
+const { handleUsersGetUserName } = require('../user-routes/handle-users-getusername');
 const { handleUserCoursesGet } = require('../user-routes/handle-user-courses-get');
 const { handleUserCoursesGetId } = require('../user-routes/handle-user-courses-get-id');
 const { handleUsersCreate } = require('../user-routes/handle-users-create');
@@ -19,6 +20,9 @@ router.post('/users/create', verifyJwt, async (req, res) =>handleUsersCreate(req
 
 // Get all users
 router.get('/users/get', verifyJwt, async (req, res) =>handleUsersGet(req, res));
+
+// Get username
+router.post('/getUsernames', verifyJwt, async (req, res) =>handleUsersGetUserName(req, res));
 
 // Get all usercoures
 router.get('/usercourses/get', verifyJwt, async (req, res) =>handleUserCoursesGet(req, res));

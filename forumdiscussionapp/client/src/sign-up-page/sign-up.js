@@ -31,16 +31,20 @@ const Signup = () => {
 
   const handleSubmit = async (event) => {
     event.preventDefault();
+    console.log('Form submitted');
 
     const validationErrors = SignUpValidation(formData);
+    console.log('Validation Erros');
     setErrors(validationErrors);
 
     if (Object.keys(validationErrors).length === 0) {
       try {
+        console.log('Sending request');
         const response = await axios.post(
           'http://localhost:8081/signup/signup',
           formData
         );
+        console.log('Response:', response);
 
         if (response.status === 200) {
           console.log('Signup successful');
@@ -183,6 +187,7 @@ const Signup = () => {
                 color="primary"
                 fullWidth
                 sx={{ mt: 3, mb: 2, opacity: 0.8 }}
+                onClick={handleSubmit}
               >
                 Sign Up
               </Button>

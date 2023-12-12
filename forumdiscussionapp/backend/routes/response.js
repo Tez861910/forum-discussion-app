@@ -11,7 +11,7 @@ router.get('/responses/get/:commentId', verifyJwt, async (req, res) => {
 
   try {
     const result = await query('SELECT * FROM responses WHERE CommentID = ?', [commentId]);
-    let responses = result[0];
+    let responses = result;
 
     // Ensure responses is always an array
     if (!Array.isArray(responses)) {
