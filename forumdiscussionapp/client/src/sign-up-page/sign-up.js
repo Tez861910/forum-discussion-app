@@ -1,9 +1,18 @@
 import * as React from 'react';
 import axios from 'axios';
-import RoleDropdown from './role-dropdown';
-import { useNavigate } from 'react-router-dom';
-import { Link as RouterLink } from 'react-router-dom';
-import { Container, Grid, Typography, TextField, Button, Stack, Box, Paper } from '@mui/material';
+import { Link as RouterLink, useNavigate } from 'react-router-dom';
+import {
+  Container,
+  Grid,
+  Typography,
+  TextField,
+  Button,
+  Stack,
+  Box,
+  Paper,
+  Select,
+  MenuItem,
+} from '@mui/material';
 import SignUpValidation from './sign-up-validation';
 
 const Signup = () => {
@@ -11,31 +20,14 @@ const Signup = () => {
     name: '',
     email: '',
     password: '',
-    roleId: '',
+    address: '',
+    phoneNumber: '',
+    dateOfBirth: '',
+    gender: 'Male',
   });
   const navigate = useNavigate();
   const [errors, setErrors] = React.useState({});
   const [successMessage, setSuccessMessage] = React.useState([]);
-  const [roles, setRoles] = React.useState([]);
-
-  const handleInputChange = (event) => {
-    const { name, value } = event.target;
-    setFormData((prevFormData) => ({ ...prevFormData, [name]: value }));
-  };
-
-  const fetchData = async () => {
-    try {
-      const rolesResponse = await axios.get('http://localhost:8081/roles/roles/get');
-      const rolesData = rolesResponse.data.roles;
-      setRoles(rolesData);
-    } catch (error) {
-      console.error('Error fetching data:', error);
-    }
-  };
-
-  React.useEffect(() => {
-    fetchData();
-  }, []);
 
   const handleSubmit = async (event) => {
     event.preventDefault();
@@ -45,7 +37,10 @@ const Signup = () => {
 
     if (Object.keys(validationErrors).length === 0) {
       try {
-        const response = await axios.post('http://localhost:8081/signup/signup', formData);
+        const response = await axios.post(
+          'http://localhost:8081/signup/signup',
+          formData
+        );
 
         if (response.status === 200) {
           console.log('Signup successful');
@@ -55,7 +50,10 @@ const Signup = () => {
             name: '',
             email: '',
             password: '',
-            roleId: '',
+            address: '',
+            phoneNumber: '',
+            dateOfBirth: '',
+            gender: 'Male',
           });
         } else {
           console.error('Signup failed. Status:', response.status);
@@ -70,63 +68,115 @@ const Signup = () => {
 
   return (
     <Container maxWidth="xs" sx={{ mt: 8, mb: 4 }}>
-      <Paper elevation={3} sx={{ p: 3, backgroundColor: 'background.paper', borderRadius: 2, opacity: 0.9, transition: 'opacity .3s', '&:hover': { opacity: 1 } }}>
+      <Paper
+        elevation={3}
+        sx={{
+          p: 3,
+          backgroundColor: 'background.paper',
+          borderRadius: 2,
+          opacity: 0.9,
+          transition: 'opacity .3s',
+          '&:hover': { opacity: 1 },
+        }}
+      >
         <Stack spacing={2} justifyContent="center" alignItems="center">
           <Grid item xs={12}>
             <Typography variant="h4" align="center" gutterBottom>
               Sign-Up
             </Typography>
-            {successMessage.length > 0 && <Box sx={{ color: 'green' }}>{successMessage}</Box>} 
+            {successMessage.length > 0 && (
+              <Box sx={{ color: 'green' }}>{successMessage}</Box>
+            )}
             <form onSubmit={handleSubmit}>
               <TextField
                 fullWidth
                 label="User Name"
                 name="name"
                 value={formData.name}
-                onChange={handleInputChange}
+                onChange={(e) =>
+                  setFormData({ ...formData, name: e.target.value })
+                }
                 variant="outlined"
                 error={!!errors.name}
                 helperText={errors.name}
-                margin="normal"
-                sx={{ '.MuiInputBase-input': { fontSize: '1rem' }, '.MuiOutlinedInput-root': { '& fieldset': { borderColor: 'primary.main' }, '&:hover fieldset': { borderColor: 'secondary.main' }, '&.Mui-focused fieldset': { borderColor: 'primary.main' } } }}
               />
-  
+
               <TextField
                 fullWidth
                 label="User Email"
                 name="email"
                 value={formData.email}
-                onChange={handleInputChange}
+                onChange={(e) =>
+                  setFormData({ ...formData, email: e.target.value })
+                }
                 variant="outlined"
                 error={!!errors.email}
                 helperText={errors.email}
-                margin="normal"
-                sx={{ '.MuiInputBase-input': { fontSize: '1rem' }, '.MuiOutlinedInput-root': { '& fieldset': { borderColor: 'primary.main' }, '&:hover fieldset': { borderColor: 'secondary.main' }, '&.Mui-focused fieldset': { borderColor: 'primary.main' } } }}
               />
-  
+
               <TextField
                 fullWidth
                 label="Password"
                 name="password"
                 type="password"
                 value={formData.password}
-                onChange={handleInputChange}
+                onChange={(e) =>
+                  setFormData({ ...formData, password: e.target.value })
+                }
                 variant="outlined"
                 error={!!errors.password}
                 helperText={errors.password}
-                margin="normal"
-                sx={{ '.MuiInputBase-input': { fontSize: '1rem' }, '.MuiOutlinedInput-root': { '& fieldset': { borderColor: 'primary.main' }, '&:hover fieldset': { borderColor: 'secondary.main' }, '&.Mui-focused fieldset': { borderColor: 'primary.main' } } }}
               />
-  
-              <RoleDropdown
-                name="roleId"
-                value={formData.roleId}
-                onChange={handleInputChange}
-                roles={roles}
-                error={!!errors.roleId}
-                helperText={errors.roleId}
+
+              <TextField
+                fullWidth
+                label="Address"
+                name="address"
+                value={formData.address}
+                onChange={(e) =>
+                  setFormData({ ...formData, address: e.target.value })
+                }
+                variant="outlined"
               />
-  
+
+              <TextField
+                fullWidth
+                label="Phone Number"
+                name="phoneNumber"
+                value={formData.phoneNumber}
+                onChange={(e) =>
+                  setFormData({ ...formData, phoneNumber: e.target.value })
+                }
+                variant="outlined"
+              />
+
+              <TextField
+                fullWidth
+                label="Date of Birth"
+                name="dateOfBirth"
+                type="date"
+                value={formData.dateOfBirth}
+                onChange={(e) =>
+                  setFormData({ ...formData, dateOfBirth: e.target.value })
+                }
+                variant="outlined"
+              />
+
+              <Select
+                fullWidth
+                label="Gender"
+                name="gender"
+                value={formData.gender}
+                onChange={(e) =>
+                  setFormData({ ...formData, gender: e.target.value })
+                }
+                variant="outlined"
+              >
+                <MenuItem value="Male">Male</MenuItem>
+                <MenuItem value="Female">Female</MenuItem>
+                <MenuItem value="Other">Other</MenuItem>
+              </Select>
+
               <Button
                 type="submit"
                 variant="contained"
@@ -136,7 +186,7 @@ const Signup = () => {
               >
                 Sign Up
               </Button>
-  
+
               <Grid container justifyContent="flex-end">
                 <Grid item>
                   <RouterLink to="/login">
@@ -144,7 +194,7 @@ const Signup = () => {
                   </RouterLink>
                 </Grid>
               </Grid>
-  
+
               <Grid container justifyContent="flex-end">
                 <Button
                   type="button"
@@ -165,5 +215,4 @@ const Signup = () => {
   );
 };
 
-  export default Signup;
-  
+export default Signup;

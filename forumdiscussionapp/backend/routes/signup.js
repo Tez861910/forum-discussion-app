@@ -6,39 +6,46 @@ const app = express();
 app.use(express.json());
 
 router.post('/signup', async (req, res) => {
-  const { name, email, password, roleId } = req.body;
+  const {
+    name,
+    email,
+    password,
+    address,
+    phoneNumber,
+    dateOfBirth,
+    gender,
+  } = req.body;
 
   try {
-    if (!name || !email || !password || !roleId) {
+    if (!name || !email || !password) {
       console.log('Missing user data');
       return res.status(400).json({ error: 'Missing user data' });
     }
 
-    // Check if the role exists
-    const roleSql = 'SELECT * FROM roles WHERE RoleID = ?';
-    const roleResults = await query(roleSql, [roleId]);
+    const userData = {
+      UserName: name,
+      UserEmail: email,
+      UserPassword: await hashPassword(password),
+      PhoneNumber: phoneNumber || null,
+      Address: address || null,
+      DateOfBirth: dateOfBirth || null,
+      Gender: gender || null,
+    };
 
-    if (roleResults.length === 0) {
-      console.log('Role does not exist');
-      return res.status(400).json({ error: 'Role does not exist' });
-    }
-
-    const hashedPassword = await hashPassword(password);
-
-    const sqluser = 'INSERT INTO users (UserName, UserEmail, UserPassword, RoleID) VALUES (?, ?, ?, ?)';
-    const [userResult] = await query(sqluser, [name, email, hashedPassword, roleId]);
+    const insertUserSql = 'INSERT INTO Users SET ?';
+    const [userResult] = await query(insertUserSql, [userData]);
 
     if (userResult.affectedRows === 1) {
       const userId = userResult.insertId;
 
-      // Insert a record into userroles to associate the user with the role
-      const sqluserroles = 'INSERT INTO userroles (UserID, RoleID) VALUES (?, ?)';
-      const [userRolesResult] = await query(sqluserroles, [userId, roleId]);
+      const studentRoleId = 3;
+      const insertUserRoleSql = 'INSERT INTO userroles (UserID, RoleID) VALUES (?, ?)';
+      const [userRolesResult] = await query(insertUserRoleSql, [userId, studentRoleId]);
 
       if (userRolesResult.affectedRows === 1) {
         const payload = {
           email,
-          roleId,
+          roleId: studentRoleId,
         };
         const token = createToken(payload);
         const refreshToken = createRefreshToken(payload);
@@ -57,6 +64,5 @@ router.post('/signup', async (req, res) => {
     res.status(500).json({ error: 'Signup failed', details: error.message });
   }
 });
-
 
 module.exports = router;

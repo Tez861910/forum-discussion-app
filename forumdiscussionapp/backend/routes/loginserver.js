@@ -13,8 +13,9 @@ router.post('/login', async (req, res) => {
     }
 
     const sql = `
-      SELECT users.*
+      SELECT users.*, userroles.RoleID
       FROM users
+      LEFT JOIN userroles ON users.UserID = userroles.UserID
       WHERE users.UserEmail = ?
     `;
 

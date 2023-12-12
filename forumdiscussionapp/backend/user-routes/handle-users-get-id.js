@@ -1,23 +1,42 @@
 const { query } = require('../db');
 
 async function handleUsersGetId(req, res) {
-  const { id } = req.params;
+  const { id: userId } = req.params;
 
   try {
-    const sql = `
+    // Fetch user data including the role ID
+    const userSql = `
       SELECT 
         users.*,
-        roles.RoleName
+        roles.RoleID
       FROM users
-      JOIN roles ON users.RoleID = roles.RoleID
+      LEFT JOIN userroles ON users.UserID = userroles.UserID
+      LEFT JOIN roles ON userroles.RoleID = roles.RoleID
       WHERE users.UserID = ?
     `;
 
-    const results = await query(sql, [id]);
+    const userResults = await query(userSql, [userId]);
 
-    if (results.length > 0) {
+    if (userResults.length > 0) {
+      const user = userResults[0];
+
+      if (user.RoleID) {
+        // Fetch role name based on the retrieved RoleID
+        const roleNameSql = `
+          SELECT RoleName
+          FROM roles
+          WHERE RoleID = ?
+        `;
+
+        const roleNameResult = await query(roleNameSql, [user.RoleID]);
+
+        if (roleNameResult.length > 0) {
+          user.RoleName = roleNameResult[0].RoleName;
+        }
+      }
+
       console.log('User fetched successfully');
-      res.json({ user: results[0] });
+      res.json({ user });
     } else {
       console.error('User not found');
       res.status(404).json({ error: 'User not found' });
