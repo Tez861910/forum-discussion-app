@@ -30,12 +30,6 @@ const StyledButton = styled(Button)(({ theme }) => ({
   },
 }));
 
-const StyledDialog = styled(Dialog)(({ theme }) => ({
-  '& .MuiDialog-paper': {
-    maxWidth: '800px',
-  },
-}));
-
 const StyledIconButton = styled(IconButton)(({ theme }) => ({
   marginLeft: 'auto',
 }));
@@ -50,97 +44,31 @@ const ResponseCard = styled(Box)(({ theme }) => ({
   alignItems: 'start',
 }));
 
-function Responses({ commentId, open, onClose }) {
+const Responses = ({ commentId, open, onClose }) => {
   const roleId = localStorage.getItem('roleId');
   const userId = localStorage.getItem('userId');
   const [responses, setResponses] = useState([]);
   const [usernamesMap, setUsernamesMap] = useState({});
   const [newResponse, setNewResponse] = useState('');
-  const [editingResponse, setEditingResponse] = useState(null);
-  const [editedContent, setEditedContent] = useState('');
   const [fetchError, setFetchError] = useState(null);
   const [isLoading, setIsLoading] = useState(false);
-
+  const [editingResponse, setEditingResponse] = useState(null);
+  const [editedContent, setEditedContent] = useState('');
   const { api } = useApi();
 
   const fetchResponses = useCallback(async () => {
     try {
       const response = await api.get(`/responses/responses/get/${commentId}`);
       const { responses } = response.data;
-
-      // Ensure responses is always an array
       const retrievedResponses = Array.isArray(responses) ? responses : [];
 
       setResponses(retrievedResponses);
-    } catch (error) {
-      console.error('Error fetching responses:', error);
-      // Handle error gracefully, maybe show a notification to the user
-      throw error;
-    }
-  }, [api, commentId]);
-
-  const fetchUsernames = useCallback(async (responsesToFetchUsernames) => {
-    try {
-      const userIds = Array.from(new Set(responsesToFetchUsernames.map((response) => response.UserID)));
-
-      if (userIds.length > 0) {
-        const usernamesResponse = await api.post('/users/getUsernames', { userIds });
-        const usernames = usernamesResponse.data;
-
-        const usernameMap = {};
-        userIds.forEach((userId) => {
-          usernameMap[userId] = usernames[userId] || 'Unknown User';
-        });
-
-        setUsernamesMap(usernameMap);
-      }
-    } catch (error) {
-      console.error('Error fetching usernames:', error);
-      // Handle error gracefully, maybe show a notification to the user
-    }
-  }, [api]);
-
-  const fetchUsernamesAndResponses = useCallback(async () => {
-    try {
-      setIsLoading(true);
-
-      // Fetch usernames first
-      await fetchUsernames(responses);
-
-      // Fetch responses after usernames are fetched
-      await fetchResponses();
-
       setFetchError(null);
     } catch (error) {
-      console.error('Error fetching usernames or responses:', error);
-      // Handle error gracefully, maybe show a notification to the user
-      setFetchError(error.message);
-    } finally {
-      setIsLoading(false);
+      console.error('Error fetching responses:', error);
+      setFetchError('Error loading responses');
     }
-  }, [fetchUsernames, fetchResponses, responses]);
-
-  useEffect(() => {
-    if (open && !isLoading) {
-      fetchUsernamesAndResponses();
-    }
-  }, [open, isLoading, fetchUsernamesAndResponses]);
-
-  useEffect(() => {
-    if (responses.length > 0) {
-      fetchUsernames(responses);
-    }
-  }, [fetchUsernames, responses]);
-
-  useEffect(() => {
-    if (open && !isLoading) {
-      setIsLoading(true);
-      fetchUsernamesAndResponses().finally(() => {
-        setFetchError(null);
-        setIsLoading(false);
-      });
-    }
-  }, [open, isLoading, fetchUsernamesAndResponses]);
+  }, [api, commentId]);
 
   const handleResponseSubmit = async (event) => {
     event.preventDefault();
@@ -153,7 +81,7 @@ function Responses({ commentId, open, onClose }) {
         });
 
         setNewResponse('');
-        fetchResponses();
+        await fetchResponses();
       } catch (error) {
         console.error('Error adding response:', error);
         // Handle error gracefully, maybe show a notification to the user
@@ -167,7 +95,7 @@ function Responses({ commentId, open, onClose }) {
         content: editedContent,
       });
 
-      fetchResponses();
+      await fetchResponses();
       setEditingResponse(null);
       setEditedContent('');
     } catch (error) {
@@ -179,16 +107,52 @@ function Responses({ commentId, open, onClose }) {
   const handleDeleteResponse = async (responseId) => {
     try {
       await api.delete(`/responses/responses/delete/${responseId}`);
-
-      fetchResponses();
+      await fetchResponses();
     } catch (error) {
       console.error('Error deleting response:', error);
       // Handle error gracefully, maybe show a notification to the user
     }
   };
 
+  const fetchUsernames = useCallback(async (responsesToFetchUsernames) => {
+    try {
+      const userIds = Array.from(new Set(responsesToFetchUsernames.map((response) => response.UserID)));
+
+      if (userIds.length > 0) {
+        const usernamesResponse = await api.post('/users/getUsernames', { userIds });
+        const usernames = usernamesResponse.data.usernames;
+
+        setUsernamesMap(usernames);
+      }
+    } catch (error) {
+      console.error('Error fetching usernames:', error);
+      // Handle error gracefully, maybe show a notification to the user
+    }
+  }, [api]);
+
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        setIsLoading(true);
+        await fetchResponses();
+        setIsLoading(false);
+      } catch (error) {
+        setIsLoading(false);
+        console.error('Error fetching responses:', error);
+      }
+    };
+
+    fetchData();
+  }, [fetchResponses]);
+
+  useEffect(() => {
+    if (responses.length > 0) {
+      fetchUsernames(responses);
+    }
+  }, [responses, fetchUsernames]);
+
   return (
-    <StyledDialog open={open} onClose={onClose}>
+    <Dialog open={open} onClose={onClose}>
       <DialogTitle>
         Responses
         <StyledIconButton edge="end" color="inherit" onClick={onClose} aria-label="close">
@@ -224,7 +188,7 @@ function Responses({ commentId, open, onClose }) {
                     {response?.ResponseContent}
                   </Typography>
                   <Typography variant="caption" color="textSecondary" mb={2}>
-                    {usernamesMap[response?.UserID]}
+                    {usernamesMap[response?.UserID] || 'Unknown User'}
                   </Typography>
                   {(roleId === '2' || userId === response?.UserID) && (
                     <Box sx={{ mt: 1 }}>
@@ -258,8 +222,8 @@ function Responses({ commentId, open, onClose }) {
           </form>
         )}
       </DialogContent>
-    </StyledDialog>
+    </Dialog>
   );
-}
+};
 
 export default Responses;
