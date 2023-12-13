@@ -28,20 +28,6 @@ const appBarStyles = {
           },
         },
       },
-      MuiIconButton: {
-        styleOverrides: {
-          root: {
-            color: '#ffffff',
-          },
-        },
-      },
-      MuiTypography: {
-        styleOverrides: {
-          root: {
-            color: '#ffffff',
-          },
-        },
-      },
     },
   };
   
