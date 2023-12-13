@@ -8,7 +8,6 @@ import {
   DialogContent,
   DialogActions,
   Box,
-  Paper,
 } from '@mui/material';
 import ThreadList from './ThreadList'; 
 import ThreadModal from './ThreadModal';
@@ -81,17 +80,17 @@ function ForumDiscussion({ selectedCourse: courseId }) {
   };
 
   return (
-    <Box sx={{ my: 3, padding: 3 }}>
-      <Typography variant="h3" component="div" gutterBottom>
+    <Box sx={{ my: 3, padding: 3, backgroundColor: 'primary.main', color: 'primary.contrastText' }}>
+      <Typography variant="h4" component="div" gutterBottom sx={{ fontWeight: 'bold', color: 'primary.contrastText' }}>
         Forum Discussion
       </Typography>
       {roleId === '2' && (
         <Box mt={2}>
-          <Button variant="contained" color="primary" onClick={handleOpenCreateModal} sx={{ mb: 2 }}>
+          <Button variant="contained" color="primary" onClick={handleOpenCreateModal} sx={{ mb: 2, fontWeight: 'bold' }}>
             Create Thread
           </Button>
           <Dialog open={showCreateModal} onClose={handleCloseCreateModal} maxWidth="sm" fullWidth>
-            <DialogTitle>Create New Thread</DialogTitle>
+            <DialogTitle sx={{ fontWeight: 'bold', color: 'primary.main' }}>Create New Thread</DialogTitle>
             <DialogContent>
               <TextField
                 label="Thread Title"
@@ -99,6 +98,7 @@ function ForumDiscussion({ selectedCourse: courseId }) {
                 onChange={(e) => setNewThreadTitle(e.target.value)}
                 fullWidth
                 margin="dense"
+                sx={{ fontWeight: 'bold', color: 'text.primary' }}
               />
               <TextField
                 label="Thread Content"
@@ -108,13 +108,14 @@ function ForumDiscussion({ selectedCourse: courseId }) {
                 onChange={(e) => setNewThreadContent(e.target.value)}
                 fullWidth
                 margin="dense"
+                sx={{ fontWeight: 'bold', color: 'text.primary' }}
               />
             </DialogContent>
             <DialogActions>
-              <Button onClick={handleCloseCreateModal} color="primary">
+              <Button onClick={handleCloseCreateModal} color="error" sx={{ fontWeight: 'bold' }}>
                 Cancel
               </Button>
-              <Button onClick={handleCreateThread} color="primary">
+              <Button onClick={handleCreateThread} color="info" sx={{ fontWeight: 'bold' }}>
                 Create
               </Button>
             </DialogActions>

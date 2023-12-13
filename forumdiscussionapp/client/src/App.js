@@ -4,7 +4,6 @@ import { ThemeProvider , CssBaseline } from '@mui/material';
 import { ErrorBoundary } from 'react-error-boundary';
 import Cookies from 'universal-cookie';
 import theme from './Theme/Theme'; 
-import logobg from './Theme/logobg.jpg';
 
 const AdminCourses = React.lazy(() => import('./admin/Courses/AdminCourses'));
 const AdminRoles = React.lazy(() => import('./admin/Roles/AdminRoles'));
@@ -20,11 +19,6 @@ const Home= React.lazy(() => import('./home-page/home'));
 const Login = React.lazy(() => import('./login/login'));
 const Start = React.lazy(() => import('./start/start'));
 const Signup = React.lazy(() => import('./sign-up-page/sign-up'));
-
-// Apply the background image to the body element
-document.body.style.backgroundImage = `url(${logobg})`;
-document.body.style.backgroundSize = 'cover';
-document.body.style.backgroundRepeat = 'no-repeat';
 
 
 function ErrorFallback({ error, resetErrorBoundary }) {

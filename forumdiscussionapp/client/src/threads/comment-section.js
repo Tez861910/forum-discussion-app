@@ -18,12 +18,7 @@ import {
 import Responses from './Responses';
 import useApi from '../home-page/Api';
 
-const StyledIconButton = styled(IconButton)(({ theme }) => ({
-  margin: theme.spacing(1),
-  '&.MuiIconButton-root': {
-    marginRight: theme.spacing(1),
-  },
-}));
+
 
 const CommentItem = styled(Box)(({ theme }) => ({
   marginBottom: theme.spacing(2),
@@ -81,7 +76,6 @@ const CommentSection = ({ threadId }) => {
       setUsernamesMap((prevUsernamesMap) => ({ ...prevUsernamesMap, ...usernameMap }));
     } catch (error) {
       console.error('Error fetching usernames:', error);
-      // Handle error gracefully, maybe show a notification to the user
     }
   }, [api]);
 
@@ -156,10 +150,9 @@ const CommentSection = ({ threadId }) => {
       fetchUsernames(comments); // Fetch usernames after comments are updated
     }
   }, [fetchComments, fetchUsernames, comments, isLoading]);
-
   return (
-    <Box sx={{ p: 2 }}>
-      <Typography variant="h2">Comment Section</Typography>
+    <Box sx={{ p: 2, backgroundColor: 'warning.main', color: 'warning.contrastText' }}>
+      <Typography variant="h2" sx={{ fontWeight: 'bold' }}>Comment Section</Typography>
 
       {fetchError && <p>{fetchError}</p>}
 
@@ -171,16 +164,16 @@ const CommentSection = ({ threadId }) => {
             aria-label="new comment"
             minRows={4}
             placeholder="Add a comment..."
-            sx={{ width: '100%', marginTop: 2 }}
+            sx={{ width: '100%', marginTop: 2, fontWeight: 'bold' }}
           />
           {newComment.trim() !== '' && (
             <>
-              <StyledIconButton type="submit" color="primary">
+              <IconButton type="submit" color="primary">
                 <SendIcon />
-              </StyledIconButton>
-              <StyledIconButton onClick={() => setNewComment('')}>
+              </IconButton>
+              <IconButton onClick={() => setNewComment('')}>
                 <CloseIcon />
-              </StyledIconButton>
+              </IconButton>
             </>
           )}
         </form>
@@ -200,34 +193,34 @@ const CommentSection = ({ threadId }) => {
                     aria-label="edit comment"
                     minRows={4}
                     placeholder="Edit your comment..."
-                    sx={{ width: '100%', marginBottom: 2 }}
+                    sx={{ width: '100%', marginBottom: 2, fontWeight: 'bold' }}
                   />
-                  <StyledIconButton onClick={() => handleEditComment(comment?.CommentID)}>
+                  <IconButton onClick={() => handleEditComment(comment?.CommentID)}>
                     <SaveIcon />
-                  </StyledIconButton>
-                  <StyledIconButton onClick={() => setEditingComment(null)}>
+                  </IconButton>
+                  <IconButton onClick={() => setEditingComment(null)}>
                     <CloseIcon />
-                  </StyledIconButton>
+                  </IconButton>
                 </Box>
               ) : (
                 <>
-                  <Typography variant="body1" mb={2}>
+                  <Typography variant="body1" mb={2} sx={{ fontWeight: 'bold' }}>
                     {comment?.CommentContent}
                   </Typography>
-                  <Typography variant="body2" color="textSecondary">
+                  <Typography variant="body2" color="textSecondary" sx={{ fontWeight: 'bold' }}>
                     by {usernamesMap[comment.UserID]}
                   </Typography>
                   {(roleId === '2' || (roleId === '3' && userId === comment?.UserID)) && (
                     <EditDeleteWrapper>
-                      <StyledIconButton onClick={() => { setEditingComment(comment?.CommentID); setEditedContent(comment?.CommentContent); }}>
+                      <IconButton onClick={() => { setEditingComment(comment?.CommentID); setEditedContent(comment?.CommentContent); }}>
                         <EditIcon />
-                      </StyledIconButton>
-                      <StyledIconButton onClick={() => handleDeleteComment(comment?.CommentID)}>
+                      </IconButton>
+                      <IconButton onClick={() => handleDeleteComment(comment?.CommentID)}>
                         <DeleteIcon />
-                      </StyledIconButton>
+                      </IconButton>
                     </EditDeleteWrapper>
                   )}
-                  <Button onClick={() => setSelectedComment(comment)}>
+                  <Button onClick={() => setSelectedComment(comment)} sx={{ fontWeight: 'bold' }}>
                     Responses
                   </Button>
                 </>

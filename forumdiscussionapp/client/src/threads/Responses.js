@@ -10,6 +10,7 @@ import {
   Typography,
   styled,
   CircularProgress,
+  hello,
 } from '@mui/material';
 import {
   Close as CloseIcon,
@@ -19,20 +20,7 @@ import {
 } from '@mui/icons-material';
 import useApi from '../home-page/Api';
 
-const StyledButton = styled(Button)(({ theme }) => ({
-  margin: theme.spacing(1),
-  '&.MuiButton-contained': {
-    backgroundColor: theme.palette.primary.main,
-    color: theme.palette.primary.contrastText,
-    '&:hover': {
-      backgroundColor: theme.palette.primary.dark,
-    },
-  },
-}));
 
-const StyledIconButton = styled(IconButton)(({ theme }) => ({
-  marginLeft: 'auto',
-}));
 
 const ResponseCard = styled(Box)(({ theme }) => ({
   marginBottom: theme.spacing(2),
@@ -152,12 +140,12 @@ const Responses = ({ commentId, open, onClose }) => {
   }, [responses, fetchUsernames]);
 
   return (
-    <Dialog open={open} onClose={onClose}>
-      <DialogTitle>
+    <Dialog open={open} onClose={onClose} PaperProps={{ sx: { backgroundColor: 'palette.info.main', color: 'palette.info.contrastText' } }}>
+      <DialogTitle sx={{ fontWeight: 'typography.fontWeightBold' }}>
         Responses
-        <StyledIconButton edge="end" color="inherit" onClick={onClose} aria-label="close">
+        <IconButton edge="end" color="inherit" onClick={onClose} aria-label="close">
           <CloseIcon />
-        </StyledIconButton>
+        </IconButton>
       </DialogTitle>
       <DialogContent>
         {isLoading ? (
@@ -173,31 +161,31 @@ const Responses = ({ commentId, open, onClose }) => {
                     aria-label="edit response"
                     minRows={4}
                     placeholder="Edit your response..."
-                    sx={{ width: '100%', marginBottom: 2 }}
+                    sx={{ width: '100%', marginBottom: 2, fontWeight: 'typography.fontWeightBold' }}
                   />
-                  <StyledButton onClick={() => handleEditResponse(response?.ResponseID)}>
+                  <Button onClick={() => handleEditResponse(response?.ResponseID)} sx={{ fontWeight: 'typography.fontWeightBold' }}>
                     <SaveIcon /> Save
-                  </StyledButton>
-                  <StyledButton onClick={() => setEditingResponse(null)}>
+                  </Button>
+                  <Button onClick={() => setEditingResponse(null)} sx={{ fontWeight: 'typography.fontWeightBold' }}>
                     <CloseIcon /> Cancel
-                  </StyledButton>
+                  </Button>
                 </Box>
               ) : (
                 <>
-                  <Typography variant="body1" mb={2}>
+                  <Typography variant="body1" mb={2} sx={{ fontWeight: 'typography.fontWeightBold' }}>
                     {response?.ResponseContent}
                   </Typography>
-                  <Typography variant="caption" color="textSecondary" mb={2}>
+                  <Typography variant="caption" color="textSecondary" mb={2} sx={{ fontWeight: 'typography.fontWeightBold' }}>
                     {usernamesMap[response?.UserID] || 'Unknown User'}
                   </Typography>
                   {(roleId === '2' || userId === response?.UserID) && (
                     <Box sx={{ mt: 1 }}>
-                      <StyledButton onClick={() => { setEditingResponse(response?.ResponseID); setEditedContent(response?.ResponseContent); }}>
+                      <Button onClick={() => { setEditingResponse(response?.ResponseID); setEditedContent(response?.ResponseContent); }} sx={{ fontWeight: 'typography.fontWeightBold' }}>
                         <EditIcon />
-                      </StyledButton>
-                      <StyledButton onClick={() => handleDeleteResponse(response?.ResponseID)}>
+                      </Button>
+                      <Button onClick={() => handleDeleteResponse(response?.ResponseID)} sx={{ fontWeight: 'typography.fontWeightBold' }}>
                         <DeleteIcon />
-                      </StyledButton>
+                      </Button>
                     </Box>
                   )}
                 </>
@@ -205,7 +193,7 @@ const Responses = ({ commentId, open, onClose }) => {
             </ResponseCard>
           ))
         )}
-
+  
         {(roleId === '2' || roleId === '3') && (
           <form onSubmit={handleResponseSubmit}>
             <TextareaAutosize
@@ -214,16 +202,17 @@ const Responses = ({ commentId, open, onClose }) => {
               aria-label="new response"
               minRows={4}
               placeholder="Add a new response..."
-              sx={{ width: '100%', marginTop: 2 }}
+              sx={{ width: '100%', marginTop: 2, fontWeight: 'typography.fontWeightBold' }}
             />
-            <StyledButton type="submit" variant="contained" sx={{ marginTop: 2 }}>
+            <Button type="submit" variant="contained" sx={{ marginTop: 2, fontWeight: 'typography.fontWeightBold' }}>
               Submit
-            </StyledButton>
+            </Button>
           </form>
         )}
       </DialogContent>
     </Dialog>
   );
 };
-
-export default Responses;
+  
+  export default Responses;
+  

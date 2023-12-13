@@ -23,7 +23,6 @@ const ThreadList = ({ threads, onThreadSelect }) => {
         setLoadingUsernames(false);
       } catch (error) {
         console.error('Error fetching usernames for threads:', error);
-        // Handle error gracefully, maybe show a notification to the user
       }
     };
 
@@ -33,8 +32,8 @@ const ThreadList = ({ threads, onThreadSelect }) => {
   }, [api, threads]);
 
   return (
-    <Paper elevation={3} sx={{ padding: 2, mt: 2 }}>
-      <Typography variant="h4" component="div" gutterBottom>
+    <Paper elevation={3} sx={{ padding: 2, mt: 2, backgroundColor: 'secondary.main', color: 'secondary.contrastText' }}>
+      <Typography variant="h3" component="div" gutterBottom sx={{ fontWeight: 'bold' }}>
         Thread List
       </Typography>
       <List>
@@ -45,10 +44,10 @@ const ThreadList = ({ threads, onThreadSelect }) => {
             <ListItem key={thread.ThreadID}>
               <Button
                 variant="outlined"
-                color="primary"
+                color="secondary"
                 fullWidth
                 onClick={() => onThreadSelect(thread.ThreadID)}
-                sx={{ textTransform: 'none', justifyContent: 'space-between', textAlign: 'left', my: 1 }}
+                sx={{ textTransform: 'none', justifyContent: 'space-between', textAlign: 'left', my: 1, fontWeight: 'bold' }}
               >
                 <Box>
                   <Typography variant="h6">
@@ -56,7 +55,7 @@ const ThreadList = ({ threads, onThreadSelect }) => {
                   </Typography>
                 </Box>
                 <Box>
-                  <Typography variant="body2" color="text.secondary" align="right">
+                  <Typography variant="body2" color="text.secondary" align="right" sx={{ fontWeight: 'bold' }}>
                     by {usernamesMap[thread.UserID]}
                   </Typography>
                 </Box>

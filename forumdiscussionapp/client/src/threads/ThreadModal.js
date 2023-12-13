@@ -1,42 +1,52 @@
 import React from 'react';
-import { Dialog, DialogTitle, DialogContent, DialogActions, TextField, Button, styled, Card, CardContent, CardHeader, Box, IconButton, Typography } from '@mui/material';
+import {
+  Dialog,
+  DialogTitle,
+  DialogContent,
+  DialogActions,
+  TextField,
+  Button,
+  Card,
+  CardContent,
+  CardHeader,
+  Box,
+  IconButton,
+} from '@mui/material';
 import CloseIcon from '@mui/icons-material/Close';
 import CommentSection from './comment-section';
-import useApi from '../home-page/Api';
+import useApi  from '../home-page/Api';
+import { useTransition, startTransition } from 'react'; 
 
-const StyledButton = styled(Button)(({ theme }) => ({
-  margin: theme.spacing(1),
-  '&.MuiButton-outlinedPrimary': {
-    borderColor: theme.palette.primary.main,
-  },
-}));
-
-const StyledCard = styled(Card)(({ theme }) => ({
-  marginBottom: theme.spacing(2),
-  border: `1px solid ${theme.palette.divider}`,
-  borderRadius: theme.shape.borderRadius,
-}));
-
-function ThreadModal({ courseId, threadId, onClose, roleId, userId }) {
+function ThreadModal({
+  courseId,
+  threadId,
+  onClose,
+  roleId,
+  userId,
+}) {
   const [thread, setThread] = React.useState({ title: '', content: '' });
   const [editedTitle, setEditedTitle] = React.useState('');
   const [editedContent, setEditedContent] = React.useState('');
   const { api } = useApi();
 
+  const transition = useTransition(); 
+
   React.useEffect(() => {
     const fetchThread = async () => {
       try {
         if (threadId) {
-          const response = await api.get(`/threads/threads/getThread/${threadId}`);
-          const threadData = response.data?.thread;
+          startTransition(async () => {
+            const response = await api.get(`/threads/threads/getThread/${threadId}`);
+            const threadData = response.data?.thread;
 
-          if (threadData) {
-            setThread(threadData);
-            setEditedTitle(threadData.ThreadTitle || '');
-            setEditedContent(threadData.ThreadContent || '');
-          } else {
-            console.error('Thread data not found');
-          }
+            if (threadData) {
+              setThread(threadData);
+              setEditedTitle(threadData.ThreadTitle || '');
+              setEditedContent(threadData.ThreadContent || '');
+            } else {
+              console.error('Thread data not found');
+            }
+          });
         }
       } catch (error) {
         console.error('Error fetching thread:', error);
@@ -44,7 +54,7 @@ function ThreadModal({ courseId, threadId, onClose, roleId, userId }) {
     };
 
     fetchThread();
-  }, [api, threadId]);
+  }, [api, threadId, transition]); 
 
   const isEditable = roleId === '2';
 
@@ -53,8 +63,8 @@ function ThreadModal({ courseId, threadId, onClose, roleId, userId }) {
       await api.put(`/threads/threads/update/${threadId}`, {
         title: editedTitle,
         content: editedContent,
-        userId: userId,
-        courseId: courseId,
+        userId,
+        courseId,
       });
 
       // Directly update state with edited values
@@ -79,26 +89,33 @@ function ThreadModal({ courseId, threadId, onClose, roleId, userId }) {
   };
 
   return (
-    <Dialog open={!!threadId} onClose={onClose} fullWidth maxWidth="md">
+    <Dialog
+      open={!!threadId}
+      onClose={onClose}
+      fullWidth
+      maxWidth="md"
+      PaperProps={{ sx: { backgroundColor: 'background.paper', color: 'text.primary' } }}
+    >
       {threadId && (
         <>
-          <DialogTitle>
+          <DialogTitle sx={{ fontWeight: 'bold', backgroundColor: 'primary.main', color: 'primary.contrastText' }}>
             {editedTitle}
             <IconButton edge="end" color="inherit" onClick={onClose} aria-label="close">
               <CloseIcon />
             </IconButton>
           </DialogTitle>
           <DialogContent dividers>
-            <StyledCard>
+            <Card sx={{ backgroundColor: 'secondary.light', color: 'text.primary' }}>
               <CardHeader title="Thread Details" />
               <CardContent>
-              <TextField
+                <TextField
                   label="Title"
                   value={editedTitle}
                   onChange={(e) => setEditedTitle(e.target.value)}
                   disabled={!isEditable}
                   InputProps={{ style: { color: isEditable ? 'inherit' : 'black', opacity: isEditable ? 1 : 0.7 } }}
                   fullWidth
+                  sx={{ fontWeight: 'bold' }}
                 />
                 <TextField
                   label="Content"
@@ -109,27 +126,28 @@ function ThreadModal({ courseId, threadId, onClose, roleId, userId }) {
                   disabled={!isEditable}
                   InputProps={{ style: { color: isEditable ? 'inherit' : 'black', opacity: isEditable ? 1 : 0.7 } }}
                   fullWidth
+                  sx={{ fontWeight: 'bold' }}
                 />
               </CardContent>
-            </StyledCard>
-            <Box sx={{ overflow: 'auto', maxHeight: '50vh' }}>
-              <CommentSection threadId={threadId} roleId={roleId} userId={userId} courseId={courseId} />
-            </Box>
+              <Box sx={{ overflow: 'auto', maxHeight: '50vh' }}>
+                <CommentSection threadId={threadId} roleId={roleId} userId={userId} courseId={courseId} />
+              </Box>
+            </Card>
           </DialogContent>
           <DialogActions>
             {isEditable && (
               <>
-                <StyledButton variant="contained" color="secondary" onClick={handleDelete}>
+                <Button variant="contained" color="secondary" onClick={handleDelete} sx={{ fontWeight: 'bold' }}>
                   Delete
-                </StyledButton>
-                <StyledButton variant="contained" onClick={handleSaveChanges}>
+                </Button>
+                <Button variant="contained" onClick={handleSaveChanges} sx={{ fontWeight: 'bold' }}>
                   Save Changes
-                </StyledButton>
+                </Button>
               </>
             )}
-            <StyledButton variant="contained" onClick={onClose}>
+            <Button variant="contained" onClick={onClose} sx={{ fontWeight: 'bold' }}>
               Close
-            </StyledButton>
+            </Button>
           </DialogActions>
         </>
       )}

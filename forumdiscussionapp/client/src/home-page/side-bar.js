@@ -1,6 +1,7 @@
 import * as React from 'react';
 import PropTypes from 'prop-types';
 import { Button, Box,  Avatar, Typography, Drawer, IconButton } from '@mui/material';
+import Brightness4Icon from '@mui/icons-material/Brightness4';
 import LogoutIcon from '@mui/icons-material/Logout';
 import AddIcon from '@mui/icons-material/Add';
 import ChevronLeftIcon from '@mui/icons-material/ChevronLeft';
@@ -23,9 +24,24 @@ const Sidebar = ({
   roleId,        
 }) => {
   const theme = useTheme();
+  const [themeMode, setThemeMode] = React.useState('default');
   const matches = useMediaQuery(theme.breakpoints.up('md'));
 
   const [isAvatarModalOpen, setAvatarModalOpen] = React.useState(false); 
+
+  const handleThemeChange = () => {
+    if (themeMode === 'default') {
+      setThemeMode('light');
+      theme.palette.primary = theme.palette.light; 
+    } else if (themeMode === 'light') {
+      setThemeMode('dark');
+      theme.palette.primary = theme.palette.dark;
+    } else {
+      setThemeMode('default');
+      theme.palette.primary = theme.palette.main; 
+    }
+  };
+  
 
   const handleUserProfileClick = () => {
     setUserProfileOpen(true);
@@ -73,11 +89,14 @@ const Sidebar = ({
           keepMounted: true, 
         }}
       >
-        <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'flex-end', py: 1, px: 2, bgcolor: 'primary.main' }}>
-          <IconButton onClick={handleDrawerToggle} sx={{ color: 'white' }}>
-            <ChevronLeftIcon />
-          </IconButton>
-        </Box>
+    <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'flex-end', py: 1, px: 2, bgcolor: (theme) => theme.palette.primary.main }}>
+  <IconButton onClick={handleDrawerToggle} sx={{ color: 'white' }}>
+    <ChevronLeftIcon />
+  </IconButton>
+  <IconButton onClick={handleThemeChange} sx={{ color: 'white' }}>
+    <Brightness4Icon /> 
+  </IconButton>
+</Box>
         <Box sx={{ p: 2, display: 'flex', flexDirection: 'column', gap: 2 }}>
             {/* User Avatar */}
             <Avatar sx={{ width: 56, height: 56, alignSelf: 'center' }} onClick={handleAvatarClick}>
