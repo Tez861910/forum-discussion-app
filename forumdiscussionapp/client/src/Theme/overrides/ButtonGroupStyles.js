@@ -4,7 +4,7 @@ const buttonGroupStyles = {
     root: {
         display: 'inline-flex',
         borderRadius: '8px',
-        backgroundColor: palette.palette.background.default,
+        backgroundColor: palette.palette.default.background.default,
     },
     grouped: {
         '&:not(:first-of-type)': {

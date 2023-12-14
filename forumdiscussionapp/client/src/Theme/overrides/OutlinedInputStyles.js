@@ -3,13 +3,13 @@ import palette from '../palette';
 const outlinedInputStyles = {
     root: {
         '& fieldset': {
-          borderColor: palette.palette.secondary.main,
+          borderColor: palette.palette.default.secondary.main,
         },
         '&:hover fieldset': {
-          borderColor: palette.palette.primary.main,
+          borderColor: palette.palette.default.primary.main,
         },
         '&.Mui-focused fieldset': {
-          borderColor: palette.palette.primary.main,
+          borderColor: palette.palette.default.primary.main,
         },
     },
     input: {
@@ -25,7 +25,7 @@ const outlinedInputStyles = {
         paddingRight: '12px',
     },
     notchedOutline: {
-        borderColor: palette.palette.primary.main,
+        borderColor: palette.palette.default.primary.main,
     },
     inputMarginDense: {
         paddingTop: '10.5px',

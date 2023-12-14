@@ -5,17 +5,17 @@ const bottomNavigationStyles = {
       MuiBottomNavigation: {
         styleOverrides: {
           root: {
-            backgroundColor: palette.palette.primary.main,
+            backgroundColor: palette.palette.default.primary.main,
           },
         },
       },
       MuiBottomNavigationAction: {
         styleOverrides: {
           root: {
-            color: palette.palette.primary.main,
+            color: palette.palette.default.primary.main,
           },
           selected: {
-            color: palette.palette.text.primary,
+            color: palette.palette.default.text.primary,
           },
         },
       },

@@ -8,7 +8,7 @@ const imageListStyles = {
             display: 'grid',
             gridTemplateColumns: 'repeat(auto-fill, minmax(200px, 1fr))',
             gap: '10px',
-            backgroundColor: palette.palette.background.default, 
+            backgroundColor: palette.palette.default.background.default, 
           },
         },
       },
@@ -17,7 +17,7 @@ const imageListStyles = {
           root: {
             listStyle: 'none',
             height: 'auto',
-            color: palette.palette.text.primary, 
+            color: palette.palette.default.text.primary, 
           },
           imgFullHeight: {
             height: '100%',

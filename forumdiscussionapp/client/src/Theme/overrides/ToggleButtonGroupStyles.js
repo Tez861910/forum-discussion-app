@@ -5,37 +5,37 @@ const toggleButtonGroupStyles = {
     display: 'flex',
     borderRadius: '8px',
     overflow: 'hidden',
-    backgroundColor: palette.palette.primary.main, 
+    backgroundColor: palette.palette.default.primary.main, 
   },
   grouped: {
-    '&:not(:first-child)': {
+    '&:not(:first-path)': {
       borderTopLeftRadius: '0',
       borderBottomLeftRadius: '0',
     },
-    '&:not(:last-child)': {
+    '&:not(:last-path)': {
       borderTopRightRadius: '0',
       borderBottomRightRadius: '0',
     },
-    color: palette.palette.text.primary, 
+    color: palette.palette.default.text.primary, 
   },
   groupedHorizontal: {
-    '&:not(:first-child)': {
+    '&:not(:first-path)': {
       marginLeft: '-1px',
       borderTopLeftRadius: '0',
       borderBottomLeftRadius: '0',
     },
-    '&:not(:last-child)': {
+    '&:not(:last-path)': {
       borderTopRightRadius: '0',
       borderBottomRightRadius: '0',
     },
   },
   groupedVertical: {
-    '&:not(:first-child)': {
+    '&:not(:first-path)': {
       marginTop: '-1px',
       borderTopLeftRadius: '0',
       borderTopRightRadius: '0',
     },
-    '&:not(:last-child)': {
+    '&:not(:last-path)': {
       borderBottomRightRadius: '0',
       borderBottomLeftRadius: '0',
     },

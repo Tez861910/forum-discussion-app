@@ -2,22 +2,22 @@ import palette from '../palette';
 
 const svgIconStyles = {
   root: {
-    color: palette.palette.primary.main,
+    color: palette.palette.default.primary.main,
   },
   colorPrimary: {
-    color: palette.palette.primary.main,
+    color: palette.palette.default.primary.main,
   },
   colorSecondary: {
-    color: palette.palette.secondary.main,
+    color: palette.palette.default.secondary.main,
   },
   colorAction: {
-    color: palette.palette.action.active,
+    color: palette.palette.default.action.active,
   },
   colorError: {
-    color: palette.palette.error.main,
+    color: palette.palette.default.error.main,
   },
   colorDisabled: {
-    color: palette.palette.action.disabled,
+    color: palette.palette.default.action.disabled,
   },
 };
 

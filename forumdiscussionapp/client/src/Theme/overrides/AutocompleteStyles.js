@@ -4,44 +4,44 @@ const autocompleteStyles = {
     root: {
         '& .MuiOutlinedInput-root': {
           '&.Mui-focused fieldset': {
-            borderColor: palette.palette.primary.main,
+            borderColor: palette.palette.default.primary.main,
           },
         },
       },
       inputRoot: {
         '&.MuiOutlinedInput-root': {
           '& fieldset': {
-            borderColor: palette.palette.secondary.main,
+            borderColor: palette.palette.default.secondary.main,
           },
           '&:hover fieldset': {
-            borderColor: palette.palette.primary.main,
+            borderColor: palette.palette.default.primary.main,
           },
           '&.Mui-focused fieldset': {
-            borderColor: palette.palette.primary.main,
+            borderColor: palette.palette.default.primary.main,
           },
         },
       },
       listbox: {
-        backgroundColor: palette.palette.background.paper,
-        color: palette.palette.text.primary,
+        backgroundColor: palette.palette.default.background.paper,
+        color: palette.palette.default.text.primary,
       },
       option: {
         '&[data-focus="true"]': {
-          backgroundColor: palette.palette.primary.main,
+          backgroundColor: palette.palette.default.primary.main,
         },
         '&[aria-selected="true"]': {
-          backgroundColor: palette.palette.secondary.main,
+          backgroundColor: palette.palette.default.secondary.main,
         },
       },
       groupLabel: {
-        backgroundColor: palette.palette.background.paper,
-        color: palette.palette.text.primary,
+        backgroundColor: palette.palette.default.background.paper,
+        color: palette.palette.default.text.primary,
       },
       popupIndicator: {
-        color: palette.palette.primary.main,
+        color: palette.palette.default.primary.main,
       },
       clearIndicator: {
-        color: palette.palette.secondary.main,
+        color: palette.palette.default.secondary.main,
       },
 };
 

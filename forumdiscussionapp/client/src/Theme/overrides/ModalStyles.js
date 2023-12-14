@@ -15,14 +15,14 @@ const modalStyles = {
             outline: 0,
           },
           backdrop: {
-            backgroundColor: palette.palette.background.default,
+            backgroundColor: palette.palette.default.background.default,
           },
         },
       },
       MuiBackdrop: {
         styleOverrides: {
           root: {
-            backgroundColor: palette.palette.background.default, 
+            backgroundColor: palette.palette.default.background.default, 
             transition: 'opacity 300ms ease-out', 
           },
         },

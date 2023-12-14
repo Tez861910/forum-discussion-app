@@ -5,7 +5,7 @@ const menuStyles = {
       MuiMenu: {
         styleOverrides: {
           paper: {
-            backgroundColor: palette.palette.background.default, 
+            backgroundColor: palette.palette.default.background.default, 
           },
         },
       },
@@ -13,10 +13,10 @@ const menuStyles = {
         styleOverrides: {
           root: {
             '&:hover': {
-              backgroundColor: palette.palette.background.paper, 
+              backgroundColor: palette.palette.default.background.paper, 
             },
             '&$selected': {
-              backgroundColor: palette.palette.primary.main,
+              backgroundColor: palette.palette.default.primary.main,
             },
           },
         },

@@ -4,28 +4,28 @@ const transferListStyles = {
   MuiList: {
     styleOverrides: {
       root: {
-        backgroundColor: palette.palette.primary.main,
+        backgroundColor: palette.palette.default.primary.main,
       },
     },
   },
   MuiListItem: {
     styleOverrides: {
       root: {
-        color: palette.palette.text.primary,
+        color: palette.palette.default.text.primary,
       },
     },
   },
   MuiCheckbox: {
     styleOverrides: {
       root: {
-        color: palette.palette.primary.main,
+        color: palette.palette.default.primary.main,
       },
     },
   },
   MuiButton: {
     styleOverrides: {
       root: {
-        color: palette.palette.primary.main,
+        color: palette.palette.default.primary.main,
       },
     },
   },

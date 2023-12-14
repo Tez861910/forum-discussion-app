@@ -5,25 +5,25 @@ const radioStyles = {
     MuiRadio: {
       styleOverrides: {
         root: {
-          color: palette.palette.primary.main,
+          color: palette.palette.default.primary.main,
           '&$checked': {
-            color: palette.palette.primary.main,
+            color: palette.palette.default.primary.main,
           },
         },
         colorSecondary: {
           '&$checked': {
-            color: palette.palette.primary.main,
+            color: palette.palette.default.primary.main,
           },
           '&$disabled': {
-            color: palette.palette.grey[400], 
+            color: palette.palette.default.grey[400],
           },
         },
         colorPrimary: {
           '&$checked': {
-            color: palette.palette.primary.main, 
+            color: palette.palette.default.primary.main,
           },
           '&$disabled': {
-            color: palette.palette.grey[400],
+            color: palette.palette.default.grey[400],
           },
         },
       },
@@ -31,13 +31,13 @@ const radioStyles = {
     MuiFormControlLabel: {
       styleOverrides: {
         root: {
-          color: palette.palette.primary.main,
+          color: palette.palette.default.primary.main,
         },
         label: {
-          color: palette.palette.primary.main, 
+          color: palette.palette.default.primary.main,
         },
         disabled: {
-          color: palette.palette.grey[400], 
+          color: palette.palette.default.grey[400],
         },
       },
     },

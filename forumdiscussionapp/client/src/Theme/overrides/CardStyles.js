@@ -10,8 +10,8 @@ const cardStyles = {
       MuiCardHeader: {
         styleOverrides: {
           root: {
-            backgroundColor: palette.palette.primary.main,
-            color: palette.palette.primary.contrastText,
+            backgroundColor: palette.palette.default.primary.main,
+            color: palette.palette.default.primary.contrastText,
             padding: '16px',
             fontSize: '1.5rem',
             fontWeight: 'bold',
@@ -21,8 +21,8 @@ const cardStyles = {
       MuiCardContent: {
         styleOverrides: {
           root: {
-            backgroundColor: palette.palette.background.paper,
-            color: palette.palette.text.primary,
+            backgroundColor: palette.palette.default.background.paper,
+            color: palette.palette.default.text.primary,
             padding: '16px',
             '&:last-child': {
               paddingBottom: '16px',
@@ -33,8 +33,8 @@ const cardStyles = {
       MuiCardActions: {
         styleOverrides: {
           root: {
-            backgroundColor: palette.palette.primary.main,
-            color: palette.palette.text.primary,
+            backgroundColor: palette.palette.default.primary.main,
+            color: palette.palette.default.text.primary,
             padding: '16px',
             justifyContent: 'center',
           },

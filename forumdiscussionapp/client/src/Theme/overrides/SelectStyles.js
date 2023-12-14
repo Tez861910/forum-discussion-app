@@ -5,31 +5,31 @@ const selectStyles = {
     MuiSelect: {
       styleOverrides: {
         root: {
-          color: palette.palette.primary.main,
+          color: palette.palette.default.primary.main,
         },
         icon: {
-          color: palette.palette.primary.main,
+          color: palette.palette.default.primary.main,
         },
       },
     },
     MuiOutlinedInput: {
       styleOverrides: {
         root: {
-          color: palette.palette.primary.main,
+          color: palette.palette.default.primary.main,
         },
       },
     },
     MuiInput: {
       styleOverrides: {
         root: {
-          color: palette.palette.primary.main,
+          color: palette.palette.default.primary.main,
         },
       },
     },
     MuiFilledInput: {
       styleOverrides: {
         root: {
-          color: palette.palette.primary.main,
+          color: palette.palette.default.primary.main,
         },
       },
     },

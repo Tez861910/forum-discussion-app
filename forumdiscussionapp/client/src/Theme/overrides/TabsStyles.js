@@ -5,11 +5,11 @@ const tabsStyles = {
     MuiTabs: {
       styleOverrides: {
         root: {
-          backgroundColor: palette.palette.background.paper, 
+          backgroundColor: palette.palette.default.background.paper, 
           minHeight: 48, 
         },
         indicator: {
-          backgroundColor: palette.palette.info.main, 
+          backgroundColor: palette.palette.default.info.main, 
         },
       },
     },
@@ -19,14 +19,14 @@ const tabsStyles = {
           textTransform: 'none',
           minWidth: 72, 
           '&:hover': {
-            color: palette.palette.primary.main, 
+            color: palette.palette.default.primary.main, 
             opacity: 1,
           },
           '&$selected': {
-            color: palette.palette.secondary.main,
+            color: palette.palette.default.secondary.main,
           },
           '&:focus': {
-            color: palette.palette.secondary.main,
+            color: palette.palette.default.secondary.main,
           },
         },
       },

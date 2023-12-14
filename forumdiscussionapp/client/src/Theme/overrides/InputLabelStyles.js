@@ -2,9 +2,9 @@ import palette from '../palette';
 
 const inputLabelStyles = {
     root: {
-        color: palette.palette.secondary.main,
+        color: palette.palette.default.secondary.main,
         '&.Mui-focused': {
-          color: palette.palette.primary.main,
+          color: palette.palette.default.primary.main,
         },
     },
     formControl: {

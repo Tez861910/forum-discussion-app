@@ -2,7 +2,7 @@ import palette from '../palette';
 
 const skeletonStyles = {
   root: {
-    backgroundColor: palette.palette.grey[200],
+    backgroundColor: palette.palette.default.grey[200],
   },
   text: {
     transform: 'scale(1, 0.60)',
@@ -21,7 +21,7 @@ const skeletonStyles = {
     overflow: 'hidden',
     '&::after': {
       animation: '$wave 1.6s linear 0.5s infinite',
-      background: `linear-gradient(90deg, transparent, ${palette.palette.grey[200]}, transparent)`,
+      background: `linear-gradient(90deg, transparent, ${palette.palette.default.grey[200]}, transparent)`,
       content: '""',
       position: 'absolute',
       transform: 'translateX(-100%)',

@@ -5,17 +5,17 @@ const badgeStyles = {
         marginRight: '16px',
       },
       badge: {
-        backgroundColor: palette.palette.secondary.main,
-        color: palette.palette.text.primary,
+        backgroundColor: palette.palette.default.secondary.main,
+        color: palette.palette.default.text.primary,
       },
       colorPrimary: {
-        backgroundColor: palette.palette.primary.main,
+        backgroundColor: palette.palette.default.primary.main,
       },
       colorSecondary: {
-        backgroundColor: palette.palette.secondary.main,
+        backgroundColor: palette.palette.default.secondary.main,
       },
       colorError: {
-        backgroundColor: palette.palette.error.main,
+        backgroundColor: palette.palette.default.error.main,
       },
       dot: {
         borderRadius: '50%',

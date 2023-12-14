@@ -2,25 +2,25 @@ import palette from '../palette';
 
 const snackbarStyles = {
   root: {
-    backgroundColor: palette.palette.primary.main,
+    backgroundColor: palette.palette.default.primary.main,
   },
   anchorOriginTopCenter: {
-    backgroundColor: palette.palette.primary.main,
+    backgroundColor: palette.palette.default.primary.main,
   },
   anchorOriginBottomCenter: {
-    backgroundColor: palette.palette.primary.main,
+    backgroundColor: palette.palette.default.primary.main,
   },
   anchorOriginTopRight: {
-    backgroundColor: palette.palette.primary.main,
+    backgroundColor: palette.palette.default.primary.main,
   },
   anchorOriginBottomRight: {
-    backgroundColor: palette.palette.primary.main,
+    backgroundColor: palette.palette.default.primary.main,
   },
   anchorOriginTopLeft: {
-    backgroundColor: palette.palette.primary.main,
+    backgroundColor: palette.palette.default.primary.main,
   },
   anchorOriginBottomLeft: {
-    backgroundColor: palette.palette.primary.main,
+    backgroundColor: palette.palette.default.primary.main,
   },
 };
 

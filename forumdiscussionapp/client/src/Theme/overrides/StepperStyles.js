@@ -5,8 +5,8 @@ const stepperStyles = {
     MuiStepper: {
       styleOverrides: {
         root: {
-          backgroundColor: 'transparent', 
-          padding: '24px', 
+          backgroundColor: 'transparent',
+          padding: '24px',
         },
       },
     },
@@ -14,15 +14,15 @@ const stepperStyles = {
       styleOverrides: {
         root: {
           padding: '8px',
-          border: `1px solid ${palette.palette.primary.main}`,
+          border: `1px solid ${palette.palette.default.primary.main}`,
           borderRadius: '4px',
           margin: '4px',
           '&$completed': {
-            borderColor: palette.palette.grey[400],
+            borderColor: palette.palette.default.grey[400],
           },
           '&$active': {
-            borderColor: palette.palette.info.main,
-            backgroundColor: palette.palette.background.paper,
+            borderColor: palette.palette.default.info.main,
+            backgroundColor: palette.palette.default.background.paper,
           },
         },
       },
@@ -30,12 +30,12 @@ const stepperStyles = {
     MuiStepLabel: {
       styleOverrides: {
         label: {
-          color: palette.palette.primary.main, 
+          color: palette.palette.default.primary.main,
           '&$active': {
-            color: palette.palette.info.main, 
+            color: palette.palette.default.info.main,
           },
           '&$completed': {
-            color: palette.palette.grey[400], 
+            color: palette.palette.default.grey[400],
           },
         },
       },
@@ -43,7 +43,7 @@ const stepperStyles = {
     MuiStepConnector: {
       styleOverrides: {
         line: {
-          borderColor: palette.palette.primary.main, 
+          borderColor: palette.palette.default.primary.main,
         },
       },
     },

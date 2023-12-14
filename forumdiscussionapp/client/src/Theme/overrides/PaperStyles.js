@@ -2,13 +2,13 @@ import palette from '../palette';
 
 const paperStyles = {
   root: {
-    backgroundColor: palette.palette.primary.main,
+    backgroundColor: palette.palette.default.primary.main,
   },
   rounded: {
     borderRadius: '10px',
   },
   outlined: {
-    border: `1px solid ${palette.palette.primary.main}`,
+    border: `1px solid ${palette.palette.default.primary.main}`,
   },
   elevation0: {
     boxShadow: 'none',

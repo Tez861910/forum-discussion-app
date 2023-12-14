@@ -5,19 +5,19 @@ const toggleButtonStyles = {
     textTransform: 'none',
     borderRadius: '8px',
     padding: '12px 24px',
-    color: palette.palette.primary.main,
+    color: palette.palette.default.primary.main,
     '&.Mui-selected': {
-      backgroundColor: palette.palette.primary.main,
-      color: palette.palette.text.primary,
+      backgroundColor: palette.palette.default.primary.main,
+      color: palette.palette.default.text.primary,
       '&:hover': {
-        backgroundColor: palette.palette.info.main,
+        backgroundColor: palette.palette.default.info.main,
       },
     },
     '&:hover': {
-      backgroundColor: palette.palette.grey[200],
+      backgroundColor: palette.palette.default.grey[200],
     },
     '&.Mui-disabled': {
-      color: palette.palette.grey[400],
+      color: palette.palette.default.grey[400],
     },
   },
   sizeSmall: {
@@ -29,7 +29,7 @@ const toggleButtonStyles = {
     fontSize: '0.9375rem',
   },
   label: {
-    color: palette.palette.primary.main,
+    color: palette.palette.default.primary.main,
   },
 };
 

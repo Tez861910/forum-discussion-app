@@ -20,8 +20,8 @@ const stackStyles = {
       styleOverrides: {
         root: {
           padding: '16px',
-          backgroundColor: palette.palette.primary.main,
-          color: palette.palette.text.primary,
+          backgroundColor: palette.palette.default.primary.main,
+          color: palette.palette.default.text.primary,
         },
       },
     },

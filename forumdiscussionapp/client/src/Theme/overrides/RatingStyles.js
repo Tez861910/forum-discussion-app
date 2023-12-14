@@ -2,13 +2,13 @@ import palette from '../palette';
 
 const ratingStyles = {
   root: {
-    color: palette.palette.primary.main,
+    color: palette.palette.default.primary.main,
   },
   iconFilled: {
-    color: palette.palette.primary.main,
+    color: palette.palette.default.primary.main,
   },
   iconHover: {
-    color: palette.palette.info.main,
+    color: palette.palette.default.info.main,
   },
 };
 

@@ -13,28 +13,28 @@ const paginationStyles = {
     MuiPaginationItem: {
       styleOverrides: {
         root: {
-          color: palette.palette.primary.main, 
+          color: palette.palette.default.primary.main, 
         },
         page: {
           '&.Mui-selected': {
-            backgroundColor: palette.palette.primary.main, 
-            color: palette.palette.text.primary, 
+            backgroundColor: palette.palette.default.primary.main, 
+            color: palette.palette.default.text.primary, 
             '&:hover': {
-              backgroundColor: palette.palette.info.main, 
+              backgroundColor: palette.palette.default.info.main, 
             },
           },
         },
         previous: {
-          color: palette.palette.primary.main, 
+          color: palette.palette.default.primary.main, 
         },
         next: {
-          color: palette.palette.primary.main,
+          color: palette.palette.default.primary.main,
         },
         first: {
-          color: palette.palette.primary.main,
+          color: palette.palette.default.primary.main,
         },
         last: {
-          color: palette.palette.primary.main,
+          color: palette.palette.default.primary.main,
         },
       },
     },

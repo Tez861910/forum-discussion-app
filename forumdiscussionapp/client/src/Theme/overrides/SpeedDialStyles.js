@@ -13,10 +13,10 @@ const speedDialStyles = {
     },
   },
   fab: {
-    backgroundColor: palette.palette.primary.main,
-    color: palette.palette.text.primary,
+    backgroundColor: palette.palette.default.primary.main,
+    color: palette.palette.default.text.primary,
     '&:hover': {
-      backgroundColor: palette.palette.info.main,
+      backgroundColor: palette.palette.default.info.main,
     },
   },
   directionUp: {

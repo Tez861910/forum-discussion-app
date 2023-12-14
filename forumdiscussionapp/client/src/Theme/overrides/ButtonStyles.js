@@ -5,33 +5,33 @@ const buttonStyles = {
         textTransform: 'none',
         borderRadius: '8px',
         padding: '12px 24px',
-        backgroundColor: palette.palette.primary.main,
-        color: palette.palette.primary.contrastText,
+        backgroundColor: palette.palette.default.primary.main,
+        color: palette.palette.default.primary.contrastText,
         '&:hover': {
-          backgroundColor: palette.palette.secondary.main,
+          backgroundColor: palette.palette.default.secondary.main,
         },
     },
     label: {
-        color: palette.palette.text.primary,
+        color: palette.palette.default.text.primary,
     },
     text: {
         padding: '6px 8px',
     },
     textPrimary: {
-        color: palette.palette.primary.main,
+        color: palette.palette.default.primary.main,
     },
     textSecondary: {
-        color: palette.palette.secondary.main,
+        color: palette.palette.default.secondary.main,
     },
     outlined: {
         padding: '6px 16px',
-        border: `1px solid ${palette.palette.primary.main}`,
+        border: `1px solid ${palette.palette.default.primary.main}`,
     },
     outlinedPrimary: {
-        borderColor: palette.palette.primary.main,
+        borderColor: palette.palette.default.primary.main,
     },
     outlinedSecondary: {
-        borderColor: palette.palette.secondary.main,
+        borderColor: palette.palette.default.secondary.main,
     },
     contained: {
         boxShadow: 'none',
@@ -40,15 +40,15 @@ const buttonStyles = {
         },
     },
     containedPrimary: {
-        backgroundColor: palette.palette.primary.main,
+        backgroundColor: palette.palette.default.primary.main,
         '&:hover': {
-          backgroundColor: palette.palette.secondary.main,
+          backgroundColor: palette.palette.default.secondary.main,
         },
     },
     containedSecondary: {
-        backgroundColor: palette.palette.secondary.main,
+        backgroundColor: palette.palette.default.secondary.main,
         '&:hover': {
-          backgroundColor: palette.palette.primary.main,
+          backgroundColor: palette.palette.default.primary.main,
         },
     },
     disableElevation: {
@@ -78,17 +78,17 @@ const buttonStyles = {
         marginLeft: '8px',
     },
     iconSizeSmall: {
-        '& > *:first-child': {
+        '& > *:first-path': {
           fontSize: '18px',
         },
     },
     iconSizeMedium: {
-        '& > *:first-child': {
+        '& > *:first-path': {
           fontSize: '20px',
         },
     },
     iconSizeLarge: {
-        '& > *:first-child': {
+        '& > *:first-path': {
           fontSize: '22px',
         },
     },

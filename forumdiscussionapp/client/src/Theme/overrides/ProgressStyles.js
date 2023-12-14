@@ -4,17 +4,17 @@ const progressStyles = {
   MuiLinearProgress: {
     styleOverrides: {
       root: {
-        backgroundColor: palette.palette.primary.main,
+        backgroundColor: palette.palette.default.primary.main,
       },
       bar: {
-        backgroundColor: palette.palette.text.primary,
+        backgroundColor: palette.palette.default.text.primary,
       },
     },
   },
   MuiCircularProgress: {
     styleOverrides: {
       root: {
-        color: palette.palette.primary.main,
+        color: palette.palette.default.primary.main,
       },
     },
   },

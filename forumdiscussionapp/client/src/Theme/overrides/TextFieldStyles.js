@@ -8,7 +8,7 @@ const textFieldStyles = {
     MuiInput: {
       styleOverrides: {
         root: {
-          backgroundColor: palette.palette.grey[200],
+          backgroundColor: palette.palette.default.grey[200],
           borderRadius: '4px',
           padding: '10px',
         },
@@ -17,7 +17,7 @@ const textFieldStyles = {
     MuiInputLabel: {
       styleOverrides: {
         root: {
-          color: palette.palette.primary.main,
+          color: palette.palette.default.primary.main,
           fontWeight: 'bold',
         },
       },
@@ -25,14 +25,14 @@ const textFieldStyles = {
     MuiInputAdornment: {
       styleOverrides: {
         root: {
-          color: palette.palette.primary.main,
+          color: palette.palette.default.primary.main,
         },
       },
     },
     MuiFormHelperText: {
       styleOverrides: {
         root: {
-          color: palette.palette.warning.main,
+          color: palette.palette.default.warning.main,
         },
       },
     },

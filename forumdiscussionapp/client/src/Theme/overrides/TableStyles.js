@@ -5,21 +5,21 @@ const tableStyles = {
     MuiTable: {
       styleOverrides: {
         root: {
-          backgroundColor: palette.palette.primary.main,
+          backgroundColor: palette.palette.default.primary.main,
         },
       },
     },
     MuiTableCell: {
       styleOverrides: {
         root: {
-          color: palette.palette.text.primary,
+          color: palette.palette.default.text.primary,
         },
       },
     },
     MuiTableHead: {
       styleOverrides: {
         root: {
-          backgroundColor: palette.palette.primary.main,
+          backgroundColor: palette.palette.default.primary.main,
         },
       },
     },
@@ -27,7 +27,7 @@ const tableStyles = {
       styleOverrides: {
         root: {
           '&:nth-of-type(odd)': {
-            backgroundColor: palette.palette.primary.main,
+            backgroundColor: palette.palette.default.primary.main,
           },
         },
       },

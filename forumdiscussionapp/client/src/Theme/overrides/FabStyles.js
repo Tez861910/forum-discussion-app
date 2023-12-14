@@ -5,22 +5,22 @@ const fabStyles = {
       MuiFab: {
         styleOverrides: {
           root: {
-            backgroundColor: palette.palette.primary.main,
-            color: palette.palette.primary.contrastText,
+            backgroundColor: palette.palette.default.primary.main,
+            color: palette.palette.default.primary.contrastText,
             '&:hover': {
-              backgroundColor: palette.palette.secondary.main,
+              backgroundColor: palette.palette.default.secondary.main,
             },
           },
           primary: {
-            backgroundColor: palette.palette.primary.main,
+            backgroundColor: palette.palette.default.primary.main,
             '&:hover': {
-              backgroundColor: palette.palette.secondary.main,
+              backgroundColor: palette.palette.default.secondary.main,
             },
           },
           secondary: {
-            backgroundColor: palette.palette.secondary.main,
+            backgroundColor: palette.palette.default.secondary.main,
             '&:hover': {
-              backgroundColor: palette.palette.primary.main,
+              backgroundColor: palette.palette.default.primary.main,
             },
           },
         },
@@ -28,9 +28,9 @@ const fabStyles = {
           {
             props: { variant: 'extended' },
             style: {
-              backgroundColor: palette.palette.primary.main,
+              backgroundColor: palette.palette.default.primary.main,
               '&:hover': {
-                backgroundColor: palette.palette.secondary.main,
+                backgroundColor: palette.palette.default.secondary.main,
               },
             },
           },

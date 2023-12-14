@@ -6,7 +6,7 @@ const cssBaseline = {
         backgroundImage: `url(${logobg})`,
         backgroundSize: 'cover',
         backgroundRepeat: 'no-repeat',
-        color: palette.palette.text.primary, 
+        color: palette.palette.default.text.primary, 
     },
     '@global': {
         html: {
@@ -21,16 +21,16 @@ const cssBaseline = {
         },
         input: {
           '&::-webkit-input-placeholder': {
-            color: palette.palette.primary.main,
+            color: palette.palette.default.primary.main,
           },
           '&::-moz-placeholder': {
-            color: palette.palette.primary.main,
+            color: palette.palette.default.primary.main,
           },
           '&:-ms-input-placeholder': {
-            color: palette.palette.primary.main,
+            color: palette.palette.default.primary.main,
           },
           '&::placeholder': {
-            color: palette.palette.primary.main,
+            color: palette.palette.default.primary.main,
           },
         },
         '*': {

@@ -17,10 +17,10 @@ const accordionStyles = {
     MuiAccordionSummary: {
       styleOverrides: {
         root: {
-          backgroundColor: palette.palette.primary.main,
-          color: palette.palette.primary.contrastText,
+          backgroundColor: palette.palette.default.primary.main,
+          color: palette.palette.default.primary.contrastText,
           '&:hover': {
-            backgroundColor: palette.palette.secondary.main,
+            backgroundColor: palette.palette.default.secondary.main,
           },
         },
       },
@@ -28,8 +28,8 @@ const accordionStyles = {
     MuiAccordionDetails: {
       styleOverrides: {
         root: {
-          backgroundColor: palette.palette.background.default,
-          color: palette.palette.text.primary,
+          backgroundColor: palette.palette.default.background.default,
+          color: palette.palette.default.text.primary,
         },
       },
     },

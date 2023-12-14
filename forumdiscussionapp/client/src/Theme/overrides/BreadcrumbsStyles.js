@@ -23,7 +23,7 @@ const breadcrumbsStyles = {
       MuiLink: {
         styleOverrides: {
           root: {
-            color: palette.palette.primary.main,
+            color: palette.palette.default.primary.main,
           },
           underlineHover: {
             textDecoration: 'none',

@@ -2,45 +2,45 @@ import palette from '../palette';
 
 const tooltipStyles = {
   tooltip: {
-    backgroundColor: palette.palette.primary.main,
-    color: palette.palette.text.primary,
+    backgroundColor: palette.palette.default.primary.main,
+    color: palette.palette.default.text.primary,
   },
   tooltipPlacementLeft: {
-    backgroundColor: palette.palette.primary.main,
-    color: palette.palette.text.primary,
+    backgroundColor: palette.palette.default.primary.main,
+    color: palette.palette.default.text.primary,
   },
   tooltipPlacementRight: {
-    backgroundColor: palette.palette.primary.main,
-    color: palette.palette.text.primary,
+    backgroundColor: palette.palette.default.primary.main,
+    color: palette.palette.default.text.primary,
   },
   tooltipPlacementTop: {
-    backgroundColor: palette.palette.primary.main,
-    color: palette.palette.text.primary,
+    backgroundColor: palette.palette.default.primary.main,
+    color: palette.palette.default.text.primary,
   },
   tooltipPlacementBottom: {
-    backgroundColor: palette.palette.primary.main,
-    color: palette.palette.text.primary,
+    backgroundColor: palette.palette.default.primary.main,
+    color: palette.palette.default.text.primary,
   },
   arrow: {
-    color: palette.palette.primary.main,
+    color: palette.palette.default.primary.main,
   },
   touch: {
-    color: palette.palette.primary.main,
+    color: palette.palette.default.primary.main,
   },
   popper: {
-    color: palette.palette.primary.main,
+    color: palette.palette.default.primary.main,
   },
   popperInteractive: {
-    color: palette.palette.primary.main,
+    color: palette.palette.default.primary.main,
   },
   popperArrow: {
-    color: palette.palette.primary.main,
+    color: palette.palette.default.primary.main,
   },
   popperClose: {
-    color: palette.palette.primary.main,
+    color: palette.palette.default.primary.main,
   },
   popperOpen: {
-    color: palette.palette.primary.main,
+    color: palette.palette.default.primary.main,
   },
 };
 

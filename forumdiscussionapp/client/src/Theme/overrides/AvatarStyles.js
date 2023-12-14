@@ -6,8 +6,8 @@ const avatarStyles = {
         height: '48px',
     },
     colorDefault: {
-        backgroundColor: palette.palette.primary.main,
-        color: palette.palette.primary.contrastText,
+        backgroundColor: palette.palette.default.primary.main,
+        color: palette.palette.default.primary.contrastText,
     },
     img: {
         width: '100%',
