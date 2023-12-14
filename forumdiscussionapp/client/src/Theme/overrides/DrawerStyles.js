@@ -1,7 +1,9 @@
+import palette from '../palette';
+
 const drawerStyles = {
     paper: {
       width: '240px',
-      backgroundColor: '#311b92',
+      backgroundColor: palette.palette.background.paper,
     },
     defaultProps: {
       MuiList: {
@@ -9,18 +11,18 @@ const drawerStyles = {
           root: {
             width: '100%',
             maxWidth: '360px',
-            backgroundColor: '#311b92',
+            backgroundColor: palette.palette.background.paper,
           },
         },
       },
       MuiListItem: {
         styleOverrides: {
           root: {
-            color: '#ffffff',
+            color: palette.palette.text.primary,
           },
           button: {
             '&:hover': {
-              backgroundColor: '#1a237e',
+              backgroundColor: palette.palette.primary.main,
             },
           },
         },
@@ -28,26 +30,25 @@ const drawerStyles = {
       MuiListItemIcon: {
         styleOverrides: {
           root: {
-            color: '#ffffff',
+            color: palette.palette.text.primary,
           },
         },
       },
       MuiListItemText: {
         styleOverrides: {
           root: {
-            color: '#ffffff',
+            color: palette.palette.text.primary,
           },
         },
       },
       MuiDivider: {
         styleOverrides: {
           root: {
-            backgroundColor: '#1a237e',
+            backgroundColor: palette.palette.primary.main,
           },
         },
       },
     },
-  };
-  
-  export default drawerStyles;
-  
+};
+
+export default drawerStyles;

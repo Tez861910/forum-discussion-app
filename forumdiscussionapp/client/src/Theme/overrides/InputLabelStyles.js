@@ -1,35 +1,37 @@
+import palette from '../palette';
+
 const inputLabelStyles = {
     root: {
-        color: '#ff6f00',
+        color: palette.palette.secondary.main,
         '&.Mui-focused': {
-          color: '#1a237e',
+          color: palette.palette.primary.main,
         },
-      },
-      formControl: {
+    },
+    formControl: {
         position: 'relative',
         marginTop: '16px',
         minWidth: '0',
-      },
-      marginDense: {
+    },
+    marginDense: {
         marginTop: '8px',
-      },
-      shrink: {
+    },
+    shrink: {
         transform: 'translate(0, 1.5px) scale(0.75)',
         transformOrigin: 'top left',
-      },
-      animated: {
+    },
+    animated: {
         transition: 'all 200ms cubic-bezier(0.0, 0, 0.2, 1) 0ms',
-      },
-      filled: {
+    },
+    filled: {
         '&$shrink': {
           transform: 'translate(12px, 7px) scale(0.75)',
         },
-      },
-      outlined: {
+    },
+    outlined: {
         '&$shrink': {
           transform: 'translate(14px, -6px) scale(0.75)',
         },
-      },
+    },
 };
 
 export default inputLabelStyles;

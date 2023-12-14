@@ -1,55 +1,57 @@
+import palette from '../palette';
+
 const buttonStyles = {
     root: {
         textTransform: 'none',
         borderRadius: '8px',
         padding: '12px 24px',
-        backgroundColor: '#1a237e',
-        color: '#ffffff',
+        backgroundColor: palette.palette.primary.main,
+        color: palette.palette.primary.contrastText,
         '&:hover': {
-          backgroundColor: '#0d47a1',
+          backgroundColor: palette.palette.secondary.main,
         },
-      },
-      label: {
-        color: '#ffffff',
-      },
-      text: {
+    },
+    label: {
+        color: palette.palette.text.primary,
+    },
+    text: {
         padding: '6px 8px',
-      },
-      textPrimary: {
-        color: '#1a237e',
-      },
-      textSecondary: {
-        color: '#ff6f00',
-      },
-      outlined: {
+    },
+    textPrimary: {
+        color: palette.palette.primary.main,
+    },
+    textSecondary: {
+        color: palette.palette.secondary.main,
+    },
+    outlined: {
         padding: '6px 16px',
-        border: '1px solid #1a237e',
-      },
-      outlinedPrimary: {
-        borderColor: '#1a237e',
-      },
-      outlinedSecondary: {
-        borderColor: '#ff6f00',
-      },
-      contained: {
+        border: `1px solid ${palette.palette.primary.main}`,
+    },
+    outlinedPrimary: {
+        borderColor: palette.palette.primary.main,
+    },
+    outlinedSecondary: {
+        borderColor: palette.palette.secondary.main,
+    },
+    contained: {
         boxShadow: 'none',
         '&:active': {
           boxShadow: 'none',
         },
-      },
-      containedPrimary: {
-        backgroundColor: '#1a237e',
+    },
+    containedPrimary: {
+        backgroundColor: palette.palette.primary.main,
         '&:hover': {
-          backgroundColor: '#0d47a1',
+          backgroundColor: palette.palette.secondary.main,
         },
-      },
-      containedSecondary: {
-        backgroundColor: '#ff6f00',
+    },
+    containedSecondary: {
+        backgroundColor: palette.palette.secondary.main,
         '&:hover': {
-          backgroundColor: '#c41c00',
+          backgroundColor: palette.palette.primary.main,
         },
-      },
-      disableElevation: {
+    },
+    disableElevation: {
         boxShadow: 'none',
         '&:hover': {
           boxShadow: 'none',
@@ -57,40 +59,39 @@ const buttonStyles = {
         '&$focusVisible': {
           boxShadow: 'none',
         },
-      },
-      sizeSmall: {
+    },
+    sizeSmall: {
         padding: '4px 8px',
         fontSize: '0.8125rem',
-      },
-      sizeLarge: {
+    },
+    sizeLarge: {
         padding: '8px 24px',
         fontSize: '0.9375rem',
-      },
-      fullWidth: {
+    },
+    fullWidth: {
         width: '100%',
-      },
-      startIcon: {
+    },
+    startIcon: {
         marginRight: '8px',
-      },
-      endIcon: {
+    },
+    endIcon: {
         marginLeft: '8px',
-      },
-      iconSizeSmall: {
+    },
+    iconSizeSmall: {
         '& > *:first-child': {
           fontSize: '18px',
         },
-      },
-      iconSizeMedium: {
+    },
+    iconSizeMedium: {
         '& > *:first-child': {
           fontSize: '20px',
         },
-      },
-      iconSizeLarge: {
+    },
+    iconSizeLarge: {
         '& > *:first-child': {
           fontSize: '22px',
         },
-      },
-    };
-  
-  export default buttonStyles;
-  
+    },
+};
+
+export default buttonStyles;

@@ -1,24 +1,26 @@
+import palette from '../palette';
+
 const fabStyles = {
     defaultProps: {
       MuiFab: {
         styleOverrides: {
           root: {
-            backgroundColor: '#1a237e',
-            color: '#ffffff',
+            backgroundColor: palette.palette.primary.main,
+            color: palette.palette.primary.contrastText,
             '&:hover': {
-              backgroundColor: '#0d133f',
+              backgroundColor: palette.palette.secondary.main,
             },
           },
           primary: {
-            backgroundColor: '#1a237e',
+            backgroundColor: palette.palette.primary.main,
             '&:hover': {
-              backgroundColor: '#0d133f',
+              backgroundColor: palette.palette.secondary.main,
             },
           },
           secondary: {
-            backgroundColor: '#1a237e',
+            backgroundColor: palette.palette.secondary.main,
             '&:hover': {
-              backgroundColor: '#0d133f',
+              backgroundColor: palette.palette.primary.main,
             },
           },
         },
@@ -26,16 +28,15 @@ const fabStyles = {
           {
             props: { variant: 'extended' },
             style: {
-              backgroundColor: '#1a237e',
+              backgroundColor: palette.palette.primary.main,
               '&:hover': {
-                backgroundColor: '#0d133f',
+                backgroundColor: palette.palette.secondary.main,
               },
             },
           },
         ],
       },
     },
-  };
-  
-  export default fabStyles;
-  
+};
+
+export default fabStyles;

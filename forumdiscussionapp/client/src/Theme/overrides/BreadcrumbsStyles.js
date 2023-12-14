@@ -1,3 +1,5 @@
+import palette from '../palette';
+
 const breadcrumbsStyles = {
     root: {
       '& > * + *': {
@@ -21,7 +23,7 @@ const breadcrumbsStyles = {
       MuiLink: {
         styleOverrides: {
           root: {
-            color: '#1a237e',
+            color: palette.palette.primary.main,
           },
           underlineHover: {
             textDecoration: 'none',
@@ -34,7 +36,6 @@ const breadcrumbsStyles = {
         },
       },
     },
-  };
-  
-  export default breadcrumbsStyles;
-  
+};
+
+export default breadcrumbsStyles;

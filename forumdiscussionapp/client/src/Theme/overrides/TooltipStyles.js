@@ -1,45 +1,47 @@
+import palette from '../palette';
+
 const tooltipStyles = {
-    tooltip: {
-        backgroundColor: '#1a237e',
-        color: '#ffffff',
-      },
-      tooltipPlacementLeft: {
-        backgroundColor: '#1a237e',
-        color: '#ffffff',
-      },
-      tooltipPlacementRight: {
-        backgroundColor: '#1a237e',
-        color: '#ffffff',
-      },
-      tooltipPlacementTop: {
-        backgroundColor: '#1a237e',
-        color: '#ffffff',
-      },
-      tooltipPlacementBottom: {
-        backgroundColor: '#1a237e',
-        color: '#ffffff',
-      },
-      arrow: {
-        color: '#1a237e',
-      },
-      touch: {
-        color: '#1a237e',
-      },
-      popper: {
-        color: '#1a237e',
-      },
-      popperInteractive: {
-        color: '#1a237e',
-      },
-      popperArrow: {
-        color: '#1a237e',
-      },
-      popperClose: {
-        color: '#1a237e',
-      },
-      popperOpen: {
-        color: '#1a237e',
-      },
+  tooltip: {
+    backgroundColor: palette.palette.primary.main,
+    color: palette.palette.text.primary,
+  },
+  tooltipPlacementLeft: {
+    backgroundColor: palette.palette.primary.main,
+    color: palette.palette.text.primary,
+  },
+  tooltipPlacementRight: {
+    backgroundColor: palette.palette.primary.main,
+    color: palette.palette.text.primary,
+  },
+  tooltipPlacementTop: {
+    backgroundColor: palette.palette.primary.main,
+    color: palette.palette.text.primary,
+  },
+  tooltipPlacementBottom: {
+    backgroundColor: palette.palette.primary.main,
+    color: palette.palette.text.primary,
+  },
+  arrow: {
+    color: palette.palette.primary.main,
+  },
+  touch: {
+    color: palette.palette.primary.main,
+  },
+  popper: {
+    color: palette.palette.primary.main,
+  },
+  popperInteractive: {
+    color: palette.palette.primary.main,
+  },
+  popperArrow: {
+    color: palette.palette.primary.main,
+  },
+  popperClose: {
+    color: palette.palette.primary.main,
+  },
+  popperOpen: {
+    color: palette.palette.primary.main,
+  },
 };
 
 export default tooltipStyles;

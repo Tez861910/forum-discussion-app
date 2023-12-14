@@ -1,9 +1,11 @@
+import palette from '../palette';
+
 const menuStyles = {
     defaultProps: {
       MuiMenu: {
         styleOverrides: {
           paper: {
-            backgroundColor: '#f5f5f5', 
+            backgroundColor: palette.palette.background.default, 
           },
         },
       },
@@ -11,16 +13,15 @@ const menuStyles = {
         styleOverrides: {
           root: {
             '&:hover': {
-              backgroundColor: '#e0e0e0', 
+              backgroundColor: palette.palette.background.paper, 
             },
             '&$selected': {
-              backgroundColor: '#bdbdbd',
+              backgroundColor: palette.palette.primary.main,
             },
           },
         },
       },
     },
-  };
-  
-  export default menuStyles;
-  
+};
+
+export default menuStyles;

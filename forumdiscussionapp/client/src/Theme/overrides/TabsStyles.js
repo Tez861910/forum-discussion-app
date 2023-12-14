@@ -1,36 +1,37 @@
+import palette from '../palette';
+
 const tabsStyles = {
-    defaultProps: {
-      MuiTabs: {
-        styleOverrides: {
-          root: {
-            backgroundColor: '#e8eaf6', 
-            minHeight: 48, 
-          },
-          indicator: {
-            backgroundColor: '#3f51b5', 
-          },
+  defaultProps: {
+    MuiTabs: {
+      styleOverrides: {
+        root: {
+          backgroundColor: palette.palette.background.paper, 
+          minHeight: 48, 
+        },
+        indicator: {
+          backgroundColor: palette.palette.info.main, 
         },
       },
-      MuiTab: {
-        styleOverrides: {
-          root: {
-            textTransform: 'none',
-            minWidth: 72, 
-            '&:hover': {
-              color: '#1a237e', 
-              opacity: 1,
-            },
-            '&$selected': {
-              color: '#3949ab',
-            },
-            '&:focus': {
-              color: '#3949ab',
-            },
+    },
+    MuiTab: {
+      styleOverrides: {
+        root: {
+          textTransform: 'none',
+          minWidth: 72, 
+          '&:hover': {
+            color: palette.palette.primary.main, 
+            opacity: 1,
+          },
+          '&$selected': {
+            color: palette.palette.secondary.main,
+          },
+          '&:focus': {
+            color: palette.palette.secondary.main,
           },
         },
       },
     },
-  };
-  
-  export default tabsStyles;
-  
+  },
+};
+
+export default tabsStyles;

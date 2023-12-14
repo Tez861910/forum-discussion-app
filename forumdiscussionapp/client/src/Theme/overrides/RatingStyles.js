@@ -1,12 +1,14 @@
+import palette from '../palette';
+
 const ratingStyles = {
-root: {
-    color: '#1a237e',
+  root: {
+    color: palette.palette.primary.main,
   },
   iconFilled: {
-    color: '#1a237e',
+    color: palette.palette.primary.main,
   },
   iconHover: {
-    color: '#0d133f',
+    color: palette.palette.info.main,
   },
 };
 

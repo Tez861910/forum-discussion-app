@@ -1,53 +1,54 @@
+import palette from '../palette';
+
 const radioStyles = {
-    defaultProps: {
-      MuiRadio: {
-        styleOverrides: {
-          root: {
-            color: '#1a237e',
-            '&$checked': {
-              color: '#1a237e',
-            },
-          },
-          colorSecondary: {
-            '&$checked': {
-              color: '#1a237e',
-            },
-            '&$disabled': {
-              color: '#bdbdbd',
-            },
-          },
-          colorPrimary: {
-            '&$checked': {
-              color: '#1a237e',
-            },
-            '&$disabled': {
-              color: '#bdbdbd',
-            },
+  defaultProps: {
+    MuiRadio: {
+      styleOverrides: {
+        root: {
+          color: palette.palette.primary.main,
+          '&$checked': {
+            color: palette.palette.primary.main,
           },
         },
-      },
-      MuiFormControlLabel: {
-        styleOverrides: {
-          root: {
-            color: '#1a237e',
+        colorSecondary: {
+          '&$checked': {
+            color: palette.palette.primary.main,
           },
-          label: {
-            color: '#1a237e',
-          },
-          disabled: {
-            color: '#bdbdbd',
+          '&$disabled': {
+            color: palette.palette.grey[400], 
           },
         },
-      },
-      MuiRadioGroup: {
-        styleOverrides: {
-          root: {
-            flexDirection: 'row',
+        colorPrimary: {
+          '&$checked': {
+            color: palette.palette.primary.main, 
+          },
+          '&$disabled': {
+            color: palette.palette.grey[400],
           },
         },
       },
     },
-  };
-  
-  export default radioStyles;
-  
+    MuiFormControlLabel: {
+      styleOverrides: {
+        root: {
+          color: palette.palette.primary.main,
+        },
+        label: {
+          color: palette.palette.primary.main, 
+        },
+        disabled: {
+          color: palette.palette.grey[400], 
+        },
+      },
+    },
+    MuiRadioGroup: {
+      styleOverrides: {
+        root: {
+          flexDirection: 'row',
+        },
+      },
+    },
+  },
+};
+
+export default radioStyles;

@@ -1,43 +1,45 @@
+import palette from '../palette';
+
 const outlinedInputStyles = {
     root: {
         '& fieldset': {
-          borderColor: '#ff6f00',
+          borderColor: palette.palette.secondary.main,
         },
         '&:hover fieldset': {
-          borderColor: '#1a237e',
+          borderColor: palette.palette.primary.main,
         },
         '&.Mui-focused fieldset': {
-          borderColor: '#1a237e',
+          borderColor: palette.palette.primary.main,
         },
-      },
-      input: {
+    },
+    input: {
         padding: '12px',
-      },
-      multiline: {
+    },
+    multiline: {
         padding: '10px',
-      },
-      adornedStart: {
+    },
+    adornedStart: {
         paddingLeft: '12px',
-      },
-      adornedEnd: {
+    },
+    adornedEnd: {
         paddingRight: '12px',
-      },
-      notchedOutline: {
-        borderColor: '#1a237e',
-      },
-      inputMarginDense: {
+    },
+    notchedOutline: {
+        borderColor: palette.palette.primary.main,
+    },
+    inputMarginDense: {
         paddingTop: '10.5px',
         paddingBottom: '10.5px',
-      },
-      inputMultiline: {
+    },
+    inputMultiline: {
         padding: '0',
-      },
-      inputAdornedStart: {
+    },
+    inputAdornedStart: {
         paddingLeft: '0',
-      },
-      inputAdornedEnd: {
+    },
+    inputAdornedEnd: {
         paddingRight: '0',
-      },
+    },
 };
 
 export default outlinedInputStyles;

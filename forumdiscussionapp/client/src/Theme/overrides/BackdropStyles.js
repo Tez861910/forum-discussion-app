@@ -1,13 +1,15 @@
+import palette from '../palette';
+
 const backdropStyles = {
     root: {
-        backgroundColor: '#1a237e',
-      },
-      invisible: {
+        backgroundColor: palette.palette.primary.main,
+    },
+    invisible: {
         backgroundColor: 'transparent',
-      },
-      visible: {
-        backgroundColor: '#1a237e',
-      },
+    },
+    visible: {
+        backgroundColor: palette.palette.primary.main,
+    },
 };
 
 export default backdropStyles;

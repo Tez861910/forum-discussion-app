@@ -1,33 +1,34 @@
+import palette from '../palette';
+
 const transferListStyles = {
-    MuiList: {
-        styleOverrides: {
-          root: {
-            backgroundColor: '#1a237e',
-          },
-        },
+  MuiList: {
+    styleOverrides: {
+      root: {
+        backgroundColor: palette.palette.primary.main,
       },
-      MuiListItem: {
-        styleOverrides: {
-          root: {
-            color: '#1a237e',
-          },
-        },
+    },
+  },
+  MuiListItem: {
+    styleOverrides: {
+      root: {
+        color: palette.palette.text.primary,
       },
-      MuiCheckbox: {
-        styleOverrides: {
-          root: {
-            color: '#1a237e',
-          },
-        },
+    },
+  },
+  MuiCheckbox: {
+    styleOverrides: {
+      root: {
+        color: palette.palette.primary.main,
       },
-      MuiButton: {
-        styleOverrides: {
-          root: {
-            color: '#1a237e',
-          },
-        },
+    },
+  },
+  MuiButton: {
+    styleOverrides: {
+      root: {
+        color: palette.palette.primary.main,
       },
-      
+    },
+  },
 };
 
 export default transferListStyles;

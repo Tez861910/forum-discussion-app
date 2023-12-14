@@ -1,10 +1,12 @@
+import palette from '../palette';
+
 const textareaAutosizeStyles = {
-    root: {
-        margin: '8px',
-        padding: '8px',
-        border: '1px solid #c4c4c4',
-        borderRadius: '4px',
-      },
+  root: {
+    margin: '8px',
+    padding: '8px',
+    border: `1px solid ${palette.palette.grey[400]}`,
+    borderRadius: '4px',
+  },
 };
 
 export default textareaAutosizeStyles;

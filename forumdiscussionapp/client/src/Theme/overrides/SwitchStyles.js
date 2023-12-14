@@ -1,23 +1,25 @@
+import palette from '../palette';
+
 const switchStyles = {
-    root: {
-        color: '#1a237e',
-      },
-      switchBase: {
-        color: '#1a237e',
-        '&.Mui-checked': {
-          color: '#1a237e',
-        },
-        '&.Mui-checked + .MuiSwitch-track': {
-          backgroundColor: '#1a237e',
-        },
-      },
-      thumb: {
-        color: '#1a237e',
-      },
-      track: {
-        backgroundColor: '#1a237e',
-      },
-      checked: {},
+  root: {
+    color: palette.palette.primary.main,
+  },
+  switchBase: {
+    color: palette.palette.primary.main,
+    '&.Mui-checked': {
+      color: palette.palette.primary.main,
+    },
+    '&.Mui-checked + .MuiSwitch-track': {
+      backgroundColor: palette.palette.primary.main,
+    },
+  },
+  thumb: {
+    color: palette.palette.primary.main,
+  },
+  track: {
+    backgroundColor: palette.palette.primary.main,
+  },
+  checked: {},
 };
 
 export default switchStyles;

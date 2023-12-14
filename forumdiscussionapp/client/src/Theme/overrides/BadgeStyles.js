@@ -1,19 +1,21 @@
+import palette from '../palette';
+
 const badgeStyles = {
       root: {
         marginRight: '16px',
       },
       badge: {
-        backgroundColor: '#ff6f00',
-        color: '#ffffff',
+        backgroundColor: palette.palette.secondary.main,
+        color: palette.palette.text.primary,
       },
       colorPrimary: {
-        backgroundColor: '#1a237e',
+        backgroundColor: palette.palette.primary.main,
       },
       colorSecondary: {
-        backgroundColor: '#ff6f00',
+        backgroundColor: palette.palette.secondary.main,
       },
       colorError: {
-        backgroundColor: '#f44336',
+        backgroundColor: palette.palette.error.main,
       },
       dot: {
         borderRadius: '50%',
@@ -50,7 +52,6 @@ const badgeStyles = {
         bottom: '14%',
         left: '14%',
       },
-    
-  };
-  
-  export default badgeStyles;
+};
+
+export default badgeStyles;

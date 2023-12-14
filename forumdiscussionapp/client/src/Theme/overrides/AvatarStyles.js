@@ -1,23 +1,25 @@
+import palette from '../palette';
+
 const avatarStyles = {
     root: {
         width: '48px',
         height: '48px',
-      },
-      colorDefault: {
-        backgroundColor: '#1a237e',
-        color: '#ffffff',
-      },
-      img: {
+    },
+    colorDefault: {
+        backgroundColor: palette.palette.primary.main,
+        color: palette.palette.primary.contrastText,
+    },
+    img: {
         width: '100%',
         height: '100%',
         objectFit: 'cover',
         textAlign: 'center',
         textIndent: '10000px',
-      },
-      fallback: {
+    },
+    fallback: {
         fontSize: '1rem',
         fontFamily: 'Roboto, Helvetica, Arial, sans-serif',
-      },
+    },
 };
 
 export default avatarStyles;

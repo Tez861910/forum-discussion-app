@@ -40,161 +40,166 @@ import linkStyles from './overrides/LinkStyles';
 import menuStyles from './overrides/MenuStyles';
 import stepperStyles from './overrides/StepperStyles';
 import tabsStyles from './overrides/TabsStyles';
-import listItemStyles from './overrides/ListItemStyles';
+import imageListStyles from './overrides/ImageListStyles';
 import modalStyles from './overrides/ModalStyles';
 import popoverStyles from './overrides/PopoverStyles';
 import popperStyles from './overrides/PopperStyles';
 import textareaAutosizeStyles from './overrides/TextareaAutosize';
 import transitionStyles from './overrides/TransitionStyles';
+import toggleButtonStyles from './overrides/ToggleButtonStyles';
+import toggleButtonGroupStyles from './overrides/ToggleButtonGroupStyles';
 
 const components = {
+  MuiAccordion: {
+    styleOverrides: accordionStyles,
+  },
+  MuiALert: {
+    styleOverrides: alertStyles,
+  },
+  MuiAppBar: {
+    styleOverrides: appBarStyles,
+  },
+  MuiAutocomplete: {
+    styleOverrides: autocompleteStyles,
+  },
+  MuiAvatar: {
+    styleOverrides: avatarStyles,
+  },
+  MuiBadge: {
+    styleOverrides: badgeStyles,
+  },
+  MuiBottomNavigation: {
+    styleOverrides: bottomNavigationStyles,
+  },
+  MuiBreadcrumbs: {
+    styleOverrides: breadcrumbsStyles,
+  },
   MuiButton: {
     styleOverrides: buttonStyles,
   },
   MuiButtonGroup: {
     styleOverrides: buttonGroupStyles,
   },
+  MuiBackdrop: {
+    styleOverrides: backdropStyles,
+  }, 
+  MuiCard: {
+    styleOverrides: cardStyles,
+  },
+  MuiCheckbox: {
+    styleOverrides: checkboxStyles,
+  },
+  MuiChip: {
+    styleOverrides: chipStyles,
+  },
+  MuiCssBaseline: {
+    styleOverrides: cssBaselineStyles,
+  },
+  MuiDialog: {
+    styleOverrides: dialogStyles,
+  },
+  MuiDrawer: {
+    styleOverrides: drawerStyles,
+  },
+  MuiFab: {
+    styleOverrides: fabStyles,
+  },
   MuiInputLabel: {
     styleOverrides: inputLabelStyles,
+  },
+  MuiLink: {
+    styleOverrides: linkStyles,
+  },
+  MuiList: {
+    styleOverrides: listStyles,
+  },
+  MuiImageList: {
+    styleOverrides: imageListStyles,
+  },
+  MuiMenu: {
+    styleOverrides: menuStyles,
+  },
+  MuiModal: {
+    styleOverrides: modalStyles,
   },
   MuiOutlinedInput: {
     styleOverrides: outlinedInputStyles,
   },
-  MuiTextField: {
-    styleOverrides: textFieldStyles,
-  },
-  MuiAccordion:{
-    styleOverrides: accordionStyles,
-  },
-  MuiALert:{
-    styleOverrides: alertStyles,
-  },
-  MuiAppBar:{
-    styleOverrides: appBarStyles,
-  },
-  MuiAutocomplete:{
-    styleOverrides: autocompleteStyles,
-  },
-  MuiAvatar:{
-    styleOverrides: avatarStyles,
-  },
-  MuiCard:{
-    styleOverrides: cardStyles,
-  },
-  MuiCheckbox:{
-    styleOverrides: checkboxStyles,
-  },
-  MuiCssBaseline:{
-    styleOverrides: cssBaselineStyles,
-  },
-  MuiDialog:{
-    styleOverrides: dialogStyles,
-  },
-  MuiDrawer:{
-    styleOverrides: drawerStyles,
-  },
-  MuiList:{
-    styleOverrides: listStyles,
-  },
-  MuiInputLabelStyles:{
-    styleOverrides: inputLabelStyles,
-  },
-  MuiRadio:{
-    styleOverrides: radioStyles,
-  },
-  MuiBadge:{
-    styleOverrides: badgeStyles,
-  },
-  MuiBreadcrumbs:{
-    styleOverrides: breadcrumbsStyles,
-  },
-  MuiPagination:{
+  MuiPagination: {
     styleOverrides: paginationStyles,
-  },
-  MuiStack:{
-    styleOverrides: stackStyles,
-  },
-  MuiSkeleton:{
-    styleOverrides: skeletonStyles,
-  },
-  MuiSpeedDial:{
-    styleOverrides: speedDialStyles,
-  },
-  MuiFab: {
-    styleOverrides: fabStyles,
-  },  
-  MuiRating: {
-    styleOverrides: ratingStyles,
-  }, 
-  MuiSelect: {
-    styleOverrides: selectStyles,
-  },
-  MuiSlider: {
-    styleOverrides: sliderStyles,
-  },
-  MuiSwitch: {
-    styleOverrides: switchStyles,
-  },
-  MuiTransferList: {
-    styleOverrides: transferListStyles,
-  }, 
-  MuiChip: {
-    styleOverrides: chipStyles,
-  },
-  MuiSvgIcon: {
-    styleOverrides: svgIconStyles,
-  },
-  MuiTable: {
-    styleOverrides: tableStyles,
-  },
-  MuiTooltip: {
-    styleOverrides: tooltipStyles,
-  },  
-  MuiBackdrop: {
-    styleOverrides: backdropStyles,
-  }, 
-  MuiProgress:{
-    styleOverrides: progressStyles,
-  },
-  MuiSnackbar: {
-    styleOverrides: snackbarStyles,
   },
   MuiPaper: {
     styleOverrides: paperStyles,
   },
-  MuiBottomNavigation: {
-    styleOverrides: bottomNavigationStyles,
+  MuiPopover: {
+    styleOverrides: popoverStyles,
   },
-  MuiLink: {
-    styleOverrides: linkStyles,
-  }, 
-  MuiMenu: {
-    styleOverrides: menuStyles,
+  MuiPopper: {
+    styleOverrides: popperStyles,
+  },
+  MuiProgress: {
+    styleOverrides: progressStyles,
+  },
+  MuiRadio: {
+    styleOverrides: radioStyles,
+  },
+  MuiRating: {
+    styleOverrides: ratingStyles,
+  },
+  MuiSelect: {
+    styleOverrides: selectStyles,
+  },
+  MuiSkeleton: {
+    styleOverrides: skeletonStyles,
+  },
+  MuiSlider: {
+    styleOverrides: sliderStyles,
+  },
+  MuiSnackbar: {
+    styleOverrides: snackbarStyles,
+  },
+  MuiSpeedDial: {
+    styleOverrides: speedDialStyles,
+  },
+  MuiStack: {
+    styleOverrides: stackStyles,
   },
   MuiStepper: {
     styleOverrides: stepperStyles,
-  }, 
+  },
+  MuiSvgIcon: {
+    styleOverrides: svgIconStyles,
+  },
+  MuiSwitch: {
+    styleOverrides: switchStyles,
+  },
+  MuiTable: {
+    styleOverrides: tableStyles,
+  },
   MuiTabs: {
     styleOverrides: tabsStyles,
   },
-  MuiListItem: {
-    styleOverrides: listItemStyles,
-  }, 
-  MuiModal: {
-    styleOverrides: modalStyles,
+  MuiTextField: {
+    styleOverrides: textFieldStyles,
   },
-  MuiPopover: {
-    styleOverrides: popoverStyles,
-  }, 
-  MuiPopper: {
-    styleOverrides: popperStyles,
-  },  
   MuiTextareaAutosize: {
     styleOverrides: textareaAutosizeStyles,
   },
+  MuiTooltip: {
+    styleOverrides: tooltipStyles,
+  },
+  MuiTransferList: {
+    styleOverrides: transferListStyles,
+  },
   MuiTransition: {
     styleOverrides: transitionStyles,
-  },        
+  },
+  MuiToggleButton: {
+    styleOverrides: toggleButtonStyles,
+  },
+  MuiToggleButtonGroup: {
+    styleOverrides: toggleButtonGroupStyles,
+  },
 };
 
 export default components;

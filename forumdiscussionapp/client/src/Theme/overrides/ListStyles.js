@@ -1,26 +1,28 @@
+import palette from '../palette';
+
 const listStyles = {
     root: {
       width: '100%',
-      backgroundColor: '#311b92',
-      color: '#ffffff',
+      backgroundColor: palette.palette.background.paper,
+      color: palette.palette.text.primary,
     },
     defaultProps: {
       MuiListItem: {
         styleOverrides: {
           root: {
             '&.Mui-selected': {
-              backgroundColor: '#1a237e',
+              backgroundColor: palette.palette.primary.main,
               '&:hover': {
-                backgroundColor: '#0d47a1',
+                backgroundColor: palette.palette.secondary.main,
               },
             },
             '&:hover': {
-              backgroundColor: '#eeeeee',
+              backgroundColor: palette.palette.background.default,
             },
           },
           button: {
             '&:hover': {
-              backgroundColor: '#eeeeee',
+              backgroundColor: palette.palette.background.default,
             },
           },
         },
@@ -28,27 +30,26 @@ const listStyles = {
       MuiListItemIcon: {
         styleOverrides: {
           root: {
-            color: '#ffffff',
+            color: palette.palette.text.primary,
           },
         },
       },
       MuiListItemText: {
         styleOverrides: {
           root: {
-            color: '#ffffff',
+            color: palette.palette.text.primary,
           },
         },
       },
       MuiListSubheader: {
         styleOverrides: {
           root: {
-            color: '#ffffff',
-            backgroundColor: '#1a237e',
+            color: palette.palette.text.primary,
+            backgroundColor: palette.palette.primary.main,
           },
         },
       },
     },
-  };
-  
-  export default listStyles;
-  
+};
+
+export default listStyles;

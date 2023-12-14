@@ -1,15 +1,14 @@
+import palette from '../palette';
+
 const checkboxStyles = {
     defaultProps: {
-     
-          root: {
-            color: '#1a237e',
-          },
-          checked: {
-            color: '#1a237e',
-          },
+        root: {
+            color: palette.palette.primary.main,
         },
-      
-  };
-  
-  export default checkboxStyles;
-  
+        checked: {
+            color: palette.palette.primary.main,
+        },
+    },
+};
+
+export default checkboxStyles;

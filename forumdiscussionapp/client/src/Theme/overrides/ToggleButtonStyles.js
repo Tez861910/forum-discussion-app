@@ -1,34 +1,36 @@
+import palette from '../palette';
+
 const toggleButtonStyles = {
-    root: {
-        textTransform: 'none',
-        borderRadius: '8px',
-        padding: '12px 24px',
-        color: '#1a237e',
-        '&.Mui-selected': {
-          backgroundColor: '#1a237e',
-          color: '#ffffff',
-          '&:hover': {
-            backgroundColor: '#0d47a1',
-          },
-        },
-        '&:hover': {
-          backgroundColor: '#eeeeee',
-        },
+  root: {
+    textTransform: 'none',
+    borderRadius: '8px',
+    padding: '12px 24px',
+    color: palette.palette.primary.main,
+    '&.Mui-selected': {
+      backgroundColor: palette.palette.primary.main,
+      color: palette.palette.text.primary,
+      '&:hover': {
+        backgroundColor: palette.palette.info.main,
       },
-      sizeSmall: {
-        padding: '8px 16px',
-        fontSize: '0.8125rem',
-      },
-      sizeLarge: {
-        padding: '16px 32px',
-        fontSize: '0.9375rem',
-      },
-      disabled: {
-        color: '#bdbdbd',
-      },
-      label: {
-        color: '#1a237e',
-      },
+    },
+    '&:hover': {
+      backgroundColor: palette.palette.grey[200],
+    },
+    '&.Mui-disabled': {
+      color: palette.palette.grey[400],
+    },
+  },
+  sizeSmall: {
+    padding: '8px 16px',
+    fontSize: '0.8125rem',
+  },
+  sizeLarge: {
+    padding: '16px 32px',
+    fontSize: '0.9375rem',
+  },
+  label: {
+    color: palette.palette.primary.main,
+  },
 };
 
 export default toggleButtonStyles;

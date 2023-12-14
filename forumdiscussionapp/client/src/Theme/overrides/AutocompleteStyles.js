@@ -1,45 +1,47 @@
+import palette from '../palette';
+
 const autocompleteStyles = {
     root: {
         '& .MuiOutlinedInput-root': {
           '&.Mui-focused fieldset': {
-            borderColor: '#1a237e',
+            borderColor: palette.palette.primary.main,
           },
         },
       },
       inputRoot: {
         '&.MuiOutlinedInput-root': {
           '& fieldset': {
-            borderColor: '#ff6f00',
+            borderColor: palette.palette.secondary.main,
           },
           '&:hover fieldset': {
-            borderColor: '#1a237e',
+            borderColor: palette.palette.primary.main,
           },
           '&.Mui-focused fieldset': {
-            borderColor: '#1a237e',
+            borderColor: palette.palette.primary.main,
           },
         },
       },
       listbox: {
-        backgroundColor: '#311b92',
-        color: '#ffffff',
+        backgroundColor: palette.palette.background.paper,
+        color: palette.palette.text.primary,
       },
       option: {
         '&[data-focus="true"]': {
-          backgroundColor: '#1a237e',
+          backgroundColor: palette.palette.primary.main,
         },
         '&[aria-selected="true"]': {
-          backgroundColor: '#0d47a1',
+          backgroundColor: palette.palette.secondary.main,
         },
       },
       groupLabel: {
-        backgroundColor: '#311b92',
-        color: '#ffffff',
+        backgroundColor: palette.palette.background.paper,
+        color: palette.palette.text.primary,
       },
       popupIndicator: {
-        color: '#1a237e',
+        color: palette.palette.primary.main,
       },
       clearIndicator: {
-        color: '#ff6f00',
+        color: palette.palette.secondary.main,
       },
 };
 

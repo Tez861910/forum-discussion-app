@@ -1,3 +1,5 @@
+import palette from '../palette';
+
 const modalStyles = {
     defaultProps: {
       MuiModal: {
@@ -13,20 +15,19 @@ const modalStyles = {
             outline: 0,
           },
           backdrop: {
-            backgroundColor: 'rgba(0, 0, 0, 0.5)',
+            backgroundColor: palette.palette.background.default,
           },
         },
       },
       MuiBackdrop: {
         styleOverrides: {
           root: {
-            backgroundColor: 'rgba(0, 0, 0, 0.5)', 
+            backgroundColor: palette.palette.background.default, 
             transition: 'opacity 300ms ease-out', 
           },
         },
       },
     },
-  };
-  
-  export default modalStyles;
-  
+};
+
+export default modalStyles;

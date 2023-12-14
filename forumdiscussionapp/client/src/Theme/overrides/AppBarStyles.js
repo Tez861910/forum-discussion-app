@@ -1,7 +1,9 @@
+import palette from '../palette';
+
 const appBarStyles = {
     root: {
-      backgroundColor: '#1a237e',
-      color: '#ffffff',
+      backgroundColor: palette.palette.primary.main,
+      color: palette.palette.primary.contrastText,
     },
     defaultProps: {
       MuiToolbar: {
@@ -29,7 +31,6 @@ const appBarStyles = {
         },
       },
     },
-  };
-  
-  export default appBarStyles;
-  
+};
+
+export default appBarStyles;

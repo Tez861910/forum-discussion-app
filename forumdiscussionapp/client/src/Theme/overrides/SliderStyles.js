@@ -1,24 +1,26 @@
+import palette from '../palette';
+
 const sliderStyles = {
-root: {
-    color: '#1a237e',
+  root: {
+    color: palette.palette.primary.main,
   },
   thumb: {
-    color: '#1a237e',
+    color: palette.palette.primary.main,
   },
   track: {
-    color: '#1a237e',
+    color: palette.palette.primary.main,
   },
   rail: {
-    color: '#1a237e',
+    color: palette.palette.primary.main,
   },
   mark: {
-    color: '#1a237e',
+    color: palette.palette.primary.main,
   },
   markLabel: {
-    color: '#1a237e',
+    color: palette.palette.primary.main,
   },
   valueLabel: {
-    color: '#1a237e',
+    color: palette.palette.primary.main,
   },
 };
 

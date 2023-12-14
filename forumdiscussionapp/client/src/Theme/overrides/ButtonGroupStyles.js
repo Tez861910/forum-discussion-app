@@ -1,9 +1,12 @@
+import palette from '../palette';
+
 const buttonGroupStyles = {
     root: {
         display: 'inline-flex',
         borderRadius: '8px',
-      },
-      grouped: {
+        backgroundColor: palette.palette.background.default,
+    },
+    grouped: {
         '&:not(:first-of-type)': {
           borderTopLeftRadius: '0',
           borderBottomLeftRadius: '0',
@@ -12,8 +15,8 @@ const buttonGroupStyles = {
           borderTopRightRadius: '0',
           borderBottomRightRadius: '0',
         },
-      },
-      groupedHorizontal: {
+    },
+    groupedHorizontal: {
         '&:not(:first-child)': {
           marginLeft: '-1px',
           borderTopLeftRadius: '0',
@@ -23,8 +26,8 @@ const buttonGroupStyles = {
           borderTopRightRadius: '0',
           borderBottomRightRadius: '0',
         },
-      },
-      groupedVertical: {
+    },
+    groupedVertical: {
         '&:not(:first-child)': {
           marginTop: '-1px',
           borderTopLeftRadius: '0',
@@ -34,10 +37,7 @@ const buttonGroupStyles = {
           borderBottomRightRadius: '0',
           borderBottomLeftRadius: '0',
         },
-      },
-    };
+    },
+};
 
-    export default buttonGroupStyles;
-
-
- 
+export default buttonGroupStyles;

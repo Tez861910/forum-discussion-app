@@ -1,65 +1,67 @@
+import palette from '../palette';
+
 const alertStyles = {
-    root: {
-        width: '100%',
-        borderRadius: '4px',
-      },
-      message: {
-        padding: '8px 0',
-      },
-      action: {
-        alignItems: 'flex-start',
-      },
-      icon: {
-        padding: '7px 0',
-      },
-      filledSuccess: {
-        color: '#ffffff',
-        backgroundColor: '#4caf50',
-      },
-      filledInfo: {
-        color: '#ffffff',
-        backgroundColor: '#2196f3',
-      },
-      filledWarning: {
-        color: '#ffffff',
-        backgroundColor: '#ff9800',
-      },
-      filledError: {
-        color: '#ffffff',
-        backgroundColor: '#f44336',
-      },
-      outlinedSuccess: {
-        color: '#4caf50',
-        borderColor: '#4caf50',
-      },
-      outlinedInfo: {
-        color: '#2196f3',
-        borderColor: '#2196f3',
-      },
-      outlinedWarning: {
-        color: '#ff9800',
-        borderColor: '#ff9800',
-      },
-      outlinedError: {
-        color: '#f44336',
-        borderColor: '#f44336',
-      },
-      standardSuccess: {
-        color: '#4caf50',
-        backgroundColor: '#dcedc8',
-      },
-      standardInfo: {
-        color: '#2196f3',
-        backgroundColor: '#bbdefb',
-      },
-      standardWarning: {
-        color: '#ff9800',
-        backgroundColor: '#ffe0b2',
-      },
-      standardError: {
-        color: '#f44336',
-        backgroundColor: '#ffcdd2',
-      },
+  root: {
+      width: '100%',
+      borderRadius: '4px',
+  },
+  message: {
+      padding: '8px 0',
+  },
+  action: {
+      alignItems: 'flex-start',
+  },
+  icon: {
+      padding: '7px 0',
+  },
+  filledSuccess: {
+      color: palette.palette.text.primary,
+      backgroundColor: palette.palette.success.main,
+  },
+  filledInfo: {
+      color: palette.palette.text.primary,
+      backgroundColor: palette.palette.info.main,
+  },
+  filledWarning: {
+      color: palette.palette.text.primary,
+      backgroundColor: palette.palette.warning.main,
+  },
+  filledError: {
+      color: palette.palette.text.primary,
+      backgroundColor: palette.palette.error.main,
+  },
+  outlinedSuccess: {
+      color: palette.palette.success.main,
+      borderColor: palette.palette.success.main,
+  },
+  outlinedInfo: {
+      color: palette.palette.info.main,
+      borderColor: palette.palette.info.main,
+  },
+  outlinedWarning: {
+      color: palette.palette.warning.main,
+      borderColor: palette.palette.warning.main,
+  },
+  outlinedError: {
+      color: palette.palette.error.main,
+      borderColor: palette.palette.error.main,
+  },
+  standardSuccess: {
+      color: palette.palette.success.main,
+      backgroundColor: palette.palette.background.default,
+  },
+  standardInfo: {
+      color: palette.palette.info.main,
+      backgroundColor: palette.palette.background.default,
+  },
+  standardWarning: {
+      color: palette.palette.warning.main,
+      backgroundColor: palette.palette.background.default,
+  },
+  standardError: {
+      color: palette.palette.error.main,
+      backgroundColor: palette.palette.background.default,
+  },
 };
 
 export default alertStyles;

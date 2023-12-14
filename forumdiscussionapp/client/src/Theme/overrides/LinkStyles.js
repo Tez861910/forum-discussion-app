@@ -1,16 +1,18 @@
+import palette from '../palette';
+
 const linkStyles = {
     root: {
-        color: '#1a237e',
-      },
-      underlineHover: {
+        color: palette.palette.primary.main,
+    },
+    underlineHover: {
         textDecoration: 'underline',
-      },
-      underlineAlways: {
+    },
+    underlineAlways: {
         textDecoration: 'underline',
-      },
-      button: {
-        color: '#1a237e',
-      },
+    },
+    button: {
+        color: palette.palette.primary.main,
+    },
 };
 
 export default linkStyles;

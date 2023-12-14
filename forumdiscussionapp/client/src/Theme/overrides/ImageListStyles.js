@@ -1,11 +1,14 @@
-const listItemStyles = {
+import palette from '../palette';
+
+const imageListStyles = {
     defaultProps: {
-      MuiListItem: {
+      MuiImageList: {
         styleOverrides: {
           root: {
             display: 'grid',
             gridTemplateColumns: 'repeat(auto-fill, minmax(200px, 1fr))',
             gap: '10px',
+            backgroundColor: palette.palette.background.default, 
           },
         },
       },
@@ -14,6 +17,7 @@ const listItemStyles = {
           root: {
             listStyle: 'none',
             height: 'auto',
+            color: palette.palette.text.primary, 
           },
           imgFullHeight: {
             height: '100%',
@@ -24,7 +28,6 @@ const listItemStyles = {
         },
       },
     },
-  };
-  
-  export default listItemStyles;
-  
+};
+
+export default imageListStyles;

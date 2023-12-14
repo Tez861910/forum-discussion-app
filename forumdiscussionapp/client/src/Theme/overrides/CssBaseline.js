@@ -1,3 +1,4 @@
+import palette from '../palette';
 import logobg from '../logobg.jpg';
 
 const cssBaseline = {
@@ -5,9 +6,9 @@ const cssBaseline = {
         backgroundImage: `url(${logobg})`,
         backgroundSize: 'cover',
         backgroundRepeat: 'no-repeat',
-        color: '#ffffff', 
-      },
-      '@global': {
+        color: palette.palette.text.primary, 
+    },
+    '@global': {
         html: {
           WebkitFontSmoothing: 'auto',
         },
@@ -20,16 +21,16 @@ const cssBaseline = {
         },
         input: {
           '&::-webkit-input-placeholder': {
-            color: '#1a237e',
+            color: palette.palette.primary.main,
           },
           '&::-moz-placeholder': {
-            color: '#1a237e',
+            color: palette.palette.primary.main,
           },
           '&:-ms-input-placeholder': {
-            color: '#1a237e',
+            color: palette.palette.primary.main,
           },
           '&::placeholder': {
-            color: '#1a237e',
+            color: palette.palette.primary.main,
           },
         },
         '*': {
@@ -41,7 +42,7 @@ const cssBaseline = {
         '*::after': {
           boxSizing: 'border-box',
         },
-      },
+    },
 };
 
 export default cssBaseline;

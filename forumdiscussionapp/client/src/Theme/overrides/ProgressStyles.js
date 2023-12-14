@@ -1,22 +1,23 @@
+import palette from '../palette';
+
 const progressStyles = {
-MuiLinearProgress: {
+  MuiLinearProgress: {
     styleOverrides: {
       root: {
-        backgroundColor: '#1a237e',
+        backgroundColor: palette.palette.primary.main,
       },
       bar: {
-        backgroundColor: '#ffffff',
+        backgroundColor: palette.palette.text.primary,
       },
     },
   },
   MuiCircularProgress: {
     styleOverrides: {
       root: {
-        color: '#1a237e',
+        color: palette.palette.primary.main,
       },
     },
   },
 };
 
 export default progressStyles;
-  

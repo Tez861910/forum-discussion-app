@@ -1,52 +1,53 @@
+import palette from '../palette';
+
 const stepperStyles = {
-    defaultProps: {
-      MuiStepper: {
-        styleOverrides: {
-          root: {
-            backgroundColor: 'transparent', 
-            padding: '24px', 
-          },
+  defaultProps: {
+    MuiStepper: {
+      styleOverrides: {
+        root: {
+          backgroundColor: 'transparent', 
+          padding: '24px', 
         },
       },
-      MuiStep: {
-        styleOverrides: {
-          root: {
-            padding: '8px',
-          border: '1px solid #1a237e',
+    },
+    MuiStep: {
+      styleOverrides: {
+        root: {
+          padding: '8px',
+          border: `1px solid ${palette.palette.primary.main}`,
           borderRadius: '4px',
           margin: '4px',
           '&$completed': {
-            borderColor: '#9fa8da',
+            borderColor: palette.palette.grey[400],
           },
           '&$active': {
-            borderColor: '#3f51b5',
-            backgroundColor: '#e8eaf6',
+            borderColor: palette.palette.info.main,
+            backgroundColor: palette.palette.background.paper,
           },
         },
       },
     },
-      MuiStepLabel: {
-        styleOverrides: {
-          label: {
-            color: '#1a237e', 
-            '&$active': {
-              color: '#3f51b5', 
-            },
-            '&$completed': {
-              color: '#9fa8da', 
-            },
+    MuiStepLabel: {
+      styleOverrides: {
+        label: {
+          color: palette.palette.primary.main, 
+          '&$active': {
+            color: palette.palette.info.main, 
           },
-        },
-      },
-      MuiStepConnector: {
-        styleOverrides: {
-          line: {
-            borderColor: '#1a237e', 
+          '&$completed': {
+            color: palette.palette.grey[400], 
           },
         },
       },
     },
-  };
-  
-  export default stepperStyles;
-  
+    MuiStepConnector: {
+      styleOverrides: {
+        line: {
+          borderColor: palette.palette.primary.main, 
+        },
+      },
+    },
+  },
+};
+
+export default stepperStyles;
