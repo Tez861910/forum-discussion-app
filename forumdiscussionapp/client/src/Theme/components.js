@@ -24,6 +24,11 @@ import stackStyles from './overrides/StackStyles';
 import fabStyles from './overrides/FabStyles';
 import ratingStyles from './overrides/RatingStyles';
 import selectStyles from './overrides/SelectStyles';
+import sliderStyles from './overrides/SliderStyles';
+import switchStyles from './overrides/SwitchStyles';
+import transferListStyles from './overrides/TransferListStyles';
+import chipStyles from './overrides/ChipStyles';
+import svgIconStyles from './overrides/SvgIconStyles';
 
 const components = {
   MuiButton: {
@@ -107,6 +112,21 @@ const components = {
   MuiSelect: {
     styleOverrides: selectStyles,
   },
+  MuiSlider: {
+    styleOverrides: sliderStyles,
+  },
+  MuiSwitch: {
+    styleOverrides: switchStyles,
+  },
+  MuiTransferList: {
+    styleOverrides: transferListStyles,
+  }, 
+  MuiChip: {
+    styleOverrides: chipStyles,
+  },
+  MuiSvgIcon: {
+    styleOverrides: svgIconStyles,
+  },      
 };
 
 export default components;

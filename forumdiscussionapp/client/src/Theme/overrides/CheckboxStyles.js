@@ -1,7 +1,6 @@
 const checkboxStyles = {
     defaultProps: {
-      MuiCheckbox: {
-        styleOverrides: {
+     
           root: {
             color: '#1a237e',
           },
@@ -9,8 +8,7 @@ const checkboxStyles = {
             color: '#1a237e',
           },
         },
-      },
-    },
+      
   };
   
   export default checkboxStyles;
