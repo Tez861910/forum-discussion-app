@@ -29,6 +29,23 @@ import switchStyles from './overrides/SwitchStyles';
 import transferListStyles from './overrides/TransferListStyles';
 import chipStyles from './overrides/ChipStyles';
 import svgIconStyles from './overrides/SvgIconStyles';
+import tableStyles from './overrides/TableStyles';
+import tooltipStyles from './overrides/TooltipStyles';
+import backdropStyles from './overrides/BackdropStyles';
+import progressStyles from './overrides/ProgressStyles';
+import snackbarStyles from './overrides/SnackbarStyles';
+import paperStyles from './overrides/PaperStyles';
+import bottomNavigationStyles from './overrides/BottomNavigationStyles';
+import linkStyles from './overrides/LinkStyles';
+import menuStyles from './overrides/MenuStyles';
+import stepperStyles from './overrides/StepperStyles';
+import tabsStyles from './overrides/TabsStyles';
+import listItemStyles from './overrides/ListItemStyles';
+import modalStyles from './overrides/ModalStyles';
+import popoverStyles from './overrides/PopoverStyles';
+import popperStyles from './overrides/PopperStyles';
+import textareaAutosizeStyles from './overrides/TextareaAutosize';
+import transitionStyles from './overrides/TransitionStyles';
 
 const components = {
   MuiButton: {
@@ -126,7 +143,58 @@ const components = {
   },
   MuiSvgIcon: {
     styleOverrides: svgIconStyles,
-  },      
+  },
+  MuiTable: {
+    styleOverrides: tableStyles,
+  },
+  MuiTooltip: {
+    styleOverrides: tooltipStyles,
+  },  
+  MuiBackdrop: {
+    styleOverrides: backdropStyles,
+  }, 
+  MuiProgress:{
+    styleOverrides: progressStyles,
+  },
+  MuiSnackbar: {
+    styleOverrides: snackbarStyles,
+  },
+  MuiPaper: {
+    styleOverrides: paperStyles,
+  },
+  MuiBottomNavigation: {
+    styleOverrides: bottomNavigationStyles,
+  },
+  MuiLink: {
+    styleOverrides: linkStyles,
+  }, 
+  MuiMenu: {
+    styleOverrides: menuStyles,
+  },
+  MuiStepper: {
+    styleOverrides: stepperStyles,
+  }, 
+  MuiTabs: {
+    styleOverrides: tabsStyles,
+  },
+  MuiListItem: {
+    styleOverrides: listItemStyles,
+  }, 
+  MuiModal: {
+    styleOverrides: modalStyles,
+  },
+  MuiPopover: {
+    styleOverrides: popoverStyles,
+  }, 
+  MuiPopper: {
+    styleOverrides: popperStyles,
+  },  
+  MuiTextareaAutosize: {
+    styleOverrides: textareaAutosizeStyles,
+  },
+  MuiTransition: {
+    styleOverrides: transitionStyles,
+  },        
 };
 
 export default components;
