@@ -1,13 +1,17 @@
 import palette from '../palette';
 
+const primaryColor = palette.palette.default.primary.main;
+const contrastTextColor = palette.palette.default.primary.contrastText;
+const fontFamily = 'Roboto, Helvetica, Arial, sans-serif';
+
 const avatarStyles = {
     root: {
-        width: '48px',
-        height: '48px',
+        width: '3rem',
+        height: '3rem',
     },
     colorDefault: {
-        backgroundColor: palette.palette.default.primary.main,
-        color: palette.palette.default.primary.contrastText,
+        backgroundColor: primaryColor,
+        color: contrastTextColor,
     },
     img: {
         width: '100%',
@@ -18,7 +22,14 @@ const avatarStyles = {
     },
     fallback: {
         fontSize: '1rem',
-        fontFamily: 'Roboto, Helvetica, Arial, sans-serif',
+        fontFamily: fontFamily,
+    },
+    avatarGroup: { 
+        avatar: {
+            width: 48,
+            height: 48,
+            border: `2px solid ${primaryColor}`,
+        },
     },
 };
 

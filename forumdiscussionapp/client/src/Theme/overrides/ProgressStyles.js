@@ -11,6 +11,7 @@ const progressStyles = {
       },
     },
   },
+  
   MuiCircularProgress: {
     styleOverrides: {
       root: {

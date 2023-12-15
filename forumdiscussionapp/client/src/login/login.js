@@ -1,14 +1,25 @@
 import * as React from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import axios from 'axios';
-import { useCookies } from 'react-cookie'; 
-import { Button, Container, Grid, Typography, TextField, Box, Paper, Stack } from '@mui/material';
+import { useCookies } from 'react-cookie';
+import {
+  Button,
+  Container,
+  Grid,
+  Typography,
+  TextField,
+  Box,
+  Paper,
+  Stack,
+} from '@mui/material';
+import { useTheme } from '@mui/material/styles';
 
 const Login = () => {
   const [values, setValues] = React.useState({ email: '', password: '' });
   const [error, setError] = React.useState('');
   const navigate = useNavigate();
-  const [cookies, setCookie] = useCookies(['token']); 
+  const [cookies, setCookie] = useCookies(['token']);
+  const theme = useTheme(); 
 
   const handleInput = (event) => {
     const { name, value } = event.target;
@@ -16,14 +27,14 @@ const Login = () => {
   };
 
   const handleLoginSuccess = (data) => {
-    setCookie('token', data.token, { path: '/', sameSite: 'lax' }); 
-    console.log(`Token set: ${cookies.token}`); 
+    setCookie('token', data.token, { path: '/', sameSite: 'lax' });
+    console.log(`Token set: ${cookies.token}`);
     localStorage.setItem('userId', data.userId);
     localStorage.setItem('roleId', data.roleId);
 
     navigate('/home');
   };
-  
+
   const handleSubmit = async (event) => {
     event.preventDefault();
     try {
@@ -46,14 +57,39 @@ const Login = () => {
   };
 
   return (
-    <Container component="main" maxWidth="xs" sx={{ display: 'flex', alignItems: 'center', justifyContent: 'center', height: '100vh' }}>
-      <Paper elevation={3} sx={{ p: 3, backgroundColor: 'background.paper', borderRadius: 2, opacity: 0.9, transition: 'opacity .3s', '&:hover': { opacity: 1 } }}>
+    <Container
+      component="main"
+      maxWidth="xs"
+      sx={{
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'center',
+        height: '100vh',
+      }}
+    >
+      <Paper
+        elevation={3}
+        sx={{
+          p: 3,
+          backgroundColor: theme.palette.background.paper,
+          borderRadius: 2,
+          opacity: 0.9,
+          transition: 'opacity .3s',
+          '&:hover': { opacity: 1 },
+        }}
+      >
         <Stack spacing={2} justifyContent="center" alignItems="center">
           <Grid item xs={12}>
-            <Typography component="h2" variant="h5">
+            <Typography
+              component="h2"
+              variant="h5"
+              sx={{ color: theme.palette.primary.main }}
+            >
               Sign-In
             </Typography>
-            {error && <Box sx={{ color: 'red' }}>{error}</Box>}
+            {error && (
+              <Box sx={{ color: theme.palette.error.main }}>{error}</Box>
+            )}
             <form onSubmit={handleSubmit}>
               {['email', 'password'].map((field) => (
                 <Grid item xs={12} key={field}>
@@ -69,7 +105,20 @@ const Login = () => {
                     autoComplete={field === 'email' ? 'email' : 'current-password'}
                     value={values[field]}
                     onChange={handleInput}
-                    sx={{ '.MuiInputBase-input': { fontSize: '1rem' }, '.MuiOutlinedInput-root': { '& fieldset': { borderColor: 'primary.main' }, '&:hover fieldset': { borderColor: 'secondary.main' }, '&.Mui-focused fieldset': { borderColor: 'primary.main' } } }}
+                    sx={{
+                      '.MuiInputBase-input': { fontSize: '1rem' },
+                      '.MuiOutlinedInput-root': {
+                        '& fieldset': {
+                          borderColor: theme.palette.primary.main,
+                        },
+                        '&:hover fieldset': {
+                          borderColor: theme.palette.secondary.main,
+                        },
+                        '&.Mui-focused fieldset': {
+                          borderColor: theme.palette.primary.main,
+                        },
+                      },
+                    }}
                   />
                 </Grid>
               ))}
@@ -105,6 +154,5 @@ const Login = () => {
     </Container>
   );
 };
-  
-  export default Login;
-  
+
+export default Login;

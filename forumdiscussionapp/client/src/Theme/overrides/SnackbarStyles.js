@@ -1,26 +1,34 @@
 import palette from '../palette';
 
+const primaryMainColor = palette.palette.default.primary.main;
+
 const snackbarStyles = {
   root: {
-    backgroundColor: palette.palette.default.primary.main,
+    backgroundColor: primaryMainColor,
   },
+  
   anchorOriginTopCenter: {
-    backgroundColor: palette.palette.default.primary.main,
+    backgroundColor: primaryMainColor,
   },
+  
   anchorOriginBottomCenter: {
-    backgroundColor: palette.palette.default.primary.main,
+    backgroundColor: primaryMainColor,
   },
+  
   anchorOriginTopRight: {
-    backgroundColor: palette.palette.default.primary.main,
+    backgroundColor: primaryMainColor,
   },
+  
   anchorOriginBottomRight: {
-    backgroundColor: palette.palette.default.primary.main,
+    backgroundColor: primaryMainColor,
   },
+  
   anchorOriginTopLeft: {
-    backgroundColor: palette.palette.default.primary.main,
+    backgroundColor: primaryMainColor,
   },
+  
   anchorOriginBottomLeft: {
-    backgroundColor: palette.palette.default.primary.main,
+    backgroundColor: primaryMainColor,
   },
 };
 

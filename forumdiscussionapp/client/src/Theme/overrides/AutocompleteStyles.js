@@ -1,47 +1,54 @@
 import palette from '../palette';
 
+const primaryColor = palette.palette.default.primary.main;
+const secondaryColor = palette.palette.default.secondary.main;
+const contrastTextColor = palette.palette.default.primary.contrastText;
+const backgroundColorPaper = palette.palette.default.background.paper;
+
 const autocompleteStyles = {
     root: {
         '& .MuiOutlinedInput-root': {
           '&.Mui-focused fieldset': {
-            borderColor: palette.palette.default.primary.main,
+            borderColor: primaryColor,
           },
         },
       },
       inputRoot: {
         '&.MuiOutlinedInput-root': {
           '& fieldset': {
-            borderColor: palette.palette.default.secondary.main,
+            borderColor: secondaryColor,
           },
           '&:hover fieldset': {
-            borderColor: palette.palette.default.primary.main,
+            borderColor: primaryColor,
           },
           '&.Mui-focused fieldset': {
-            borderColor: palette.palette.default.primary.main,
+            borderColor: primaryColor,
           },
         },
       },
       listbox: {
-        backgroundColor: palette.palette.default.background.paper,
-        color: palette.palette.default.text.primary,
+        backgroundColor: backgroundColorPaper,
+        color: contrastTextColor, 
       },
       option: {
         '&[data-focus="true"]': {
-          backgroundColor: palette.palette.default.primary.main,
+          backgroundColor: primaryColor,
+          color: contrastTextColor, 
         },
         '&[aria-selected="true"]': {
-          backgroundColor: palette.palette.default.secondary.main,
+          backgroundColor: secondaryColor,
+          color: contrastTextColor, 
         },
       },
       groupLabel: {
-        backgroundColor: palette.palette.default.background.paper,
-        color: palette.palette.default.text.primary,
+        backgroundColor: backgroundColorPaper,
+        color: contrastTextColor, 
       },
       popupIndicator: {
-        color: palette.palette.default.primary.main,
+        color: primaryColor,
       },
       clearIndicator: {
-        color: palette.palette.default.secondary.main,
+        color: secondaryColor,
       },
 };
 

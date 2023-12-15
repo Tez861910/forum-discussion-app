@@ -1,14 +1,17 @@
 import palette from '../palette';
 
+const primaryColor = palette.palette.default.primary.main;
+const textColorPrimary = palette.palette.default.text.primary;
+
 const chipStyles = {
     root: {
-        color: palette.palette.default.primary.main,
+        color: primaryColor,
     },
     label: {
-        color: palette.palette.default.text.primary,
+        color: textColorPrimary,
     },
     deleteIcon: {
-        color: palette.palette.default.primary.main,
+        color: primaryColor,
     },
 };
 

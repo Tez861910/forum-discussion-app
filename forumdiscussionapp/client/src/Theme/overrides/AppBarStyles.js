@@ -1,9 +1,12 @@
 import palette from '../palette';
 
+const primaryColor = palette.palette.default.primary.main;
+const contrastTextColor = palette.palette.default.primary.contrastText;
+
 const appBarStyles = {
     root: {
-      backgroundColor: palette.palette.default.primary.main,
-      color: palette.palette.default.primary.contrastText,
+      backgroundColor: primaryColor,
+      color: contrastTextColor,
     },
     defaultProps: {
       MuiToolbar: {
@@ -13,20 +16,20 @@ const appBarStyles = {
             justifyContent: 'space-between',
           },
           gutters: {
-            paddingLeft: '16px',
-            paddingRight: '16px',
+            paddingLeft: '1rem',
+            paddingRight: '1rem',
           },
           regular: {
-            minHeight: '64px',
+            minHeight: '4rem',
             '@media (min-width:0px) and (orientation: landscape)': {
-              minHeight: '56px',
+              minHeight: '3.5rem',
             },
             '@media (min-width:600px)': {
-              minHeight: '64px',
+              minHeight: '4rem',
             },
           },
           dense: {
-            minHeight: '48px',
+            minHeight: '3rem',
           },
         },
       },

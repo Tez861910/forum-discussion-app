@@ -1,5 +1,8 @@
 import palette from '../palette';
 
+const backgroundColorDefault = palette.palette.default.background.default;
+const textColorPrimary = palette.palette.default.text.primary;
+
 const imageListStyles = {
     defaultProps: {
       MuiImageList: {
@@ -7,8 +10,8 @@ const imageListStyles = {
           root: {
             display: 'grid',
             gridTemplateColumns: 'repeat(auto-fill, minmax(200px, 1fr))',
-            gap: '10px',
-            backgroundColor: palette.palette.default.background.default, 
+            gap: '0.625rem',
+            backgroundColor: backgroundColorDefault, 
           },
         },
       },
@@ -17,7 +20,7 @@ const imageListStyles = {
           root: {
             listStyle: 'none',
             height: 'auto',
-            color: palette.palette.default.text.primary, 
+            color: textColorPrimary, 
           },
           imgFullHeight: {
             height: '100%',

@@ -1,31 +1,37 @@
 import palette from '../palette';
 
+const primaryMainColor = palette.palette.default.primary.main;
+const textPrimaryColor = palette.palette.default.text.primary;
+
 const transferListStyles = {
   MuiList: {
     styleOverrides: {
       root: {
-        backgroundColor: palette.palette.default.primary.main,
+        backgroundColor: primaryMainColor,
       },
     },
   },
+  
   MuiListItem: {
     styleOverrides: {
       root: {
-        color: palette.palette.default.text.primary,
+        color: textPrimaryColor,
       },
     },
   },
+  
   MuiCheckbox: {
     styleOverrides: {
       root: {
-        color: palette.palette.default.primary.main,
+        color: primaryMainColor,
       },
     },
   },
+  
   MuiButton: {
     styleOverrides: {
       root: {
-        color: palette.palette.default.primary.main,
+        color: primaryMainColor,
       },
     },
   },

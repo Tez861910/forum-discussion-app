@@ -1,32 +1,38 @@
 import palette from '../palette';
 
+const paperColor = palette.palette.default.background.paper;
+const infoMainColor = palette.palette.default.info.main;
+const primaryMainColor = palette.palette.default.primary.main;
+const secondaryMainColor = palette.palette.default.secondary.main;
+
 const tabsStyles = {
   defaultProps: {
     MuiTabs: {
       styleOverrides: {
         root: {
-          backgroundColor: palette.palette.default.background.paper, 
+          backgroundColor: paperColor, 
           minHeight: 48, 
         },
         indicator: {
-          backgroundColor: palette.palette.default.info.main, 
+          backgroundColor: infoMainColor, 
         },
       },
     },
+    
     MuiTab: {
       styleOverrides: {
         root: {
           textTransform: 'none',
           minWidth: 72, 
           '&:hover': {
-            color: palette.palette.default.primary.main, 
+            color: primaryMainColor, 
             opacity: 1,
           },
           '&$selected': {
-            color: palette.palette.default.secondary.main,
+            color: secondaryMainColor,
           },
           '&:focus': {
-            color: palette.palette.default.secondary.main,
+            color: secondaryMainColor,
           },
         },
       },

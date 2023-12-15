@@ -1,5 +1,9 @@
 import palette from '../palette';
 
+const primaryMainColor = palette.palette.default.primary.main;
+const textPrimaryColor = palette.palette.default.text.primary;
+const infoMainColor = palette.palette.default.info.main;
+
 const speedDialStyles = {
   root: {
     position: 'fixed',
@@ -12,28 +16,35 @@ const speedDialStyles = {
       left: '16px',
     },
   },
+  
   fab: {
-    backgroundColor: palette.palette.default.primary.main,
-    color: palette.palette.default.text.primary,
+    backgroundColor: primaryMainColor,
+    color: textPrimaryColor,
     '&:hover': {
-      backgroundColor: palette.palette.default.info.main,
+      backgroundColor: infoMainColor,
     },
   },
+  
   directionUp: {
     transform: 'rotate(45deg)',
   },
+  
   directionRight: {
     transform: 'rotate(135deg)',
   },
+  
   directionDown: {
     transform: 'rotate(-45deg)',
   },
+  
   directionLeft: {
     transform: 'rotate(-135deg)',
   },
+  
   actions: {
     zIndex: 1,
   },
+  
   actionsClosed: {
     transition: 'top 0s 0.2s',
   },

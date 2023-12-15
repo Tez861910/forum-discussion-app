@@ -1,26 +1,32 @@
 import palette from '../palette';
 
+const primaryColor = palette.palette.default.primary.main;
+const secondaryColor = palette.palette.default.secondary.main;
+const contrastTextColor = palette.palette.default.primary.contrastText;
+const backgroundColor = palette.palette.default.background.default;
+const textColor = palette.palette.default.text.primary;
+
 const accordionStyles = {
   root: {
-    margin: '16px 0',
+    margin: '1rem 0',
     '&.Mui-expanded': {
-      margin: '16px 0',
+      margin: '1rem 0',
     },
   },
   rounded: {
-    borderRadius: '4px',
+    borderRadius: '0.25rem',
   },
   gutters: {
-    padding: '0 16px',
+    padding: '0 1rem',
   },
   defaultProps: {
     MuiAccordionSummary: {
       styleOverrides: {
         root: {
-          backgroundColor: palette.palette.default.primary.main,
-          color: palette.palette.default.primary.contrastText,
+          backgroundColor: primaryColor,
+          color: contrastTextColor,
           '&:hover': {
-            backgroundColor: palette.palette.default.secondary.main,
+            backgroundColor: secondaryColor,
           },
         },
       },
@@ -28,8 +34,8 @@ const accordionStyles = {
     MuiAccordionDetails: {
       styleOverrides: {
         root: {
-          backgroundColor: palette.palette.default.background.default,
-          color: palette.palette.default.text.primary,
+          backgroundColor: backgroundColor,
+          color: textColor,
         },
       },
     },

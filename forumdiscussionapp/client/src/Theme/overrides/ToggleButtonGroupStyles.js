@@ -1,12 +1,17 @@
 import palette from '../palette';
 
+// Define the repeated color values
+const primaryMainColor = palette.palette.default.primary.main;
+const textPrimaryColor = palette.palette.default.text.primary;
+
 const toggleButtonGroupStyles = {
   root: {
     display: 'flex',
     borderRadius: '8px',
     overflow: 'hidden',
-    backgroundColor: palette.palette.default.primary.main, 
+    backgroundColor: primaryMainColor, 
   },
+  
   grouped: {
     '&:not(:first-path)': {
       borderTopLeftRadius: '0',
@@ -16,8 +21,9 @@ const toggleButtonGroupStyles = {
       borderTopRightRadius: '0',
       borderBottomRightRadius: '0',
     },
-    color: palette.palette.default.text.primary, 
+    color: textPrimaryColor, 
   },
+  
   groupedHorizontal: {
     '&:not(:first-path)': {
       marginLeft: '-1px',
@@ -29,6 +35,7 @@ const toggleButtonGroupStyles = {
       borderBottomRightRadius: '0',
     },
   },
+  
   groupedVertical: {
     '&:not(:first-path)': {
       marginTop: '-1px',

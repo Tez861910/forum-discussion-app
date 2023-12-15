@@ -1,5 +1,9 @@
 import palette from '../palette';
 
+const primaryColor = palette.palette.default.primary.main;
+const textColor = palette.palette.default.text.primary;
+const infoColor = palette.palette.default.info.main;
+
 const paginationStyles = {
   root: {
     display: 'flex',
@@ -13,28 +17,28 @@ const paginationStyles = {
     MuiPaginationItem: {
       styleOverrides: {
         root: {
-          color: palette.palette.default.primary.main, 
+          color: primaryColor, 
         },
         page: {
           '&.Mui-selected': {
-            backgroundColor: palette.palette.default.primary.main, 
-            color: palette.palette.default.text.primary, 
+            backgroundColor: primaryColor, 
+            color: textColor, 
             '&:hover': {
-              backgroundColor: palette.palette.default.info.main, 
+              backgroundColor: infoColor, 
             },
           },
         },
         previous: {
-          color: palette.palette.default.primary.main, 
+          color: primaryColor, 
         },
         next: {
-          color: palette.palette.default.primary.main,
+          color: primaryColor,
         },
         first: {
-          color: palette.palette.default.primary.main,
+          color: primaryColor,
         },
         last: {
-          color: palette.palette.default.primary.main,
+          color: primaryColor,
         },
       },
     },

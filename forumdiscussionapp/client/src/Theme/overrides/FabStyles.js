@@ -1,26 +1,30 @@
 import palette from '../palette';
 
+const primaryColor = palette.palette.default.primary.main;
+const secondaryColor = palette.palette.default.secondary.main;
+const contrastTextColor = palette.palette.default.primary.contrastText;
+
 const fabStyles = {
     defaultProps: {
       MuiFab: {
         styleOverrides: {
           root: {
-            backgroundColor: palette.palette.default.primary.main,
-            color: palette.palette.default.primary.contrastText,
+            backgroundColor: primaryColor,
+            color: contrastTextColor,
             '&:hover': {
-              backgroundColor: palette.palette.default.secondary.main,
+              backgroundColor: secondaryColor,
             },
           },
           primary: {
-            backgroundColor: palette.palette.default.primary.main,
+            backgroundColor: primaryColor,
             '&:hover': {
-              backgroundColor: palette.palette.default.secondary.main,
+              backgroundColor: secondaryColor,
             },
           },
           secondary: {
-            backgroundColor: palette.palette.default.secondary.main,
+            backgroundColor: secondaryColor,
             '&:hover': {
-              backgroundColor: palette.palette.default.primary.main,
+              backgroundColor: primaryColor,
             },
           },
         },
@@ -28,9 +32,9 @@ const fabStyles = {
           {
             props: { variant: 'extended' },
             style: {
-              backgroundColor: palette.palette.default.primary.main,
+              backgroundColor: primaryColor,
               '&:hover': {
-                backgroundColor: palette.palette.default.secondary.main,
+                backgroundColor: secondaryColor,
               },
             },
           },

@@ -1,5 +1,7 @@
 import palette from '../palette';
 
+const shrinkTransform = (x, y, scale) => `translate(${x}, ${y}) scale(${scale})`;
+
 const inputLabelStyles = {
     root: {
         color: palette.palette.default.secondary.main,
@@ -16,7 +18,7 @@ const inputLabelStyles = {
         marginTop: '8px',
     },
     shrink: {
-        transform: 'translate(0, 1.5px) scale(0.75)',
+        transform: shrinkTransform(0, '1.5px', 0.75),
         transformOrigin: 'top left',
     },
     animated: {
@@ -24,12 +26,12 @@ const inputLabelStyles = {
     },
     filled: {
         '&$shrink': {
-          transform: 'translate(12px, 7px) scale(0.75)',
+          transform: shrinkTransform('12px', '7px', 0.75),
         },
     },
     outlined: {
         '&$shrink': {
-          transform: 'translate(14px, -6px) scale(0.75)',
+          transform: shrinkTransform('14px', '-6px', 0.75),
         },
     },
 };

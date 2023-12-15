@@ -1,46 +1,55 @@
 import palette from '../palette';
 
+const primaryMainColor = palette.palette.default.primary.main;
+const greyColor = palette.palette.default.grey[400];
+
 const radioStyles = {
   defaultProps: {
     MuiRadio: {
       styleOverrides: {
         root: {
-          color: palette.palette.default.primary.main,
+          color: primaryMainColor,
           '&$checked': {
-            color: palette.palette.default.primary.main,
+            color: primaryMainColor,
           },
         },
+        
         colorSecondary: {
           '&$checked': {
-            color: palette.palette.default.primary.main,
+            color: primaryMainColor,
           },
           '&$disabled': {
-            color: palette.palette.default.grey[400],
+            color: greyColor,
           },
         },
+        
         colorPrimary: {
           '&$checked': {
-            color: palette.palette.default.primary.main,
+            color: primaryMainColor,
           },
           '&$disabled': {
-            color: palette.palette.default.grey[400],
+            color: greyColor,
           },
         },
       },
     },
+    
     MuiFormControlLabel: {
       styleOverrides: {
         root: {
-          color: palette.palette.default.primary.main,
+          color: primaryMainColor,
         },
+        
         label: {
-          color: palette.palette.default.primary.main,
+          color: primaryMainColor,
         },
+        
         disabled: {
-          color: palette.palette.default.grey[400],
+          color: greyColor,
         },
       },
     },
+    
     MuiRadioGroup: {
       styleOverrides: {
         root: {

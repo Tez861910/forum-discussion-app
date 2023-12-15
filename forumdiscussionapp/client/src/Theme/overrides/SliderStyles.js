@@ -1,26 +1,34 @@
 import palette from '../palette';
 
+const primaryMainColor = palette.palette.default.primary.main;
+
 const sliderStyles = {
   root: {
-    color: palette.palette.default.primary.main,
+    color: primaryMainColor,
   },
+  
   thumb: {
-    color: palette.palette.default.primary.main,
+    color: primaryMainColor,
   },
+  
   track: {
-    color: palette.palette.default.primary.main,
+    color: primaryMainColor,
   },
+  
   rail: {
-    color: palette.palette.default.primary.main,
+    color: primaryMainColor,
   },
+  
   mark: {
-    color: palette.palette.default.primary.main,
+    color: primaryMainColor,
   },
+  
   markLabel: {
-    color: palette.palette.default.primary.main,
+    color: primaryMainColor,
   },
+  
   valueLabel: {
-    color: palette.palette.default.primary.main,
+    color: primaryMainColor,
   },
 };
 

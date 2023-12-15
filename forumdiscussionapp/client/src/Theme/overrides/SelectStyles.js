@@ -1,35 +1,37 @@
 import palette from '../palette';
 
+const primaryMainColor = palette.palette.default.primary.main;
+
 const selectStyles = {
   defaultProps: {
     MuiSelect: {
       styleOverrides: {
         root: {
-          color: palette.palette.default.primary.main,
+          color: primaryMainColor,
         },
         icon: {
-          color: palette.palette.default.primary.main,
+          color: primaryMainColor,
         },
       },
     },
     MuiOutlinedInput: {
       styleOverrides: {
         root: {
-          color: palette.palette.default.primary.main,
+          color: primaryMainColor,
         },
       },
     },
     MuiInput: {
       styleOverrides: {
         root: {
-          color: palette.palette.default.primary.main,
+          color: primaryMainColor,
         },
       },
     },
     MuiFilledInput: {
       styleOverrides: {
         root: {
-          color: palette.palette.default.primary.main,
+          color: primaryMainColor,
         },
       },
     },

@@ -1,35 +1,44 @@
 import palette from '../palette';
 
+const primaryMainColor = palette.palette.default.primary.main;
+const textPrimaryColor = palette.palette.default.text.primary;
+const infoMainColor = palette.palette.default.info.main;
+const grey200Color = palette.palette.default.grey[200];
+const grey400Color = palette.palette.default.grey[400];
+
 const toggleButtonStyles = {
   root: {
     textTransform: 'none',
     borderRadius: '8px',
     padding: '12px 24px',
-    color: palette.palette.default.primary.main,
+    color: primaryMainColor,
     '&.Mui-selected': {
-      backgroundColor: palette.palette.default.primary.main,
-      color: palette.palette.default.text.primary,
+      backgroundColor: primaryMainColor,
+      color: textPrimaryColor,
       '&:hover': {
-        backgroundColor: palette.palette.default.info.main,
+        backgroundColor: infoMainColor,
       },
     },
     '&:hover': {
-      backgroundColor: palette.palette.default.grey[200],
+      backgroundColor: grey200Color,
     },
     '&.Mui-disabled': {
-      color: palette.palette.default.grey[400],
+      color: grey400Color,
     },
   },
+  
   sizeSmall: {
     padding: '8px 16px',
     fontSize: '0.8125rem',
   },
+  
   sizeLarge: {
     padding: '16px 32px',
     fontSize: '0.9375rem',
   },
+  
   label: {
-    color: palette.palette.default.primary.main,
+    color: primaryMainColor,
   },
 };
 

@@ -1,66 +1,74 @@
 import palette from '../palette';
 
+const primaryTextColor = palette.palette.default.text.primary;
+const backgroundColorDefault = palette.palette.default.background.default;
+
+const successColor = palette.palette.default.success.main;
+const infoColor = palette.palette.default.info.main;
+const warningColor = palette.palette.default.warning.main;
+const errorColor = palette.palette.default.error.main;
+
 const alertStyles = {
   root: {
       width: '100%',
-      borderRadius: '4px',
+      borderRadius: '0.25rem',
   },
   message: {
-      padding: '8px 0',
+      padding: '0.5rem 0',
   },
   action: {
       alignItems: 'flex-start',
   },
   icon: {
-      padding: '7px 0',
+      padding: '0.4375rem 0',
   },
   filledSuccess: {
-      color: palette.palette.default.text.primary,
-      backgroundColor: palette.palette.default.success.main,
+      color: primaryTextColor,
+      backgroundColor: successColor,
   },
   filledInfo: {
-      color: palette.palette.default.text.primary,
-      backgroundColor: palette.palette.default.info.main,
+      color: primaryTextColor,
+      backgroundColor: infoColor,
   },
   filledWarning: {
-      color: palette.palette.default.text.primary,
-      backgroundColor: palette.palette.default.warning.main,
+      color: primaryTextColor,
+      backgroundColor: warningColor,
   },
   filledError: {
-      color: palette.palette.default.text.primary,
-      backgroundColor: palette.palette.default.error.main,
+      color: primaryTextColor,
+      backgroundColor: errorColor,
   },
   outlinedSuccess: {
-      color: palette.palette.default.success.main,
-      borderColor: palette.palette.default.success.main,
+      color: successColor,
+      borderColor: successColor,
   },
   outlinedInfo: {
-      color: palette.palette.default.info.main,
-      borderColor: palette.palette.default.info.main,
+      color: infoColor,
+      borderColor: infoColor,
   },
   outlinedWarning: {
-      color: palette.palette.default.warning.main,
-      borderColor: palette.palette.default.warning.main,
+      color: warningColor,
+      borderColor: warningColor,
   },
   outlinedError: {
-      color: palette.palette.default.error.main,
-      borderColor: palette.palette.default.error.main,
+      color: errorColor,
+      borderColor: errorColor,
   },
   standardSuccess: {
-      color: palette.palette.default.success.main,
-      backgroundColor: palette.palette.default.background.default,
+      color: successColor,
+      backgroundColor: backgroundColorDefault,
   },
   standardInfo: {
-      color: palette.palette.default.info.main,
-      backgroundColor: palette.palette.default.background.default,
+      color: infoColor,
+      backgroundColor: backgroundColorDefault,
   },
   standardWarning: {
-      color: palette.palette.default.warning.main,
-      backgroundColor: palette.palette.default.background.default,
+      color: warningColor,
+      backgroundColor: backgroundColorDefault,
   },
   standardError: {
-      color: palette.palette.default.error.main,
-      backgroundColor: palette.palette.default.background.default,
+      color: errorColor,
+      backgroundColor: backgroundColorDefault,
   },
 };
 

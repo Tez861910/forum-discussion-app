@@ -1,23 +1,34 @@
 import palette from '../palette';
 
+const primaryMainColor = palette.palette.default.primary.main;
+const secondaryMainColor = palette.palette.default.secondary.main;
+const actionActiveColor = palette.palette.default.action.active;
+const errorMainColor = palette.palette.default.error.main;
+const actionDisabledColor = palette.palette.default.action.disabled;
+
 const svgIconStyles = {
   root: {
-    color: palette.palette.default.primary.main,
+    color: primaryMainColor,
   },
+  
   colorPrimary: {
-    color: palette.palette.default.primary.main,
+    color: primaryMainColor,
   },
+  
   colorSecondary: {
-    color: palette.palette.default.secondary.main,
+    color: secondaryMainColor,
   },
+  
   colorAction: {
-    color: palette.palette.default.action.active,
+    color: actionActiveColor,
   },
+  
   colorError: {
-    color: palette.palette.default.error.main,
+    color: errorMainColor,
   },
+  
   colorDisabled: {
-    color: palette.palette.default.action.disabled,
+    color: actionDisabledColor,
   },
 };
 

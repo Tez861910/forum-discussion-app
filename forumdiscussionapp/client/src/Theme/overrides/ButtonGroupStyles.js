@@ -1,10 +1,12 @@
 import palette from '../palette';
 
+const backgroundColorDefault = palette.palette.default.background.default;
+
 const buttonGroupStyles = {
     root: {
         display: 'inline-flex',
-        borderRadius: '8px',
-        backgroundColor: palette.palette.default.background.default,
+        borderRadius: '0.5rem',
+        backgroundColor: backgroundColorDefault,
     },
     grouped: {
         '&:not(:first-of-type)': {

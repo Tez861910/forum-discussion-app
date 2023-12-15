@@ -1,33 +1,39 @@
 import palette from '../palette';
 
+const primaryMainColor = palette.palette.default.primary.main;
+const textPrimaryColor = palette.palette.default.text.primary;
+
 const tableStyles = {
   defaultProps: {
     MuiTable: {
       styleOverrides: {
         root: {
-          backgroundColor: palette.palette.default.primary.main,
+          backgroundColor: primaryMainColor,
         },
       },
     },
+    
     MuiTableCell: {
       styleOverrides: {
         root: {
-          color: palette.palette.default.text.primary,
+          color: textPrimaryColor,
         },
       },
     },
+    
     MuiTableHead: {
       styleOverrides: {
         root: {
-          backgroundColor: palette.palette.default.primary.main,
+          backgroundColor: primaryMainColor,
         },
       },
     },
+    
     MuiTableRow: {
       styleOverrides: {
         root: {
           '&:nth-of-type(odd)': {
-            backgroundColor: palette.palette.default.primary.main,
+            backgroundColor: primaryMainColor,
           },
         },
       },

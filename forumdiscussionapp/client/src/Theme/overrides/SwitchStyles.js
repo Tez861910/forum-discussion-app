@@ -1,24 +1,30 @@
 import palette from '../palette';
 
+const primaryMainColor = palette.palette.default.primary.main;
+
 const switchStyles = {
   root: {
-    color: palette.palette.default.primary.main,
+    color: primaryMainColor,
   },
+  
   switchBase: {
-    color: palette.palette.default.primary.main,
+    color: primaryMainColor,
     '&.Mui-checked': {
-      color: palette.palette.default.primary.main,
+      color: primaryMainColor,
     },
     '&.Mui-checked + .MuiSwitch-track': {
-      backgroundColor: palette.palette.default.primary.main,
+      backgroundColor: primaryMainColor,
     },
   },
+  
   thumb: {
-    color: palette.palette.default.primary.main,
+    color: primaryMainColor,
   },
+  
   track: {
-    backgroundColor: palette.palette.default.primary.main,
+    backgroundColor: primaryMainColor,
   },
+  
   checked: {},
 };
 

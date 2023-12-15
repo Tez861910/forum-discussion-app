@@ -1,21 +1,24 @@
 import palette from '../palette';
 
+const primaryColor = palette.palette.default.primary.main;
+const textColorPrimary = palette.palette.default.text.primary;
+
 const bottomNavigationStyles = {
     defaultProps: {
       MuiBottomNavigation: {
         styleOverrides: {
           root: {
-            backgroundColor: palette.palette.default.primary.main,
+            backgroundColor: primaryColor,
           },
         },
       },
       MuiBottomNavigationAction: {
         styleOverrides: {
           root: {
-            color: palette.palette.default.primary.main,
+            color: primaryColor,
           },
           selected: {
-            color: palette.palette.default.text.primary,
+            color: textColorPrimary,
           },
         },
       },

@@ -1,28 +1,34 @@
 import palette from '../palette';
 
+const primaryColor = palette.palette.default.primary.main;
+const secondaryColor = palette.palette.default.secondary.main;
+const backgroundColor = palette.palette.default.background.default;
+const paperColor = palette.palette.default.background.paper;
+const textColor = palette.palette.default.text.primary;
+
 const listStyles = {
     root: {
       width: '100%',
-      backgroundColor: palette.palette.default.background.paper,
-      color: palette.palette.default.text.primary,
+      backgroundColor: paperColor,
+      color: textColor,
     },
     defaultProps: {
       MuiListItem: {
         styleOverrides: {
           root: {
             '&.Mui-selected': {
-              backgroundColor: palette.palette.default.primary.main,
+              backgroundColor: primaryColor,
               '&:hover': {
-                backgroundColor: palette.palette.default.secondary.main,
+                backgroundColor: secondaryColor,
               },
             },
             '&:hover': {
-              backgroundColor: palette.palette.default.background.default,
+              backgroundColor: backgroundColor,
             },
           },
           button: {
             '&:hover': {
-              backgroundColor: palette.palette.default.background.default,
+              backgroundColor: backgroundColor,
             },
           },
         },
@@ -30,22 +36,22 @@ const listStyles = {
       MuiListItemIcon: {
         styleOverrides: {
           root: {
-            color: palette.palette.default.text.primary,
+            color: textColor,
           },
         },
       },
       MuiListItemText: {
         styleOverrides: {
           root: {
-            color: palette.palette.default.text.primary,
+            color: textColor,
           },
         },
       },
       MuiListSubheader: {
         styleOverrides: {
           root: {
-            color: palette.palette.default.text.primary,
-            backgroundColor: palette.palette.default.primary.main,
+            color: textColor,
+            backgroundColor: primaryColor,
           },
         },
       },

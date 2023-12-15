@@ -1,11 +1,15 @@
 import palette from '../palette';
 
+const primaryMainColor = palette.palette.default.primary.main;
+const textPrimaryColor = palette.palette.default.text.primary;
+
 const stackStyles = {
   root: {
     display: 'flex',
     alignItems: 'center',
     justifyContent: 'space-between',
   },
+  
   defaultProps: {
     MuiBox: {
       styleOverrides: {
@@ -16,15 +20,17 @@ const stackStyles = {
         },
       },
     },
+    
     MuiContainer: {
       styleOverrides: {
         root: {
           padding: '16px',
-          backgroundColor: palette.palette.default.primary.main,
-          color: palette.palette.default.text.primary,
+          backgroundColor: primaryMainColor,
+          color: textPrimaryColor,
         },
       },
     },
+    
     MuiGrid: {
       styleOverrides: {
         root: {

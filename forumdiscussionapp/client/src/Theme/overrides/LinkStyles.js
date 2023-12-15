@@ -1,8 +1,10 @@
 import palette from '../palette';
 
+const primaryColor = palette.palette.default.primary.main;
+
 const linkStyles = {
     root: {
-        color: palette.palette.default.primary.main,
+        color: primaryColor,
     },
     underlineHover: {
         textDecoration: 'underline',
@@ -11,7 +13,7 @@ const linkStyles = {
         textDecoration: 'underline',
     },
     button: {
-        color: palette.palette.default.primary.main,
+        color: primaryColor,
     },
 };
 

@@ -34,7 +34,7 @@ const Navbar = ({
         <IconButton edge="start" color="inherit" aria-label="menu" sx={{ mr: 2 }} onClick={handleDrawerToggle}>
           <MenuIcon />
         </IconButton>
-        <Typography variant="h6" color="inherit" component="div" sx={{ flexGrow: 1 , mr: 2 }}>
+        <Typography variant="h5" color="inherit" component="div" sx={{ flexGrow: 1 , mr: 2 }}>
           {getRoleHeaderText(roleId)}
         </Typography>
         <ButtonGroup variant="contained" color="secondary" aria-label="outlined primary button group" sx={{ '& .MuiButton-root': { mx: 1 }, flexDirection: matches ? 'row' : 'column' }}>

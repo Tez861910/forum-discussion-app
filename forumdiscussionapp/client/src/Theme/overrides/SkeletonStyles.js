@@ -1,27 +1,36 @@
 import palette from '../palette';
 
+const greyColor = palette.palette.default.grey[200];
+const pulseAnimation = '$pulse 1.5s ease-in-out 0.5s infinite';
+const waveAnimation = '$wave 1.6s linear 0.5s infinite';
+
 const skeletonStyles = {
   root: {
-    backgroundColor: palette.palette.default.grey[200],
+    backgroundColor: greyColor,
   },
+  
   text: {
     transform: 'scale(1, 0.60)',
   },
+  
   circle: {
     borderRadius: '50%',
   },
+  
   rect: {
     borderRadius: '4px',
   },
+  
   pulse: {
-    animation: '$pulse 1.5s ease-in-out 0.5s infinite',
+    animation: pulseAnimation,
   },
+  
   wave: {
     position: 'relative',
     overflow: 'hidden',
     '&::after': {
-      animation: '$wave 1.6s linear 0.5s infinite',
-      background: `linear-gradient(90deg, transparent, ${palette.palette.default.grey[200]}, transparent)`,
+      animation: waveAnimation,
+      background: `linear-gradient(90deg, transparent, ${greyColor}, transparent)`,
       content: '""',
       position: 'absolute',
       transform: 'translateX(-100%)',
@@ -32,17 +41,21 @@ const skeletonStyles = {
       zIndex: 1,
     },
   },
+  
   withChildren: {
     '& > *': {
       visibility: 'hidden',
     },
   },
+  
   fitContent: {
     maxWidth: 'fit-content',
   },
+  
   heightAuto: {
     height: 'auto',
   },
+  
   keyframes: {
     pulse: {
       '0%': {
@@ -55,6 +68,7 @@ const skeletonStyles = {
         opacity: 1,
       },
     },
+    
     wave: {
       '0%': {
         transform: 'translateX(-100%)',

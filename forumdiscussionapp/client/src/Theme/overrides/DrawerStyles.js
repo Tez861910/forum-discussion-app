@@ -1,9 +1,14 @@
 import palette from '../palette';
 
+const primaryColor = palette.palette.default.primary.main;
+const textColorPrimary = palette.palette.default.text.primary;
+const backgroundColorPaper = palette.palette.default.background.paper;
+const backgroundColorTransparent = 'rgba(255, 255, 255, 0.5)'; 
+
 const drawerStyles = {
     paper: {
       width: '240px',
-      backgroundColor: palette.palette.default.background.paper,
+      backgroundColor: backgroundColorTransparent, 
     },
     defaultProps: {
       MuiList: {
@@ -11,18 +16,18 @@ const drawerStyles = {
           root: {
             width: '100%',
             maxWidth: '360px',
-            backgroundColor: palette.palette.default.background.paper,
+            backgroundColor: backgroundColorTransparent, 
           },
         },
       },
       MuiListItem: {
         styleOverrides: {
           root: {
-            color: palette.palette.default.text.primary,
+            color: textColorPrimary,
           },
           button: {
             '&:hover': {
-              backgroundColor: palette.palette.default.primary.main,
+              backgroundColor: primaryColor,
             },
           },
         },
@@ -30,21 +35,21 @@ const drawerStyles = {
       MuiListItemIcon: {
         styleOverrides: {
           root: {
-            color: palette.palette.default.text.primary,
+            color: textColorPrimary,
           },
         },
       },
       MuiListItemText: {
         styleOverrides: {
           root: {
-            color: palette.palette.default.text.primary,
+            color: textColorPrimary,
           },
         },
       },
       MuiDivider: {
         styleOverrides: {
           root: {
-            backgroundColor: palette.palette.default.primary.main,
+            backgroundColor: primaryColor,
           },
         },
       },

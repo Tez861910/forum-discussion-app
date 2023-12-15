@@ -1,9 +1,11 @@
 import palette from '../palette';
 
+const primaryColor = palette.palette.default.primary.main;
+
 const breadcrumbsStyles = {
     root: {
       '& > * + *': {
-        marginLeft: '8px',
+        marginLeft: '0.5rem',
       },
     },
     ol: {
@@ -16,14 +18,14 @@ const breadcrumbsStyles = {
     separator: {
       display: 'flex',
       userSelect: 'none',
-      marginLeft: '8px',
-      marginRight: '8px',
+      marginLeft: '0.5rem',
+      marginRight: '0.5rem',
     },
     defaultProps: {
       MuiLink: {
         styleOverrides: {
           root: {
-            color: palette.palette.default.primary.main,
+            color: primaryColor,
           },
           underlineHover: {
             textDecoration: 'none',

@@ -1,12 +1,15 @@
 import palette from '../palette';
 import logobg from '../logobg.jpg';
 
+const primaryColor = palette.palette.default.primary.main;
+const textColorPrimary = palette.palette.default.text.primary;
+
 const cssBaseline = {
     body: {
         backgroundImage: `url(${logobg})`,
         backgroundSize: 'cover',
         backgroundRepeat: 'no-repeat',
-        color: palette.palette.default.text.primary, 
+        color: textColorPrimary, 
     },
     '@global': {
         html: {
@@ -21,16 +24,16 @@ const cssBaseline = {
         },
         input: {
           '&::-webkit-input-placeholder': {
-            color: palette.palette.default.primary.main,
+            color: primaryColor,
           },
           '&::-moz-placeholder': {
-            color: palette.palette.default.primary.main,
+            color: primaryColor,
           },
           '&:-ms-input-placeholder': {
-            color: palette.palette.default.primary.main,
+            color: primaryColor,
           },
           '&::placeholder': {
-            color: palette.palette.default.primary.main,
+            color: primaryColor,
           },
         },
         '*': {

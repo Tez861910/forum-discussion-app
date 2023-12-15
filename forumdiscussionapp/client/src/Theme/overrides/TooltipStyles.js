@@ -1,46 +1,60 @@
 import palette from '../palette';
 
+const primaryMainColor = palette.palette.default.primary.main;
+const textPrimaryColor = palette.palette.default.text.primary;
+
 const tooltipStyles = {
   tooltip: {
-    backgroundColor: palette.palette.default.primary.main,
-    color: palette.palette.default.text.primary,
+    backgroundColor: primaryMainColor,
+    color: textPrimaryColor,
   },
+  
   tooltipPlacementLeft: {
-    backgroundColor: palette.palette.default.primary.main,
-    color: palette.palette.default.text.primary,
+    backgroundColor: primaryMainColor,
+    color: textPrimaryColor,
   },
+  
   tooltipPlacementRight: {
-    backgroundColor: palette.palette.default.primary.main,
-    color: palette.palette.default.text.primary,
+    backgroundColor: primaryMainColor,
+    color: textPrimaryColor,
   },
+  
   tooltipPlacementTop: {
-    backgroundColor: palette.palette.default.primary.main,
-    color: palette.palette.default.text.primary,
+    backgroundColor: primaryMainColor,
+    color: textPrimaryColor,
   },
+  
   tooltipPlacementBottom: {
-    backgroundColor: palette.palette.default.primary.main,
-    color: palette.palette.default.text.primary,
+    backgroundColor: primaryMainColor,
+    color: textPrimaryColor,
   },
+  
   arrow: {
-    color: palette.palette.default.primary.main,
+    color: primaryMainColor,
   },
+  
   touch: {
-    color: palette.palette.default.primary.main,
+    color: primaryMainColor,
   },
+  
   popper: {
-    color: palette.palette.default.primary.main,
+    color: primaryMainColor,
   },
+  
   popperInteractive: {
-    color: palette.palette.default.primary.main,
+    color: primaryMainColor,
   },
+  
   popperArrow: {
-    color: palette.palette.default.primary.main,
+    color: primaryMainColor,
   },
+  
   popperClose: {
-    color: palette.palette.default.primary.main,
+    color: primaryMainColor,
   },
+  
   popperOpen: {
-    color: palette.palette.default.primary.main,
+    color: primaryMainColor,
   },
 };
 

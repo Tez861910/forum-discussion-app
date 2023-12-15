@@ -1,18 +1,23 @@
 import palette from '../palette';
 
+const primaryColor = palette.palette.default.primary.main;
+const contrastTextColor = palette.palette.default.primary.contrastText;
+const backgroundColorPaper = palette.palette.default.background.paper;
+const textColorPrimary = palette.palette.default.text.primary;
+
 const cardStyles = {
     root: {
-      padding: '16px',
-      borderRadius: '8px',
+      padding: '1rem',
+      borderRadius: '0.5rem',
       boxShadow: '0px 4px 12px rgba(0, 0, 0, 0.1)',
     },
     defaultProps: {
       MuiCardHeader: {
         styleOverrides: {
           root: {
-            backgroundColor: palette.palette.default.primary.main,
-            color: palette.palette.default.primary.contrastText,
-            padding: '16px',
+            backgroundColor: primaryColor,
+            color: contrastTextColor,
+            padding: '1rem',
             fontSize: '1.5rem',
             fontWeight: 'bold',
           },
@@ -21,11 +26,11 @@ const cardStyles = {
       MuiCardContent: {
         styleOverrides: {
           root: {
-            backgroundColor: palette.palette.default.background.paper,
-            color: palette.palette.default.text.primary,
-            padding: '16px',
+            backgroundColor: backgroundColorPaper,
+            color: textColorPrimary,
+            padding: '1rem',
             '&:last-child': {
-              paddingBottom: '16px',
+              paddingBottom: '1rem',
             },
           },
         },
@@ -33,9 +38,9 @@ const cardStyles = {
       MuiCardActions: {
         styleOverrides: {
           root: {
-            backgroundColor: palette.palette.default.primary.main,
-            color: palette.palette.default.text.primary,
-            padding: '16px',
+            backgroundColor: primaryColor,
+            color: textColorPrimary,
+            padding: '1rem',
             justifyContent: 'center',
           },
         },
