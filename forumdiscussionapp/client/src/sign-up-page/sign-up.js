@@ -12,8 +12,11 @@ import {
   Paper,
   Select,
   MenuItem,
+  Avatar,
 } from '@mui/material';
-import SignUpValidation from './sign-up-validation';
+import { useTheme } from '@mui/material/styles';
+import logo from '../start/logo.png';
+import SignupValidation from './sign-up-validation';
 
 const Signup = () => {
   const [formData, setFormData] = React.useState({
@@ -28,13 +31,14 @@ const Signup = () => {
   const navigate = useNavigate();
   const [errors, setErrors] = React.useState({});
   const [successMessage, setSuccessMessage] = React.useState([]);
+  const theme = useTheme();
 
   const handleSubmit = async (event) => {
     event.preventDefault();
     console.log('Form submitted');
 
-    const validationErrors = SignUpValidation(formData);
-    console.log('Validation Erros');
+    const validationErrors = SignupValidation(formData);
+    console.log('Validation Errors:', validationErrors);
     setErrors(validationErrors);
 
     if (Object.keys(validationErrors).length === 0) {
@@ -76,7 +80,7 @@ const Signup = () => {
         elevation={3}
         sx={{
           p: 3,
-          backgroundColor: 'background.paper',
+          backgroundColor: theme.palette.background.paper,
           borderRadius: 2,
           opacity: 0.9,
           transition: 'opacity .3s',
@@ -84,136 +88,125 @@ const Signup = () => {
         }}
       >
         <Stack spacing={2} justifyContent="center" alignItems="center">
-          <Grid item xs={12}>
-            <Typography variant="h4" align="center" gutterBottom>
-              Sign-Up
-            </Typography>
-            {successMessage.length > 0 && (
-              <Box sx={{ color: 'green' }}>{successMessage}</Box>
-            )}
-            <form onSubmit={handleSubmit}>
-              <TextField
-                fullWidth
-                label="User Name"
-                name="name"
-                value={formData.name}
-                onChange={(e) =>
-                  setFormData({ ...formData, name: e.target.value })
-                }
-                variant="outlined"
-                error={!!errors.name}
-                helperText={errors.name}
-              />
+          <Avatar src={logo} alt="Logo" sx={{ width: 100, height: 100, mb: 2 }} />
 
-              <TextField
-                fullWidth
-                label="User Email"
-                name="email"
-                value={formData.email}
-                onChange={(e) =>
-                  setFormData({ ...formData, email: e.target.value })
-                }
-                variant="outlined"
-                error={!!errors.email}
-                helperText={errors.email}
-              />
+          <Typography variant="h3" align="center" gutterBottom>
+            Sign-Up
+          </Typography>
 
-              <TextField
-                fullWidth
-                label="Password"
-                name="password"
-                type="password"
-                value={formData.password}
-                onChange={(e) =>
-                  setFormData({ ...formData, password: e.target.value })
-                }
-                variant="outlined"
-                error={!!errors.password}
-                helperText={errors.password}
-              />
+          {successMessage.length > 0 && (
+            <Box sx={{ color: 'green', mb: 2 }}>{successMessage}</Box>
+          )}
 
-              <TextField
-                fullWidth
-                label="Address"
-                name="address"
-                value={formData.address}
-                onChange={(e) =>
-                  setFormData({ ...formData, address: e.target.value })
-                }
-                variant="outlined"
-              />
+          <form onSubmit={handleSubmit}>
+            <TextField
+              fullWidth
+              label="User Name"
+              name="name"
+              value={formData.name}
+              onChange={(e) => setFormData({ ...formData, name: e.target.value })}
+              variant="outlined"
+              error={!!errors.name}
+              helperText={errors.name}
+            />
 
-              <TextField
-                fullWidth
-                label="Phone Number"
-                name="phoneNumber"
-                value={formData.phoneNumber}
-                onChange={(e) =>
-                  setFormData({ ...formData, phoneNumber: e.target.value })
-                }
-                variant="outlined"
-              />
+            <TextField
+              fullWidth
+              label="User Email"
+              name="email"
+              value={formData.email}
+              onChange={(e) => setFormData({ ...formData, email: e.target.value })}
+              variant="outlined"
+              error={!!errors.email}
+              helperText={errors.email}
+            />
 
-              <TextField
-                fullWidth
-                label="Date of Birth"
-                name="dateOfBirth"
-                type="date"
-                value={formData.dateOfBirth}
-                onChange={(e) =>
-                  setFormData({ ...formData, dateOfBirth: e.target.value })
-                }
-                variant="outlined"
-              />
+            <TextField
+              fullWidth
+              label="Password"
+              name="password"
+              type="password"
+              value={formData.password}
+              onChange={(e) => setFormData({ ...formData, password: e.target.value })}
+              variant="outlined"
+              error={!!errors.password}
+              helperText={errors.password}
+            />
 
-              <Select
-                fullWidth
-                label="Gender"
-                name="gender"
-                value={formData.gender}
-                onChange={(e) =>
-                  setFormData({ ...formData, gender: e.target.value })
-                }
-                variant="outlined"
-              >
-                <MenuItem value="Male">Male</MenuItem>
-                <MenuItem value="Female">Female</MenuItem>
-                <MenuItem value="Other">Other</MenuItem>
-              </Select>
+            <TextField
+              fullWidth
+              label="Address"
+              name="address"
+              value={formData.address}
+              onChange={(e) => setFormData({ ...formData, address: e.target.value })}
+              variant="outlined"
+            />
 
+            <TextField
+              fullWidth
+              label="Phone Number"
+              name="phoneNumber"
+              value={formData.phoneNumber}
+              onChange={(e) => setFormData({ ...formData, phoneNumber: e.target.value })}
+              variant="outlined"
+            />
+
+            <TextField
+              fullWidth
+              label="Date of Birth"
+              name="dateOfBirth"
+              type="date"
+              value={formData.dateOfBirth}
+              onChange={(e) => setFormData({ ...formData, dateOfBirth: e.target.value })}
+              variant="outlined"
+            />
+
+            <Select
+              fullWidth
+              label="Gender"
+              name="gender"
+              value={formData.gender}
+              onChange={(e) => setFormData({ ...formData, gender: e.target.value })}
+              variant="outlined"
+              sx={{ mt: 2 }}
+            >
+              <MenuItem value="Male">Male</MenuItem>
+              <MenuItem value="Female">Female</MenuItem>
+              <MenuItem value="Other">Other</MenuItem>
+            </Select>
+
+            <Button
+              type="submit"
+              variant="contained"
+              color="primary"
+              fullWidth
+              sx={{ mt: 3, mb: 2, opacity: 0.8 }}
+              onClick={handleSubmit}
+            >
+              Sign Up
+            </Button>
+
+            <Grid container justifyContent="flex-end">
+              <Grid item>
+                <RouterLink to="/login" variant="body2">
+                  Already have an account? Sign in
+                </RouterLink>
+              </Grid>
+            </Grid>
+
+            <Grid container justifyContent="flex-end" sx={{ mt: 2 }}>
               <Button
-                type="submit"
+                type="button"
                 variant="contained"
-                color="primary"
+                color="secondary"
                 fullWidth
-                sx={{ mt: 3, mb: 2, opacity: 0.8 }}
-                onClick={handleSubmit}
+                sx={{ opacity: 0.8 }}
+                onClick={() => navigate('/')}
               >
-                Sign Up
+                Go back to start
               </Button>
-
-              <Grid container justifyContent="flex-end">
-                <Grid item>
-                  <RouterLink to="/login">
-                    Already have an account? Sign in
-                  </RouterLink>
-                </Grid>
-              </Grid>
-
-              <Grid container justifyContent="flex-end">
-                <Button
-                  type="button"
-                  variant="contained"
-                  color="secondary"
-                  fullWidth
-                  sx={{ mt: 3, mb: 2, opacity: 0.8 }}
-                  onClick={() => navigate('/')}
-                >
-                  Go back to start
-                </Button>
-              </Grid>
-            </form>
-          </Grid>
+            </Grid>
+          </form>
         </Stack>
       </Paper>
     </Container>

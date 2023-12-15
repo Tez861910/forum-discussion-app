@@ -13,24 +13,19 @@ import {
 import { useTheme } from '@mui/material/styles';
 import logo from './logo.png';
 
-// Define constants
-const BUTTON_STYLES = {
-  width: '100%',
-  fontSize: '1.2rem',
-  py: 2,
-  borderRadius: 4,
-  boxShadow: 3,
-  textTransform: 'none',
-};
-
-// Create reusable components
 const NavigationButton = ({ to, color, children }) => (
   <Button
     variant="contained"
     component={RouterLink}
     to={to}
     color={color}
-    sx={BUTTON_STYLES}
+    sx={{
+      width: '100%',
+      fontSize: '1.2rem',
+      py: 2,
+      borderRadius: 4,
+      textTransform: 'none',
+    }}
   >
     {children}
   </Button>

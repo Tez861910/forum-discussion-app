@@ -7,29 +7,29 @@ const ThreadList = ({ threads, onThreadSelect }) => {
   const [usernamesMap, setUsernamesMap] = useState({});
   const { api } = useApi();
 
+  const fetchUsernames = async () => {
+    try {
+      const userIds = Array.from(new Set(threads.map((thread) => thread.UserID)));
+      const usernamesResponse = await api.post('/users/getUsernames', { userIds });
+      const usernames = usernamesResponse.data.usernames;
+
+      const usernameMap = {};
+      userIds.forEach((userId) => {
+        usernameMap[userId] = usernames[userId] || 'Unknown User';
+      });
+
+      setUsernamesMap(usernameMap);
+      setLoadingUsernames(false);
+    } catch (error) {
+      console.error('Error fetching usernames for threads:', error);
+    }
+  };
+
   useEffect(() => {
-    const fetchUsernames = async () => {
-      try {
-        const userIds = Array.from(new Set(threads.map((thread) => thread.UserID)));
-        const usernamesResponse = await api.post('/users/getUsernames', { userIds });
-        const usernames = usernamesResponse.data.usernames;
-
-        const usernameMap = {};
-        userIds.forEach((userId) => {
-          usernameMap[userId] = usernames[userId] || 'Unknown User';
-        });
-
-        setUsernamesMap(usernameMap);
-        setLoadingUsernames(false);
-      } catch (error) {
-        console.error('Error fetching usernames for threads:', error);
-      }
-    };
-
-    if (threads.length > 0) {
+    if (threads.length > 0 && loadingUsernames) {
       fetchUsernames();
     }
-  }, [api, threads]);
+  }, [api, threads, loadingUsernames]);
 
   return (
     <Paper elevation={3} sx={{ padding: 2, mt: 2, backgroundColor: 'secondary.main', color: 'secondary.contrastText' }}>

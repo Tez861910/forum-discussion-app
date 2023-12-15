@@ -9,7 +9,8 @@ const cssBaseline = {
         backgroundImage: `url(${logobg})`,
         backgroundSize: 'cover',
         backgroundRepeat: 'no-repeat',
-        color: textColorPrimary, 
+        backgroundcolor: primaryColor,
+        textcolor: textColorPrimary, 
     },
     '@global': {
         html: {

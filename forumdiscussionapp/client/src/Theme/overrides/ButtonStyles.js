@@ -2,7 +2,12 @@ import palette from '../palette';
 
 const primaryColor = palette.palette.default.primary.main;
 const secondaryColor = palette.palette.default.secondary.main;
-const contrastTextColor = palette.palette.default.primary.contrastText;
+const tertiaryColor = palette.palette.default.tertiary.main;
+const quaternaryColor = palette.palette.default.quaternary.main;
+const contrastTextColorPrimary = palette.palette.default.primary.contrastText;
+const contrastTextColorSecondary = palette.palette.default.secondary.contrastText;
+const contrastTextColorTertiary = palette.palette.default.tertiary.contrastText;
+const contrastTextColorQuaternary = palette.palette.default.quaternary.contrastText;
 const textColorPrimary = palette.palette.default.text.primary;
 
 const buttonStyles = {
@@ -11,9 +16,10 @@ const buttonStyles = {
         borderRadius: '0.5rem',
         padding: '0.75rem 1.5rem',
         backgroundColor: primaryColor,
-        color: contrastTextColor,
+        color: contrastTextColorPrimary,
         '&:hover': {
           backgroundColor: secondaryColor,
+          color: contrastTextColorSecondary,
         },
     },
     label: {
@@ -23,20 +29,20 @@ const buttonStyles = {
         padding: '0.375rem 0.5rem',
     },
     textPrimary: {
-        color: primaryColor,
+        color: tertiaryColor,
     },
     textSecondary: {
-        color: secondaryColor,
+        color: quaternaryColor,
     },
     outlined: {
         padding: '0.375rem 1rem',
-        border: `1px solid ${primaryColor}`,
+        border: `1px solid ${tertiaryColor}`,
     },
     outlinedPrimary: {
-        borderColor: primaryColor,
+        borderColor: quaternaryColor,
     },
     outlinedSecondary: {
-        borderColor: secondaryColor,
+        borderColor: primaryColor,
     },
     contained: {
         boxShadow: 'none',
@@ -45,13 +51,13 @@ const buttonStyles = {
         },
     },
     containedPrimary: {
-        backgroundColor: primaryColor,
+        backgroundColor: secondaryColor,
         '&:hover': {
-          backgroundColor: secondaryColor,
+          backgroundColor: tertiaryColor,
         },
     },
     containedSecondary: {
-        backgroundColor: secondaryColor,
+        backgroundColor: quaternaryColor,
         '&:hover': {
           backgroundColor: primaryColor,
         },

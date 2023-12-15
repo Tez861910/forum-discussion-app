@@ -1,6 +1,6 @@
 import palette from '../palette';
 
-const primaryColor = palette.palette.default.primary.main;
+const primaryColor = palette.palette.priamry;
 const contrastTextColor = palette.palette.default.primary.contrastText;
 
 const appBarStyles = {

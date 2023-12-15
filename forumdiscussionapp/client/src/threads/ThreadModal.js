@@ -15,7 +15,6 @@ import {
 import CloseIcon from '@mui/icons-material/Close';
 import CommentSection from './comment-section';
 import useApi  from '../home-page/Api';
-import { useTransition, startTransition } from 'react'; 
 
 function ThreadModal({
   courseId,
@@ -27,34 +26,31 @@ function ThreadModal({
   const [thread, setThread] = React.useState({ title: '', content: '' });
   const [editedTitle, setEditedTitle] = React.useState('');
   const [editedContent, setEditedContent] = React.useState('');
-  const { api } = useApi();
-
-  const transition = useTransition(); 
+  const { api } = useApi(); 
 
   React.useEffect(() => {
     const fetchThread = async () => {
       try {
         if (threadId) {
-          startTransition(async () => {
-            const response = await api.get(`/threads/threads/getThread/${threadId}`);
-            const threadData = response.data?.thread;
-
-            if (threadData) {
-              setThread(threadData);
-              setEditedTitle(threadData.ThreadTitle || '');
-              setEditedContent(threadData.ThreadContent || '');
-            } else {
-              console.error('Thread data not found');
-            }
-          });
+          const response = await api.get(`/threads/threads/getThread/${threadId}`);
+          const threadData = response.data?.thread;
+  
+          if (threadData) {
+            setThread(threadData);
+            setEditedTitle(threadData.ThreadTitle || '');
+            setEditedContent(threadData.ThreadContent || '');
+          } else {
+            console.error('Thread data not found');
+          }
         }
       } catch (error) {
         console.error('Error fetching thread:', error);
       }
     };
-
+  
     fetchThread();
-  }, [api, threadId, transition]); 
+  }, [api, threadId]);
+  
 
   const isEditable = roleId === '2';
 

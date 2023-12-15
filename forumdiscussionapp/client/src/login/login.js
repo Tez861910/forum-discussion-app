@@ -11,15 +11,17 @@ import {
   Box,
   Paper,
   Stack,
+  Avatar,
 } from '@mui/material';
 import { useTheme } from '@mui/material/styles';
+import logo from '../start/logo.png';
 
 const Login = () => {
   const [values, setValues] = React.useState({ email: '', password: '' });
   const [error, setError] = React.useState('');
   const navigate = useNavigate();
   const [cookies, setCookie] = useCookies(['token']);
-  const theme = useTheme(); 
+  const theme = useTheme();
 
   const handleInput = (event) => {
     const { name, value } = event.target;
@@ -31,7 +33,6 @@ const Login = () => {
     console.log(`Token set: ${cookies.token}`);
     localStorage.setItem('userId', data.userId);
     localStorage.setItem('roleId', data.roleId);
-
     navigate('/home');
   };
 
@@ -78,24 +79,23 @@ const Login = () => {
           '&:hover': { opacity: 1 },
         }}
       >
-        <Stack spacing={2} justifyContent="center" alignItems="center">
-          <Grid item xs={12}>
-            <Typography
-              component="h2"
-              variant="h5"
-              sx={{ color: theme.palette.primary.main }}
-            >
-              Sign-In
-            </Typography>
-            {error && (
-              <Box sx={{ color: theme.palette.error.main }}>{error}</Box>
-            )}
-            <form onSubmit={handleSubmit}>
+        <Stack spacing={3} justifyContent="center" alignItems="center">
+          <Avatar src={logo} alt="Logo" sx={{ width: 100, height: 100, mb: 2 }} />
+          <Typography
+            component="h2"
+            variant="h3"
+            sx={{ color: theme.palette.primary.main, mb: 2 }}
+          >
+            Sign-In
+          </Typography>
+          {error && <Box sx={{ color: theme.palette.error.main, mb: 2}}>{error}</Box>}
+          <form onSubmit={handleSubmit}>
+            <Grid container spacing={.1}>
               {['email', 'password'].map((field) => (
                 <Grid item xs={12} key={field}>
                   <TextField
                     fullWidth
-                    margin="normal"
+                    margin="dense"
                     variant="outlined"
                     id={field}
                     label={field === 'email' ? 'Email' : 'Password'}
@@ -105,50 +105,38 @@ const Login = () => {
                     autoComplete={field === 'email' ? 'email' : 'current-password'}
                     value={values[field]}
                     onChange={handleInput}
-                    sx={{
-                      '.MuiInputBase-input': { fontSize: '1rem' },
-                      '.MuiOutlinedInput-root': {
-                        '& fieldset': {
-                          borderColor: theme.palette.primary.main,
-                        },
-                        '&:hover fieldset': {
-                          borderColor: theme.palette.secondary.main,
-                        },
-                        '&.Mui-focused fieldset': {
-                          borderColor: theme.palette.primary.main,
-                        },
-                      },
-                    }}
                   />
                 </Grid>
               ))}
-              <Button
-                fullWidth
-                type="submit"
-                variant="contained"
-                color="primary"
-                sx={{ mt: 2, opacity: 0.8 }}
-              >
-                Log in
-              </Button>
-              <Typography variant="body2" sx={{ mt: 2 }}>
-                You agree to our terms and conditions
-              </Typography>
-              <Link to="/sign-up" variant="body2" sx={{ mt: 2 }}>
-                Create Account
-              </Link>
-            </form>
-            <Button
-              type="button"
-              fullWidth
-              variant="contained"
-              color="secondary"
-              sx={{ mt: 3, mb: 2, opacity: 0.8 }}
-              onClick={() => navigate('/')}
-            >
-              Go back to start
-            </Button>
-          </Grid>
+              <Grid item xs={12}>
+                <Button
+                  fullWidth
+                  type="submit"
+                  variant="contained"
+                  color="primary"
+                  sx={{ mt: 3, opacity: 0.8 }}
+                >
+                  Log in
+                </Button>
+              </Grid>
+            </Grid>
+            <Typography variant="body2" sx={{ mt: 2 }}>
+              You agree to our terms and conditions
+            </Typography>
+            <Link to="/sign-up" variant="body2" sx={{ mt: 2, display: 'block' }}>
+              Create Account
+            </Link>
+          </form>
+          <Button
+            type="button"
+            fullWidth
+            variant="outlined"
+            color="secondary"
+            sx={{ mt: 2, mb: 2, opacity: 0.8 }}
+            onClick={() => navigate('/')}
+          >
+            Go back to start
+          </Button>
         </Stack>
       </Paper>
     </Container>

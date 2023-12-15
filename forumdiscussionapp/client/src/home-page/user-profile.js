@@ -4,9 +4,15 @@ import {
   TextField,
   Button,
   Modal,
-  Box
+  Box,
+  IconButton,
+  AppBar,
+  Toolbar,
 } from '@mui/material';
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
+import EditIcon from '@mui/icons-material/Edit';
+import CancelIcon from '@mui/icons-material/Cancel';
+import SaveIcon from '@mui/icons-material/Save';
 import useApi from './Api';
 
 const UserProfile = ({ isOpen, onClose, setUserName }) => {
@@ -43,7 +49,9 @@ const UserProfile = ({ isOpen, onClose, setUserName }) => {
             RoleName: user.RoleName || 'N/A',
             Address: user.Address || 'N/A',
             PhoneNumber: user.PhoneNumber || 'N/A',
-            DateOfBirth: user.DateOfBirth ? new Date(user.DateOfBirth).toLocaleDateString() : 'N/A',
+            DateOfBirth: user.DateOfBirth
+              ? new Date(user.DateOfBirth).toLocaleDateString()
+              : 'N/A',
             Gender: user.Gender || 'N/A',
             UserID: user.UserID || 'N/A',
             RoleID: user.RoleID || 'N/A',
@@ -52,7 +60,6 @@ const UserProfile = ({ isOpen, onClose, setUserName }) => {
           setNewName(user.UserName || '');
           setNewEmail(user.UserEmail || '');
           setUserName(user.UserName || '');
-
         } catch (error) {
           console.error('Error fetching user data:', error);
         }
@@ -68,7 +75,7 @@ const UserProfile = ({ isOpen, onClose, setUserName }) => {
 
   const handleSave = async () => {
     const userId = localStorage.getItem('userId');
-  
+
     try {
       const updatedUserData = {
         name: newName,
@@ -79,9 +86,9 @@ const UserProfile = ({ isOpen, onClose, setUserName }) => {
         dateOfBirth: userData.DateOfBirth,
         gender: userData.Gender,
       };
-  
+
       await api.put(`/users/users/update/users/${userId}`, updatedUserData);
-  
+
       setUserData((prevData) => ({
         ...prevData,
         UserName: newName,
@@ -91,14 +98,14 @@ const UserProfile = ({ isOpen, onClose, setUserName }) => {
         DateOfBirth: updatedUserData.dateOfBirth,
         Gender: updatedUserData.gender,
       }));
-  
+
       setUserName(newName);
-  
+
       setEditing(false);
     } catch (error) {
       console.error('Error updating user data:', error);
     }
-  };  
+  };
 
   const handleCancel = () => {
     setEditing(false);
@@ -124,95 +131,145 @@ const UserProfile = ({ isOpen, onClose, setUserName }) => {
   return (
     <Modal open={isOpen} onClose={() => { onClose(); setEditing(false); }}>
       <Box sx={style}>
-        <Typography variant="h6" mb={2}>
-          User Profile
-        </Typography>
-
-        {editing ? (
-          <>
-            <Typography mb={1} sx={{ fontWeight: 'medium' }}>Role: {userData.RoleName}</Typography>
-            <Typography mb={1} sx={{ fontWeight: 'medium' }}>{getUserIDLabel(userData.RoleID, userData.UserID)}</Typography>
-            <TextField
-              fullWidth
-              label="Name"
-              value={newName}
-              onChange={(e) => setNewName(e.target.value)}
-              mb={2}
-              sx={{ mb: 2 }}
-            />
-            <TextField
-              fullWidth
-              label="Email"
-              value={newEmail}
-              onChange={(e) => setNewEmail(e.target.value)}
-              mb={2}
-              sx={{ mb: 2 }}
-            />
-            <TextField
-              fullWidth
-              label="Password"
-              type="password"
-              value={newPassword}
-              onChange={(e) => setNewPassword(e.target.value)}
-              mb={2}
-              sx={{ mb: 2 }}
-            />
-            <TextField
-              fullWidth
-              label="Address"
-              value={userData.Address}
-              onChange={(e) => setUserData((prevData) => ({ ...prevData, Address: e.target.value }))}
-              mb={2}
-            />
-            <TextField
-              fullWidth
-              label="Phone Number"
-              value={userData.PhoneNumber}
-              onChange={(e) => setUserData((prevData) => ({ ...prevData, PhoneNumber: e.target.value }))}
-              mb={2}
-            />
-            <TextField
-              fullWidth
-              label="Date of Birth"
-              value={userData.DateOfBirth}
-              onChange={(e) => setUserData((prevData) => ({ ...prevData, DateOfBirth: e.target.value }))}
-              mb={2}
-            />
-            <TextField
-              fullWidth
-              label="Gender"
-              value={userData.Gender}
-              onChange={(e) => setUserData((prevData) => ({ ...prevData, Gender: e.target.value }))}
-              mb={2}
-            />
-            <Box sx={{ display: 'flex', justifyContent: 'flex-end', mt: 2 }}>
-              <Button variant="contained" color="primary" onClick={handleSave} sx={{ mr: 2 }}>
-                Save
-              </Button>
-              <Button variant="contained" onClick={handleCancel}>
-                Cancel
-              </Button>
-            </Box>
-          </>
-        ) : (
-          <>
-            <Typography mb={1} sx={{ fontWeight: 'medium' }}>{getUserIDLabel(userData.RoleID, userData.UserID)}</Typography>
-            <Typography mb={1} sx={{ fontWeight: 'medium' }}>Name: {userData.UserName}</Typography>
-            <Typography mb={1} sx={{ fontWeight: 'medium' }}>Email: {userData.UserEmail}</Typography>
-            <Typography mb={1} sx={{ fontWeight: 'medium' }}>Role: {userData.RoleName}</Typography>
-            <Typography mb={1} sx={{ fontWeight: 'medium' }}>Address: {userData.Address}</Typography>
-            <Typography mb={1} sx={{ fontWeight: 'medium' }}>Phone Number: {userData.PhoneNumber}</Typography>
-            <Typography mb={1} sx={{ fontWeight: 'medium' }}>Date of Birth: {userData.DateOfBirth}</Typography>
-            <Typography mb={1} sx={{ fontWeight: 'medium' }}>Gender: {userData.Gender}</Typography>
-            <Box sx={{ display: 'flex', justifyContent: 'flex-end', mt: 2 }}>
-              <Button variant="contained" color="primary" onClick={handleEdit} sx={{ mr: 2 }}>
-                Edit
-              </Button>
-              <Button variant="contained" onClick={handleNavigateBack} startIcon={<ArrowBackIcon />}>
-                Back
-              </Button>
-            </Box>
-          </>
+        <AppBar position="static">
+          <Toolbar>
+            <IconButton
+              edge="start"
+              color="inherit"
+              onClick={handleNavigateBack}
+            >
+              <ArrowBackIcon />
+            </IconButton>
+            <Typography variant="h6">User Profile</Typography>
+          </Toolbar>
+        </AppBar>
+        <Box sx={{ maxHeight: '60vh', overflowY: 'auto', padding: 2 }}>
+          {editing ? (
+            <>
+              <Typography variant="h6" sx={{ fontWeight: 'medium', mb: 2 }}>
+                Role: {userData.RoleName}
+              </Typography>
+              <Typography variant="h6" sx={{ fontWeight: 'medium', mb: 2 }}>
+                {getUserIDLabel(userData.RoleID, userData.UserID)}
+              </Typography>
+              <TextField
+                fullWidth
+                label="Name"
+                value={newName}
+                onChange={(e) => setNewName(e.target.value)}
+                mb={2}
+                sx={{ mb: 2 }}
+              />
+              <TextField
+                fullWidth
+                label="Email"
+                value={newEmail}
+                onChange={(e) => setNewEmail(e.target.value)}
+                mb={2}
+                sx={{ mb: 2 }}
+              />
+              <TextField
+                fullWidth
+                label="Password"
+                type="password"
+                value={newPassword}
+                onChange={(e) => setNewPassword(e.target.value)}
+                mb={2}
+                sx={{ mb: 2 }}
+              />
+              <TextField
+                fullWidth
+                label="Address"
+                value={userData.Address}
+                onChange={(e) => setUserData((prevData) => ({ ...prevData, Address: e.target.value }))}
+                mb={2}
+              />
+              <TextField
+                fullWidth
+                label="Phone Number"
+                value={userData.PhoneNumber}
+                onChange={(e) => setUserData((prevData) => ({ ...prevData, PhoneNumber: e.target.value }))}
+                mb={2}
+              />
+              <TextField
+                fullWidth
+                label="Date of Birth"
+                value={userData.DateOfBirth}
+                onChange={(e) => setUserData((prevData) => ({ ...prevData, DateOfBirth: e.target.value }))}
+                mb={2}
+              />
+              <TextField
+                fullWidth
+                label="Gender"
+                value={userData.Gender}
+                onChange={(e) => setUserData((prevData) => ({ ...prevData, Gender: e.target.value }))}
+                mb={2}
+              />
+            </>
+          ) : (
+            <>
+              <Typography variant="h6" sx={{ fontWeight: 'medium', mb: 2 }}>
+                {getUserIDLabel(userData.RoleID, userData.UserID)}
+              </Typography>
+              <Typography variant="h6" sx={{ fontWeight: 'medium', mb: 2 }}>
+                Name: {userData.UserName}
+              </Typography>
+              <Typography variant="h6" sx={{ fontWeight: 'medium', mb: 2 }}>
+                Email: {userData.UserEmail}
+              </Typography>
+              <Typography variant="h6" sx={{ fontWeight: 'medium', mb: 2 }}>
+                Role: {userData.RoleName}
+              </Typography>
+              <Typography variant="h6" sx={{ fontWeight: 'medium', mb: 2 }}>
+                Address: {userData.Address}
+              </Typography>
+              <Typography variant="h6" sx={{ fontWeight: 'medium', mb: 2 }}>
+                Phone Number: {userData.PhoneNumber}
+              </Typography>
+              <Typography variant="h6" sx={{ fontWeight: 'medium', mb: 2 }}>
+                Date of Birth: {userData.DateOfBirth}
+              </Typography>
+              <Typography variant="h6" sx={{ fontWeight: 'medium', mb: 2 }}>
+                Gender: {userData.Gender}
+              </Typography>
+              <Box sx={{ display: 'flex', justifyContent: 'flex-end', mt: 2 }}>
+                <IconButton
+                  color="primary"
+                  onClick={handleEdit}
+                >
+                  <EditIcon />
+                </IconButton>
+                <Button
+                  onClick={handleNavigateBack}
+                  startIcon={<ArrowBackIcon />}
+                >
+                  Back
+                </Button>
+              </Box>
+            </>
+          )}
+        </Box>
+        {editing && (
+          <Box
+            sx={{
+              position: 'fixed',
+              bottom: 0,
+              left: 0,
+              right: 0,
+              p: 2,
+              display: 'flex',
+              justifyContent: 'flex-end',
+              background: '#fff',
+              boxShadow: '0 -4px 4px -4px rgba(0,0,0,0.1)',
+            }}
+          >
+            <IconButton color="primary" onClick={handleSave}>
+              <SaveIcon />
+            </IconButton>
+            <IconButton color="error" onClick={handleCancel}>
+              <CancelIcon />
+            </IconButton>
+          </Box>
         )}
       </Box>
     </Modal>
@@ -226,10 +283,8 @@ const style = {
   transform: 'translate(-50%, -50%)',
   width: 400,
   bgcolor: 'background.paper',
-  border: '2px solid #000',
   borderRadius: 8,
   boxShadow: 24,
-  p: 4,
   color: 'text.primary',
   fontFamily: 'Roboto, sans-serif',
   fontWeight: 'normal',

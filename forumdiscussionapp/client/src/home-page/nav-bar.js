@@ -27,14 +27,14 @@ const Navbar = ({
     };
     return roleTitles[roleId] || 'Home Panel';
   };
-  
+
   return (
     <AppBar position="static" color="primary" sx={{ mb: 3 }}>
       <Toolbar>
-        <IconButton edge="start" color="inherit" aria-label="menu" sx={{ mr: 2 }} onClick={handleDrawerToggle}>
+        <IconButton edge="start" color="secondary" aria-label="menu" sx={{ mr: 2 }} onClick={handleDrawerToggle}>
           <MenuIcon />
         </IconButton>
-        <Typography variant="h5" color="inherit" component="div" sx={{ flexGrow: 1 , mr: 2 }}>
+        <Typography variant="h5" color="inherit" component="div" sx={{ flexGrow: 1, mr: 2 }}>
           {getRoleHeaderText(roleId)}
         </Typography>
         <ButtonGroup variant="contained" color="secondary" aria-label="outlined primary button group" sx={{ '& .MuiButton-root': { mx: 1 }, flexDirection: matches ? 'row' : 'column' }}>
@@ -84,18 +84,18 @@ const Navbar = ({
             </Box>
           )}
 
-          <Button onClick={() => onButtonClick('/home/scheduler', userId,roleId, selectedCourse)}>
+          <Button onClick={() => onButtonClick('/home/scheduler', userId, roleId, selectedCourse)}>
             Scheduler
           </Button>
         </ButtonGroup>
       </Toolbar>
       {((roleId === '2' || roleId === '3') && !selectedCourse) && (
-       <Alert severity="info" sx={{ mt: 2 }}>
-       <Typography variant="body2">
-        Please select a course to enable more options.
-       </Typography>
-     </Alert>
-   )}
+        <Alert severity="info" sx={{ mt: 2 }}>
+          <Typography variant="body2">
+            Please select a course to enable more options.
+          </Typography>
+        </Alert>
+      )}
     </AppBar>
   );
 };

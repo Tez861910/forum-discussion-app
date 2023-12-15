@@ -13,6 +13,7 @@ import TextField from '@mui/material/TextField';
 import Typography from '@mui/material/Typography';
 import SearchIcon from '@mui/icons-material/Search';
 import InputAdornment from '@mui/material/InputAdornment';
+import Autocomplete from '@mui/material/Autocomplete';
 import useApi from './Api';
 
 const CourseEnrollmentModal = ({ isOpen, onRequestClose, onEnrollSuccess }) => {
@@ -64,10 +65,10 @@ const CourseEnrollmentModal = ({ isOpen, onRequestClose, onEnrollSuccess }) => {
   const fetchUserCoursesAndSetState = useCallback(async () => {
     try {
       const userCoursesData = await fetchUserCourses();
-  
+
       if (userCoursesData) {
         setUserCourses(userCoursesData);
-  
+
         const enrolledCourseIds = userCoursesData.map((course) => course.CourseID);
         setSelectedCourses(enrolledCourseIds);
       } else {
@@ -77,7 +78,7 @@ const CourseEnrollmentModal = ({ isOpen, onRequestClose, onEnrollSuccess }) => {
       console.error('Error fetching user courses:', error);
     }
   }, [fetchUserCourses]);
-  
+
   useEffect(() => {
     const fetchCoursesAndUserCourses = async () => {
       await Promise.all([fetchCourses(), fetchUserCoursesAndSetState()]);
@@ -105,18 +106,16 @@ const CourseEnrollmentModal = ({ isOpen, onRequestClose, onEnrollSuccess }) => {
         return;
       }
 
-      const response = await api.post(
-        '/courses/courses/enroll',
-        {
-          userId: userId,
-          courseIds: selectedCourses,
-        }
-      );
+      const response = await api.post('/courses/courses/enroll', {
+        userId: userId,
+        courseIds: selectedCourses,
+      });
 
       if (response.status === 200) {
         // If enrollment is successful
         onEnrollSuccess(selectedCourses);
         fetchUserCoursesAndSetState();
+        // Do not close the modal on enrollment
       } else {
         console.error('Enrollment failed:', response.status);
       }
@@ -130,7 +129,7 @@ const CourseEnrollmentModal = ({ isOpen, onRequestClose, onEnrollSuccess }) => {
       const enrolledCourse = courses.find((course) => course.CourseID === userCourse.CourseID);
 
       if (enrolledCourse) {
-        return enrolledCourse; // Return the course object instead of a ListItem
+        return enrolledCourse;
       } else {
         return null;
       }
@@ -139,16 +138,7 @@ const CourseEnrollmentModal = ({ isOpen, onRequestClose, onEnrollSuccess }) => {
 
   const selectableCoursesList = courses
     .filter((course) => !selectedCourses.includes(course?.CourseID))
-    .filter((course) => course?.CourseName.toLowerCase().includes(searchTerm.toLowerCase()))
-    .map((course) => (
-      <ListItem key={course?.CourseID} disablePadding>
-        <Checkbox
-          checked={selectedCourses.includes(course?.CourseID)}
-          onChange={() => handleCourseSelection(course?.CourseID)}
-        />
-        <ListItemText primary={course?.CourseName} />
-      </ListItem>
-    ));
+    .filter((course) => course?.CourseName.toLowerCase().includes(searchTerm.toLowerCase()));
 
   return (
     <Dialog
@@ -156,6 +146,8 @@ const CourseEnrollmentModal = ({ isOpen, onRequestClose, onEnrollSuccess }) => {
       onClose={onRequestClose}
       aria-labelledby="course-enrollment-modal-title"
       aria-describedby="course-enrollment-modal-description"
+      maxWidth="md"
+      fullWidth
     >
       <DialogTitle id="course-enrollment-modal-title">Course Enrollment</DialogTitle>
       <DialogContent dividers>
@@ -172,32 +164,45 @@ const CourseEnrollmentModal = ({ isOpen, onRequestClose, onEnrollSuccess }) => {
           </Box>
         )}
 
-        <TextField
-          fullWidth
-          variant="outlined"
-          placeholder="Search courses..."
-          value={searchTerm}
-          onChange={(e) => setSearchTerm(e.target.value)}
-          InputProps={{
-            startAdornment: (
-              <InputAdornment position="start">
-                <SearchIcon />
-              </InputAdornment>
-            ),
+        <Autocomplete
+          multiple
+          id="add-course-autocomplete"
+          options={selectableCoursesList ?? []}
+          getOptionLabel={(option) => option?.CourseName || ''}
+          isOptionEqualToValue={(option, value) => option?.CourseID === value?.CourseID}
+          onChange={(event, value) => {
+            setSelectedCourses(value.map((course) => course.CourseID));
           }}
-          sx={{ marginBottom: 2 }}
+          renderInput={(params) => (
+            <TextField
+              {...params}
+              label="Add Courses"
+              variant="outlined"
+              fullWidth
+              size="small"
+              sx={{ marginBottom: 2 }}
+              InputProps={{
+                ...params.InputProps,
+                startAdornment: (
+                  <InputAdornment position="start">
+                    <SearchIcon />
+                  </InputAdornment>
+                ),
+              }}
+            />
+          )}
+          value={selectableCoursesList.filter((course) => selectedCourses.includes(course?.CourseID))}
+          renderOption={(props, option) => (
+            <ListItem {...props} disablePadding>
+              <Checkbox
+                checked={selectedCourses.includes(option?.CourseID)}
+                onChange={() => handleCourseSelection(option?.CourseID)}
+              />
+              <ListItemText primary={option?.CourseName} />
+            </ListItem>
+          )}
         />
 
-        <Typography variant="h6">Available Courses</Typography>
-        <List>
-          {selectableCoursesList.length > 0 ? (
-            selectableCoursesList
-          ) : (
-            <Typography variant="body2" color="textSecondary">
-              No available courses for enrollment.
-            </Typography>
-          )}
-        </List>
       </DialogContent>
       <DialogActions>
         <Button variant="contained" onClick={handleEnroll} sx={{ marginRight: 2 }}>

@@ -38,7 +38,7 @@ function ForumDiscussion({ selectedCourse: courseId }) {
 
   useEffect(() => {
     fetchThreads();
-  }, [fetchThreads]);
+  }, [fetchThreads,courseId]);
 
   const handleThreadSelection = (threadId) => {
     setSelectedThread(threadId);

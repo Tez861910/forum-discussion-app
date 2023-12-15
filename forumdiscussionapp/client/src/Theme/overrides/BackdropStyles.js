@@ -1,16 +1,18 @@
-import palette from '../palette';
-
-const primaryColor = palette.palette.default.primary.main;
+import logobg from '../logobg.jpg';
 
 const backdropStyles = {
     root: {
-        backgroundColor: primaryColor,
+        backgroundImage: `url(${logobg})`,
+        backgroundSize: 'cover',
+        backgroundRepeat: 'no-repeat',
     },
     invisible: {
         backgroundColor: 'transparent',
     },
     visible: {
-        backgroundColor: primaryColor,
+        backgroundImage: `url(${logobg})`,
+        backgroundSize: 'cover',
+        backgroundRepeat: 'no-repeat',
     },
 };
 

@@ -25,6 +25,7 @@ const textFieldStyles = {
         root: {
           color: primaryMainColor,
           fontWeight: 'bold',
+          textAlign: 'center',
         },
       },
     },
