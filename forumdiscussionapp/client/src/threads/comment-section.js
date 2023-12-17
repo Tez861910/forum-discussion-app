@@ -56,6 +56,7 @@ const CommentSection = ({ threadId }) => {
         : [response.data.comments];
       setComments(comments);
       setFetchError(null);
+      return comments; 
     } catch (error) {
       console.error('Error fetching comments:', error);
       setFetchError('Error loading comments');
@@ -124,32 +125,32 @@ const CommentSection = ({ threadId }) => {
   const handleCommentSubmit = async (event) => {
     event.preventDefault();
     await createComment();
-    await fetchComments();
-    await fetchUsernames(comments); // Fetch usernames after comments are updated
-  };
+    const newComments = await fetchComments(); 
+    fetchUsernames(newComments); 
+  }; 
 
   const handleEditComment = async (commentId) => {
     await editComment(commentId);
     await fetchComments();
-    await fetchUsernames(comments); // Fetch usernames after comments are updated
+    await fetchUsernames(comments);
   };
 
   const handleDeleteComment = async (commentId) => {
     await deleteComment(commentId);
     await fetchComments();
-    await fetchUsernames(comments); // Fetch usernames after comments are updated
+    await fetchUsernames(comments); 
   };
 
   useEffect(() => {
-    if (!isLoading && comments.length === 0) {
+    if (!isLoading) {
       setIsLoading(true);
-      fetchComments();
-      setIsLoading(false);
+      fetchComments().then(() => {
+        fetchUsernames(comments); 
+        setIsLoading(false);
+      });
     }
-    if (comments.length > 0) {
-      fetchUsernames(comments); // Fetch usernames after comments are updated
-    }
-  }, [fetchComments, fetchUsernames, comments, isLoading]);
+  }, []);  
+
   return (
     <Box sx={{ p: 2, backgroundColor: 'warning.main', color: 'warning.contrastText' }}>
       <Typography variant="h2" sx={{ fontWeight: 'bold' }}>Comment Section</Typography>
