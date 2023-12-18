@@ -12,6 +12,10 @@ const alertStyles = {
   root: {
       width: '100%',
       borderRadius: '0.25rem',
+      padding: '0.5rem', 
+      '&:hover': { 
+        opacity: 0.9,
+      },
   },
   message: {
       padding: '0.5rem 0',

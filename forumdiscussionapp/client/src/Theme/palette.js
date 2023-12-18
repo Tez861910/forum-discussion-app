@@ -1,35 +1,19 @@
+const createColor = (main, contrastText) => ({ main, contrastText });
+
 const palette = {
   palette: {
     mode: 'light',
     default: {
-      primary: {
-        main: '#d72631',
-        contrastText: '#ffffff',
-      },
-      secondary: {
-        main: '#a2d5c6',
-        contrastText: '#000000',
-      },
-      tertiary: {
-        main: '#077b8a',
-        contrastText: '#ffffff',
-      },
-      quaternary: {
-        main: '#5c3c92',
-        contrastText: '#ffffff',
-      },
-      error: {
-        main: '#e53935',
-      },
-      warning: {
-        main: '#FB8C00',
-      },
-      info: {
-        main: '#43A047',
-      },
-      success: {
-        main: '#7CB342',
-      },
+      primary: createColor('#AEC6CF', '#000000'), 
+      secondary: createColor('#F49AC2', '#000000'), 
+      tertiary: createColor('#77DD77', '#000000'), 
+      quaternary: createColor('#FDFD96', '#000000'),
+      quinary: createColor('#FF6961', '#000000'), 
+      senary: createColor('#CB99C9', '#000000'), 
+      error: { main: '#e53935' },
+      warning: { main: '#FB8C00' },
+      info: { main: '#43A047' },
+      success: { main: '#7CB342' },
       grey: {
         50: '#F5F5F5',
         100: '#EEEEEE',
@@ -47,6 +31,8 @@ const palette = {
         secondary: '#212121',
         tertiary: '#ffffff',
         quaternary: '#000000',
+        quinary: '#ffffff',
+        senary: '#ffffff',
         disabled: '#9E9E9E',
         hint: '#757575',
       },
@@ -70,34 +56,16 @@ const palette = {
       },
     },
     dark: {
-      primary: {
-        main: '#0D47A1',
-        contrastText: '#FFFFFF',
-      },
-      secondary: {
-        main: '#C2185B',
-        contrastText: '#ffffff',
-      },
-      tertiary: {
-        main: '#00695C',
-        contrastText: '#ffffff',
-      },
-      quaternary: {
-        main: '#FFA000',
-        contrastText: '#000000',
-      },
-      error: {
-        main: '#d32f2f',
-      },
-      warning: {
-        main: '#F57C00',
-      },
-      info: {
-        main: '#388E3C',
-      },
-      success: {
-        main: '#689F38',
-      },
+      primary: createColor('#AEC6CF', '#000000'), 
+      secondary: createColor('#F49AC2', '#000000'), 
+      tertiary: createColor('#77DD77', '#000000'),
+      quaternary: createColor('#FDFD96', '#000000'), 
+      quinary: createColor('#FF6961', '#000000'), 
+      senary: createColor('#CB99C9', '#000000'), 
+      error: { main: '#d32f2f' },
+      warning: { main: '#F57C00' },
+      info: { main: '#388E3C' },
+      success: { main: '#689F38' },
       grey: {
         50: '#212121',
         100: '#424242',
@@ -115,6 +83,8 @@ const palette = {
         secondary: '#E0E0E0',
         tertiary: '#FFFFFF',
         quaternary: '#000000',
+        quinary: '#ffffff',
+        senary: '#ffffff',
         disabled: '#9E9E9E',
         hint: '#757575',
       },

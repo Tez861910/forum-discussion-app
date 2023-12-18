@@ -3,10 +3,12 @@ import palette from '../palette';
 const greyColor = palette.palette.default.grey[200];
 const primaryMainColor = palette.palette.default.primary.main;
 const warningMainColor = palette.palette.default.warning.main;
+const transition = '0.3s'; 
 
 const textFieldStyles = {
   root: {
     margin: '8px 0',
+    transition: transition, 
   },
   
   defaultProps: {
@@ -16,6 +18,7 @@ const textFieldStyles = {
           backgroundColor: greyColor,
           borderRadius: '4px',
           padding: '10px',
+          transition: transition, 
         },
       },
     },
@@ -26,6 +29,7 @@ const textFieldStyles = {
           color: primaryMainColor,
           fontWeight: 'bold',
           textAlign: 'center',
+          transition: transition, 
         },
       },
     },
@@ -34,6 +38,7 @@ const textFieldStyles = {
       styleOverrides: {
         root: {
           color: primaryMainColor,
+          transition: transition, 
         },
       },
     },
@@ -42,6 +47,7 @@ const textFieldStyles = {
       styleOverrides: {
         root: {
           color: warningMainColor,
+          transition: transition, 
         },
       },
     },

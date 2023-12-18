@@ -1,8 +1,8 @@
-import React, { Suspense } from 'react';
+import React, { Suspense, useEffect } from 'react';
 import { BrowserRouter as Router, Routes, Route , Navigate } from 'react-router-dom';
 import { ThemeProvider , CssBaseline } from '@mui/material';
 import { ErrorBoundary } from 'react-error-boundary';
-import Cookies from 'universal-cookie';
+import { useCookies } from 'react-cookie';
 import theme from './Theme/Theme'; 
 
 const AdminCourses = React.lazy(() => import('./admin/Courses/AdminCourses'));
@@ -32,11 +32,19 @@ function ErrorFallback({ error, resetErrorBoundary }) {
 }
 
 function RequireAuth({ children }) {
-  const cookies = new Cookies();
-  const isAuthenticated = Boolean(cookies.get('token'));
+  const [cookies] = useCookies(['token']); 
 
-  return isAuthenticated ? children : <Navigate to="/login" replace />;
-};
+  const isAuthenticated = Boolean(cookies.token);
+
+  useEffect(() => {
+  }, []); 
+
+  return isAuthenticated ? (
+    children
+  ) : (
+    <Navigate to="/login" replace />
+  );
+}
 
 const App = () => (
   <ErrorBoundary FallbackComponent={ErrorFallback}>

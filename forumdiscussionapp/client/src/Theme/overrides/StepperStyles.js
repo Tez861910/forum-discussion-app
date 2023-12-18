@@ -4,6 +4,7 @@ const primaryMainColor = palette.palette.default.primary.main;
 const infoMainColor = palette.palette.default.info.main;
 const greyColor = palette.palette.default.grey[400];
 const paperColor = palette.palette.default.background.paper;
+const transition = '0.3s'; 
 
 const stepperStyles = {
   defaultProps: {
@@ -12,6 +13,7 @@ const stepperStyles = {
         root: {
           backgroundColor: 'transparent',
           padding: '24px',
+          transition: transition,
         },
       },
     },
@@ -25,11 +27,14 @@ const stepperStyles = {
           margin: '4px',
           '&$completed': {
             borderColor: greyColor,
+            transition: transition,
           },
           '&$active': {
             borderColor: infoMainColor,
             backgroundColor: paperColor,
+            transition: transition, 
           },
+          transition: transition, 
         },
       },
     },
@@ -40,10 +45,13 @@ const stepperStyles = {
           color: primaryMainColor,
           '&$active': {
             color: infoMainColor,
+            transition: transition, 
           },
           '&$completed': {
             color: greyColor,
+            transition: transition, 
           },
+          transition: transition, 
         },
       },
     },
@@ -52,6 +60,7 @@ const stepperStyles = {
       styleOverrides: {
         line: {
           borderColor: primaryMainColor,
+          transition: transition, 
         },
       },
     },

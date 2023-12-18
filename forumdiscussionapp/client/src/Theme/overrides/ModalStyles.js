@@ -1,6 +1,6 @@
 import palette from '../palette';
 
-const backgroundColor = palette.palette.default.background.default;
+const backgroundColor =palette.palette.default.background.default;
 
 const modalStyles = {
     defaultProps: {
@@ -15,6 +15,7 @@ const modalStyles = {
             left: 0,
             overflow: 'auto',
             outline: 0,
+            boxShadow: '0px 2px 4px -1px rgba(0, 0, 0, 0.2)', 
           },
           backdrop: {
             backgroundColor: backgroundColor,

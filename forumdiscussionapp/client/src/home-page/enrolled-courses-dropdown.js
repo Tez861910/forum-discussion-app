@@ -1,8 +1,8 @@
 import React, { useState, useEffect, useCallback } from 'react';
-import { Select, MenuItem, InputLabel, FormControl, Box } from '@mui/material';
+import { Select, MenuItem, InputLabel, FormControl, Box, CircularProgress } from '@mui/material';
 import useApi from './Api';
 
-const EnrolledCoursesDropdown = ({ onCourseSelect, onCourseChange ,refreshCourses }) => {
+const EnrolledCoursesDropdown = ({ onCourseSelect, onCourseChange, refreshCourses }) => {
   const [enrolledCourses, setEnrolledCourses] = useState([]);
   const [userCourses, setUserCourses] = useState([]);
   const [selectedCourse, setSelectedCourse] = useState('');
@@ -32,9 +32,11 @@ const EnrolledCoursesDropdown = ({ onCourseSelect, onCourseChange ,refreshCourse
         setUserCourses(response.data.userCourses);
       } else {
         console.error('Failed to fetch user courses:', response.status);
+        // Consider displaying an error message to the user
       }
     } catch (error) {
       console.error('Error fetching user courses:', error);
+      // Consider displaying an error message to the user
     }
   }, [api]);
 
@@ -46,50 +48,58 @@ const EnrolledCoursesDropdown = ({ onCourseSelect, onCourseChange ,refreshCourse
         setEnrolledCourses(response.data.courses);
       } else {
         console.error('Failed to fetch courses:', response.status);
+        // Consider displaying an error message to the user
       }
     } catch (error) {
       console.error('Error fetching courses:', error);
+      // Consider displaying an error message to the user
     }
   }, [api]);
 
   useEffect(() => {
     const fetchData = async () => {
       setIsLoading(true);
-      await Promise.all([fetchUserCourses(), fetchEnrolledCourses()]);
-      setIsLoading(false);
+      try {
+        await Promise.all([fetchUserCourses(), fetchEnrolledCourses()]);
+      } finally {
+        setIsLoading(false);
+      }
     };
 
     fetchData();
-  }, [fetchUserCourses, fetchEnrolledCourses,refreshCourses]);
+  }, [fetchUserCourses, fetchEnrolledCourses, refreshCourses]);
 
   return (
-    <Box sx={{ minWidth: 200 }}>
-      <FormControl fullWidth>
-        <InputLabel htmlFor="enrolled-courses-dropdown">Enrolled Courses</InputLabel>
-        <Select
-          label="Enrolled Courses"
-          id="enrolled-courses-dropdown"
-          value={selectedCourse}
-          onChange={(e) => handleCourseChange(e.target.value)}
-        >
-          {isLoading ? (
-            <MenuItem disabled>Loading...</MenuItem>
-          ) : enrolledCourses.length > 0 ? (
-            enrolledCourses
-              .filter((enrolledCourse) =>
-                userCourses.some((userCourse) => userCourse.CourseID === enrolledCourse.CourseID)
-              )
-              .map((enrolledCourse) => (
-                <MenuItem key={enrolledCourse.CourseID} value={enrolledCourse.CourseID}>
-                  {enrolledCourse.CourseName}
-                </MenuItem>
-              ))
-          ) : (
-            <MenuItem disabled>No enrolled courses</MenuItem>
-          )}
-        </Select>
-      </FormControl>
-    </Box>
+    <FormControl fullWidth disabled={isLoading}>
+      <InputLabel htmlFor="enrolled-courses-dropdown">Enrolled Courses</InputLabel>
+      <Box>
+      <Select
+        label="Enrolled Courses"
+        id="enrolled-courses-dropdown"
+        value={selectedCourse}
+        onChange={(e) => handleCourseChange(e.target.value)}
+      >
+        {isLoading ? (
+          <MenuItem disabled>
+            <CircularProgress size={20} thickness={5} />
+            &nbsp; Loading...
+          </MenuItem>
+        ) : enrolledCourses.length > 0 ? (
+          enrolledCourses
+            .filter((enrolledCourse) =>
+              userCourses.some((userCourse) => userCourse.CourseID === enrolledCourse.CourseID)
+            )
+            .map((enrolledCourse) => (
+              <MenuItem key={enrolledCourse.CourseID} value={enrolledCourse.CourseID}>
+                {enrolledCourse.CourseName}
+              </MenuItem>
+            ))
+        ) : (
+          <MenuItem disabled>No enrolled courses</MenuItem>
+        )}
+      </Select>
+      </Box>
+    </FormControl>
   );
 };
 

@@ -9,6 +9,8 @@ const bottomNavigationStyles = {
         styleOverrides: {
           root: {
             backgroundColor: primaryColor,
+            transition: '0.3s', 
+            boxShadow: '0px 2px 4px -1px rgba(0, 0, 0, 0.2)', 
           },
         },
       },

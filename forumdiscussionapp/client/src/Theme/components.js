@@ -80,9 +80,9 @@ const components = {
   MuiButtonGroup: {
     styleOverrides: buttonGroupStyles,
   },
-  MuiBackdrop: {
+ /* MuiBackdrop: {
     styleOverrides: backdropStyles,
-  }, 
+  }, */
   MuiCard: {
     styleOverrides: cardStyles,
   },

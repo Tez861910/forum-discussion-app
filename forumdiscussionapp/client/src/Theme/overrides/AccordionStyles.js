@@ -12,6 +12,8 @@ const accordionStyles = {
     '&.Mui-expanded': {
       margin: '1rem 0',
     },
+    transition: '0.3s',
+    boxShadow: '0px 2px 4px -1px rgba(0, 0, 0, 0.2)',
   },
   rounded: {
     borderRadius: '0.25rem',

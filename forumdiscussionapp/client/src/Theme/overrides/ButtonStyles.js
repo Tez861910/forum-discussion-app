@@ -1,26 +1,36 @@
 import palette from '../palette';
 
-const primaryColor = palette.palette.default.primary.main;
-const secondaryColor = palette.palette.default.secondary.main;
 const tertiaryColor = palette.palette.default.tertiary.main;
 const quaternaryColor = palette.palette.default.quaternary.main;
-const contrastTextColorPrimary = palette.palette.default.primary.contrastText;
-const contrastTextColorSecondary = palette.palette.default.secondary.contrastText;
+const quinaryColor = palette.palette.default.quinary.main;
+const senaryColor = palette.palette.default.senary.main;
 const contrastTextColorTertiary = palette.palette.default.tertiary.contrastText;
 const contrastTextColorQuaternary = palette.palette.default.quaternary.contrastText;
+const contrastTextColorQuinary = palette.palette.default.quinary.contrastText;
+const contrastTextColorSenary = palette.palette.default.senary.contrastText;
 const textColorPrimary = palette.palette.default.text.primary;
+
+const hexToRGBA = (hex, opacity) => {
+    let r = parseInt(hex.slice(1, 3), 16),
+        g = parseInt(hex.slice(3, 5), 16),
+        b = parseInt(hex.slice(5, 7), 16);
+
+    return `rgba(${r}, ${g}, ${b}, ${opacity})`;
+};
 
 const buttonStyles = {
     root: {
         textTransform: 'none',
         borderRadius: '0.5rem',
         padding: '0.75rem 1.5rem',
-        backgroundColor: primaryColor,
-        color: contrastTextColorPrimary,
+        backgroundColor: hexToRGBA(tertiaryColor, 0.8),
+        color: contrastTextColorTertiary,
         '&:hover': {
-          backgroundColor: secondaryColor,
-          color: contrastTextColorSecondary,
+          backgroundColor: hexToRGBA(quaternaryColor, 0.8),
+          color: contrastTextColorQuaternary,
         },
+        transition: '0.3s', 
+        boxShadow: '0px 2px 4px -1px rgba(0, 0, 0, 0.2)', 
     },
     label: {
         color: textColorPrimary,
@@ -29,20 +39,20 @@ const buttonStyles = {
         padding: '0.375rem 0.5rem',
     },
     textPrimary: {
-        color: tertiaryColor,
+        color: hexToRGBA(quinaryColor, 0.8),
     },
     textSecondary: {
-        color: quaternaryColor,
+        color: hexToRGBA(senaryColor, 0.8),
     },
     outlined: {
         padding: '0.375rem 1rem',
-        border: `1px solid ${tertiaryColor}`,
+        border: `1px solid ${hexToRGBA(quinaryColor, 0.8)}`,
     },
     outlinedPrimary: {
-        borderColor: quaternaryColor,
+        borderColor: hexToRGBA(senaryColor, 0.8),
     },
     outlinedSecondary: {
-        borderColor: primaryColor,
+        borderColor: hexToRGBA(quinaryColor, 0.8),
     },
     contained: {
         boxShadow: 'none',
@@ -51,15 +61,15 @@ const buttonStyles = {
         },
     },
     containedPrimary: {
-        backgroundColor: secondaryColor,
+        backgroundColor: hexToRGBA(quinaryColor, 0.8),
         '&:hover': {
-          backgroundColor: tertiaryColor,
+          backgroundColor: hexToRGBA(senaryColor, 0.8),
         },
     },
     containedSecondary: {
-        backgroundColor: quaternaryColor,
+        backgroundColor: hexToRGBA(senaryColor, 0.8),
         '&:hover': {
-          backgroundColor: primaryColor,
+          backgroundColor: hexToRGBA(quinaryColor, 0.8),
         },
     },
     disableElevation: {

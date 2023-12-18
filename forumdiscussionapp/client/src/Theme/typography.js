@@ -1,95 +1,44 @@
 import palette from './palette';
 
-const primaryColor = palette.palette.default.primary.main;
-const secondaryColor = palette.palette.default.secondary.main;
-const tertiaryColor = palette.palette.default.tertiary.main;
-const quaternaryColor = palette.palette.default.quaternary.main;
-const contrastTextColorPrimary = palette.palette.default.primary.contrastText;
-const contrastTextColorSecondary = palette.palette.default.secondary.contrastText;
-const contrastTextColorTertiary = palette.palette.default.tertiary.contrastText;
-const contrastTextColorQuaternary = palette.palette.default.quaternary.contrastText;
-const textColor = palette.palette.default.text.primary;
+const { primary, secondary, tertiary, quaternary, text } = palette.palette.default;
+const fontWeight = [300, 400, 500, 700];
 
-const fontWeightLight = 300;
-const fontWeightRegular = 400;
-const fontWeightMedium = 500;
-const fontWeightBold = 700;
+const createTypography = (fontSize, fontWeight, color, contrastText, textTransform) => ({
+  fontSize,
+  fontWeight,
+  color,
+  contrastText,
+  textTransform,
+});
 
 const typography = {
   fontFamily: '"Roboto", "Helvetica", "Arial", sans-serif',
-  fontWeightLight: fontWeightLight,
-  fontWeightRegular: fontWeightRegular,
-  fontWeightMedium: fontWeightMedium,
-  fontWeightBold: fontWeightBold,
-  h1: {
-    fontSize: '2rem',
-    fontWeight: fontWeightBold,
-    color: primaryColor,
-    contrastText: contrastTextColorPrimary,
-  },
-  h2: {
-    fontSize: '1.5rem',
-    fontWeight: fontWeightMedium,
-    color: secondaryColor,
-    contrastText: contrastTextColorSecondary,
-  },
-  h3: {
-    fontSize: '1.2rem',
-    fontWeight: fontWeightRegular,
-    color: tertiaryColor,
-    contrastText: contrastTextColorTertiary,
-  },
-  h4: {
-    fontSize: '1rem',
-    fontWeight: fontWeightRegular,
-    color: quaternaryColor,
-    contrastText: contrastTextColorQuaternary,
-  },
-  h5: {
-    fontSize: '0.875rem',
-    fontWeight: fontWeightRegular,
-    color: primaryColor,
-    contrastText: contrastTextColorPrimary,
-  },
-  h6: {
-    fontSize: '0.75rem',
-    fontWeight: fontWeightLight,
-    color: secondaryColor,
-    contrastText: contrastTextColorSecondary,
-  },
-  subtitle1: {
-    fontSize: '1rem',
-    color: tertiaryColor,
-    contrastText: contrastTextColorTertiary,
-  },
-  subtitle2: {
-    fontSize: '0.875rem',
-    color: quaternaryColor,
-    contrastText: contrastTextColorQuaternary,
-  },
-  body1: {
-    fontSize: '1rem',
-    color: textColor,
-  },
-  body2: {
-    fontSize: '0.875rem',
-    color: textColor,
-  },
-  button: {
-    fontSize: '0.875rem',
-    textTransform: 'uppercase',
-    color: primaryColor,
-    contrastText: contrastTextColorPrimary,
-  },
-  caption: {
-    fontSize: '0.75rem',
-    color: textColor,
-  },
-  overline: {
-    fontSize: '0.75rem',
-    textTransform: 'uppercase',
-    color: textColor,
-  },
+  fontWeightLight: fontWeight[0],
+  fontWeightRegular: fontWeight[1],
+  fontWeightMedium: fontWeight[2],
+  fontWeightBold: fontWeight[3],
+  h1: createTypography('2rem', fontWeight[3], primary.main, primary.contrastText),
+  h2: createTypography('1.5rem', fontWeight[2], secondary.main, secondary.contrastText),
+  h3: createTypography('1.2rem', fontWeight[1], tertiary.main, tertiary.contrastText),
+  h4: createTypography('1rem', fontWeight[1], quaternary.main, quaternary.contrastText),
+  h5: createTypography('0.875rem', fontWeight[1], primary.main, primary.contrastText),
+  h6: createTypography('0.75rem', fontWeight[0], secondary.main, secondary.contrastText),
+  subtitle1: createTypography('1rem', fontWeight[1], tertiary.main, tertiary.contrastText),
+  subtitle2: createTypography('0.875rem', fontWeight[1], quaternary.main, quaternary.contrastText),
+  body1: createTypography('1rem', fontWeight[1], text.primary),
+  body2: createTypography('0.875rem', fontWeight[1], text.primary),
+  button: createTypography('0.875rem', fontWeight[2], primary.main, primary.contrastText, 'uppercase'),
+  caption: createTypography('0.75rem', fontWeight[1], text.primary),
+  overline: createTypography('0.75rem', fontWeight[1], text.primary, null, 'uppercase'),
+  link: createTypography('1rem', fontWeight[1], primary.main, primary.contrastText, 'none'),
+  tooltip: createTypography('0.75rem', fontWeight[0], text.primary, text.primary, 'none'),
+  alert: createTypography('1rem', fontWeight[2], primary.main, primary.contrastText, 'none'),
+  badge: createTypography('0.75rem', fontWeight[3], primary.main, primary.contrastText, 'uppercase'),
+  listItem: createTypography('1rem', fontWeight[1], text.primary, text.primary, 'none'),
+  menu: createTypography('1rem', fontWeight[1], text.primary, text.primary, 'none'),
+  dropdown: createTypography('1rem', fontWeight[1], text.primary, text.primary, 'none'),
+  tab: createTypography('1rem', fontWeight[2], primary.main, primary.contrastText, 'none'),
+  modal: createTypography('1rem', fontWeight[1], text.primary, text.primary, 'none'),
 };
 
 export default typography;

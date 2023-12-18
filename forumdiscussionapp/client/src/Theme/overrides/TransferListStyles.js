@@ -2,12 +2,14 @@ import palette from '../palette';
 
 const primaryMainColor = palette.palette.default.primary.main;
 const textPrimaryColor = palette.palette.default.text.primary;
+const transition = '0.3s'; 
 
 const transferListStyles = {
   MuiList: {
     styleOverrides: {
       root: {
         backgroundColor: primaryMainColor,
+        transition: transition, 
       },
     },
   },
@@ -16,6 +18,7 @@ const transferListStyles = {
     styleOverrides: {
       root: {
         color: textPrimaryColor,
+        transition: transition, 
       },
     },
   },
@@ -24,6 +27,7 @@ const transferListStyles = {
     styleOverrides: {
       root: {
         color: primaryMainColor,
+        transition: transition, 
       },
     },
   },
@@ -32,6 +36,7 @@ const transferListStyles = {
     styleOverrides: {
       root: {
         color: primaryMainColor,
+        transition: transition,
       },
     },
   },

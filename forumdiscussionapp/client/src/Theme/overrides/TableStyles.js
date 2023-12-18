@@ -2,6 +2,7 @@ import palette from '../palette';
 
 const primaryMainColor = palette.palette.default.primary.main;
 const textPrimaryColor = palette.palette.default.text.primary;
+const transition = '0.3s';
 
 const tableStyles = {
   defaultProps: {
@@ -9,6 +10,7 @@ const tableStyles = {
       styleOverrides: {
         root: {
           backgroundColor: primaryMainColor,
+          transition: transition, 
         },
       },
     },
@@ -17,6 +19,7 @@ const tableStyles = {
       styleOverrides: {
         root: {
           color: textPrimaryColor,
+          transition: transition, 
         },
       },
     },
@@ -25,6 +28,7 @@ const tableStyles = {
       styleOverrides: {
         root: {
           backgroundColor: primaryMainColor,
+          transition: transition,
         },
       },
     },
@@ -34,6 +38,7 @@ const tableStyles = {
         root: {
           '&:nth-of-type(odd)': {
             backgroundColor: primaryMainColor,
+            transition: transition, 
           },
         },
       },

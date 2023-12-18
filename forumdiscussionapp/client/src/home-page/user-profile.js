@@ -240,6 +240,8 @@ const UserProfile = ({ isOpen, onClose, setUserName }) => {
                   <EditIcon />
                 </IconButton>
                 <Button
+                color="primary"
+                variant="contained"
                   onClick={handleNavigateBack}
                   startIcon={<ArrowBackIcon />}
                 >

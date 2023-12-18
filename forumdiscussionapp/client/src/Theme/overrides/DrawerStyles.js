@@ -1,14 +1,22 @@
+import { alpha } from '@mui/material/styles';
 import palette from '../palette';
 
-const primaryColor = palette.palette.default.primary.main;
-const textColorPrimary = palette.palette.default.text.primary;
-const backgroundColorPaper = palette.palette.default.background.paper;
-const backgroundColorTransparent = 'rgba(255, 255, 255, 0.5)'; 
+const primaryColor = alpha(palette.palette.default.primary.main, 0.3); 
+const secondaryColor = alpha(palette.palette.default.secondary.main, 0.3);
+const contrastTextColorPrimary = alpha(palette.palette.default.primary.contrastText, 0.3); 
+const contrastTextColorSecondary = alpha(palette.palette.default.secondary.contrastText, 0.3); 
 
 const drawerStyles = {
     paper: {
       width: '240px',
-      backgroundColor: backgroundColorTransparent, 
+      backgroundColor: primaryColor,
+      color: contrastTextColorPrimary,
+      transition: '0.3s', 
+      boxShadow: '0px 2px 4px -1px rgba(0, 0, 0, 0.2)', 
+      '&:hover': {
+        backgroundColor: secondaryColor,
+        color: contrastTextColorSecondary,
+      },
     },
     defaultProps: {
       MuiList: {
@@ -16,18 +24,20 @@ const drawerStyles = {
           root: {
             width: '100%',
             maxWidth: '360px',
-            backgroundColor: backgroundColorTransparent, 
+            backgroundColor: primaryColor,
+            color: contrastTextColorPrimary,
           },
         },
       },
       MuiListItem: {
         styleOverrides: {
           root: {
-            color: textColorPrimary,
+            color: contrastTextColorPrimary,
           },
           button: {
             '&:hover': {
-              backgroundColor: primaryColor,
+              backgroundColor: secondaryColor,
+              color: contrastTextColorSecondary,
             },
           },
         },
@@ -35,21 +45,21 @@ const drawerStyles = {
       MuiListItemIcon: {
         styleOverrides: {
           root: {
-            color: textColorPrimary,
+            color: contrastTextColorPrimary,
           },
         },
       },
       MuiListItemText: {
         styleOverrides: {
           root: {
-            color: textColorPrimary,
+            color: contrastTextColorPrimary,
           },
         },
       },
       MuiDivider: {
         styleOverrides: {
           root: {
-            backgroundColor: primaryColor,
+            backgroundColor: secondaryColor,
           },
         },
       },

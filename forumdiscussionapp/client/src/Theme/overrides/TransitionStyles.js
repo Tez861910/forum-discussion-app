@@ -25,6 +25,8 @@ const transitionStyles = {
     easeIn: 'cubic-bezier(0.4, 0, 1, 1)',
     sharp: 'cubic-bezier(0.4, 0, 0.6, 1)',
   },
+
+  delay: (delayTime = 0) => `${delayTime}ms`,
 };
 
 export default transitionStyles;

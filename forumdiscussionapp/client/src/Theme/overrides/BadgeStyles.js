@@ -8,6 +8,8 @@ const textColorPrimary = palette.palette.default.text.primary;
 const badgeStyles = {
     root: {
         marginRight: '1rem',
+        transition: '0.3s', 
+        boxShadow: '0px 2px 4px -1px rgba(0, 0, 0, 0.2)',
     },
     badge: {
         backgroundColor: secondaryColor,

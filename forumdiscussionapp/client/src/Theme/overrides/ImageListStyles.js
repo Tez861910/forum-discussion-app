@@ -12,6 +12,8 @@ const imageListStyles = {
             gridTemplateColumns: 'repeat(auto-fill, minmax(200px, 1fr))',
             gap: '0.625rem',
             backgroundColor: backgroundColorDefault, 
+            transition: '0.3s', 
+            boxShadow: '0px 2px 4px -1px rgba(0, 0, 0, 0.2)', 
           },
         },
       },

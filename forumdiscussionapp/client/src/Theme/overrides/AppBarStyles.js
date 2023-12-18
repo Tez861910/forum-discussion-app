@@ -1,12 +1,22 @@
 import palette from '../palette';
 
-const primaryColor = palette.palette.priamry;
-const contrastTextColor = palette.palette.default.primary.contrastText;
+const primaryColor = palette.palette.default.primary.main;
+const secondaryColor = palette.palette.default.secondary.main;
+const contrastTextColorPrimary = palette.palette.default.primary.contrastText;
+const contrastTextColorSecondary = palette.palette.default.secondary.contrastText;
 
 const appBarStyles = {
     root: {
       backgroundColor: primaryColor,
-      color: contrastTextColor,
+      color: contrastTextColorPrimary,
+      opacity: 0.9, 
+      boxShadow: '0px 3px 5px 2px rgba(0, 0, 0, .3)', 
+      borderRadius: '10px',
+      transition: '0.3s',
+      '&:hover': {
+        backgroundColor: secondaryColor,
+        color: contrastTextColorSecondary,
+      },
     },
     defaultProps: {
       MuiToolbar: {

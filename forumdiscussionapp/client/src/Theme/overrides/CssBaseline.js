@@ -9,8 +9,9 @@ const cssBaseline = {
         backgroundImage: `url(${logobg})`,
         backgroundSize: 'cover',
         backgroundRepeat: 'no-repeat',
-        backgroundcolor: primaryColor,
-        textcolor: textColorPrimary, 
+        backgroundColor: primaryColor,
+        color: textColorPrimary, 
+        transition: '0.3s', 
     },
     '@global': {
         html: {
@@ -18,6 +19,9 @@ const cssBaseline = {
         },
         a: {
           textDecoration: 'none',
+          '&:hover': { 
+            textDecoration: 'underline',
+          },
         },
         img: {
           maxWidth: '100%',
