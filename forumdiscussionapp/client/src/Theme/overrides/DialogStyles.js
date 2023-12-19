@@ -1,10 +1,9 @@
-import { alpha } from '@mui/material/styles';
 import palette from '../palette';
 
-const primaryColor = alpha(palette.palette.default.primary.main, 0.5); 
-const secondaryColor = alpha(palette.palette.default.secondary.main, 0.5);
-const contrastTextColorPrimary = alpha(palette.palette.default.primary.contrastText, 0.5); 
-const contrastTextColorSecondary = alpha(palette.palette.default.secondary.contrastText, 0.5); 
+const primaryColor = palette.palette.default.primary.main; 
+const secondaryColor = palette.palette.default.secondary.main;
+const contrastTextColorPrimary = palette.palette.default.primary.contrastText; 
+const contrastTextColorSecondary = palette.palette.default.secondary.contrastText; 
 
 const dialogStyles = {
     paper: {

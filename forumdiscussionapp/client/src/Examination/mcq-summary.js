@@ -1,6 +1,5 @@
 import React from 'react';
 import { List, ListItem, Typography } from '@mui/material';
-import './mcq-summary.css';
 
 const MCQSummary = ({ questions, answers }) => {
   return (
