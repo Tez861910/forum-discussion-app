@@ -1,16 +1,22 @@
 import * as React from 'react';
 import { Link as RouterLink } from 'react-router-dom';
 import {
-  Button,
+  AppBar,
+  Toolbar,
   Typography,
-  Paper,
+  Button,
+  IconButton,
+  Drawer,
+  List,
+  ListItem,
+  ListItemText,
+  ButtonBase,
   Avatar,
-  Stack,
-  Grid,
   Box,
-  Container,
+  Paper,
 } from '@mui/material';
-import { useTheme } from '@mui/material/styles';
+import MenuIcon from '@mui/icons-material/Menu';
+import { useTheme } from '@mui/system';
 import logo from './logo.png';
 
 const NavigationButton = ({ to, color, children }) => (
@@ -20,11 +26,12 @@ const NavigationButton = ({ to, color, children }) => (
     to={to}
     color={color}
     sx={{
-      width: '100%',
       fontSize: '1.2rem',
-      py: 2,
-      borderRadius: 4,
+      py: 1,
+      px: 2, 
+      borderRadius: 2,
       textTransform: 'none',
+      ml: 2, 
     }}
   >
     {children}
@@ -33,81 +40,86 @@ const NavigationButton = ({ to, color, children }) => (
 
 const Start = () => {
   const theme = useTheme();
+  const [drawerOpen, setDrawerOpen] = React.useState(false);
+
+  const handleDrawerToggle = () => {
+    setDrawerOpen(!drawerOpen);
+  };
 
   return (
-    <Container
-      sx={{
-        height: '100vh',
-        display: 'flex',
-        alignItems: 'center',
-        justifyContent: 'center',
-      }}
-    >
-      <Paper
-        elevation={3}
+    <Box sx={{p:6}}>
+      <AppBar position="static" sx={{ boxShadow: 2, bgcolor: theme.palette.background.paper }}>
+        <Toolbar sx={{ display: 'flex', justifyContent: 'space-between' }}>
+          <IconButton
+            edge="start"
+            color="inherit"
+            aria-label="menu"
+            sx={{ mr: 2 }}
+            onClick={handleDrawerToggle}
+          >
+            <MenuIcon />
+          </IconButton>
+          <Box sx={{ flexGrow: 1 }}>
+            <Typography variant="h3" component="div">
+              University Website
+            </Typography>
+          </Box>
+          <NavigationButton to="/login" color="primary" sx={{ ml: 1 }}>
+            Login
+          </NavigationButton>
+          <NavigationButton to="/sign-up" color="secondary" sx={{ ml: 1 }}>
+            Signup
+          </NavigationButton>
+        </Toolbar>
+      </AppBar>
+      <Drawer anchor="left" open={drawerOpen} onClose={handleDrawerToggle} sx={{ width: 240 }} > 
+        <AppBar position="static">
+          <Toolbar>
+            <Typography variant="h4" component="div">
+              Menu
+            </Typography>
+          </Toolbar>
+        </AppBar>
+        <List>
+          <ButtonBase component={ListItem} sx={{ py: 2 }}>
+            <ListItemText primary="Dummy Button 1" />
+          </ButtonBase>
+          <ButtonBase component={ListItem} sx={{ py: 2 }}>
+            <ListItemText primary="Dummy Button 2" />
+          </ButtonBase>
+        </List>
+      </Drawer>
+      <Box
         sx={{
-          p: 3,
-          borderRadius: 2,
-          bgcolor: theme.palette.background.paper,
-          opacity: 0.9,
-          transition: 'opacity .3s',
-          '&:hover': { opacity: 1 },
+          display: 'flex',
+          flexDirection: 'column',
+          alignItems: 'center',
+          justifyContent: 'center',
+          height: '100vh',
+          pt: 8,
         }}
       >
-        <Grid
-          container
-          spacing={2}
-          alignItems="center"
-          justifyContent="center"
+        <Paper
+          elevation={3}
+          sx={{
+            p: 4, 
+            borderRadius: 2,
+            bgcolor: theme.palette.background.paper,
+            display: 'flex', 
+            flexDirection: 'column', 
+            alignItems: 'center', 
+            opacity: 0.9,
+            transition: 'opacity .3s',
+            '&:hover': { opacity: 1 },
+          }}
         >
-          <Grid item xs={12} md={6} align="center">
-            {/* Logo */}
-            <Box
-              component="div"
-              sx={{
-                mb: 3,
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'center',
-              }}
-            >
-              <Stack>
-                <Avatar src={logo} alt="Logo" sx={{ width: 200, height: 200 }} />
-              </Stack>
-            </Box>
-
-            {/* Welcome Message */}
-            <Typography
-              variant="h2"
-              sx={{
-                mb: 2,
-                fontWeight: 'bold',
-                color: theme.palette.text.primary,
-                textAlign: 'center',
-                textShadow: '1px 1px 2px gray',
-              }}
-            >
-              Welcome to the Forum Discussion App!
-            </Typography>
-
-            {/* Navigation Buttons */}
-            <Box component="nav" sx={{ mt: 2 }}>
-              <Stack
-                direction={{ xs: 'column', sm: 'row' }}
-                spacing={3}
-              >
-                <NavigationButton to="/login" color="primary">
-                  Login
-                </NavigationButton>
-                <NavigationButton to="/sign-up" color="secondary">
-                  Signup
-                </NavigationButton>
-              </Stack>
-            </Box>
-          </Grid>
-        </Grid>
-      </Paper>
-    </Container>
+          <Avatar src={logo} alt="Logo" sx={{ width: 200, height: 200 }} />
+          <Typography variant="h1" sx={{ mt: 4, textAlign: 'center' }}>
+            Welcome to the University Website!
+          </Typography>
+        </Paper>
+      </Box>
+    </Box>
   );
 };
 

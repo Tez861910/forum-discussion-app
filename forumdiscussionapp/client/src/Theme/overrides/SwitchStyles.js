@@ -7,6 +7,9 @@ const switchStyles = {
   root: {
     color: primaryMainColor,
     transition: transition, 
+    '&.Mui-checked': {
+      transition: transition, 
+    },
   },
   
   switchBase: {
@@ -29,10 +32,6 @@ const switchStyles = {
   
   track: {
     backgroundColor: primaryMainColor,
-    transition: transition, 
-  },
-  
-  checked: {
     transition: transition, 
   },
 };

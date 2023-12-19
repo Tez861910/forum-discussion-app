@@ -11,7 +11,6 @@ import {
   Alert,
 } from '@mui/material';
 import { useTheme } from '@mui/material/styles';
-import useMediaQuery from '@mui/material/useMediaQuery';
 import MenuIcon from '@mui/icons-material/Menu';
 import EnrolledCoursesDropdown from './enrolled-courses-dropdown';
 
@@ -26,7 +25,6 @@ const Navbar = ({
   handleDrawerToggle,
 }) => {
   const theme = useTheme();
-  const matches = useMediaQuery(theme.breakpoints.up('md'));
   const [activePage, setActivePage] = useState('scheduler');
 
   useEffect(() => {
@@ -43,45 +41,48 @@ const Navbar = ({
   };
 
   return (
-    <Stack sx={{ width: '100%', flexGrow: 1 }}>
-      <AppBar position="static" color="primary" sx={{ mb: 3 }} >
-        <Toolbar sx={{ width: '100%' }}>
-          <IconButton
-            edge="start"
-            color="secondary"
-            aria-label="menu"
-            sx={{ mr: 2 }}
-            onClick={handleDrawerToggle}
-          >
-            <MenuIcon />
-          </IconButton>
+    <Stack sx={{ marginBottom: 2 }}>
+      <AppBar position="static" sx={{ boxShadow: 2, bgcolor: theme.palette.background.paper }}>
+        <Toolbar sx={{ display: 'flex', justifyContent: 'space-between' }}> 
+          <Stack direction="row" alignItems="center" spacing={2}>
+            <IconButton
+              edge="start"
+              color="secondary"
+              aria-label="menu"
+              onClick={handleDrawerToggle}
+            >
+              <MenuIcon />
+            </IconButton>
 
-          {activePage === 'scheduler' && (
-            <Typography variant="h5" color="inherit" component="div" sx={{ flexGrow: 1, mr: 2 }}>
-              {getRoleHeaderText(roleId)}
-            </Typography>
-          )}
+            {activePage === 'scheduler' && (
+              <Typography
+                variant="h5"
+                color="inherit"
+                component="div"
+                sx={{
+                  whiteSpace: 'nowrap',
+                  mr:2,
+                }}
+              >
+                {getRoleHeaderText(roleId)}
+              </Typography>
+            )}
+          </Stack>
 
-       
           {(isTeacherOrStudent && (roleId === '2' || roleId === '3')) && (
             <EnrolledCoursesDropdown
               onCourseSelect={onCourseSelect}
               onCourseChange={handleCourseChange}
-              sx={{ flexGrow: 1, mr: 2, mb: matches ? 0 : 2 }}
+              sx={{ flexGrow: 1, minWidth: '200px' }}
             />
           )}
-       
 
           <ButtonGroup
             variant="contained"
             color="secondary"
             aria-label="outlined primary button group"
             sx={{
-              '& .MuiButton-root':{ mx: 1, width: '180px' },
-              flexDirection: matches ? 'row' : 'column',
-              justifyContent: matches ? 'flex-start' : 'center',
-              alignItems: matches ? 'center' : 'stretch',
-              ml: matches ? 2 : 0,
+              '& .MuiButton-root': { mx: 1, width: '160px' },
             }}
           >
             <Button
@@ -110,22 +111,25 @@ const Navbar = ({
             {(roleId === '2' || roleId === '3') && (
               <>
                 <Button
-                  onClick={() => onButtonClick('/home/forum-discussion', userId, selectedCourse)} 
-                  disabled={!selectedCourse}>
+                  onClick={() => onButtonClick('/home/forum-discussion', userId, selectedCourse)}
+                  disabled={!selectedCourse}
+                >
                   Forum Discussion
                 </Button>
 
                 {isTeacherOrStudent && roleId === '2' && (
                   <Button
                     onClick={() => onButtonClick('/home/mcq-form', userId, selectedCourse)}
-                    disabled={!selectedCourse}>
+                    disabled={!selectedCourse}
+                  >
                     Create MCQ
                   </Button>
                 )}
                 {isTeacherOrStudent && roleId === '3' && (
                   <Button
                     onClick={() => onButtonClick('/home/mcq-answer-form', userId, selectedCourse)}
-                    disabled={!selectedCourse}>
+                    disabled={!selectedCourse}
+                  >
                     Answer MCQ
                   </Button>
                 )}
@@ -135,7 +139,7 @@ const Navbar = ({
         </Toolbar>
 
         {((roleId === '2' || roleId === '3') && !selectedCourse) && (
-          <Alert severity="info" sx={{ mt: 2 }}>
+          <Alert severity="info">
             <Typography variant="body2">
               Please select a course to enable more options.
             </Typography>

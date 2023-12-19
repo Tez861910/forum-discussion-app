@@ -1,6 +1,6 @@
 import * as React from 'react';
 import PropTypes from 'prop-types';
-import { Button, Box, Avatar, Typography, Drawer, IconButton } from '@mui/material';
+import { Button, Box, Avatar, Typography, Drawer, IconButton, AppBar, Toolbar } from '@mui/material';
 import Brightness4Icon from '@mui/icons-material/Brightness4';
 import LogoutIcon from '@mui/icons-material/Logout';
 import AddIcon from '@mui/icons-material/Add';
@@ -89,14 +89,20 @@ const Sidebar = ({
           keepMounted: true,
         }}
       >
-        <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'flex-end', py: 1, px: 2, bgcolor: theme.palette.primary.main }}>
-          <IconButton onClick={handleDrawerToggle} sx={{ color: 'white' }}>
-            <ChevronLeftIcon />
-          </IconButton>
-          <IconButton onClick={handleThemeChange} sx={{ color: 'white' }}>
-            <Brightness4Icon />
-          </IconButton>
-        </Box>
+       <AppBar position="static">
+  <Toolbar>
+    <Typography variant="h4" component="div" sx={{ flexGrow: 1 }}>
+      Menu
+    </Typography>
+    <IconButton onClick={handleDrawerToggle} sx={{ color: 'contrastPrimary' }}>
+      <ChevronLeftIcon />
+    </IconButton>
+    <IconButton onClick={handleThemeChange} sx={{ color: 'contrastSecondary' }}>
+      <Brightness4Icon />
+    </IconButton>
+  </Toolbar>
+</AppBar>
+
         <Box sx={{ p: 2, display: 'flex', flexDirection: 'column', gap: 2 }}>
           {/* User Avatar */}
           <Avatar sx={{ width: 56, height: 56, alignSelf: 'center' }} onClick={handleAvatarClick}>

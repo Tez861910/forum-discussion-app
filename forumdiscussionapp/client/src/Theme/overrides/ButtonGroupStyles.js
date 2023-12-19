@@ -23,23 +23,23 @@ const buttonGroupStyles = {
     },
   },
   groupedHorizontal: {
-    '&:not(:first-child)': {
+    '&:not(:first-of-type)': {
       marginLeft: '-1px',
       borderTopLeftRadius: '0',
       borderBottomLeftRadius: '0',
     },
-    '&:not(:last-child)': {
+    '&:not(:last-of-type)': {
       borderTopRightRadius: '0',
       borderBottomRightRadius: '0',
     },
   },
   groupedVertical: {
-    '&:not(:first-child)': {
+    '&:not(:first-of-type)': {
       marginTop: '-1px',
       borderTopLeftRadius: '0',
       borderTopRightRadius: '0',
     },
-    '&:not(:last-child)': {
+    '&:not(:last-of-type)': {
       borderBottomRightRadius: '0',
       borderBottomLeftRadius: '0',
     },

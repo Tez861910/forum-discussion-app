@@ -130,19 +130,22 @@ const UserProfile = ({ isOpen, onClose, setUserName }) => {
 
   return (
     <Modal open={isOpen} onClose={() => { onClose(); setEditing(false); }}>
-      <Box sx={style}>
+      <Box sx={{ position: 'absolute', top: '50%', left: '50%', transform: 'translate(-50%, -50%)', width: 400, bgcolor: 'background.paper', borderRadius: 8, boxShadow: 24, color: 'text.primary', fontFamily: 'Roboto, sans-serif', fontWeight: 'normal', lineHeight: 'normal', letterSpacing: 'normal', textAlign: 'left' }}>
+      <Box>
         <AppBar position="static">
           <Toolbar>
             <IconButton
               edge="start"
               color="inherit"
               onClick={handleNavigateBack}
+              sx={{ marginRight: 2 }}
             >
               <ArrowBackIcon />
             </IconButton>
             <Typography variant="h6">User Profile</Typography>
           </Toolbar>
         </AppBar>
+        </Box>
         <Box sx={{ maxHeight: '60vh', overflowY: 'auto', padding: 2 }}>
           {editing ? (
             <>
@@ -183,6 +186,7 @@ const UserProfile = ({ isOpen, onClose, setUserName }) => {
                 value={userData.Address}
                 onChange={(e) => setUserData((prevData) => ({ ...prevData, Address: e.target.value }))}
                 mb={2}
+                sx={{ mb: 2 }}
               />
               <TextField
                 fullWidth
@@ -190,6 +194,7 @@ const UserProfile = ({ isOpen, onClose, setUserName }) => {
                 value={userData.PhoneNumber}
                 onChange={(e) => setUserData((prevData) => ({ ...prevData, PhoneNumber: e.target.value }))}
                 mb={2}
+                sx={{ mb: 2 }}
               />
               <TextField
                 fullWidth
@@ -197,6 +202,7 @@ const UserProfile = ({ isOpen, onClose, setUserName }) => {
                 value={userData.DateOfBirth}
                 onChange={(e) => setUserData((prevData) => ({ ...prevData, DateOfBirth: e.target.value }))}
                 mb={2}
+                sx={{ mb: 2 }}
               />
               <TextField
                 fullWidth
@@ -204,6 +210,7 @@ const UserProfile = ({ isOpen, onClose, setUserName }) => {
                 value={userData.Gender}
                 onChange={(e) => setUserData((prevData) => ({ ...prevData, Gender: e.target.value }))}
                 mb={2}
+                sx={{ mb: 8 }}
               />
             </>
           ) : (
@@ -240,8 +247,8 @@ const UserProfile = ({ isOpen, onClose, setUserName }) => {
                   <EditIcon />
                 </IconButton>
                 <Button
-                color="primary"
-                variant="contained"
+                  color="primary"
+                  variant="contained"
                   onClick={handleNavigateBack}
                   startIcon={<ArrowBackIcon />}
                 >
@@ -276,23 +283,6 @@ const UserProfile = ({ isOpen, onClose, setUserName }) => {
       </Box>
     </Modal>
   );
-};
-
-const style = {
-  position: 'absolute',
-  top: '50%',
-  left: '50%',
-  transform: 'translate(-50%, -50%)',
-  width: 400,
-  bgcolor: 'background.paper',
-  borderRadius: 8,
-  boxShadow: 24,
-  color: 'text.primary',
-  fontFamily: 'Roboto, sans-serif',
-  fontWeight: 'normal',
-  lineHeight: 'normal',
-  letterSpacing: 'normal',
-  textAlign: 'left',
 };
 
 export default UserProfile;
