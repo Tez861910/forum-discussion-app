@@ -2,11 +2,12 @@ import React, { useState } from 'react';
 import { Typography, Button, TextField, Box, FormControlLabel, Radio, RadioGroup,  } from '@mui/material';
 import useApi from '../home-page/Api';
 
-function MCQQuestionForm({ onClose, onSave }) {
+function MCQQuestionForm({ onClose, onSave,  courseId }) {
   const [question, setQuestion] = useState('');
   const [options, setOptions] = useState(['', '', '', '']);
   const [correctAnswer, setCorrectAnswer] = useState('');
   const { api } = useApi();
+  const userId = localStorage.getItem('userId');
 
   const handleSaveQuestion = async () => {
     if (question && options.every((opt) => opt !== '') && correctAnswer !== '') {
@@ -14,6 +15,8 @@ function MCQQuestionForm({ onClose, onSave }) {
         question,
         options,
         correctAnswer,
+        courseId,
+        userId,
       };
 
       try {

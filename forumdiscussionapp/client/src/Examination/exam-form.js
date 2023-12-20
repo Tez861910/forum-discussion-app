@@ -8,13 +8,14 @@ function ExamForm({ onClose, courseId, fetchExams }) {
   const [questions, setQuestions] = useState([]);
   const [showQuestionForm, setShowQuestionForm] = useState(false);
   const { api } = useApi();
+  const userId = localStorage.getItem('userId');
 
   const handleSaveExam = async () => {
     if (examTitle && questions.every((question) => question.question && question.options.every((opt) => opt !== ''))) {
       const examData = {
         examTitle,
         questions,
-        courseId,
+        userId,
       };
 
       try {
@@ -96,7 +97,7 @@ function ExamForm({ onClose, courseId, fetchExams }) {
       <Dialog open={showQuestionForm} onClose={handleCloseQuestionForm}>
         <DialogTitle>Create New Question</DialogTitle>
         <DialogContent>
-          <MCQQuestionForm onClose={handleCloseQuestionForm} onSave={handleQuestionSave} />
+          <MCQQuestionForm onClose={handleCloseQuestionForm} onSave={handleQuestionSave} courseId={courseId}/>
         </DialogContent>
       </Dialog>
     </Box>

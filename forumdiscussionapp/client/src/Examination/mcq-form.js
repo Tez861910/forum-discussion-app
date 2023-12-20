@@ -42,9 +42,9 @@ function MCQForm({ selectedCourse: courseId }) {
   const handleDeleteExam = async (examId) => {
     // Handle deleting an exam
     try {
-      const response = await api.delete(`/exams/${examId}`);  // Adjust the API endpoint
+      const response = await api.delete(`/mcqform/mcqform/deleteexam/${examId}`);
       if (response.data.success) {
-        fetchExams();  // Refresh the list of exams after deleting an exam
+        fetchExams(); 
       } else {
         console.error('Error deleting exam:', response.data.error);
       }
