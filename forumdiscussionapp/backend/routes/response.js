@@ -1,73 +1,29 @@
 const express = require('express');
 const router = express.Router();
-const { query } = require('../db');
-const { verifyJwt} = require('../authvalid');
+const { verifyJwt } = require('../authvalid');
+const {
+  validateResponseCreate,
+  validateResponseUpdate,
+  validateResponseDelete,
+} = require('../body-validation/response-validation');
+
+const {getAllResponses} =require('../response-routes/get-all-responses')
+const {createResponse} =require('../response-routes/create-response')
+const {updateResponse} =require('../response-routes/update-response')
+const {deleteResponse} =require('../response-routes/delete-response')
 
 router.use(express.json());
 
 // Get all responses for a comment
-router.get('/responses/get/:commentId', verifyJwt, async (req, res) => {
-  const { commentId } = req.params;
-
-  try {
-    const result = await query('SELECT * FROM responses WHERE CommentID = ?', [commentId]);
-    let responses = result;
-
-    // Ensure responses is always an array
-    if (!Array.isArray(responses)) {
-      responses = [responses];
-    }
-
-    res.json({ responses });
-  } catch (error) {
-    console.error('Error fetching responses:', error);
-    res.status(500).json({ error: 'Internal Server Error' });
-  }
-});
+router.get('/responses/get/:commentId', verifyJwt, getAllResponses);
 
 // Create a new response for a comment
-router.post('/responses/create/:commentId', verifyJwt, async (req, res) => {
-  const { commentId } = req.params;
-  const { ResponseContent, userId } = req.body;
-
-  try {
-   
-    await query('INSERT INTO responses (ResponseContent, UserID, CommentID) VALUES (?, ?, ?)', [ResponseContent, userId, commentId]);
-
-    res.json({ message: 'Response added successfully' });
-  } catch (error) {
-    console.error('Error adding response:', error);
-    res.status(500).json({ error: 'Internal Server Error' });
-  }
-});
+router.post('/responses/create/:commentId', verifyJwt, validateResponseCreate, createResponse);
 
 // Update a response
-router.put('/responses/update/:responseId', verifyJwt, async (req, res) => {
-  const { responseId } = req.params;
-  const { content } = req.body;
-
-  try {
-    await query('UPDATE responses SET ResponseContent = ? WHERE ResponseID = ?', [content, responseId]);
-
-    res.json({ message: 'Response updated successfully' });
-  } catch (error) {
-    console.error('Error updating response:', error);
-    res.status(500).json({ error: 'Internal Server Error' });
-  }
-});
+router.put('/responses/update/:responseId', verifyJwt, validateResponseUpdate, updateResponse);
 
 // Delete a response
-router.delete('/responses/delete/:responseId', verifyJwt, async (req, res) => {
-  const { responseId } = req.params;
-
-  try {
-    await query('DELETE FROM responses WHERE ResponseID = ?', [responseId]);
-
-    res.json({ message: 'Response deleted successfully' });
-  } catch (error) {
-    console.error('Error deleting response:', error);
-    res.status(500).json({ error: 'Internal Server Error' });
-  }
-});
+router.delete('/responses/delete/:responseId', verifyJwt, validateResponseDelete, deleteResponse);
 
 module.exports = router;

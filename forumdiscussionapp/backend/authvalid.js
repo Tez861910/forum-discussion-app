@@ -1,5 +1,6 @@
 const jwt = require('jsonwebtoken');
 const argon2 = require('argon2');
+const Joi = require('joi');
 
 const JWT_SECRET = 'fg87234tgf8723gf82g498318u308gn8u';
 const REFRESH_TOKEN_SECRET = 'urhrhvoihiuvoalvheipaquie83843veibuiev';
@@ -95,6 +96,17 @@ const verifyRefreshToken = (req, res) => {
   }
 }
 
+function validate(schema) {
+  return (req, res, next) => {
+    const { error } = schema.validate({ ...req.body, ...req.params });
+    if (error) {
+      console.log('Invalid request:', error.details[0].message);
+      return res.status(400).json({ error: 'Invalid request' });
+    }
+    next();
+  };
+}
+
 module.exports = {
   hashPassword,
   verifyPassword,
@@ -102,4 +114,5 @@ module.exports = {
   verifyJwt,
   createRefreshToken,
   verifyRefreshToken,
+  validate,
 };
