@@ -33,10 +33,10 @@ router.get('/courses/enrollments/:courseId', verifyJwt, handleCoursesEnrollments
 // Get all courses
 router.get('/courses/get', verifyJwt, handleCoursesGet);
 
-// Enroll courses in user
+// Enroll courses in a user
 router.post('/courses/enroll', verifyJwt, validateCourseEnroll, handleCoursesEnroll);
 
-// Enroll users in course
+// Enroll users in a course
 router.post('/courses/:courseId/enroll', verifyJwt, validateCourseEnroll, handleCoursesIdEnroll);
 
 // Get a course by ID
@@ -51,7 +51,7 @@ router.patch('/courses/delete/:id', verifyJwt, validateCourseGetId, handleCourse
 // Patch (soft delete) removing users from a course
 router.patch('/courses/:courseId/enrollments', verifyJwt, validateRemoveUsersFromCourse, handleRemoveUsersFromCourse);
 
-// Patch (soft delete) removing user from a course
+// Patch (soft delete) removing a user from a course
 router.patch('/courses/:courseId/enrollments/:userId', verifyJwt, validateRemoveUsersFromCourse, handleCIDEnrollmentsEID);
 
 module.exports = router;

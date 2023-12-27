@@ -44,9 +44,6 @@ async function handleUsersCreate(req, res) {
   }
 };
 
-
-
-
 module.exports = {
   handleUsersCreate,
 };
