@@ -17,8 +17,17 @@ const handleCoursesEnrollmentsId = async (req, res) => {
         users
       JOIN
         usercourses ON users.UserID = usercourses.UserID
+      JOIN
+        courses ON usercourses.CourseID = courses.CourseID
+      JOIN
+        commonattributes AS ca_courses ON courses.CommonAttributeID = ca_courses.AttributeID
+      JOIN
+        commonattributes AS ca_usercourses ON usercourses.CommonAttributeID = ca_usercourses.AttributeID
+      JOIN
+        commonattributes AS ca_users ON users.CommonAttributeID = ca_users.AttributeID
       WHERE
-        usercourses.CourseID = ? AND usercourses.IsDeleted = FALSE;
+        courses.CourseID = ? AND ca_courses.IsDeleted = FALSE 
+        AND ca_usercourses.IsDeleted = FALSE AND ca_users.IsDeleted = FALSE;
     `;
     console.log('SQL Query:', sql);
 
