@@ -20,9 +20,7 @@ const { handleUsersDeleteId } = require('../user-routes/handle-users-delete-id')
 const { handleUsersGetRoleId } = require('../user-routes/handle-users-get-role-id');
 const { handleUsersUpdateUsers } = require('../user-routes/handle-users-updates-users');
 
-
 router.use(express.json());
-router.use(cors());
 
 // Create a new user
 router.post('/users/create', verifyJwt, validateUserCreate, handleUsersCreate);

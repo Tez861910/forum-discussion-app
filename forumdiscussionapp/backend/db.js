@@ -6,6 +6,7 @@ const dbConfig = {
   user: 'root',
   password: '',
   database: 'forumdiscussion',
+  port: 3307,
 };
 
 const connection = mysql.createConnection(dbConfig);
