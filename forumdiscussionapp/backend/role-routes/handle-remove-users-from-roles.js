@@ -9,11 +9,22 @@ async function handleRemoveUsersFromRole(req, res) {
       return res.status(400).json({ error: 'Invalid or empty user IDs provided' });
     }
 
-    const updateSql = 'UPDATE UserRole SET IsDeleted = TRUE WHERE UserID IN (?) AND RoleID = ?';
-    const updateResult = await query(updateSql, [userIds, roleId]);
+    // Check if the role assignments exist and are not deleted
+    const checkRolesSql = 'SELECT * FROM UserRoles ur INNER JOIN CommonAttributes ca ON ur.CommonAttributeID = ca.AttributeID WHERE ur.RoleID = ? AND ur.UserID IN (?) AND ca.IsDeleted = FALSE';
+    const [checkRolesResult] = await query(checkRolesSql, [roleId, userIds]);
+
+    if (!checkRolesResult || checkRolesResult.length === 0) {
+      return res.status(404).json({ error: 'Enrollment not found or already removed' });
+    }
+
+    // Soft-delete the role assignments
+    const updateSql = 'UPDATE CommonAttributes SET IsDeleted = TRUE WHERE AttributeID IN (?)';
+    const commonAttributeIds = checkRolesResult.map(role => role.CommonAttributeID);
+    const [updateResult] = await query(updateSql, [commonAttributeIds]);
 
     if (updateResult.affectedRows === 0) {
-      return res.status(404).json({ error: 'Enrollment not found or already removed' });
+      console.error('Error removing users from role');
+      return res.status(500).json({ error: 'Internal Server Error' });
     }
 
     console.log(`Users removed from the role ${roleId}.`);

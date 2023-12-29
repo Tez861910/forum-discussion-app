@@ -2,10 +2,10 @@ const { query } = require('../db');
 
 async function handleRolesGet(req, res) {
   try {
-    const sql = 'SELECT * FROM roles WHERE IsDeleted = false';
+    const sql = 'SELECT r.*, ca.IsDeleted as CommonAttributeIsDeleted FROM Roles r INNER JOIN CommonAttributes ca ON r.CommonAttributeID = ca.AttributeID WHERE ca.IsDeleted = false';
     const results = await query(sql);
 
-    if (!Array.isArray(results)) {
+    if (!Array.isArray(results) || results.length === 0) {
       console.error('No roles found in the database');
       return res.status(404).json({ error: 'No roles found' });
     }
@@ -13,7 +13,9 @@ async function handleRolesGet(req, res) {
     const rolesData = results.map(row => ({
       roleId: row.RoleID,
       roleName: row.RoleName,
-      isDeleted: row.IsDeleted,
+      roleDescription: row.RoleDescription,
+      commonAttributeId: row.CommonAttributeID,
+      commonAttributeIsDeleted: row.CommonAttributeIsDeleted,
     }));
 
     console.log('Roles fetched successfully');

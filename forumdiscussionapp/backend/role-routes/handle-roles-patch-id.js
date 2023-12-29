@@ -4,8 +4,18 @@ async function handleRolesPatchId(req, res) {
   const { id } = req.params;
 
   try {
-    const updateSql = 'UPDATE roles SET IsDeleted = TRUE WHERE RoleID = ?';
-    const [result] = await query(updateSql, [id]);
+    // Check if the role with the provided ID exists
+    const checkRoleSql = 'SELECT * FROM Roles r INNER JOIN CommonAttributes ca ON r.CommonAttributeID = ca.AttributeID WHERE r.RoleID = ? AND ca.IsDeleted = false';
+    const [checkRoleResult] = await query(checkRoleSql, [id]);
+
+    if (!checkRoleResult || checkRoleResult.length !== 1) {
+      console.error('Role not found');
+      return res.status(404).json({ error: 'Role not found' });
+    }
+
+    // Soft-delete the role
+    const updateSql = 'UPDATE CommonAttributes SET IsDeleted = TRUE WHERE AttributeID = ?';
+    const [result] = await query(updateSql, [checkRoleResult[0].CommonAttributeID]);
 
     if (result.affectedRows === 1) {
       console.log('Role soft-deleted successfully');

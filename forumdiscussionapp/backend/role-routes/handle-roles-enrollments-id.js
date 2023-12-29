@@ -2,7 +2,6 @@ const { query } = require('../db');
 
 async function handleRolesEnrollmentsId(req, res) {
   const roleId = req.params.roleId;
-  console.log('Received roleId:', roleId);
 
   try {
     if (!query) {
@@ -17,22 +16,21 @@ async function handleRolesEnrollmentsId(req, res) {
         users
       JOIN
         userroles ON users.UserID = userroles.UserID
+        JOIN CommonAttributes caUsers ON users.CommonAttributeID = caUsers.AttributeID
+        JOIN CommonAttributes caUserRoles ON userroles.CommonAttributeID = caUserRoles.AttributeID
       WHERE
-        userroles.RoleID = ? AND userroles.IsDeleted = FALSE;
+        userroles.RoleID = ? AND caUsers.IsDeleted = FALSE AND caUserRoles.IsDeleted = FALSE;
     `;
-    console.log('SQL Query:', sql);
 
     const rows = await query(sql, [parseInt(roleId, 10)]);
-
-    console.log('Query Result:', rows);
 
     if (!rows || rows.length === 0) {
       return res.status(404).json({ error: 'No users found for the specified role' });
     }
 
     const enrollmentsResult = {};
-    rows.forEach(row => {
-      const { UserID, UserName } = row;
+
+    rows.forEach(({ UserID, UserName }) => {
       if (!enrollmentsResult[UserID]) {
         enrollmentsResult[UserID] = [];
       }
@@ -47,5 +45,5 @@ async function handleRolesEnrollmentsId(req, res) {
 }
 
 module.exports = {
-    handleRolesEnrollmentsId,
+  handleRolesEnrollmentsId,
 };

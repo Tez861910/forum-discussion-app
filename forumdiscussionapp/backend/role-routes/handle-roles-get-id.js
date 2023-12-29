@@ -4,7 +4,7 @@ async function handleRolesGetId(req, res) {
   const { id } = req.params;
 
   try {
-    const sql = 'SELECT * FROM roles WHERE RoleID = ? AND IsDeleted = false';
+    const sql = 'SELECT r.*, ca.IsDeleted as CommonAttributeIsDeleted FROM Roles r INNER JOIN CommonAttributes ca ON r.CommonAttributeID = ca.AttributeID WHERE r.RoleID = ? AND ca.IsDeleted = false';
     const result = await query(sql, [id]);
 
     if (result.length === 1) {

@@ -1,16 +1,28 @@
 const { query } = require('../db');
 
 async function handleRolesCreate(req, res) {
-  const { roleName } = req.body;
+  const { roleName, description, createdByUserID } = req.body;
 
   try {
-    if (!roleName) {
-      console.log('Role name is required');
-      return res.status(400).json({ error: 'Role name is required' });
+    if (!roleName || !createdByUserID) {
+      console.log('Role name and createdByUserID are required');
+      return res.status(400).json({ error: 'Role name and createdByUserID are required' });
     }
 
-    const sql = 'INSERT INTO roles (RoleName) VALUES (?)';
-    const [result] = await query(sql, [roleName]);
+    // Insert CommonAttributes
+    const commonAttributesSql = 'INSERT INTO CommonAttributes (CreatedByUserID) VALUES (?)';
+    const [commonAttributesResult] = await query(commonAttributesSql, [createdByUserID]);
+
+    if (commonAttributesResult.affectedRows !== 1) {
+      console.error('CommonAttributes creation failed');
+      return res.status(500).json({ error: 'CommonAttributes creation failed' });
+    }
+
+    const commonAttributeID = commonAttributesResult.insertId;
+
+    // Insert Role
+    const roleSql = 'INSERT INTO Roles (RoleName, RoleDescription, CommonAttributeID) VALUES (?, ?, ?)';
+    const [result] = await query(roleSql, [roleName, description, commonAttributeID]);
 
     if (result.affectedRows === 1) {
       console.log('Role created successfully');
