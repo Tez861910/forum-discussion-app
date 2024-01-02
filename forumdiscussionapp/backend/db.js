@@ -30,8 +30,6 @@ async function handleDisconnect() {
   });
 }
 
-await handleDisconnect();
-
 // Custom query function that returns a promise
 async function query(sql, values) {
   try {
@@ -56,3 +54,12 @@ async function close() {
 }
 
 module.exports = { query, close };
+
+// Immediately Invoked Function Expression (IIFE) to handle disconnect
+(async () => {
+  try {
+    await handleDisconnect();
+  } catch (err) {
+    console.error(err);
+  }
+})();

@@ -1,6 +1,6 @@
 const express = require('express');
 const router = express.Router();
-const { query } = require('../db'); 
+const { query } = require('../../backend/db'); 
 
 // Handle the retrieval of MCQ questions for students
 router.get('/mcqanswerform/questions/get/:courseId', async (req, res) => {

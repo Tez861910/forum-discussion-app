@@ -1,6 +1,6 @@
 const express = require('express');
 const router = express.Router();
-const { query } = require('../db');
+const { query } = require('../../backend/db');
 
 // Handle the creation of MCQ questions by teachers
 router.post('/mcqform/save', async (req, res) => {
