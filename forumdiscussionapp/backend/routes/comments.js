@@ -19,18 +19,18 @@ router.use(express.json());
 router.use(cors());
 
 // Get all comments
-router.get('/comments/get', verifyJwt, handleCommentGet);
+router.get('/get', verifyJwt, handleCommentGet);
 
 // Create a new comment
-router.post('/comments/create/:threadId', verifyJwt, validateCommentCreate, handleCommentCreate);
+router.post('/create/:threadId', verifyJwt, validateCommentCreate, handleCommentCreate);
 
 // Update a comment
-router.put('/comments/update/:commentId', verifyJwt, validateCommentUpdate, handleCommentUpdateId);
+router.put('/update/:commentId', verifyJwt, validateCommentUpdate, handleCommentUpdateId);
 
 // Delete a comment
-router.delete('/comments/delete/:commentId', verifyJwt, validateCommentDelete, handleCommentDeleteId);
+router.delete('/delete/:commentId', verifyJwt, validateCommentDelete, handleCommentDeleteId);
 
 // API for retrieving comments for a specific thread.
-router.get('/comments/get/:threadId', verifyJwt, validateCommentGetThreadId, handleCommentGetThreadId);
+router.get('/get/:threadId', verifyJwt, validateCommentGetThreadId, handleCommentGetThreadId);
 
 module.exports = router;

@@ -23,33 +23,33 @@ const { handleUsersUpdateUsers } = require('../route-files/user-routes/handle-us
 router.use(express.json());
 
 // Create a new user
-router.post('/users/create', verifyJwt, validateUserCreate, handleUsersCreate);
+router.post('/create', verifyJwt, validateUserCreate, handleUsersCreate);
 
 // Get all users
-router.get('/users/get', verifyJwt, handleUsersGet);
+router.get('/get', verifyJwt, handleUsersGet);
 
 // Get username
 router.post('/getUsernames', verifyJwt, handleUsersGetUserName);
 
 // Get all user courses
-router.get('/usercourses/get', verifyJwt, handleUserCoursesGet);
+router.get('/get', verifyJwt, handleUserCoursesGet);
 
 // Get all user courses by userId
-router.get('/usercourses/get/id', verifyJwt, handleUserCoursesGetId);
+router.get('/get/id', verifyJwt, handleUserCoursesGetId);
 
 // Get a user by ID with RoleName
-router.get('/users/get/:id', verifyJwt, validateUserGetId, handleUsersGetId);
+router.get('/get/:id', verifyJwt, validateUserGetId, handleUsersGetId);
 
 // Update a user
-router.put('/users/update/:id', verifyJwt, validateUserUpdate, handleUsersUpdateId);
+router.put('/update/:id', verifyJwt, validateUserUpdate, handleUsersUpdateId);
 
 // Update a user profile
-router.put('/users/update/users/:id', verifyJwt, validateUserUpdateUsers, handleUsersUpdateUsers);
+router.put('/update/users/:id', verifyJwt, validateUserUpdateUsers, handleUsersUpdateUsers);
 
 // Delete a user
-router.delete('/users/delete/:id', verifyJwt, handleUsersDeleteId);
+router.delete('/delete/:id', verifyJwt, handleUsersDeleteId);
 
 // Get a user by RoleID
-router.get('/users/get/role/:roleId', verifyJwt, validateUserGetRoleId, handleUsersGetRoleId);
+router.get('/get/role/:roleId', verifyJwt, validateUserGetRoleId, handleUsersGetRoleId);
 
 module.exports = router;

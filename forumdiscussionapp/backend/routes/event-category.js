@@ -19,24 +19,24 @@ const {softDeleteAssignedEventCategory} =require('../route-files/event-category-
 router.use(express.json());
 
 // Endpoint to get all event categories
-router.get('/event-categories', verifyJwt, getEventCategories);
+router.get('/get', verifyJwt, getEventCategories);
 
 // Endpoint to create a new event category
-router.post('/event-categories/create', verifyJwt, validateCreateEventCategory, createEventCategory);
+router.post('/create', verifyJwt, validateCreateEventCategory, createEventCategory);
 
 // Endpoint to edit an existing event category
-router.put('/event-categories/edit/:categoryId', verifyJwt, validateEditEventCategory, editEventCategory);
+router.put('/edit/:categoryId', verifyJwt, validateEditEventCategory, editEventCategory);
 
 // Endpoint to soft delete an event category
-router.delete('/event-categories/soft-delete/:categoryId', verifyJwt, softDeleteEventCategory);
+router.delete('/soft-delete/:categoryId', verifyJwt, softDeleteEventCategory);
 
 // Endpoint to assign an event category to an event
-router.post('/events/:eventId/categories/assign/:categoryId', verifyJwt, validateAssignEventCategory, assignEventCategory);
+router.post('/:eventId/categories/assign/:categoryId', verifyJwt, validateAssignEventCategory, assignEventCategory);
 
 // Endpoint to edit an assigned event category
-router.put('/events/:eventId/categories/edit/:categoryId', verifyJwt, validateEditAssignedEventCategory, editAssignedEventCategory);
+router.put('/:eventId/categories/edit/:categoryId', verifyJwt, validateEditAssignedEventCategory, editAssignedEventCategory);
 
 // Endpoint to soft delete an assigned event category
-router.delete('/events/:eventId/categories/soft-delete/:categoryId', verifyJwt, softDeleteAssignedEventCategory);
+router.delete('/:eventId/categories/soft-delete/:categoryId', verifyJwt, softDeleteAssignedEventCategory);
 
 module.exports = router;

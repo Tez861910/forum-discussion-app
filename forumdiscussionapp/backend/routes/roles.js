@@ -24,30 +24,30 @@ router.use(express.json());
 router.use(cors());
 
 // Create a new role
-router.post('/roles/create', verifyJwt, validateRoleCreate, handleRolesCreate);
+router.post('/create', verifyJwt, validateRoleCreate, handleRolesCreate);
 
 // Get all roles
-router.get('/roles/get', handleRolesGet);
+router.get('/get', handleRolesGet);
 
 // Get a role by ID
-router.get('/roles/get/:id', verifyJwt, validateRoleId, handleRolesGetId);
+router.get('/get/:id', verifyJwt, validateRoleId, handleRolesGetId);
 
 // Update a role
-router.put('/roles/update/:id', verifyJwt, validateRoleUpdate, handleRolesUpdateId);
+router.put('/update/:id', verifyJwt, validateRoleUpdate, handleRolesUpdateId);
 
 // Patch (soft delete) a role
-router.patch('/roles/delete/:id', verifyJwt, validateRoleId, handleRolesPatchId);
+router.patch('/delete/:id', verifyJwt, validateRoleId, handleRolesPatchId);
 
 // Get role enrollments
-router.get('/roles/enrollments/:roleId', verifyJwt, validateRoleId, handleRolesEnrollmentsId);
+router.get('/enrollments/:roleId', verifyJwt, validateRoleId, handleRolesEnrollmentsId);
 
 // Enroll user in a role
-router.post('/roles/:roleId/enroll', verifyJwt, validateRoleIdUserId, handleRolesIdEnroll);
+router.post('/:roleId/enroll', verifyJwt, validateRoleIdUserId, handleRolesIdEnroll);
 
 // Patch (soft delete) removing user from a role
-router.patch('/roles/:roleId/enrollments/:userId', verifyJwt, validateRoleIdUserId, handleRIDEnrollmentsUID);
+router.patch('/:roleId/enrollments/:userId', verifyJwt, validateRoleIdUserId, handleRIDEnrollmentsUID);
 
 // Patch (soft delete) removing users from a role
-router.patch('/roles/:roleId/enrollments', verifyJwt, validateRoleIdUserId, handleRemoveUsersFromRole);
+router.patch('/:roleId/enrollments', verifyJwt, validateRoleIdUserId, handleRemoveUsersFromRole);
 
 module.exports = router;

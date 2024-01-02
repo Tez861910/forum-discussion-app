@@ -15,15 +15,15 @@ const {deleteResponse} =require('../route-files/response-routes/delete-response'
 router.use(express.json());
 
 // Get all responses for a comment
-router.get('/responses/get/:commentId', verifyJwt, getAllResponses);
+router.get('/get/:commentId', verifyJwt, getAllResponses);
 
 // Create a new response for a comment
-router.post('/responses/create/:commentId', verifyJwt, validateResponseCreate, createResponse);
+router.post('/create/:commentId', verifyJwt, validateResponseCreate, createResponse);
 
 // Update a response
-router.put('/responses/update/:responseId', verifyJwt, validateResponseUpdate, updateResponse);
+router.put('/update/:responseId', verifyJwt, validateResponseUpdate, updateResponse);
 
 // Delete a response
-router.delete('/responses/delete/:responseId', verifyJwt, validateResponseDelete, deleteResponse);
+router.delete('/delete/:responseId', verifyJwt, validateResponseDelete, deleteResponse);
 
 module.exports = router;

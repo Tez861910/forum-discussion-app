@@ -19,21 +19,21 @@ const { handleThreadsDeleteId } = require('../route-files/thread-routes/handle-t
 router.use(express.json());
 
 // Endpoint to get threads for a specific course
-router.get('/threads/get/:courseId', verifyJwt, validateThreadGetCourseId, handleThreadsGetCourseId);
+router.get('/get/:courseId', verifyJwt, validateThreadGetCourseId, handleThreadsGetCourseId);
 
 // Endpoint to get a thread by threadId
-router.get('/threads/getthread/:threadId', verifyJwt, validateThreadGetByThreadId, handleThreadsGetByThreadId);
+router.get('/getthread/:threadId', verifyJwt, validateThreadGetByThreadId, handleThreadsGetByThreadId);
 
 // Endpoint to get all threads
-router.get('/threads/get/all', verifyJwt, handleThreadsGetAll);
+router.get('/get/all', verifyJwt, handleThreadsGetAll);
 
 // Create a new thread
-router.post('/threads/create', verifyJwt, validateThreadCreate, handleThreadsCreate);
+router.post('/create', verifyJwt, validateThreadCreate, handleThreadsCreate);
 
 // Update a thread
-router.put('/threads/update/:threadId', verifyJwt, validateThreadUpdate, handleThreadsUpdateId);
+router.put('/update/:threadId', verifyJwt, validateThreadUpdate, handleThreadsUpdateId);
 
 // Delete a thread
-router.delete('/threads/delete/:threadId', verifyJwt, handleThreadsDeleteId);
+router.delete('/delete/:threadId', verifyJwt, handleThreadsDeleteId);
 
 module.exports = router;
