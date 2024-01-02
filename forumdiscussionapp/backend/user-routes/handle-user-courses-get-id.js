@@ -9,8 +9,14 @@ async function handleUserCoursesGetId(req, res) {
       throw new Error('Invalid user ID provided');
     }
 
-    // Query to retrieve courses for a specific user
-    const userCoursesQuery = 'SELECT * FROM UserCourses WHERE UserID = ? AND IsDeleted = FALSE';
+    // Assuming CommonAttributes table has an IsDeleted column
+    const userCoursesQuery = `
+      SELECT uc.*
+      FROM UserCourses uc
+      INNER JOIN CommonAttributes ca ON uc.CommonAttributeID = ca.AttributeID
+      WHERE uc.UserID = ? AND ca.IsDeleted = FALSE
+    `;
+
     const userCourses = await query(userCoursesQuery, [userId]);
 
     res.json({ userCourses });

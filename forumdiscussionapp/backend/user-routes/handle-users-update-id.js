@@ -5,11 +5,12 @@ async function handleUsersUpdateId(req, res) {
   const { id } = req.params;
   const userData = req.body;
   const userRoleData = userData.userroles;
+  const { updatedByUserId } = req.body; 
 
   try {
-    if (!userData.UserName || !userData.UserEmail) {
-      console.log('User Data is required');
-      return res.status(400).json({ error: 'User Data is required' });
+    if (!userData.UserName || !userData.UserEmail || !updatedByUserId) {
+      console.log('User Data and UpdatedByUserId are required');
+      return res.status(400).json({ error: 'User Data and UpdatedByUserId are required' });
     }
 
     // Create an SQL query dynamically based on the provided user data
@@ -37,10 +38,18 @@ async function handleUsersUpdateId(req, res) {
       values.push(hashedPassword);
     }
 
-    values.push(id);
+    values.push(updatedByUserId, id);
 
     // Update the user and associated records only if not soft deleted
-    const sql = `UPDATE users SET ${updateFields.join(', ')} WHERE UserID = ? AND IsDeleted = FALSE`;
+    const sql = `
+      UPDATE users
+      SET ${updateFields.join(', ')},
+          UpdatedAt = NOW(),
+          UpdatedByUserID = ?
+      WHERE UserID = ?
+        AND CommonAttributeID IN (SELECT AttributeID FROM CommonAttributes WHERE IsDeleted = FALSE)
+        AND IsDeleted = FALSE
+    `;
 
     const [result] = await query(sql, values);
 

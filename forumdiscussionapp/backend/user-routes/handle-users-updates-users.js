@@ -4,9 +4,10 @@ const { hashPassword } = require('../authvalid');
 async function handleUsersUpdateUsers(req, res) {
   const { id } = req.params;
   const userData = req.body;
+  const createdByUserID = req.body.createdByUserID; // Make sure to adjust based on your actual request structure
 
   try {
-    if (!userData.name && !userData.email && !userData.password) {
+    if (!userData.UserName && !userData.UserEmail && !userData.UserPassword) {
       console.log('No valid fields provided for update');
       return res.status(400).json({ error: 'No valid fields provided for update' });
     }
@@ -15,21 +16,38 @@ async function handleUsersUpdateUsers(req, res) {
     const updateFields = [];
     const values = [];
 
-    if (userData.name) {
+    if (userData.UserName) {
       updateFields.push('UserName = ?');
-      values.push(userData.name);
+      values.push(userData.UserName);
     }
 
-    if (userData.email) {
+    if (userData.UserEmail) {
       updateFields.push('UserEmail = ?');
-      values.push(userData.email);
+      values.push(userData.UserEmail);
     }
 
     // Hash the password if provided
-    if (userData.password) {
-      const hashedPassword = await hashPassword(userData.password);
+    if (userData.UserPassword) {
+      const hashedPassword = await hashPassword(userData.UserPassword);
       updateFields.push('UserPassword = ?');
       values.push(hashedPassword);
+    }
+
+    // Include CommonAttributeID for IsDeleted and updated fields
+    updateFields.push('CommonAttributeID = ?');
+    values.push(userData.CommonAttributeID); // Make sure to adjust based on your actual request structure
+
+    // Add fields for updated by and updated at
+    updateFields.push('UpdatedByUserID = ?');
+    values.push(createdByUserID);
+    updateFields.push('UpdatedAt = CURRENT_TIMESTAMP');
+    
+    // Check IsDeleted in common attributes table
+    const isDeletedSql = 'SELECT IsDeleted FROM CommonAttributes WHERE AttributeID = ?';
+    const [isDeletedResult] = await query(isDeletedSql, [userData.CommonAttributeID]);
+
+    if (isDeletedResult.length === 1 && isDeletedResult[0].IsDeleted) {
+      return res.status(400).json({ error: 'User is marked as deleted' });
     }
 
     values.push(id);
@@ -39,9 +57,9 @@ async function handleUsersUpdateUsers(req, res) {
       return res.status(400).json({ error: 'No valid fields provided for update' });
     }
 
-    const sql = `UPDATE users SET ${updateFields.join(', ')} WHERE UserID = ?`;
+    const sql = `UPDATE Users SET ${updateFields.join(', ')} WHERE UserID = ? AND CommonAttributeID = ?`;
 
-    const [result] = await query(sql, values);
+    const [result] = await query(sql, [...values, userData.CommonAttributeID]);
 
     if (result.affectedRows === 1) {
       console.log('User updated successfully');

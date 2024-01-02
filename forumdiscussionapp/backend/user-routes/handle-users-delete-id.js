@@ -5,15 +5,15 @@ async function handleUsersDeleteId(req, res) {
 
   try {
     // Update the user's IsDeleted status
-    const deleteUserSql = 'UPDATE users SET IsDeleted = TRUE WHERE UserID = ?';
+    const deleteUserSql = 'UPDATE users SET IsDeleted = TRUE WHERE UserID = ? AND CommonAttributeID IN (SELECT AttributeID FROM CommonAttributes WHERE IsDeleted = FALSE)';
     const [deleteUserResult] = await query(deleteUserSql, [id]);
 
     if (deleteUserResult.affectedRows === 1) {
       // Soft delete user-related records in other tables
-      const deleteUserCoursesSql = 'UPDATE usercourses SET IsDeleted = TRUE WHERE UserID = ?';
+      const deleteUserCoursesSql = 'UPDATE usercourses SET IsDeleted = TRUE WHERE UserID = ? AND CommonAttributeID IN (SELECT AttributeID FROM CommonAttributes WHERE IsDeleted = FALSE)';
       await query(deleteUserCoursesSql, [id]);
 
-      const deleteUserRolesSql = 'UPDATE userroles SET IsDeleted = TRUE WHERE UserID = ?';
+      const deleteUserRolesSql = 'UPDATE userroles SET IsDeleted = TRUE WHERE UserID = ? AND CommonAttributeID IN (SELECT AttributeID FROM CommonAttributes WHERE IsDeleted = FALSE)';
       await query(deleteUserRolesSql, [id]);
 
       console.log('User and associated records marked as deleted successfully');

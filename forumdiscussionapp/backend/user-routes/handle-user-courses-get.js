@@ -4,13 +4,19 @@ async function handleUserCoursesGet(req, res) {
   try {
     const userIds = req.body.userIds;
 
-// Validate userIds
-if (!userIds || userIds.length === 0) {
-  throw new Error('Invalid user IDs provided');
-}
+    // Validate userIds
+    if (!userIds || userIds.length === 0) {
+      throw new Error('Invalid user IDs provided');
+    }
 
-    // Dynamically generate placeholders for the IN clause
-    const userCoursesQuery = `SELECT * FROM UserCourses WHERE UserID IN (${userIds.map(() => '?').join(', ')})`;
+    // Assuming CommonAttributes table has an IsDeleted column
+    const userCoursesQuery = `
+      SELECT uc.*
+      FROM UserCourses uc
+      INNER JOIN CommonAttributes ca ON uc.CommonAttributeID = ca.AttributeID
+      WHERE uc.UserID IN (${userIds.map(() => '?').join(', ')}) AND ca.IsDeleted = FALSE
+    `;
+
     const userCourses = await query(userCoursesQuery, userIds);
 
     res.json({ userCourses });
