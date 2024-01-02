@@ -4,27 +4,24 @@ const { verifyJwt } = require('../authvalid');
 const {
     validateEventCreate,
     validateEventEdit,
-    validateAssignEventCategory,
     validateCreateRecurringEvent,
     validateCreateReminder,
     validateCreateGuestSpeaker,
   } = require('../body-validation/event-validation');
 
-const {getAllEvents} =require('../event-routes/get-all-event')
-const {createEvent} =require('../event-routes/create-event')
-const {editEvent} =require('../event-routes/edit-event')
-const {deleteEvent} =require('../event-routes/delete-event')
+const {getAllEvents} =require('../route-files/event-routes/get-all-event')
+const {createEvent} =require('../route-files/event-routes/create-event')
+const {editEvent} =require('../route-files/event-routes/edit-event')
+const {deleteEvent} =require('../route-files/event-routes/delete-event')
 
+const {getRecurringEvents} =require('../route-files/event-routes/get-recurring-event')
+const {createRecurringEvent} =require('../route-files/event-routes/create-recurring-event')
 
+const {getReminders} =require('../route-files/event-routes/get-reminder')
+const {createReminder} =require('../route-files/event-routes/create-reminder')
 
-const {getRecurringEvents} =require('../event-routes/get-recurring-event')
-const {createRecurringEvent} =require('../event-routes/create-recurring-event')
-
-const {getReminders} =require('../event-routes/get-reminder')
-const {createReminder} =require('../event-routes/create-reminder')
-
-const {getGuestSpeakers} =require('../event-routes/get-guest-speaker')
-const {createGuestSpeaker} =require('../event-routes/create-guest-speaker')
+const {getGuestSpeakers} =require('../route-files/event-routes/get-guest-speaker')
+const {createGuestSpeaker} =require('../route-files/event-routes/create-guest-speaker')
 
 router.use(express.json());
 

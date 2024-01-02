@@ -9,16 +9,16 @@ const {
   validateUserGetRoleId,
 } = require('../body-validation/user-validation');
 
-const { handleUsersGet } = require('../user-routes/handle-users-get');
-const { handleUsersGetUserName } = require('../user-routes/handle-users-getusername');
-const { handleUserCoursesGet } = require('../user-routes/handle-user-courses-get');
-const { handleUserCoursesGetId } = require('../user-routes/handle-user-courses-get-id');
-const { handleUsersCreate } = require('../user-routes/handle-users-create');
-const { handleUsersGetId } = require('../user-routes/handle-users-get-id');
-const { handleUsersUpdateId } = require('../user-routes/handle-users-update-id');
-const { handleUsersDeleteId } = require('../user-routes/handle-users-delete-id');
-const { handleUsersGetRoleId } = require('../user-routes/handle-users-get-role-id');
-const { handleUsersUpdateUsers } = require('../user-routes/handle-users-updates-users');
+const { handleUsersGet } = require('../route-files/user-routes/handle-users-get');
+const { handleUsersGetUserName } = require('../route-files/user-routes/handle-users-getusername');
+const { handleUserCoursesGet } = require('../route-files/user-routes/handle-user-courses-get');
+const { handleUserCoursesGetId } = require('../route-files/user-routes/handle-user-courses-get-id');
+const { handleUsersCreate } = require('../route-files/user-routes/handle-users-create');
+const { handleUsersGetId } = require('../route-files/user-routes/handle-users-get-id');
+const { handleUsersUpdateId } = require('../route-files/user-routes/handle-users-update-id');
+const { handleUsersDeleteId } = require('../route-files/user-routes/handle-users-delete-id');
+const { handleUsersGetRoleId } = require('../route-files/user-routes/handle-users-get-role-id');
+const { handleUsersUpdateUsers } = require('../route-files/user-routes/handle-users-updates-users');
 
 router.use(express.json());
 

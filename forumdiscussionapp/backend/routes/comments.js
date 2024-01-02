@@ -9,11 +9,11 @@ const {
   validateCommentGetThreadId,
 } = require('../body-validation/comment-validation');
 
-const {handleCommentDeleteId} =require('../comment-routes/handle-comment-delete-id')
-const {handleCommentUpdateId} =require('../comment-routes/handle-comment-update-id')
-const {handleCommentCreate} =require('../comment-routes/handle-comment-create')
-const {handleCommentGet} =require('../comment-routes/handle-comment-get')
-const {handleCommentGetThreadId} =require('../comment-routes/handle-comments-get-threadid')
+const {handleCommentDeleteId} =require('../route-files/comment-routes/handle-comment-delete-id')
+const {handleCommentUpdateId} =require('../route-files/comment-routes/handle-comment-update-id')
+const {handleCommentCreate} =require('../route-files/comment-routes/handle-comment-create')
+const {handleCommentGet} =require('../route-files/comment-routes/handle-comment-get')
+const {handleCommentGetThreadId} =require('../route-files/comment-routes/handle-comments-get-threadid')
 
 router.use(express.json());
 router.use(cors());

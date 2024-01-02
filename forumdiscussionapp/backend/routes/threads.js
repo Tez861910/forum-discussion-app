@@ -9,12 +9,12 @@ const {
 } = require('../body-validation/thread-validation'); 
 
 
-const { handleThreadsCreate } = require('../thread-routes/handle-threads-create');
-const { handleThreadsGetCourseId } = require('../thread-routes/handle-threads-get-courseid');
-const { handleThreadsGetAll } = require('../thread-routes/handle-threads-get-all');
-const { handleThreadsGetByThreadId } = require('../thread-routes/handle-threads-get-id');
-const { handleThreadsUpdateId } = require('../thread-routes/handle-threads-update-id');
-const { handleThreadsDeleteId } = require('../thread-routes/handle-threads-delete-id');
+const { handleThreadsCreate } = require('../route-files/thread-routes/handle-threads-create');
+const { handleThreadsGetCourseId } = require('../route-files/thread-routes/handle-threads-get-courseid');
+const { handleThreadsGetAll } = require('../route-files/thread-routes/handle-threads-get-all');
+const { handleThreadsGetByThreadId } = require('../route-files/thread-routes/handle-threads-get-id');
+const { handleThreadsUpdateId } = require('../route-files/thread-routes/handle-threads-update-id');
+const { handleThreadsDeleteId } = require('../route-files/thread-routes/handle-threads-delete-id');
 
 router.use(express.json());
 

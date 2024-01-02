@@ -8,13 +8,13 @@ const {
   validateEditAssignedEventCategory,
 } = require('../body-validation/event-category-validation');
 
-const {createEventCategory} =require('../event-category-routes/create-event-category')
-const {getEventCategories} =require('../event-category-routes/get-event-categories')
-const {editEventCategory} =require('../event-category-routes/edit-event-category')
-const {softDeleteEventCategory} =require('../event-category-routes/delete-event-category')
-const {assignEventCategory} =require('../event-category-routes/assign-event-category')
-const {editAssignedEventCategory} =require('../event-category-routes/edit-assigned-event-category')
-const {softDeleteAssignedEventCategory} =require('../event-category-routes/delete-assigned-event-category')
+const {createEventCategory} =require('../route-files/event-category-routes/create-event-category')
+const {getEventCategories} =require('../route-files/event-category-routes/get-event-categories')
+const {editEventCategory} =require('../route-files/event-category-routes/edit-event-category')
+const {softDeleteEventCategory} =require('../route-files/event-category-routes/delete-event-category')
+const {assignEventCategory} =require('../route-files/event-category-routes/assign-event-category')
+const {editAssignedEventCategory} =require('../route-files/event-category-routes/edit-assigned-event-category')
+const {softDeleteAssignedEventCategory} =require('../route-files/event-category-routes/delete-assigned-event-category')
 
 router.use(express.json());
 

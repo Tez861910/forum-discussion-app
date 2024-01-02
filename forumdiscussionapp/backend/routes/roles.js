@@ -3,15 +3,15 @@ const router = express.Router();
 const cors = require('cors');
 const { verifyJwt } = require('../authvalid');
 
-const { handleRolesGet } = require('../role-routes/handle-roles-get');
-const { handleRolesCreate } = require('../role-routes/handle-roles-create');
-const { handleRolesGetId } = require('../role-routes/handle-roles-get-id');
-const { handleRolesUpdateId } = require('../role-routes/handle-roles-update-id');
-const { handleRolesPatchId } = require('../role-routes/handle-roles-patch-id');
-const { handleRolesEnrollmentsId } = require('../role-routes/handle-roles-enrollments-id');
-const { handleRolesIdEnroll } = require('../role-routes/handle-roles-id-enroll');
-const { handleRIDEnrollmentsUID } = require('../role-routes/handle-roles-rid-enrollments-uid');
-const { handleRemoveUsersFromRole } = require('../role-routes/handle-remove-users-from-roles');
+const { handleRolesGet } = require('../route-files/role-routes/handle-roles-get');
+const { handleRolesCreate } = require('../route-files/role-routes/handle-roles-create');
+const { handleRolesGetId } = require('../route-files/role-routes/handle-roles-get-id');
+const { handleRolesUpdateId } = require('../route-files/role-routes/handle-roles-update-id');
+const { handleRolesPatchId } = require('../route-files/role-routes/handle-roles-patch-id');
+const { handleRolesEnrollmentsId } = require('../route-files/role-routes/handle-roles-enrollments-id');
+const { handleRolesIdEnroll } = require('../route-files/role-routes/handle-roles-id-enroll');
+const { handleRIDEnrollmentsUID } = require('../route-files/role-routes/handle-roles-rid-enrollments-uid');
+const { handleRemoveUsersFromRole } = require('../route-files/role-routes/handle-remove-users-from-roles');
 
 const {
   validateRoleCreate,

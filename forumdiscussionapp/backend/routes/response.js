@@ -7,10 +7,10 @@ const {
   validateResponseDelete,
 } = require('../body-validation/response-validation');
 
-const {getAllResponses} =require('../response-routes/get-all-responses')
-const {createResponse} =require('../response-routes/create-response')
-const {updateResponse} =require('../response-routes/update-response')
-const {deleteResponse} =require('../response-routes/delete-response')
+const {getAllResponses} =require('../route-files/response-routes/get-all-responses')
+const {createResponse} =require('../route-files/response-routes/create-response')
+const {updateResponse} =require('../route-files/response-routes/update-response')
+const {deleteResponse} =require('../route-files/response-routes/delete-response')
 
 router.use(express.json());
 

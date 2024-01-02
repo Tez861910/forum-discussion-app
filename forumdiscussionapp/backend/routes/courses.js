@@ -10,16 +10,16 @@ const {
   validateRemoveUsersFromCourse,
 } = require('../body-validation/course-validation');
 
-const { handleCoursesGet } = require('../course-routes/handle-courses-get');
-const { handleCoursesCreate } = require('../course-routes/handle-courses-create');
-const { handleCoursesGetId } = require('../course-routes/handle-courses-get-id');
-const { handleCoursesUpdateId } = require('../course-routes/handle-courses-update-id');
-const { handleCoursesPatchId } = require('../course-routes/handle-courses-patch-id');
-const { handleCoursesEnrollmentsId } = require('../course-routes/handle-courses-enrollments-id');
-const { handleCoursesEnroll } = require('../course-routes/handle-courses-enroll');
-const { handleCoursesIdEnroll } = require('../course-routes/handle-courses-id-enroll');
-const { handleRemoveUsersFromCourse } = require('../course-routes/handle-remove-users-from-course');
-const { handleCIDEnrollmentsEID } = require('../course-routes/handle-courses-cid-enrollments-eid');
+const { handleCoursesGet } = require('../route-files/course-routes/handle-courses-get');
+const { handleCoursesCreate } = require('../route-files/course-routes/handle-courses-create');
+const { handleCoursesGetId } = require('../route-files/course-routes/handle-courses-get-id');
+const { handleCoursesUpdateId } = require('../route-files/course-routes/handle-courses-update-id');
+const { handleCoursesPatchId } = require('../route-files/course-routes/handle-courses-patch-id');
+const { handleCoursesEnrollmentsId } = require('../route-files/course-routes/handle-courses-enrollments-id');
+const { handleCoursesEnroll } = require('../route-files/course-routes/handle-courses-enroll');
+const { handleCoursesIdEnroll } = require('../route-files/course-routes/handle-courses-id-enroll');
+const { handleRemoveUsersFromCourse } = require('../route-files/course-routes/handle-remove-users-from-course');
+const { handleCIDEnrollmentsEID } = require('../route-files/course-routes/handle-courses-cid-enrollments-eid');
 
 router.use(express.json());
 router.use(cors());
