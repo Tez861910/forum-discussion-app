@@ -2,6 +2,8 @@ const express = require('express');
 const router = express.Router();
 const { createToken, hashPassword, createRefreshToken } = require('../authvalid');
 const { query } = require('../db');
+const { validateSignup } = require('../body-validation/signup-validation');
+
 const app = express();
 app.use(express.json());
 
@@ -17,6 +19,18 @@ router.post('/signup', async (req, res) => {
   } = req.body;
 
   try {
+
+     // Validate request body
+     const validationResult = validateSignup({
+      name,
+      email,
+      password,
+      address,
+      phoneNumber,
+      dateOfBirth,
+      genderID,
+    });
+
     if (!name || !email || !password || !genderID) {
       console.log('Missing user data');
       return res.status(400).json({ error: 'Missing user data' });
@@ -40,6 +54,10 @@ router.post('/signup', async (req, res) => {
       DateOfBirth: dateOfBirth || null,
       GenderID: genderID,
     };
+
+    if (validationResult.error) {
+      return res.status(400).json({ error: validationResult.error.details[0].message });
+    }
 
     const insertUserSql = 'INSERT INTO Users SET ?';
     const [userResult] = await query(insertUserSql, [userData]);

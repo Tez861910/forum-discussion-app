@@ -2,11 +2,20 @@ const express = require('express');
 const router = express.Router();
 const { query } = require('../db');
 const { createToken, verifyPassword, createRefreshToken } = require('../authvalid');
+const { validateLogin } = require('../body-validation/login-validation'); 
 
 router.post('/login', async (req, res) => {
   const { email, password } = req.body;
 
   try {
+
+    // Validate request body
+    const validationResult = validateLogin({ email, password });
+
+    if (validationResult.error) {
+      return res.status(400).json({ error: validationResult.error.details[0].message });
+    }
+
     if (!email || !password) {
       console.log('Email and password are required.');
       return res.status(400).json({ error: 'Email and password are required' });
