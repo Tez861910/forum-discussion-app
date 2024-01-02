@@ -13,13 +13,22 @@ router.post('/signup', async (req, res) => {
     address,
     phoneNumber,
     dateOfBirth,
-    gender,
+    genderID,
   } = req.body;
 
   try {
-    if (!name || !email || !password) {
+    if (!name || !email || !password || !genderID) {
       console.log('Missing user data');
       return res.status(400).json({ error: 'Missing user data' });
+    }
+
+    // Check if the provided gender is valid
+    const checkGenderSql = 'SELECT * FROM Gender WHERE GenderID = ?';
+    const [genderResult] = await query(checkGenderSql, [genderID]);
+
+    if (!Array.isArray(genderResult) || genderResult.length === 0) {
+      console.log('Invalid gender ID');
+      return res.status(400).json({ error: 'Invalid gender ID' });
     }
 
     const userData = {
@@ -29,7 +38,7 @@ router.post('/signup', async (req, res) => {
       PhoneNumber: phoneNumber || null,
       Address: address || null,
       DateOfBirth: dateOfBirth || null,
-      Gender: gender || null,
+      GenderID: genderID,
     };
 
     const insertUserSql = 'INSERT INTO Users SET ?';
@@ -39,7 +48,7 @@ router.post('/signup', async (req, res) => {
       const userId = userResult.insertId;
 
       const studentRoleId = 3;
-      const insertUserRoleSql = 'INSERT INTO userroles (UserID, RoleID) VALUES (?, ?)';
+      const insertUserRoleSql = 'INSERT INTO UserRoles (UserID, RoleID) VALUES (?, ?)';
       const [userRolesResult] = await query(insertUserRoleSql, [userId, studentRoleId]);
 
       if (userRolesResult.affectedRows === 1) {

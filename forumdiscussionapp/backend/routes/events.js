@@ -15,9 +15,7 @@ const {createEvent} =require('../event-routes/create-event')
 const {editEvent} =require('../event-routes/edit-event')
 const {deleteEvent} =require('../event-routes/delete-event')
 
-const {getEventCategories} =require('../event-routes/get-event-categories')
-const {createEventCategory} =require('../event-routes/create-event-category')
-const {assignEventCategory} =require('../event-routes/assign-event-category')
+
 
 const {getRecurringEvents} =require('../event-routes/get-recurring-event')
 const {createRecurringEvent} =require('../event-routes/create-recurring-event')
@@ -35,11 +33,6 @@ router.post('/events/create', verifyJwt, validateEventCreate, createEvent);
 router.get('/events/get', verifyJwt, getAllEvents);
 router.put('/events/edit/:eventId', verifyJwt, validateEventEdit, editEvent);
 router.delete('/events/delete/:eventId', verifyJwt, deleteEvent);
-
-// Endpoints for event categories
-router.get('/event-categories', verifyJwt, getEventCategories);
-router.post('/event-categories/create', verifyJwt, createEventCategory);
-router.post('/events/:eventId/categories/assign/:categoryId', verifyJwt, validateAssignEventCategory, assignEventCategory);
 
 // Endpoints for recurring events
 router.get('/events/:eventId/recurring', verifyJwt, getRecurringEvents);

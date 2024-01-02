@@ -16,15 +16,16 @@ router.post('/login', async (req, res) => {
       SELECT users.*, userroles.RoleID
       FROM users
       LEFT JOIN userroles ON users.UserID = userroles.UserID
-      WHERE users.UserEmail = ?
+      LEFT JOIN commonattributes ON users.CommonAttributeID = commonattributes.AttributeID
+      WHERE users.UserEmail = ? AND commonattributes.IsDeleted = FALSE
     `;
 
     const queryResult = await query(sql, [email]);
     console.log('Query Result:', queryResult);
 
     if (!Array.isArray(queryResult) || queryResult.length === 0) {
-      console.log('No user found with this email: ' + email);
-      return res.status(401).json({ error: 'No user found with this email' });
+      console.log('No active user found with this email: ' + email);
+      return res.status(401).json({ error: 'No active user found with this email' });
     }
 
     const userData = queryResult[0];
