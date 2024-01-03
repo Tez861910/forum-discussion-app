@@ -17,9 +17,9 @@ app.use(express.json());
 app.use(morgan('dev'));
 
 // Import route handlers
-const loginRoutes = require('./routes/loginserver');
-const signupRoutes = require('./routes/signup');
-const homeRoutes = require('./routes/homeserver');
+const loginRoutes = require('./routes/login-server');
+const signupRoutes = require('./routes/signup-server');
+const homeRoutes = require('./routes/home-server');
 
 const usersRoutes = require('./routes/users');
 const coursesRoutes = require('./routes/courses');
@@ -37,7 +37,7 @@ const uservotesRoutes = require('./routes/user-votes');
 const moderatorRoutes = require('./routes/moderators');
 
 const examsRoutes = require('./routes/exams');
-const questiontypesRoutes = require('./routes/questiontypes');
+const questiontypesRoutes = require('./routes/question-types');
 const questionsRoutes = require('./routes/questions');
 const mcqoptionsRoutes = require('./routes/mcq-options');
 const answersRoutes = require('./routes/answers');
@@ -49,11 +49,24 @@ const recurringeventsRoutes = require('./routes/recurring-events');
 const remindersRoutes = require('./routes/reminders');
 const guestspeakersRoutes = require('./routes/guest-speaker');
 
-const privatemessagesRoutes = require('./routes/privatemessages');
-const groupchatsRoutes = require('./routes/groupchats');
-const groupmembersRoutes = require('./routes/groupmembers');
-const groupmessagesRoutes = require('./routes/groupmessages');
+const privatemessagesRoutes = require('./routes/private-messages');
+const groupchatsRoutes = require('./routes/group-chats');
+const groupmembersRoutes = require('./routes/group-members');
+const groupmessagesRoutes = require('./routes/group-messages');
 
+const attachmenttypesRoutes = require('./routes/attachment-types');
+const attachmentsRoutes = require('./routes/attachments');
+const reactiontypesRoutes = require('./routes/reaction-types');
+const reactionsRoutes = require('./routes/reactions');
+
+const announcementsRoutes = require('./routes/announcements');
+const notificationsRoutes = require('./routes/notifications');
+
+const bansRoutes = require('./routes/bans');
+const userreportsRoutes = require('./routes/user-reports')
+
+const useractivitylogsRoutes = require('./routes/user-activity-logs');
+const usersettingsRoutes = require('./routes/user-settings')
 
 // Routes
 app.use('/login', loginRoutes);
@@ -92,6 +105,20 @@ app.use('/privatemessages', privatemessagesRoutes);
 app.use('/groupchats', groupchatsRoutes);
 app.use('/groupmembers', groupmembersRoutes);
 app.use('/groupmessages', groupmessagesRoutes);
+
+app.use('/attachmenttypes', attachmenttypesRoutes);
+app.use('/attachments', attachmentsRoutes);
+app.use('/reactiontypes', reactiontypesRoutes);
+app.use('/reactions', reactionsRoutes);
+
+app.use('/announcements', announcementsRoutes);
+app.use('/notifications', notificationsRoutes);
+
+app.use('/bans', bansRoutes);
+app.use('/userreports', userreportsRoutes);
+
+app.use('/useractivitylogs', useractivitylogsRoutes);
+app.use('/usersettings', usersettingsRoutes);
 
 // Root route
 app.get('/', (req, res) => {
