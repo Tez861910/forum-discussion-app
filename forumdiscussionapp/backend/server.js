@@ -23,7 +23,9 @@ const homeRoutes = require('./routes/home-server');
 
 const usersRoutes = require('./routes/users');
 const coursesRoutes = require('./routes/courses');
+const usercoursesRoutes = require('./routes/user-courses');
 const rolesRoutes = require('./routes/roles');
+const userrolesRoutes = require('./routes/user-roles');
 
 const forumsRoutes = require('./routes/forum');
 const threadsRoutes = require('./routes/threads');
@@ -75,7 +77,9 @@ app.use('/home', homeRoutes);
 
 app.use('/users', usersRoutes);
 app.use('/courses', coursesRoutes);
+app.use('/usercourses', usercoursesRoutes);
 app.use('/roles', rolesRoutes);
+app.use('/userroles', userrolesRoutes);
 
 app.use('/forums', forumsRoutes);
 app.use('/threads', threadsRoutes);

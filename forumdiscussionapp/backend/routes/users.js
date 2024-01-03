@@ -11,8 +11,6 @@ const {
 
 const { handleUsersGet } = require('../route-files/user-routes/handle-users-get');
 const { handleUsersGetUserName } = require('../route-files/user-routes/handle-users-getusername');
-const { handleUserCoursesGet } = require('../route-files/user-routes/handle-user-courses-get');
-const { handleUserCoursesGetId } = require('../route-files/user-routes/handle-user-courses-get-id');
 const { handleUsersCreate } = require('../route-files/user-routes/handle-users-create');
 const { handleUsersGetId } = require('../route-files/user-routes/handle-users-get-id');
 const { handleUsersUpdateId } = require('../route-files/user-routes/handle-users-update-id');
@@ -31,12 +29,6 @@ router.get('/get', verifyJwt, handleUsersGet);
 // Get username
 router.post('/getUsernames', verifyJwt, handleUsersGetUserName);
 
-// Get all user courses
-router.get('/get', verifyJwt, handleUserCoursesGet);
-
-// Get all user courses by userId
-router.get('/get/id', verifyJwt, handleUserCoursesGetId);
-
 // Get a user by ID with RoleName
 router.get('/get/:id', verifyJwt, validateUserGetId, handleUsersGetId);
 
@@ -49,7 +41,7 @@ router.put('/update/users/:id', verifyJwt, validateUserUpdateUsers, handleUsersU
 // Delete a user
 router.delete('/delete/:id', verifyJwt, handleUsersDeleteId);
 
-// Get a user by RoleID
+// Get users by RoleID
 router.get('/get/role/:roleId', verifyJwt, validateUserGetRoleId, handleUsersGetRoleId);
 
 module.exports = router;

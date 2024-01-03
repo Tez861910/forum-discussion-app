@@ -1,28 +1,28 @@
 const Joi = require('joi');
-const { validate } = require('../authvalid'); 
+const { validate } = require('../authvalid');
 
-// Validation middleware
+// Validation middleware for creating a new role
 const validateRoleCreate = validate(Joi.object({
-  roleName: Joi.string().min(1).required()
+  // Define the schema for creating a new role
+  name: Joi.string().min(3).max(255).required(),
+  // Add any other fields as needed
 }));
 
+// Validation middleware for updating a role by ID
 const validateRoleUpdate = validate(Joi.object({
-  id: Joi.number().integer().min(1).required(),
-  roleName: Joi.string().min(1).required()
+  // Define the schema for updating a role
+  name: Joi.string().min(3).max(255),
+  // Add any other fields as needed
 }));
 
+// Validation middleware for getting a role by ID
 const validateRoleId = validate(Joi.object({
-  id: Joi.number().integer().min(1).required()
-}));
-
-const validateRoleIdUserId = validate(Joi.object({
-  roleId: Joi.number().integer().min(1).required(),
-  userIds: Joi.number().integer().min(1).required()
+  // Define the schema for getting a role by ID
+  id: Joi.number().integer().min(1).required(),
 }));
 
 module.exports = {
   validateRoleCreate,
   validateRoleUpdate,
   validateRoleId,
-  validateRoleIdUserId,
 };
