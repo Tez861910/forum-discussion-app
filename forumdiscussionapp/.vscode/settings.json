@@ -3,22 +3,18 @@
         {
             "mysqlOptions": {
                 "authProtocol": "default",
-                "enableSsl": "disabled"
+                "enableSsl": "Disabled"
             },
             "previewLimit": 50,
-            "server": "con1",
-            "port": 3306,
+            "server": "localhost",
+            "port": 3307,
             "driver": "MariaDB",
-            "name": "localhost",
+            "name": "con2",
             "database": "forumdiscussion",
             "username": "root",
             "password": ""
         }
     ],
-    "docify.commentService.programmingLanguage": "javascript",
-    "docify.commentService.sidePanelReviewMode": false,
-    "docify.commentService.inlineComments": true,
-    "docify.commentService.moreExpressiveComments": true,
     "git.ignoreLimitWarning": true,
-    "docify.commentService.docstringFormat": "JsDoc"
+    
 }
