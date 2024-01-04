@@ -12,9 +12,8 @@
             "name": "con2",
             "database": "forumdiscussion",
             "username": "root",
-            "password": ""
+            "password": "your_new_password"
         }
     ],
-    "git.ignoreLimitWarning": true,
-    
+    "git.ignoreLimitWarning": true
 }
