@@ -1,6 +1,6 @@
-const argon2Utils = require('./utils/argon2Utils');
-const jwtUtils = require('./utils/jwtUtils');
-const validationMiddleware = require('./utils/validationMiddleware');
+import * as argon2Utils from './utils/argon2Utils.js';
+import * as jwtUtils from './utils/jwtUtils.js';
+import * as validationMiddleware from './utils/validationMiddleware.js';
 
 const {
   hashPassword,
@@ -18,7 +18,7 @@ const {
   validate,
 } = validationMiddleware;
 
-module.exports = {
+export {
   hashPassword,
   verifyPassword,
   createToken,
