@@ -1,16 +1,16 @@
-import express from 'express';
-import cors from 'cors';
-import { verifyJwt } from '../../authvalid.js';
+import express from "express";
+import cors from "cors";
+import { verifyJwt } from "../../authvalid.js";
 import {
   validateNotificationCreate,
   validateNotificationUpdate,
   validateNotificationDelete,
-} from '../../body-validation/alert-validation-functions/notification-validation.js';
+} from "../../body-validation/alert-validation-functions/notification-validation.js";
 
-import { handleNotificationCreate } from '../../route-files/alert-function-routes/notification-routes/handle-notification-create.js';
-import { handleNotificationUpdate } from '../../route-files/alert-function-routes/notification-routes/handle-notification-update.js';
-import { handleNotificationDelete } from '../../route-files/alert-function-routes/notification-routes/handle-notification-delete.js';
-import { handleNotificationGetAll } from '../../route-files/alert-function-routes/notification-routes/handle-notification-get-all.js';
+import { handleNotificationCreate } from "../../route-functions/alert-function-routes/notification-routes/handle-notification-create.js";
+import { handleNotificationUpdate } from "../../route-functions/alert-function-routes/notification-routes/handle-notification-update.js";
+import { handleNotificationDelete } from "../../route-functions/alert-function-routes/notification-routes/handle-notification-delete.js";
+import { handleNotificationGetAll } from "../../route-functions/alert-function-routes/notification-routes/handle-notification-get-all.js";
 
 const router = express.Router();
 
@@ -18,15 +18,30 @@ router.use(express.json());
 router.use(cors());
 
 // Get all notifications
-router.get('/get/all', verifyJwt, handleNotificationGetAll);
+router.get("/get/all", verifyJwt, handleNotificationGetAll);
 
 // Create a new notification
-router.post('/create', verifyJwt, validateNotificationCreate, handleNotificationCreate);
+router.post(
+  "/create",
+  verifyJwt,
+  validateNotificationCreate,
+  handleNotificationCreate
+);
 
 // Update a notification
-router.put('/update/:notificationId', verifyJwt, validateNotificationUpdate, handleNotificationUpdate);
+router.put(
+  "/update/:notificationId",
+  verifyJwt,
+  validateNotificationUpdate,
+  handleNotificationUpdate
+);
 
 // Delete a notification
-router.delete('/delete/:notificationId', verifyJwt, validateNotificationDelete, handleNotificationDelete);
+router.delete(
+  "/delete/:notificationId",
+  verifyJwt,
+  validateNotificationDelete,
+  handleNotificationDelete
+);
 
 export default router;
