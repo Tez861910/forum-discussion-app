@@ -1,25 +1,23 @@
-const { query } = require('../../../db');
+import { query } from "../../../db.js";
 
-async function handleAttachmentDelete(req, res) {
+export const handleAttachmentDelete = async (req, res) => {
   const { attachmentId } = req.params;
 
   try {
-    const sql = 'DELETE FROM Attachments WHERE AttachmentID = ?';
+    const sql = "DELETE FROM Attachments WHERE AttachmentID = ?";
     const [result] = await query(sql, [attachmentId]);
 
     if (result.affectedRows === 1) {
-      console.log('Attachment deleted successfully');
-      res.json({ message: 'Attachment deleted successfully' });
+      console.log("Attachment deleted successfully");
+      res.json({ message: "Attachment deleted successfully" });
     } else {
-      console.error('Attachment deletion failed');
-      res.status(500).json({ error: 'Attachment deletion failed' });
+      console.error("Attachment deletion failed");
+      res.status(500).json({ error: "Attachment deletion failed" });
     }
   } catch (error) {
-    console.error('Error deleting attachment:', error);
-    res.status(500).json({ error: 'Attachment deletion failed', details: error.message });
+    console.error("Error deleting attachment:", error);
+    res
+      .status(500)
+      .json({ error: "Attachment deletion failed", details: error.message });
   }
-}
-
-module.exports = {
-  handleAttachmentDelete,
 };

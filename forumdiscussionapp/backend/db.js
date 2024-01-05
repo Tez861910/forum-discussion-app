@@ -1,12 +1,12 @@
-import mysql from 'mysql2/promise';
+import mysql from "mysql2/promise";
 // import mssql from 'mssql'; // Commented out for now
 
 // Define the MySQL database connection configuration
 const dbConfig = {
-  host: 'localhost',
-  user: 'root',
-  password: '',
-  database: 'universitysystem',
+  host: "localhost",
+  user: "root",
+  password: "",
+  database: "universitysystem",
   port: 3307,
 };
 
@@ -24,15 +24,15 @@ let connection;
 async function handleDisconnect() {
   try {
     connection = await mysql.createConnection(dbConfig);
-    console.log('Connected to the MySQL database');
+    console.log("Connected to the MySQL database");
   } catch (err) {
-    console.error('MySQL Database connection error:', err);
+    console.error("MySQL Database connection error:", err);
     setTimeout(handleDisconnect, 2000);
   }
 
-  connection.on('error', async (err) => {
-    console.error('MySQL Database error', err);
-    if (err.code === 'PROTOCOL_CONNECTION_LOST') {
+  connection.on("error", async (err) => {
+    console.error("MySQL Database error", err);
+    if (err.code === "PROTOCOL_CONNECTION_LOST") {
       await handleDisconnect();
     } else {
       throw err;
@@ -65,8 +65,8 @@ async function query(sql, values) {
     const [results] = await connection.query(sql, values);
     return results;
   } catch (error) {
-    console.error('MySQL SQL Error:', error);
-    console.error('MySQL SQL Query:', sql);
+    console.error("MySQL SQL Error:", error);
+    console.error("MySQL SQL Query:", sql);
     throw error;
   }
 }
@@ -88,9 +88,9 @@ async function query(sql, values) {
 async function close() {
   try {
     await connection.end();
-    console.log('MySQL Database connection closed');
+    console.log("MySQL Database connection closed");
   } catch (err) {
-    console.error('Error closing MySQL connection:', err);
+    console.error("Error closing MySQL connection:", err);
     throw err;
   }
 }

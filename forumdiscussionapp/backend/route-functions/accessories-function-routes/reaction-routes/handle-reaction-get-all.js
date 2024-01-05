@@ -1,18 +1,16 @@
-const { query } = require('../../../db');
+import { query } from "../../../db.js";
 
-async function handleReactionGetAll(req, res) {
+export const handleReactionGetAll = async (req, res) => {
   try {
-    const sql = 'SELECT * FROM Reactions';
+    const sql = "SELECT * FROM Reactions";
     const [result] = await query(sql);
 
-    console.log('Reactions retrieved successfully');
+    console.log("Reactions retrieved successfully");
     res.json({ reactions: result });
   } catch (error) {
-    console.error('Error getting reactions:', error);
-    res.status(500).json({ error: 'Error getting reactions', details: error.message });
+    console.error("Error getting reactions:", error);
+    res
+      .status(500)
+      .json({ error: "Error getting reactions", details: error.message });
   }
-}
-
-module.exports = {
-  handleReactionGetAll,
 };

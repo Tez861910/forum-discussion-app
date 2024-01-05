@@ -1,25 +1,23 @@
-const { query } = require('../../../db');
+import { query } from "../../../db.js";
 
-async function handleAnnouncementDelete(req, res) {
+export const handleAnnouncementDelete = async (req, res) => {
   const { announcementId } = req.params;
 
   try {
-    const sql = 'DELETE FROM Announcements WHERE AnnouncementID = ?';
+    const sql = "DELETE FROM Announcements WHERE AnnouncementID = ?";
     const [result] = await query(sql, [announcementId]);
 
     if (result.affectedRows === 1) {
-      console.log('Announcement deleted successfully');
-      res.json({ message: 'Announcement deleted successfully' });
+      console.log("Announcement deleted successfully");
+      res.json({ message: "Announcement deleted successfully" });
     } else {
-      console.error('Announcement deletion failed');
-      res.status(500).json({ error: 'Announcement deletion failed' });
+      console.error("Announcement deletion failed");
+      res.status(500).json({ error: "Announcement deletion failed" });
     }
   } catch (error) {
-    console.error('Error deleting announcement:', error);
-    res.status(500).json({ error: 'Announcement deletion failed', details: error.message });
+    console.error("Error deleting announcement:", error);
+    res
+      .status(500)
+      .json({ error: "Announcement deletion failed", details: error.message });
   }
-}
-
-module.exports = {
-  handleAnnouncementDelete,
 };

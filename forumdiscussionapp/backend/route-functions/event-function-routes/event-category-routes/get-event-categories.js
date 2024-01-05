@@ -1,6 +1,6 @@
-const { query } = require('../../../db');
+import { query } from "../../../db.js";
 
-async function getEventCategories(req, res) {
+export const getEventCategories = async (req, res) => {
   try {
     // Selecting relevant fields from both EventCategories and CommonAttributes tables
     const categories = await query(`
@@ -12,11 +12,9 @@ async function getEventCategories(req, res) {
 
     res.json({ success: true, categories });
   } catch (error) {
-    console.error('Error fetching event categories:', error);
-    res.status(500).json({ success: false, error: 'Error fetching event categories' });
+    console.error("Error fetching event categories:", error);
+    res
+      .status(500)
+      .json({ success: false, error: "Error fetching event categories" });
   }
-}
-
-module.exports = {
-  getEventCategories,
 };

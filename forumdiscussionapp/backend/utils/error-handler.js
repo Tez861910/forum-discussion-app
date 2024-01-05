@@ -22,7 +22,8 @@ function handleError(err, req, res, next) {
   }
 
   const statusCode = err instanceof CustomError ? err.statusCode : 500;
-  const message = err instanceof CustomError ? err.message : 'Internal Server Error';
+  const message =
+    err instanceof CustomError ? err.message : "Internal Server Error";
 
   res.status(statusCode).json({ error: message });
 }

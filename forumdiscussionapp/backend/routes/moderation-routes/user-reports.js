@@ -1,16 +1,16 @@
-import express from 'express';
-import cors from 'cors';
-import { verifyJwt } from '../../authvalid.js';
+import express from "express";
+import cors from "cors";
+import { verifyJwt } from "../../authvalid.js";
 import {
   validateUserReportCreate,
   validateUserReportUpdate,
   validateUserReportDelete,
-} from '../../body-validation/moderation-validation-functions/user-report-validation.js';
+} from "../../body-validation/moderation-validation-functions/user-report-validation.js";
 
-import { handleUserReportCreate } from '../../route-files/moderation-function-routes/user-report-routes/handle-user-report-create.js';
-import { handleUserReportUpdate } from '../../route-files/moderation-function-routes/user-report-routes/handle-user-report-update.js';
-import { handleUserReportDelete } from '../../route-files/moderation-function-routes/user-report-routes/handle-user-report-delete.js';
-import { handleUserReportGetAll } from '../../route-files/moderation-function-routes/user-report-routes/handle-user-report-get-all.js';
+import { handleUserReportCreate } from "../../route-functions/moderation-function-routes/user-report-routes/handle-user-report-create.js";
+import { handleUserReportUpdate } from "../../route-functions/moderation-function-routes/user-report-routes/handle-user-report-update.js";
+import { handleUserReportDelete } from "../../route-functions/moderation-function-routes/user-report-routes/handle-user-report-delete.js";
+import { handleUserReportGetAll } from "../../route-functions/moderation-function-routes/user-report-routes/handle-user-report-get-all.js";
 
 const router = express.Router();
 
@@ -18,15 +18,30 @@ router.use(express.json());
 router.use(cors());
 
 // Get all user reports
-router.get('/get/all', verifyJwt, handleUserReportGetAll);
+router.get("/get/all", verifyJwt, handleUserReportGetAll);
 
 // Create a new user report
-router.post('/create', verifyJwt, validateUserReportCreate, handleUserReportCreate);
+router.post(
+  "/create",
+  verifyJwt,
+  validateUserReportCreate,
+  handleUserReportCreate
+);
 
 // Update a user report
-router.put('/update/:reportId', verifyJwt, validateUserReportUpdate, handleUserReportUpdate);
+router.put(
+  "/update/:reportId",
+  verifyJwt,
+  validateUserReportUpdate,
+  handleUserReportUpdate
+);
 
 // Delete a user report
-router.delete('/delete/:reportId', verifyJwt, validateUserReportDelete, handleUserReportDelete);
+router.delete(
+  "/delete/:reportId",
+  verifyJwt,
+  validateUserReportDelete,
+  handleUserReportDelete
+);
 
 export default router;

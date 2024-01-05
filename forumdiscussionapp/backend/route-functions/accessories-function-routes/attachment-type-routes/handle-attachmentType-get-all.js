@@ -1,18 +1,19 @@
-const { query } = require('../../../db');
+import { query } from "../../../db.js";
 
-async function handleAttachmentTypeGetAll(req, res) {
+export const handleAttachmentTypeGetAll = async (req, res) => {
   try {
-    const sql = 'SELECT * FROM AttachmentType';
+    const sql = "SELECT * FROM AttachmentType";
     const [result] = await query(sql);
 
-    console.log('Attachment types retrieved successfully');
+    console.log("Attachment types retrieved successfully");
     res.json(result);
   } catch (error) {
-    console.error('Error getting attachment types:', error);
-    res.status(500).json({ error: 'Error getting attachment types', details: error.message });
+    console.error("Error getting attachment types:", error);
+    res
+      .status(500)
+      .json({
+        error: "Error getting attachment types",
+        details: error.message,
+      });
   }
-}
-
-module.exports = {
-  handleAttachmentTypeGetAll,
 };

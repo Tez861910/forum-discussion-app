@@ -1,32 +1,38 @@
-const { query } = require('../../../db');
+import { query } from "../../../db.js";
 
-async function handleAnnouncementUpdate(req, res) {
+export const handleAnnouncementUpdate = async (req, res) => {
   const { announcementId } = req.params;
   const { title, content, expiryDate, createdByUserId } = req.body;
 
   try {
     if (!title || !content || !createdByUserId) {
-      console.log('Title, content, and createdByUserId are required');
-      return res.status(400).json({ error: 'Title, content, and createdByUserId are required' });
+      console.log("Title, content, and createdByUserId are required");
+      return res
+        .status(400)
+        .json({ error: "Title, content, and createdByUserId are required" });
     }
 
     const sql =
-      'UPDATE Announcements SET AnnouncementTitle = ?, AnnouncementContent = ?, ExpiryDate = ?, CreatedByUserID = ? WHERE AnnouncementID = ?';
-    const [result] = await query(sql, [title, content, expiryDate, createdByUserId, announcementId]);
+      "UPDATE Announcements SET AnnouncementTitle = ?, AnnouncementContent = ?, ExpiryDate = ?, CreatedByUserID = ? WHERE AnnouncementID = ?";
+    const [result] = await query(sql, [
+      title,
+      content,
+      expiryDate,
+      createdByUserId,
+      announcementId,
+    ]);
 
     if (result.affectedRows === 1) {
-      console.log('Announcement updated successfully');
-      res.json({ message: 'Announcement updated successfully' });
+      console.log("Announcement updated successfully");
+      res.json({ message: "Announcement updated successfully" });
     } else {
-      console.error('Announcement update failed');
-      res.status(500).json({ error: 'Announcement update failed' });
+      console.error("Announcement update failed");
+      res.status(500).json({ error: "Announcement update failed" });
     }
   } catch (error) {
-    console.error('Error updating announcement:', error);
-    res.status(500).json({ error: 'Announcement update failed', details: error.message });
+    console.error("Error updating announcement:", error);
+    res
+      .status(500)
+      .json({ error: "Announcement update failed", details: error.message });
   }
-}
-
-module.exports = {
-  handleAnnouncementUpdate,
 };

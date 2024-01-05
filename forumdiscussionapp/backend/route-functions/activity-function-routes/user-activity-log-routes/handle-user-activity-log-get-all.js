@@ -1,18 +1,19 @@
-const { query } = require('../../../db');
+import { query } from "../../../db.js";
 
-async function handleUserActivityLogGetAll(req, res) {
+export const handleUserActivityLogGetAll = async (req, res) => {
   try {
-    const sql = 'SELECT * FROM UserActivityLog';
+    const sql = "SELECT * FROM UserActivityLog";
     const [result] = await query(sql);
 
-    console.log('User activity logs retrieved successfully');
+    console.log("User activity logs retrieved successfully");
     res.json({ userActivityLogs: result });
   } catch (error) {
-    console.error('Error getting user activity logs:', error);
-    res.status(500).json({ error: 'Error getting user activity logs', details: error.message });
+    console.error("Error getting user activity logs:", error);
+    res
+      .status(500)
+      .json({
+        error: "Error getting user activity logs",
+        details: error.message,
+      });
   }
-}
-
-module.exports = {
-  handleUserActivityLogGetAll,
 };

@@ -1,18 +1,16 @@
-const { query } = require('../../../db');
+import { query } from "../../../db.js";
 
-async function handleUserSettingsGetAll(req, res) {
+export const handleUserSettingsGetAll = async (req, res) => {
   try {
-    const sql = 'SELECT * FROM UserSettings';
+    const sql = "SELECT * FROM UserSettings";
     const [result] = await query(sql);
 
-    console.log('User settings retrieved successfully');
+    console.log("User settings retrieved successfully");
     res.json({ userSettings: result });
   } catch (error) {
-    console.error('Error getting user settings:', error);
-    res.status(500).json({ error: 'Error getting user settings', details: error.message });
+    console.error("Error getting user settings:", error);
+    res
+      .status(500)
+      .json({ error: "Error getting user settings", details: error.message });
   }
-}
-
-module.exports = {
-  handleUserSettingsGetAll,
 };

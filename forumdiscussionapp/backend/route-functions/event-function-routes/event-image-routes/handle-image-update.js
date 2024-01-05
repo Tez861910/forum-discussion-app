@@ -1,26 +1,25 @@
-const { query } = require('../../../db');
+import { query } from "../../../db.js";
 
-async function handleImageUpdate(req, res) {
+export const handleImageUpdate = async (req, res) => {
   const { imageId } = req.params;
   const { eventId, imageUrl } = req.body;
 
   try {
-    const sql = 'UPDATE EventImages SET EventID = ?, ImageURL = ? WHERE ImageID = ?';
+    const sql =
+      "UPDATE EventImages SET EventID = ?, ImageURL = ? WHERE ImageID = ?";
     const [result] = await query(sql, [eventId, imageUrl, imageId]);
 
     if (result.affectedRows === 1) {
-      console.log('Event image updated successfully');
-      res.json({ message: 'Event image updated successfully' });
+      console.log("Event image updated successfully");
+      res.json({ message: "Event image updated successfully" });
     } else {
-      console.error('Event image update failed');
-      res.status(500).json({ error: 'Event image update failed' });
+      console.error("Event image update failed");
+      res.status(500).json({ error: "Event image update failed" });
     }
   } catch (error) {
-    console.error('Error updating event image:', error);
-    res.status(500).json({ error: 'Event image update failed', details: error.message });
+    console.error("Error updating event image:", error);
+    res
+      .status(500)
+      .json({ error: "Event image update failed", details: error.message });
   }
-}
-
-module.exports = {
-  handleImageUpdate,
 };

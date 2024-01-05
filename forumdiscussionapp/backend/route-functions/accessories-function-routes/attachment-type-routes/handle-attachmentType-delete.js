@@ -1,25 +1,26 @@
-const { query } = require('../../../db');
+import { query } from "../../../db.js";
 
-async function handleAttachmentTypeDelete(req, res) {
+export const handleAttachmentTypeDelete = async (req, res) => {
   const { attachmentTypeId } = req.params;
 
   try {
-    const sql = 'DELETE FROM AttachmentType WHERE AttachmentTypeID = ?';
+    const sql = "DELETE FROM AttachmentType WHERE AttachmentTypeID = ?";
     const [result] = await query(sql, [attachmentTypeId]);
 
     if (result.affectedRows === 1) {
-      console.log('Attachment type deleted successfully');
-      res.json({ message: 'Attachment type deleted successfully' });
+      console.log("Attachment type deleted successfully");
+      res.json({ message: "Attachment type deleted successfully" });
     } else {
-      console.error('Attachment type deletion failed');
-      res.status(500).json({ error: 'Attachment type deletion failed' });
+      console.error("Attachment type deletion failed");
+      res.status(500).json({ error: "Attachment type deletion failed" });
     }
   } catch (error) {
-    console.error('Error deleting attachment type:', error);
-    res.status(500).json({ error: 'Error deleting attachment type', details: error.message });
+    console.error("Error deleting attachment type:", error);
+    res
+      .status(500)
+      .json({
+        error: "Error deleting attachment type",
+        details: error.message,
+      });
   }
-}
-
-module.exports = {
-  handleAttachmentTypeDelete,
 };
