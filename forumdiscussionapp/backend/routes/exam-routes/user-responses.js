@@ -5,12 +5,12 @@ import {
   validateUserResponseCreate,
   validateUserResponseUpdate,
   validateUserResponseDelete,
-} from '../../body-validation/user-response-validation.js';
+} from '../../body-validation/exam-validation-functions/user-response-validation.js';
 
-import { handleUserResponseDeleteById } from '../../route-files/user-response-routes/handle-userResponse-delete-id.js';
-import { handleUserResponseUpdateById } from '../../route-files/user-response-routes/handle-userResponse-update-id.js';
-import { handleUserResponseCreate } from '../../route-files/user-response-routes/handle-userResponse-create.js';
-import { handleUserResponsesGetAll } from '../../route-files/user-response-routes/handle-userResponses-get-all.js';
+import { handleUserResponseDeleteById } from '../../route-files/exam-function-routes/user-response-routes/handle-userResponse-delete-id.js';
+import { handleUserResponseUpdateById } from '../../route-files/exam-function-routes/user-response-routes/handle-userResponse-update-id.js';
+import { handleUserResponseCreate } from '../../route-files/exam-function-routes/user-response-routes/handle-userResponse-create.js';
+import { handleUserResponsesGetAll } from '../../route-files/exam-function-routes/user-response-routes/handle-userResponses-get-all.js';
 
 const router = express.Router();
 

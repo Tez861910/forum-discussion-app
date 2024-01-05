@@ -7,13 +7,13 @@ import {
   validateGroupChatDelete,
   validateGroupChatGetById,
   validateGroupChatGetByName,
-} from '../../body-validation/group-chat-validation.js';
+} from '../../body-validation/groupchat-validation-functions/group-chat-validation.js';
 
-import { handleGroupChatCreate } from '../../route-files/group-chat-routes/handle-groupChat-create.js';
-import { handleGroupChatUpdateById } from '../../route-files/group-chat-routes/handle-groupChat-update-id.js';
-import { handleGroupChatDeleteById } from '../../route-files/group-chat-routes/handle-groupChat-delete-id.js';
-import { handleGroupChatGetById } from '../../route-files/group-chat-routes/handle-groupChat-get-id.js';
-import { handleGroupChatGetByName } from '../../route-files/group-chat-routes/handle-groupChat-get-name.js';
+import { handleGroupChatCreate } from '../../route-files/groupchat-function-routes/group-chat-routes/handle-groupChat-create.js';
+import { handleGroupChatUpdateById } from '../../route-files/groupchat-function-routes/group-chat-routes/handle-groupChat-update-id.js';
+import { handleGroupChatDeleteById } from '../../route-files/groupchat-function-routes/group-chat-routes/handle-groupChat-delete-id.js';
+import { handleGroupChatGetById } from '../../route-files/groupchat-function-routes/group-chat-routes/handle-groupChat-get-id.js';
+import { handleGroupChatGetByName } from '../../route-files/groupchat-function-routes/group-chat-routes/handle-groupChat-get-name.js';
 
 const router = express.Router();
 

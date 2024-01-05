@@ -6,12 +6,12 @@ import {
   validatePrivateMessageUpdate,
   validatePrivateMessageDelete,
   validatePrivateMessagesGetByUser,
-} from '../../body-validation/private-message-validation.js';
+} from '../../body-validation/messaging-validation-functions/private-message-validation.js';
 
-import { handlePrivateMessageDeleteById } from '../../route-files/private-message-routes/handle-privateMessage-delete-id.js';
-import { handlePrivateMessageUpdateById } from '../../route-files/private-message-routes/handle-privateMessage-update-id.js';
-import { handlePrivateMessageCreate } from '../../route-files/private-message-routes/handle-privateMessage-create.js';
-import { handlePrivateMessagesGetByUser } from '../../route-files/private-message-routes/handle-privateMessages-get-by-user.js';
+import { handlePrivateMessageDeleteById } from '../../route-files/messaging-function-routes/private-message-routes/handle-privateMessage-delete-id.js';
+import { handlePrivateMessageUpdateById } from '../../route-files/messaging-function-routes/private-message-routes/handle-privateMessage-update-id.js';
+import { handlePrivateMessageCreate } from '../../route-files/messaging-function-routes/private-message-routes/handle-privateMessage-create.js';
+import { handlePrivateMessagesGetByUser } from '../../route-files/messaging-function-routes/private-message-routes/handle-privateMessages-get-by-user.js';
 
 const router = express.Router();
 

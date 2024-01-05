@@ -1,16 +1,17 @@
-const express = require('express');
-const router = express.Router();
-const { verifyJwt } = require('../../authvalid');
-const {
+import express from 'express';
+import { verifyJwt } from '../../authvalid.js';
+import {
     validateEventCreate,
     validateEventEdit,
     validateEventDelete,
-  } = require('../../body-validation/event-validation');
+  } from '../../body-validation/event-validation-functions/event-validation.js';
 
-const {getAllEvents} =require('../../route-files/event-routes/get-all-event')
-const {createEvent} =require('../../route-files/event-routes/create-event')
-const {editEvent} =require('../../route-files/event-routes/edit-event')
-const {deleteEvent} =require('../../route-files/event-routes/delete-event')
+import {getAllEvents} from '../../route-files/event-function-routes/event-routes/get-all-event.js';
+import {createEvent} from '../../route-files/event-function-routes/event-routes/create-event.js';
+import {editEvent} from '../../route-files/event-function-routes/event-routes/edit-event.js';
+import {deleteEvent} from '../../route-files/event-function-routes/event-routes/delete-event.js';
+
+const router = express.Router();
 
 router.use(express.json());
 
@@ -26,4 +27,4 @@ router.put('/edit/:eventId', verifyJwt, validateEventEdit, editEvent);
 // Endpoint to delete an event
 router.delete('/delete/:eventId', verifyJwt, validateEventDelete, deleteEvent);
 
-module.exports = router;
+export default router;

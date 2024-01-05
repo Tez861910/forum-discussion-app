@@ -6,13 +6,13 @@ import {
   validatePollUpdate,
   validatePollDelete,
   validatePollGetCreatedByUserId,
-} from '../../body-validation/poll-validation.js';
+} from '../../body-validation/forum-validation-functions/poll-validation.js';
 
-import { handlePollDeleteById } from '../../route-files/poll-routes/handle-poll-delete-id.js';
-import { handlePollUpdateById } from '../../route-files/poll-routes/handle-poll-update-id.js';
-import { handlePollCreate } from '../../route-files/poll-routes/handle-poll-create.js';
-import { handlePollGet } from '../../route-files/poll-routes/handle-poll-get.js';
-import { handlePollGetCreatedByUserId } from '../../route-files/poll-routes/handle-polls-get-createdbyuserid.js';
+import { handlePollDeleteById } from '../../route-files/forum-function-routes/poll-routes/handle-poll-delete-id.js';
+import { handlePollUpdateById } from '../../route-files/forum-function-routes/poll-routes/handle-poll-update-id.js';
+import { handlePollCreate } from '../../route-files/forum-function-routes/poll-routes/handle-poll-create.js';
+import { handlePollGet } from '../../route-files/forum-function-routes/poll-routes/handle-poll-get.js';
+import { handlePollGetCreatedByUserId } from '../../route-files/forum-function-routes/poll-routes/handle-polls-get-createdbyuserid.js';
 
 const router = express.Router();
 

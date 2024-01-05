@@ -5,12 +5,12 @@ import {
   validateQuestionTypeCreate,
   validateQuestionTypeUpdate,
   validateQuestionTypeDelete,
-} from '../../body-validation/question-type-validation.js';
+} from '../../body-validation/exam-validation-functions/question-type-validation.js';
 
-import { handleQuestionTypeDeleteById } from '../../route-files/question-type-routes/handle-question-type-delete-id.js';
-import { handleQuestionTypeUpdateById } from '../../route-files/question-type-routes/handle-question-type-update-id.js';
-import { handleQuestionTypeCreate } from '../../route-files/question-type-routes/handle-question-type-create.js';
-import { handleQuestionTypeGetAll } from '../../route-files/question-type-routes/handle-question-types-get-all.js';
+import { handleQuestionTypeDeleteById } from '../../route-files/exam-function-routes/question-type-routes/handle-question-type-delete-id.js';
+import { handleQuestionTypeUpdateById } from '../../route-files/exam-function-routes/question-type-routes/handle-question-type-update-id.js';
+import { handleQuestionTypeCreate } from '../../route-files/exam-function-routes/question-type-routes/handle-question-type-create.js';
+import { handleQuestionTypeGetAll } from '../../route-files/exam-function-routes/question-type-routes/handle-question-types-get-all.js';
 
 const router = express.Router();
 

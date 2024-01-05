@@ -5,12 +5,12 @@ import {
   validateMCQOptionCreate,
   validateMCQOptionUpdate,
   validateMCQOptionDelete,
-} from '../../body-validation/mcq-option-validation.js';
+} from '../../body-validation/exam-validation-functions/mcq-option-validation.js';
 
-import { handleMCQOptionDeleteById } from '../../route-files/mcq-option-routes/handle-mcq-option-delete-id.js';
-import { handleMCQOptionUpdateById } from '../../route-files/mcq-option-routes/handle-mcq-option-update-id.js';
-import { handleMCQOptionCreate } from '../../route-files/mcq-option-routes/handle-mcq-option-create.js';
-import { handleMCQOptionsGetAll } from '../../route-files/mcq-option-routes/handle-mcq-options-get-all.js';
+import { handleMCQOptionDeleteById } from '../../route-files/exam-function-routes/mcq-option-routes/handle-mcq-option-delete-id.js';
+import { handleMCQOptionUpdateById } from '../../route-files/exam-function-routes/mcq-option-routes/handle-mcq-option-update-id.js';
+import { handleMCQOptionCreate } from '../../route-files/exam-function-routes/mcq-option-routes/handle-mcq-option-create.js';
+import { handleMCQOptionsGetAll } from '../../route-files/exam-function-routes/mcq-option-routes/handle-mcq-options-get-all.js';
 
 const router = express.Router();
 

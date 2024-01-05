@@ -1,5 +1,5 @@
 import express from 'express';
-import { handleError } from '../error-handler.js';
+import { handleError } from '../authvalid.js';
 
 import eventsRoutes from '../routes/event-routes/events.js';
 import eventscategoryRoutes from '../routes/event-routes/event-category.js';

@@ -6,12 +6,12 @@ import {
   validateGroupMembersDelete,
   validateGroupMembersGetByGroupId,
   validateGroupMembersGetByUserId,
-} from '../../body-validation/group-members-validation.js';
+} from '../../body-validation/groupchat-validation-functions/group-members-validation.js';
 
-import { handleGroupMembersCreate } from '../../route-files/group-members-routes/handle-groupMembers-create.js';
-import { handleGroupMembersDelete } from '../../route-files/group-members-routes/handle-groupMembers-delete.js';
-import { handleGroupMembersGetByGroupId } from '../../route-files/group-members-routes/handle-groupMembers-get-groupid.js';
-import { handleGroupMembersGetByUserId } from '../../route-files/group-members-routes/handle-groupMembers-get-userid.js';
+import { handleGroupMembersCreate } from '../../route-files/groupchat-function-routes/group-members-routes/handle-groupMembers-create.js';
+import { handleGroupMembersDelete } from '../../route-files/groupchat-function-routes/group-members-routes/handle-groupMembers-delete.js';
+import { handleGroupMembersGetByGroupId } from '../../route-files/groupchat-function-routes/group-members-routes/handle-groupMembers-get-groupid.js';
+import { handleGroupMembersGetByUserId } from '../../route-files/groupchat-function-routes/group-members-routes/handle-groupMembers-get-userid.js';
 
 const router = express.Router();
 

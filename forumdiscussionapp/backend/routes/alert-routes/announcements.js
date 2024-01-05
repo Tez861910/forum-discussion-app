@@ -1,17 +1,18 @@
-const express = require('express');
-const router = express.Router();
-const cors = require('cors');
-const { verifyJwt } = require('../../authvalid');
-const {
+import express from 'express';
+import cors from 'cors';
+import { verifyJwt } from '../../authvalid.js';
+import {
   validateAnnouncementCreate,
   validateAnnouncementUpdate,
   validateAnnouncementDelete,
-} = require('../../body-validation/announcement-validation');
+} from '../../body-validation/alert-validation-functions/announcement-validation.js';
 
-const { handleAnnouncementCreate } = require('../../route-files/announcement-routes/handle-announcement-create');
-const { handleAnnouncementUpdate } = require('../../route-files/announcement-routes/handle-announcement-update');
-const { handleAnnouncementDelete } = require('../../route-files/announcement-routes/handle-announcement-delete');
-const { handleAnnouncementGetAll } = require('../../route-files/announcement-routes/handle-announcement-get-all');
+import { handleAnnouncementCreate } from '../../route-files/alert-function-routes/announcement-routes/handle-announcement-create.js';
+import { handleAnnouncementUpdate } from '../../route-files/alert-function-routes/announcement-routes/handle-announcement-update.js';
+import { handleAnnouncementDelete } from '../../route-files/alert-function-routes/announcement-routes/handle-announcement-delete.js';
+import { handleAnnouncementGetAll } from '../../route-files/alert-function-routes/announcement-routes/handle-announcement-get-all.js';
+
+const router = express.Router();
 
 router.use(express.json());
 router.use(cors());
@@ -28,4 +29,4 @@ router.put('/update/:announcementId', verifyJwt, validateAnnouncementUpdate, han
 // Delete an announcement
 router.delete('/delete/:announcementId', verifyJwt, validateAnnouncementDelete, handleAnnouncementDelete);
 
-module.exports = router;
+export default router;

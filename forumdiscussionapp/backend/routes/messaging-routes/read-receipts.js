@@ -3,10 +3,10 @@ import { verifyJwt } from '../../authvalid.js';
 import {
   validateReceiptCreate,
   validateReceiptGet,
-} from '../../body-validation/read-receipts-validation.js';
+} from '../../body-validation/messaging-validation-functions/read-receipts-validation.js';
 
-import { handleReceiptCreate } from '../../route-files/read-receipts-routes/handle-receipt-create.js';
-import { handleReceiptGet } from '../../route-files/read-receipts-routes/handle-receipt-get.js';
+import { handleReceiptCreate } from '../../route-files/messaging-function-routes/read-receipts-routes/handle-receipt-create.js';
+import { handleReceiptGet } from '../../route-files/messaging-function-routes/read-receipts-routes/handle-receipt-get.js';
 
 const router = express.Router();
 

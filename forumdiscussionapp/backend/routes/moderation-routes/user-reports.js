@@ -5,12 +5,12 @@ import {
   validateUserReportCreate,
   validateUserReportUpdate,
   validateUserReportDelete,
-} from '../../body-validation/user-report-validation.js';
+} from '../../body-validation/moderation-validation-functions/user-report-validation.js';
 
-import { handleUserReportCreate } from '../../route-files/user-report-routes/handle-user-report-create.js';
-import { handleUserReportUpdate } from '../../route-files/user-report-routes/handle-user-report-update.js';
-import { handleUserReportDelete } from '../../route-files/user-report-routes/handle-user-report-delete.js';
-import { handleUserReportGetAll } from '../../route-files/user-report-routes/handle-user-report-get-all.js';
+import { handleUserReportCreate } from '../../route-files/moderation-function-routes/user-report-routes/handle-user-report-create.js';
+import { handleUserReportUpdate } from '../../route-files/moderation-function-routes/user-report-routes/handle-user-report-update.js';
+import { handleUserReportDelete } from '../../route-files/moderation-function-routes/user-report-routes/handle-user-report-delete.js';
+import { handleUserReportGetAll } from '../../route-files/moderation-function-routes/user-report-routes/handle-user-report-get-all.js';
 
 const router = express.Router();
 

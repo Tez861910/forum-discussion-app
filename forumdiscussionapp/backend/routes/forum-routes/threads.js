@@ -5,14 +5,14 @@ import {
   validateThreadUpdate,
   validateThreadGetCourseId,
   validateThreadGetByThreadId,
-} from '../../body-validation/thread-validation.js'; 
+} from '../../body-validation/forum-validation-functions/thread-validation.js'; 
 
-import { handleThreadsCreate } from '../../route-files/thread-routes/handle-threads-create.js';
-import { handleThreadsGetCourseId } from '../../route-files/thread-routes/handle-threads-get-courseid.js';
-import { handleThreadsGetAll } from '../../route-files/thread-routes/handle-threads-get-all.js';
-import { handleThreadsGetByThreadId } from '../../route-files/thread-routes/handle-threads-get-id.js';
-import { handleThreadsUpdateId } from '../../route-files/thread-routes/handle-threads-update-id.js';
-import { handleThreadsDeleteId } from '../../route-files/thread-routes/handle-threads-delete-id.js';
+import { handleThreadsCreate } from '../../route-files/forum-function-routes/thread-routes/handle-threads-create.js';
+import { handleThreadsGetCourseId } from '../../route-files/forum-function-routes/thread-routes/handle-threads-get-courseid.js';
+import { handleThreadsGetAll } from '../../route-files/forum-function-routes/thread-routes/handle-threads-get-all.js';
+import { handleThreadsGetByThreadId } from '../../route-files/forum-function-routes/thread-routes/handle-threads-get-id.js';
+import { handleThreadsUpdateId } from '../../route-files/forum-function-routes/thread-routes/handle-threads-update-id.js';
+import { handleThreadsDeleteId } from '../../route-files/forum-function-routes/thread-routes/handle-threads-delete-id.js';
 
 const router = express.Router();
 

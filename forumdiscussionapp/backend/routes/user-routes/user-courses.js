@@ -4,15 +4,15 @@ import { verifyJwt } from '../../authvalid.js';
 import {
   validateCourseEnroll,
   validateRemoveUsersFromCourse,
-} from '../../body-validation/user-course-validation.js';
+} from '../../body-validation/user-validation-functions/user-course-validation.js';
 
-import { handleUserCoursesGet } from '../../route-files/user-course-routes/handle-user-courses-get.js';
-import { handleUserCoursesGetId } from '../../route-files/user-course-routes/handle-user-courses-get-id.js';
-import { handleCoursesEnrollmentsId } from '../../route-files/user-course-routes/handle-courses-enrollments-id.js';
-import { handleCoursesEnroll } from '../../route-files/user-course-routes/handle-courses-enroll.js';
-import { handleCoursesIdEnroll } from '../../route-files/user-course-routes/handle-courses-id-enroll.js';
-import { handleRemoveUsersFromCourse } from '../../route-files/user-course-routes/handle-remove-users-from-course.js';
-import { handleCIDEnrollmentsEID } from '../../route-files/user-course-routes/handle-courses-cid-enrollments-eid.js';
+import { handleUserCoursesGet } from '../../route-files/user-function-routes/user-course-routes/handle-user-courses-get.js';
+import { handleUserCoursesGetId } from '../../route-files/user-function-routes/user-course-routes/handle-user-courses-get-id.js';
+import { handleCoursesEnrollmentsId } from '../../route-files/user-function-routes/user-course-routes/handle-courses-enrollments-id.js';
+import { handleCoursesEnroll } from '../../route-files/user-function-routes/user-course-routes/handle-courses-enroll.js';
+import { handleCoursesIdEnroll } from '../../route-files/user-function-routes/user-course-routes/handle-courses-id-enroll.js';
+import { handleRemoveUsersFromCourse } from '../../route-files/user-function-routes/user-course-routes/handle-remove-users-from-course.js';
+import { handleCIDEnrollmentsEID } from '../../route-files/user-function-routes/user-course-routes/handle-courses-cid-enrollments-eid.js';
 
 const router = express.Router();
 

@@ -6,13 +6,13 @@ import {
   validateCourseUpdate,
   validateCourseGetId,
   validateCourseDelete,
-} from '../../body-validation/course-validation.js';
+} from '../../body-validation/user-validation-functions/course-validation.js';
 
-import { handleCoursesGet } from '../../route-files/course-routes/handle-courses-get.js';
-import { handleCoursesCreate } from '../../route-files/course-routes/handle-courses-create.js';
-import { handleCoursesGetId } from '../../route-files/course-routes/handle-courses-get-id.js';
-import { handleCoursesUpdateId } from '../../route-files/course-routes/handle-courses-update-id.js';
-import { handleCoursesPatchId } from '../../route-files/course-routes/handle-courses-patch-id.js';
+import { handleCoursesGet } from '../../route-files/user-function-routes/course-routes/handle-courses-get.js';
+import { handleCoursesCreate } from '../../route-files/user-function-routes/course-routes/handle-courses-create.js';
+import { handleCoursesGetId } from '../../route-files/user-function-routes/course-routes/handle-courses-get-id.js';
+import { handleCoursesUpdateId } from '../../route-files/user-function-routes/course-routes/handle-courses-update-id.js';
+import { handleCoursesPatchId } from '../../route-files/user-function-routes/course-routes/handle-courses-patch-id.js';
 
 const router = express.Router();
 

@@ -2,17 +2,17 @@ import express from 'express';
 import cors from 'cors';
 import { verifyJwt } from '../../authvalid.js';
 
-import { handleRolesGet } from '../../route-files/role-routes/handle-roles-get.js';
-import { handleRolesCreate } from '../../route-files/role-routes/handle-roles-create.js';
-import { handleRolesGetId } from '../../route-files/role-routes/handle-roles-get-id.js';
-import { handleRolesUpdateId } from '../../route-files/role-routes/handle-roles-update-id.js';
-import { handleRolesPatchId } from '../../route-files/role-routes/handle-roles-patch-id.js';
+import { handleRolesGet } from '../../route-files/user-function-routes/role-routes/handle-roles-get.js';
+import { handleRolesCreate } from '../../route-files/user-function-routes/role-routes/handle-roles-create.js';
+import { handleRolesGetId } from '../../route-files/user-function-routes/role-routes/handle-roles-get-id.js';
+import { handleRolesUpdateId } from '../../route-files/user-function-routes/role-routes/handle-roles-update-id.js';
+import { handleRolesPatchId } from '../../route-files/user-function-routes/role-routes/handle-roles-patch-id.js';
 
 import {
   validateRoleCreate,
   validateRoleUpdate,
   validateRoleId,
-} from '../../body-validation/role-validation.js'; 
+} from '../../body-validation/user-validation-functions/role-validation.js'; 
 
 const router = express.Router();
 

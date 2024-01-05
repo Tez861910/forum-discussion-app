@@ -1,17 +1,18 @@
-const express = require('express');
-const router = express.Router();
-const cors = require('cors');
-const { verifyJwt } = require('../../authvalid');
-const {
+import express from 'express';
+import cors from 'cors';
+import { verifyJwt } from '../../authvalid.js';
+import {
   validateUserSettingsCreate,
   validateUserSettingsUpdate,
   validateUserSettingsDelete,
-} = require('../../body-validation/user-settings-validation');
+} from '../../body-validation/activity-validation-functions/user-settings-validation.js';
 
-const { handleUserSettingsCreate } = require('../../route-files/user-settings-routes/handle-user-settings-create');
-const { handleUserSettingsUpdate } = require('../../route-files/user-settings-routes/handle-user-settings-update');
-const { handleUserSettingsDelete } = require('../../route-files/user-settings-routes/handle-user-settings-delete');
-const { handleUserSettingsGetAll } = require('../../route-files/user-settings-routes/handle-user-settings-get-all');
+import { handleUserSettingsCreate } from '../../route-files/activity-function-routes/user-settings-routes/handle-user-settings-create.js';
+import { handleUserSettingsUpdate } from '../../route-files/activity-function-routes/user-settings-routes/handle-user-settings-update.js';
+import { handleUserSettingsDelete } from '../../route-files/activity-function-routes/user-settings-routes/handle-user-settings-delete.js';
+import { handleUserSettingsGetAll } from '../../route-files/activity-function-routes/user-settings-routes/handle-user-settings-get-all.js';
+
+const router = express.Router();
 
 router.use(express.json());
 router.use(cors());
@@ -28,4 +29,4 @@ router.put('/update/:settingId', verifyJwt, validateUserSettingsUpdate, handleUs
 // Delete user settings
 router.delete('/delete/:settingId', verifyJwt, validateUserSettingsDelete, handleUserSettingsDelete);
 
-module.exports = router;
+export default router;

@@ -6,16 +6,16 @@ import {
   validateUserUpdateUsers,
   validateUserGetId,
   validateUserGetRoleId,
-} from '../../body-validation/user-validation.js';
+} from '../../body-validation/user-validation-functions/user-validation.js';
 
-import { handleUsersGet } from '../../route-files/user-routes/handle-users-get.js';
-import { handleUsersGetUserName } from '../../route-files/user-routes/handle-users-getusername.js';
-import { handleUsersCreate } from '../../route-files/user-routes/handle-users-create.js';
-import { handleUsersGetId } from '../../route-files/user-routes/handle-users-get-id.js';
-import { handleUsersUpdateId } from '../../route-files/user-routes/handle-users-update-id.js';
-import { handleUsersDeleteId } from '../../route-files/user-routes/handle-users-delete-id.js';
-import { handleUsersGetRoleId } from '../../route-files/user-routes/handle-users-get-role-id.js';
-import { handleUsersUpdateUsers } from '../../route-files/user-routes/handle-users-updates-users.js';
+import { handleUsersGet } from '../../route-files/user-function-routes/user-routes/handle-users-get.js';
+import { handleUsersGetUserName } from '../../route-files/user-function-routes/user-routes/handle-users-getusername.js';
+import { handleUsersCreate } from '../../route-files/user-function-routes/user-routes/handle-users-create.js';
+import { handleUsersGetId } from '../../route-files/user-function-routes/user-routes/handle-users-get-id.js';
+import { handleUsersUpdateId } from '../../route-files/user-function-routes/user-routes/handle-users-update-id.js';
+import { handleUsersDeleteId } from '../../route-files/user-function-routes/user-routes/handle-users-delete-id.js';
+import { handleUsersGetRoleId } from '../../route-files/user-function-routes/user-routes/handle-users-get-role-id.js';
+import { handleUsersUpdateUsers } from '../../route-files/user-function-routes/user-routes/handle-users-updates-users.js';
 
 const router = express.Router();
 

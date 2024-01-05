@@ -1,17 +1,18 @@
-const express = require('express');
-const router = express.Router();
-const cors = require('cors');
-const { verifyJwt } = require('../../authvalid');
-const {
+import express from 'express';
+import cors from 'cors';
+import { verifyJwt } from '../../authvalid.js';
+import {
   validateUserActivityLogCreate,
   validateUserActivityLogUpdate,
   validateUserActivityLogDelete,
-} = require('../../body-validation/user-activity-log-validation');
+} from '../../body-validation/activity-validation-functions/user-activity-log-validation.js';
 
-const { handleUserActivityLogCreate } = require('../../route-files/user-activity-log-routes/handle-user-activity-log-create');
-const { handleUserActivityLogUpdate } = require('../../route-files/user-activity-log-routes/handle-user-activity-log-update');
-const { handleUserActivityLogDelete } = require('../../route-files/user-activity-log-routes/handle-user-activity-log-delete');
-const { handleUserActivityLogGetAll } = require('../../route-files/user-activity-log-routes/handle-user-activity-log-get-all');
+import { handleUserActivityLogCreate } from '../../route-files/activity-function-routes/user-activity-log-routes/handle-user-activity-log-create.js';
+import { handleUserActivityLogUpdate } from '../../route-files/activity-function-routes/user-activity-log-routes/handle-user-activity-log-update.js';
+import { handleUserActivityLogDelete } from '../../route-files/activity-function-routes/user-activity-log-routes/handle-user-activity-log-delete.js';
+import { handleUserActivityLogGetAll } from '../../route-files/activity-function-routes/user-activity-log-routes/handle-user-activity-log-get-all.js';
+
+const router = express.Router();
 
 router.use(express.json());
 router.use(cors());
@@ -28,4 +29,4 @@ router.put('/update/:logId', verifyJwt, validateUserActivityLogUpdate, handleUse
 // Delete a user activity log
 router.delete('/delete/:logId', verifyJwt, validateUserActivityLogDelete, handleUserActivityLogDelete);
 
-module.exports = router;
+export default router;

@@ -7,14 +7,14 @@ import {
   validateForumModeratorDelete,
   validateForumModeratorGetUserId,
   validateForumModeratorGetForumId,
-} from '../../body-validation/moderator-validation.js';
+} from '../../body-validation/forum-validation-functions/moderator-validation.js';
 
-import { handleForumModeratorDeleteById } from '../../route-files/moderator-routes/handle-forum-moderator-delete-id.js';
-import { handleForumModeratorUpdateById } from '../../route-files/moderator-routes/handle-forum-moderator-update-id.js';
-import { handleForumModeratorCreate } from '../../route-files/moderator-routes/handle-forum-moderator-create.js';
-import { handleForumModeratorGet } from '../../route-files/moderator-routes/handle-forum-moderator-get.js';
-import { handleForumModeratorGetUserId } from '../../route-files/moderator-routes/handle-forum-moderators-get-userid.js';
-import { handleForumModeratorGetForumId } from '../../route-files/moderator-routes/handle-forum-moderators-get-forumid.js';
+import { handleForumModeratorDeleteById } from '../../route-files/forum-function-routes/moderator-routes/handle-forum-moderator-delete-id.js';
+import { handleForumModeratorUpdateById } from '../../route-files/forum-function-routes/moderator-routes/handle-forum-moderator-update-id.js';
+import { handleForumModeratorCreate } from '../../route-files/forum-function-routes/moderator-routes/handle-forum-moderator-create.js';
+import { handleForumModeratorGet } from '../../route-files/forum-function-routes/moderator-routes/handle-forum-moderator-get.js';
+import { handleForumModeratorGetUserId } from '../../route-files/forum-function-routes/moderator-routes/handle-forum-moderators-get-userid.js';
+import { handleForumModeratorGetForumId } from '../../route-files/forum-function-routes/moderator-routes/handle-forum-moderators-get-forumid.js';
 
 const router = express.Router();
 

@@ -6,13 +6,13 @@ import {
   validateCommentUpdate,
   validateCommentDelete,
   validateCommentGetThreadId,
-} from '../../body-validation/comment-validation.js';
+} from '../../body-validation/forum-validation-functions/comment-validation.js';
 
-import { handleCommentDeleteId } from '../../route-files/comment-routes/handle-comment-delete-id.js';
-import { handleCommentUpdateId } from '../../route-files/comment-routes/handle-comment-update-id.js';
-import { handleCommentCreate } from '../../route-files/comment-routes/handle-comment-create.js';
-import { handleCommentGet } from '../../route-files/comment-routes/handle-comment-get.js';
-import { handleCommentGetThreadId } from '../../route-files/comment-routes/handle-comments-get-threadid.js';
+import { handleCommentDeleteId } from '../../route-files/forum-function-routes/comment-routes/handle-comment-delete-id.js';
+import { handleCommentUpdateId } from '../../route-files/forum-function-routes/comment-routes/handle-comment-update-id.js';
+import { handleCommentCreate } from '../../route-files/forum-function-routes/comment-routes/handle-comment-create.js';
+import { handleCommentGet } from '../../route-files/forum-function-routes/comment-routes/handle-comment-get.js';
+import { handleCommentGetThreadId } from '../../route-files/forum-function-routes/comment-routes/handle-comments-get-threadid.js';
 
 const router = express.Router();
 

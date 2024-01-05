@@ -1,8 +1,9 @@
-const express = require('express');
+import express from 'express';
+import { query } from '../../db.js';
+import { createToken, verifyPassword, createRefreshToken } from '../../authvalid.js';
+import { validateLogin } from '../../body-validation/auth-validation-functions/login-validation.js'; 
+
 const router = express.Router();
-const { query } = require('../../db');
-const { createToken, verifyPassword, createRefreshToken } = require('../../authvalid');
-const { validateLogin } = require('../../body-validation/login-validation'); 
 
 router.post('/login', async (req, res) => {
   const { email, password } = req.body;
@@ -74,4 +75,4 @@ router.post('/login', async (req, res) => {
   }
 });
 
-module.exports = router;
+export default router;

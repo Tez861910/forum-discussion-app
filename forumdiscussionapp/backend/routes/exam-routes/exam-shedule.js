@@ -5,12 +5,12 @@ import {
   validateScheduleCreate,
   validateScheduleUpdate,
   validateScheduleDelete,
-} from '../../body-validation/exam-schedule-validation.js';
+} from '../../body-validation/exam-validation-functions/exam-schedule-validation.js';
 
-import { handleScheduleCreate } from '../../route-files/exam-schedule-routes/handle-schedule-create.js';
-import { handleScheduleUpdate } from '../../route-files/exam-schedule-routes/handle-schedule-update.js';
-import { handleScheduleDelete } from '../../route-files/exam-schedule-routes/handle-schedule-delete.js';
-import { handleScheduleGetAll } from '../../route-files/exam-schedule-routes/handle-schedule-get-all.js';
+import { handleScheduleCreate } from '../../route-files/exam-function-routes/exam-schedule-routes/handle-schedule-create.js';
+import { handleScheduleUpdate } from '../../route-files/exam-function-routes/exam-schedule-routes/handle-schedule-update.js';
+import { handleScheduleDelete } from '../../route-files/exam-function-routes/exam-schedule-routes/handle-schedule-delete.js';
+import { handleScheduleGetAll } from '../../route-files/exam-function-routes/exam-schedule-routes/handle-schedule-get-all.js';
 
 const router = express.Router();
 

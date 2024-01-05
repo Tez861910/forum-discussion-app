@@ -1,17 +1,18 @@
-const express = require('express');
-const router = express.Router();
-const cors = require('cors');
-const { verifyJwt } = require('../../authvalid');
-const {
+import express from 'express';
+import cors from 'cors';
+import { verifyJwt } from '../../authvalid.js';
+import {
   validateNotificationCreate,
   validateNotificationUpdate,
   validateNotificationDelete,
-} = require('../../body-validation/notification-validation');
+} from '../../body-validation/alert-validation-functions/notification-validation.js';
 
-const { handleNotificationCreate } = require('../../route-files/notification-routes/handle-notification-create');
-const { handleNotificationUpdate } = require('../../route-files/notification-routes/handle-notification-update');
-const { handleNotificationDelete } = require('../../route-files/notification-routes/handle-notification-delete');
-const { handleNotificationGetAll } = require('../../route-files/notification-routes/handle-notification-get-all');
+import { handleNotificationCreate } from '../../route-files/alert-function-routes/notification-routes/handle-notification-create.js';
+import { handleNotificationUpdate } from '../../route-files/alert-function-routes/notification-routes/handle-notification-update.js';
+import { handleNotificationDelete } from '../../route-files/alert-function-routes/notification-routes/handle-notification-delete.js';
+import { handleNotificationGetAll } from '../../route-files/alert-function-routes/notification-routes/handle-notification-get-all.js';
+
+const router = express.Router();
 
 router.use(express.json());
 router.use(cors());
@@ -28,4 +29,4 @@ router.put('/update/:notificationId', verifyJwt, validateNotificationUpdate, han
 // Delete a notification
 router.delete('/delete/:notificationId', verifyJwt, validateNotificationDelete, handleNotificationDelete);
 
-module.exports = router;
+export default router;

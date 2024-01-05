@@ -5,12 +5,12 @@ import {
   validateManagerUpdate,
   validateManagerDelete,
   validateManagerGet,
-} from '../../body-validation/group-manager-validation.js';
+} from '../../body-validation/groupchat-validation-functions/group-manager-validation.js';
 
-import { handleManagerCreate } from '../../route-files/group-manager-routes/handle-manager-create.js';
-import { handleManagerUpdate } from '../../route-files/group-manager-routes/handle-manager-update.js';
-import { handleManagerDelete } from '../../route-files/group-manager-routes/handle-manager-delete.js';
-import { handleManagerGet } from '../../route-files/group-manager-routes/handle-manager-get.js';
+import { handleManagerCreate } from '../../route-files/groupchat-function-routes/group-manager-routes/handle-manager-create.js';
+import { handleManagerUpdate } from '../../route-files/groupchat-function-routes/group-manager-routes/handle-manager-update.js';
+import { handleManagerDelete } from '../../route-files/groupchat-function-routes/group-manager-routes/handle-manager-delete.js';
+import { handleManagerGet } from '../../route-files/groupchat-function-routes/group-manager-routes/handle-manager-get.js';
 
 const router = express.Router();
 

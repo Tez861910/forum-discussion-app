@@ -6,12 +6,12 @@ import {
   validateGroupMessagesDelete,
   validateGroupMessagesGetByGroupId,
   validateGroupMessagesGetBySenderId,
-} from '../../body-validation/group-messages-validation.js';
+} from '../../body-validation/groupchat-validation-functions/group-messages-validation.js';
 
-import { handleGroupMessagesCreate } from '../../route-files/group-messages-routes/handle-groupMessages-create.js';
-import { handleGroupMessagesDelete } from '../../route-files/group-messages-routes/handle-groupMessages-delete.js';
-import { handleGroupMessagesGetByGroupId } from '../../route-files/group-messages-routes/handle-groupMessages-get-groupid.js';
-import { handleGroupMessagesGetBySenderId } from '../../route-files/group-messages-routes/handle-groupMessages-get-senderid.js';
+import { handleGroupMessagesCreate } from '../../route-files/groupchat-function-routes/group-messages-routes/handle-groupMessages-create.js';
+import { handleGroupMessagesDelete } from '../../route-files/groupchat-function-routes/group-messages-routes/handle-groupMessages-delete.js';
+import { handleGroupMessagesGetByGroupId } from '../../route-files/groupchat-function-routes/group-messages-routes/handle-groupMessages-get-groupid.js';
+import { handleGroupMessagesGetBySenderId } from '../../route-files/groupchat-function-routes/group-messages-routes/handle-groupMessages-get-senderid.js';
 
 const router = express.Router();
 

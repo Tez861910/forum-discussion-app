@@ -1,5 +1,5 @@
 import express from 'express';
-import { handleError } from '../error-handler.js';
+import { handleError } from '../authvalid.js';
 
 import bansRoutes from '../routes/moderation-routes/bans.js';
 import userreportsRoutes from '../routes/moderation-routes/user-reports.js';

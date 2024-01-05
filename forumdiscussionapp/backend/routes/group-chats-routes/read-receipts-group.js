@@ -3,10 +3,10 @@ import { verifyJwt } from '../../authvalid.js';
 import {
   validateReadReceiptGroupCreate,
   validateReadReceiptGroupGet,
-} from '../../body-validation/read-receipts-group-validation.js';
+} from '../../body-validation/groupchat-validation-functions/read-receipts-group-validation.js';
 
-import { handleReadReceiptGroupCreate } from '../../route-files/read-receipts-group-routes/handle-read-receipt-group-create.js';
-import { handleReadReceiptGroupGet } from '../../route-files/read-receipts-group-routes/handle-read-receipt-group-get.js';
+import { handleReadReceiptGroupCreate } from '../../route-files/groupchat-function-routes/read-receipts-group-routes/handle-read-receipt-group-create.js';
+import { handleReadReceiptGroupGet } from '../../route-files/groupchat-function-routes/read-receipts-group-routes/handle-read-receipt-group-get.js';
 
 const router = express.Router();
 

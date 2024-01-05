@@ -1,5 +1,5 @@
 import express from 'express';
-import { handleError } from '../error-handler.js';
+import { handleError } from '../authvalid.js';
 
 import groupchatsRoutes from '../routes/group-chats-routes/group-chats.js';
 import groupmanagersRoutes from '../routes/group-chats-routes/group-managers.js';

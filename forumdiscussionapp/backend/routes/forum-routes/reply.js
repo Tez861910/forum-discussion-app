@@ -6,13 +6,13 @@ import {
   validateForumReplyUpdate,
   validateForumReplyDelete,
   validateForumReplyGetForumPostId,
-} from '../../body-validation/reply-validation.js';
+} from '../../body-validation/forum-validation-functions/reply-validation.js';
 
-import { handleForumReplyDeleteById } from '../../route-files/reply-routes/handle-forum-reply-delete-id.js';
-import { handleForumReplyUpdateById } from '../../route-files/reply-routes/handle-forum-reply-update-id.js';
-import { handleForumReplyCreate } from '../../route-files/reply-routes/handle-forum-reply-create.js';
-import { handleForumReplyGet } from '../../route-files/reply-routes/handle-forum-reply-get.js';
-import { handleForumReplyGetForumPostId } from '../../route-files/reply-routes/handle-forum-replies-get-forumpostid.js';
+import { handleForumReplyDeleteById } from '../../route-files/forum-function-routes/reply-routes/handle-forum-reply-delete-id.js';
+import { handleForumReplyUpdateById } from '../../route-files/forum-function-routes/reply-routes/handle-forum-reply-update-id.js';
+import { handleForumReplyCreate } from '../../route-files/forum-function-routes/reply-routes/handle-forum-reply-create.js';
+import { handleForumReplyGet } from '../../route-files/forum-function-routes/reply-routes/handle-forum-reply-get.js';
+import { handleForumReplyGetForumPostId } from '../../route-files/forum-function-routes/reply-routes/handle-forum-replies-get-forumpostid.js';
 
 const router = express.Router();
 

@@ -1,10 +1,11 @@
-const express = require('express');
+import express from 'express';
+import { query } from '../../db.js';
+import multer from 'multer';
+import path from 'path';
+import { validateAvatarUpload, validateTokenRefresh } from '../../body-validation/auth-validation-functions/home-validation.js'; 
+import { verifyRefreshToken, createToken } from '../../authvalid.js';
+
 const router = express.Router();
-const { query } = require('../../db');
-const multer = require('multer');
-const path = require('path');
-const { validateAvatarUpload, validateTokenRefresh } = require('../../body-validation/home-validation'); 
-const { verifyRefreshToken, createToken } = require('../../authvalid');
 
 // Set up multer for file uploads
 const storage = multer.diskStorage({
@@ -64,4 +65,4 @@ router.post('/refresh-token', verifyRefreshToken, async (req, res) => {
   }
 });
 
-module.exports = router;
+export default router;

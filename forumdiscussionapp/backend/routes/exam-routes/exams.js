@@ -6,12 +6,12 @@ import {
   validateExamUpdate,
   validateExamDelete,
   validateExamGetByCourseId,
-} from '../../body-validation/exam-validation.js';
+} from '../../body-validation/exam-validation-functions/exam-validation.js';
 
-import { handleExamDeleteById } from '../../route-files/exam-routes/handle-exam-delete-id.js';
-import { handleExamUpdateById } from '../../route-files/exam-routes/handle-exam-update-id.js';
-import { handleExamCreate } from '../../route-files/exam-routes/handle-exam-create.js';
-import { handleExamGetByCourseId } from '../../route-files/exam-routes/handle-exams-get-bycourseid.js';
+import { handleExamDeleteById } from '../../route-files/exam-function-routes/exam-routes/handle-exam-delete-id.js';
+import { handleExamUpdateById } from '../../route-files/exam-function-routes/exam-routes/handle-exam-update-id.js';
+import { handleExamCreate } from '../../route-files/exam-function-routes/exam-routes/handle-exam-create.js';
+import { handleExamGetByCourseId } from '../../route-files/exam-function-routes/exam-routes/handle-exams-get-bycourseid.js';
 
 const router = express.Router();
 

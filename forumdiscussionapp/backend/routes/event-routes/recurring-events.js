@@ -1,16 +1,17 @@
-const express = require('express');
-const router = express.Router();
-const { verifyJwt } = require('../../authvalid');
-const {
+import express from 'express';
+import { verifyJwt } from '../../authvalid.js';
+import {
   validateCreateRecurringEvent,
   validateEditRecurringEvent,
   validateSoftDeleteRecurringEvent,
-} = require('../../body-validation/recurring-event-validation'); 
+} from '../../body-validation/event-validation-functions/recurring-event-validation.js'; 
 
-const {getRecurringEvents} =require('../../route-files/recurring-event-routes/get-recurring-event')
-const {createRecurringEvent} =require('../../route-files/recurring-event-routes/create-recurring-event')
-const {editRecurringEvent} =require('../../route-files/recurring-event-routes/edit-recurring-event')
-const {softDeleteRecurringEvent} =require('../../route-files/recurring-event-routes/delete-recurring-event')
+import {getRecurringEvents} from '../../route-files/event-function-routes/recurring-event-routes/get-recurring-event.js';
+import {createRecurringEvent} from '../../route-files/event-function-routes/recurring-event-routes/create-recurring-event.js';
+import {editRecurringEvent} from '../../route-files/event-function-routes/recurring-event-routes/edit-recurring-event.js';
+import {softDeleteRecurringEvent} from '../../route-files/event-function-routes/recurring-event-routes/delete-recurring-event.js';
+
+const router = express.Router();
 
 router.use(express.json());
 
@@ -26,4 +27,4 @@ router.put('/:eventId/recurring/edit/:recurringEventId', verifyJwt, validateEdit
 // Endpoint to soft delete a recurring event
 router.delete('/:eventId/recurring/soft-delete/:recurringEventId', verifyJwt, validateSoftDeleteRecurringEvent, softDeleteRecurringEvent);
 
-module.exports = router;
+export default router;

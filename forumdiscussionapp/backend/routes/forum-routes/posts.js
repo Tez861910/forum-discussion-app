@@ -6,13 +6,13 @@ import {
   validateForumPostUpdate,
   validateForumPostDelete,
   validateForumPostGetForumId,
-} from '../../body-validation/post-validation.js';
+} from '../../body-validation/forum-validation-functions/post-validation.js';
 
-import { handleForumPostDeleteById } from '../../route-files/post-routes/handle-forum-post-delete-id.js';
-import { handleForumPostUpdateById } from '../../route-files/post-routes/handle-forum-post-update-id.js';
-import { handleForumPostCreate } from '../../route-files/post-routes/handle-forum-post-create.js';
-import { handleForumPostGet } from '../../route-files/post-routes/handle-forum-post-get.js';
-import { handleForumPostGetForumId } from '../../route-files/post-routes/handle-forum-posts-get-forumid.js';
+import { handleForumPostDeleteById } from '../../route-files/forum-function-routes/post-routes/handle-forum-post-delete-id.js';
+import { handleForumPostUpdateById } from '../../route-files/forum-function-routes/post-routes/handle-forum-post-update-id.js';
+import { handleForumPostCreate } from '../../route-files/forum-function-routes/post-routes/handle-forum-post-create.js';
+import { handleForumPostGet } from '../../route-files/forum-function-routes/post-routes/handle-forum-post-get.js';
+import { handleForumPostGetForumId } from '../../route-files/forum-function-routes/post-routes/handle-forum-posts-get-forumid.js';
 
 const router = express.Router();
 

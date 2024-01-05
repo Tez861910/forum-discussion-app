@@ -5,11 +5,11 @@ import {
   validateUserPollVoteCreate,
   validateUserPollVoteDelete,
   validateUserPollVoteGetByUserId,
-} from '../../body-validation/user-vote-validation.js';
+} from '../../body-validation/forum-validation-functions/user-vote-validation.js';
 
-import { handleUserPollVoteDeleteById } from '../../route-files/user-vote-routes/handle-user-poll-vote-delete-id.js';
-import { handleUserPollVoteCreate } from '../../route-files/user-vote-routes/handle-user-poll-vote-create.js';
-import { handleUserPollVoteGetByUserId } from '../../route-files/user-vote-routes/handle-user-poll-votes-get-byuserid.js';
+import { handleUserPollVoteDeleteById } from '../../route-files/forum-function-routes/user-vote-routes/handle-user-poll-vote-delete-id.js';
+import { handleUserPollVoteCreate } from '../../route-files/forum-function-routes/user-vote-routes/handle-user-poll-vote-create.js';
+import { handleUserPollVoteGetByUserId } from '../../route-files/forum-function-routes/user-vote-routes/handle-user-poll-votes-get-byuserid.js';
 
 const router = express.Router();
 

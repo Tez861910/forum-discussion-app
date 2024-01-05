@@ -1,16 +1,17 @@
-const express = require('express');
-const router = express.Router();
-const { verifyJwt } = require('../../authvalid');
-const {
+import express from 'express';
+import { verifyJwt } from '../../authvalid.js';
+import {
   validateCreateGuestSpeaker,
   validateEditGuestSpeaker,
   validateSoftDeleteGuestSpeaker,
-} = require('../../body-validation/guest-speaker-validation')
+} from '../../body-validation/event-validation-functions/guest-speaker-validation.js';
 
-const {getGuestSpeakers} =require('../../route-files/guest-speaker-routes/get-guest-speaker')
-const {createGuestSpeaker} =require('../../route-files/guest-speaker-routes/create-guest-speaker')
-const {editGuestSpeaker} =require('../../route-files/guest-speaker-routes/edit-guest-speaker')
-const {softDeleteGuestSpeaker} =require('../../route-files/guest-speaker-routes/delete-guest-speaker')
+import {getGuestSpeakers} from '../../route-files/event-function-routes/guest-speaker-routes/get-guest-speaker.js';
+import {createGuestSpeaker} from '../../route-files/event-function-routes/guest-speaker-routes/create-guest-speaker.js';
+import {editGuestSpeaker} from '../../route-files/event-function-routes/guest-speaker-routes/edit-guest-speaker.js';
+import {softDeleteGuestSpeaker} from '../../route-files/event-function-routes/guest-speaker-routes/delete-guest-speaker.js';
+
+const router = express.Router();
 
 router.use(express.json());
 
@@ -26,4 +27,4 @@ router.put('/:eventId/guest-speakers/edit/:guestSpeakerId', verifyJwt, validateE
 // Endpoint to soft delete a guest speaker
 router.delete('/:eventId/guest-speakers/soft-delete/:guestSpeakerId', verifyJwt, validateSoftDeleteGuestSpeaker, softDeleteGuestSpeaker);
 
-module.exports = router;
+export default router;

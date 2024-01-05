@@ -5,12 +5,12 @@ import {
   validateDepartmentCreate,
   validateDepartmentUpdate,
   validateDepartmentDelete,
-} from '../../body-validation/department-validation.js';
+} from '../../body-validation/user-validation-functions/department-validation.js';
 
-import { handleDepartmentCreate } from '../../route-files/department-routes/handle-department-create.js';
-import { handleDepartmentUpdate } from '../../route-files/department-routes/handle-department-update.js';
-import { handleDepartmentDelete } from '../../route-files/department-routes/handle-department-delete.js';
-import { handleDepartmentGetAll } from '../../route-files/department-routes/handle-department-get-all.js';
+import { handleDepartmentCreate } from '../../route-files/user-function-routes/department-routes/handle-department-create.js';
+import { handleDepartmentUpdate } from '../../route-files/user-function-routes/department-routes/handle-department-update.js';
+import { handleDepartmentDelete } from '../../route-files/user-function-routes/department-routes/handle-department-delete.js';
+import { handleDepartmentGetAll } from '../../route-files/user-function-routes/department-routes/handle-department-get-all.js';
 
 const router = express.Router();
 

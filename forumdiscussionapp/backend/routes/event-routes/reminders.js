@@ -1,17 +1,17 @@
-const express = require('express');
-const router = express.Router();
-const { verifyJwt } = require('../../authvalid');
-const {
+import express from 'express';
+import { verifyJwt } from '../../authvalid.js';
+import {
   validateCreateReminder,
   validateEditReminder,
   validateSoftDeleteReminder,
-} = require('../../body-validation/reminders-validation');
+} from '../../body-validation/event-validation-functions/reminders-validation.js';
 
+import {getReminders} from '../../route-files/event-function-routes/reminder-routes/get-reminder.js';
+import {createReminder} from '../../route-files/event-function-routes/reminder-routes/create-reminder.js';
+import {editReminder} from '../../route-files/event-function-routes/reminder-routes/edit-reminder.js';
+import {softDeleteReminder} from '../../route-files/event-function-routes/reminder-routes/delete-reminder.js';
 
-const {getReminders} =require('../../route-files/reminder-routes/get-reminder')
-const {createReminder} =require('../../route-files/reminder-routes/create-reminder')
-const {editReminder} =require('../../route-files/reminder-routes/edit-reminder')
-const {softDeleteReminder} =require('../../route-files/reminder-routes/delete-reminder')
+const router = express.Router();
 
 router.use(express.json());
 
@@ -27,4 +27,4 @@ router.put('/:eventId/reminders/edit/:reminderId', verifyJwt, validateEditRemind
 // Endpoint to soft delete a reminder
 router.delete('/:eventId/reminders/soft-delete/:reminderId', verifyJwt, validateSoftDeleteReminder, softDeleteReminder);
 
-module.exports = router;
+export default router;

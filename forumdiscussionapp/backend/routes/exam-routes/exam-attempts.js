@@ -5,12 +5,12 @@ import {
   validateAttemptCreate,
   validateAttemptUpdate,
   validateAttemptDelete,
-} from '../../body-validation/exam-attempt-validation.js';
+} from '../../body-validation/exam-validation-functions/exam-attempt-validation.js';
 
-import { handleAttemptCreate } from '../../route-files/exam-attempt-routes/handle-attempt-create.js';
-import { handleAttemptUpdate } from '../../route-files/exam-attempt-routes/handle-attempt-update.js';
-import { handleAttemptDelete } from '../../route-files/exam-attempt-routes/handle-attempt-delete.js';
-import { handleAttemptGetAll } from '../../route-files/exam-attempt-routes/handle-attempt-get-all.js';
+import { handleAttemptCreate } from '../../route-files/exam-function-routes/exam-attempt-routes/handle-attempt-create.js';
+import { handleAttemptUpdate } from '../../route-files/exam-function-routes/exam-attempt-routes/handle-attempt-update.js';
+import { handleAttemptDelete } from '../../route-files/exam-function-routes/exam-attempt-routes/handle-attempt-delete.js';
+import { handleAttemptGetAll } from '../../route-files/exam-function-routes/exam-attempt-routes/handle-attempt-get-all.js';
 
 const router = express.Router();
 

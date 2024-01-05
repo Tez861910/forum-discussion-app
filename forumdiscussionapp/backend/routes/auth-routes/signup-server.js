@@ -1,9 +1,9 @@
-const express = require('express');
-const router = express.Router();
-const { createToken, hashPassword, createRefreshToken } = require('../../authvalid');
-const { query } = require('../../db');
-const { validateSignup } = require('../../body-validation/signup-validation');
+import express from 'express';
+import { createToken, hashPassword, createRefreshToken } from '../../authvalid.js';
+import { query } from '../../db.js';
+import { validateSignup } from '../../body-validation/auth-validation-functions/signup-validation.js';
 
+const router = express.Router();
 const app = express();
 app.use(express.json());
 
@@ -92,4 +92,4 @@ router.post('/signup', async (req, res) => {
   }
 });
 
-module.exports = router;
+export default router;

@@ -1,5 +1,5 @@
 import express from 'express';
-import { handleError } from '../error-handler.js';
+import { handleError } from '../authvalid.js';
 
 import loginRoutes from '../routes/auth-routes/login-server.js';
 import signupRoutes from '../routes/auth-routes/signup-server.js';

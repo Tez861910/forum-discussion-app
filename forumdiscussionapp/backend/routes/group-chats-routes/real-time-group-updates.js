@@ -3,10 +3,10 @@ import { verifyJwt } from '../../authvalid.js';
 import {
   validateRealTimeGroupUpdateCreate,
   validateRealTimeGroupUpdateGet,
-} from '../../body-validation/real-time-group-update-validation.js';
+} from '../../body-validation/groupchat-validation-functions/real-time-group-update-validation.js';
 
-import { handleRealTimeGroupUpdateCreate } from '../../route-files/real-time-group-updates-routes/handle-real-time-group-update-create.js';
-import { handleRealTimeGroupUpdateGet } from '../../route-files/real-time-group-updates-routes/handle-real-time-group-update-get.js';
+import { handleRealTimeGroupUpdateCreate } from '../../route-files/groupchat-function-routes/real-time-group-updates-routes/handle-real-time-group-update-create.js';
+import { handleRealTimeGroupUpdateGet } from '../../route-files/groupchat-function-routes/real-time-group-updates-routes/handle-real-time-group-update-get.js';
 
 const router = express.Router();
 

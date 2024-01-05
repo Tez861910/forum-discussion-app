@@ -5,12 +5,12 @@ import {
   validateQuestionCreate,
   validateQuestionUpdate,
   validateQuestionDelete,
-} from '../../body-validation/question-validation.js';
+} from '../../body-validation/exam-validation-functions/question-validation.js';
 
-import { handleQuestionDeleteById } from '../../route-files/question-routes/handle-question-delete-id.js';
-import { handleQuestionUpdateById } from '../../route-files/question-routes/handle-question-update-id.js';
-import { handleQuestionCreate } from '../../route-files/question-routes/handle-question-create.js';
-import { handleQuestionGetAll } from '../../route-files/question-routes/handle-questions-get-all.js';
+import { handleQuestionDeleteById } from '../../route-files/exam-function-routes/question-routes/handle-question-delete-id.js';
+import { handleQuestionUpdateById } from '../../route-files/exam-function-routes/question-routes/handle-question-update-id.js';
+import { handleQuestionCreate } from '../../route-files/exam-function-routes/question-routes/handle-question-create.js';
+import { handleQuestionGetAll } from '../../route-files/exam-function-routes/question-routes/handle-questions-get-all.js';
 
 const router = express.Router();
 

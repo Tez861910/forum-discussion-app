@@ -3,10 +3,10 @@ import { verifyJwt } from '../../authvalid.js';
 import {
   validateFriendsCreate,
   validateFriendsGet,
-} from '../../body-validation/friends-validation.js';
+} from '../../body-validation/messaging-validation-functions/friends-validation.js';
 
-import { handleFriendsCreate } from '../../route-files/friends-routes/handle-friends-create.js';
-import { handleFriendsGet } from '../../route-files/friends-routes/handle-friends-get.js';
+import { handleFriendsCreate } from '../../route-files/messaging-function-routes/friends-routes/handle-friends-create.js';
+import { handleFriendsGet } from '../../route-files/messaging-function-routes/friends-routes/handle-friends-get.js';
 
 const router = express.Router();
 

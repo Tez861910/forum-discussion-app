@@ -1,5 +1,5 @@
 import express from 'express';
-import { handleError } from '../error-handler.js';
+import { handleError } from '../authvalid.js';
 
 import userstatusRoutes from '../routes/messaging-routes/user-status.js';
 import friendrequestsRoutes from '../routes/messaging-routes/friend-requests.js';

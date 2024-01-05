@@ -4,12 +4,12 @@ import {
   validateResponseCreate,
   validateResponseUpdate,
   validateResponseDelete,
-} from '../../body-validation/response-validation.js';
+} from '../../body-validation/forum-validation-functions/response-validation.js';
 
-import { getAllResponses } from '../../route-files/response-routes/get-all-responses.js';
-import { createResponse } from '../../route-files/response-routes/create-response.js';
-import { updateResponse } from '../../route-files/response-routes/update-response.js';
-import { deleteResponse } from '../../route-files/response-routes/delete-response.js';
+import { getAllResponses } from '../../route-files/forum-function-routes/response-routes/get-all-responses.js';
+import { createResponse } from '../../route-files/forum-function-routes/response-routes/create-response.js';
+import { updateResponse } from '../../route-files/forum-function-routes/response-routes/update-response.js';
+import { deleteResponse } from '../../route-files/forum-function-routes/response-routes/delete-response.js';
 
 const router = express.Router();
 

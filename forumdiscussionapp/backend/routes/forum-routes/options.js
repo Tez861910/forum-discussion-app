@@ -6,13 +6,13 @@ import {
   validatePollOptionUpdate,
   validatePollOptionDelete,
   validatePollOptionGetByPollId,
-} from '../../body-validation/option-validation.js';
+} from '../../body-validation/forum-validation-functions/option-validation.js';
 
-import { handlePollOptionDeleteById } from '../../route-files/option-routes/handle-poll-option-delete-id.js';
-import { handlePollOptionUpdateById } from '../../route-files/option-routes/handle-poll-option-update-id.js';
-import { handlePollOptionCreate } from '../../route-files/option-routes/handle-poll-option-create.js';
-import { handlePollOptionGet } from '../../route-files/option-routes/handle-poll-option-get.js';
-import { handlePollOptionGetByPollId } from '../../route-files/option-routes/handle-poll-options-get-bypollid.js';
+import { handlePollOptionDeleteById } from '../../route-files/forum-function-routes/option-routes/handle-poll-option-delete-id.js';
+import { handlePollOptionUpdateById } from '../../route-files/forum-function-routes/option-routes/handle-poll-option-update-id.js';
+import { handlePollOptionCreate } from '../../route-files/forum-function-routes/option-routes/handle-poll-option-create.js';
+import { handlePollOptionGet } from '../../route-files/forum-function-routes/option-routes/handle-poll-option-get.js';
+import { handlePollOptionGetByPollId } from '../../route-files/forum-function-routes/option-routes/handle-poll-options-get-bypollid.js';
 
 const router = express.Router();
 

@@ -5,12 +5,12 @@ import {
   validateBanCreate,
   validateBanUpdate,
   validateBanDelete,
-} from '../../body-validation/ban-validation.js';
+} from '../../body-validation/moderation-validation-functions/ban-validation.js';
 
-import { handleBanCreate } from '../../route-files/ban-routes/handle-ban-create.js';
-import { handleBanUpdate } from '../../route-files/ban-routes/handle-ban-update.js';
-import { handleBanDelete } from '../../route-files/ban-routes/handle-ban-delete.js';
-import { handleBanGetAll } from '../../route-files/ban-routes/handle-ban-get-all.js';
+import { handleBanCreate } from '../../route-files/moderation-function-routes/ban-routes/handle-ban-create.js';
+import { handleBanUpdate } from '../../route-files/moderation-function-routes/ban-routes/handle-ban-update.js';
+import { handleBanDelete } from '../../route-files/moderation-function-routes/ban-routes/handle-ban-delete.js';
+import { handleBanGetAll } from '../../route-files/moderation-function-routes/ban-routes/handle-ban-get-all.js';
 
 const router = express.Router();
 

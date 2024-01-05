@@ -3,10 +3,10 @@ import { verifyJwt } from '../../authvalid.js';
 import {
   validateUpdateCreate,
   validateUpdateGet,
-} from '../../body-validation/real-time-updates-validation.js';
+} from '../../body-validation/messaging-validation-functions/real-time-updates-validation.js';
 
-import { handleUpdateCreate } from '../../route-files/real-time-updates-routes/handle-update-create.js';
-import { handleUpdateGet } from '../../route-files/real-time-updates-routes/handle-update-get.js';
+import { handleUpdateCreate } from '../../route-files/messaging-function-routes/real-time-updates-routes/handle-update-create.js';
+import { handleUpdateGet } from '../../route-files/messaging-function-routes/real-time-updates-routes/handle-update-get.js';
 
 const router = express.Router();
 

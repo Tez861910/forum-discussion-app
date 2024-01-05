@@ -1,20 +1,21 @@
-const express = require('express');
-const router = express.Router();
-const { verifyJwt } = require('../../authvalid');
-const {
+import express from 'express';
+import { verifyJwt } from '../../authvalid.js';
+import {
   validateCreateEventCategory,
   validateEditEventCategory,
   validateAssignEventCategory,
   validateEditAssignedEventCategory,
-} = require('../../body-validation/event-category-validation');
+} from '../../body-validation/event-validation-functions/event-category-validation.js';
 
-const {createEventCategory} =require('../../route-files/event-category-routes/create-event-category')
-const {getEventCategories} =require('../../route-files/event-category-routes/get-event-categories')
-const {editEventCategory} =require('../../route-files/event-category-routes/edit-event-category')
-const {softDeleteEventCategory} =require('../../route-files/event-category-routes/delete-event-category')
-const {assignEventCategory} =require('../../route-files/event-category-routes/assign-event-category')
-const {editAssignedEventCategory} =require('../../route-files/event-category-routes/edit-assigned-event-category')
-const {softDeleteAssignedEventCategory} =require('../../route-files/event-category-routes/delete-assigned-event-category')
+import {createEventCategory} from '../../route-files/event-function-routes/event-category-routes/create-event-category.js';
+import {getEventCategories} from '../../route-files/event-function-routes/event-category-routes/get-event-categories.js';
+import {editEventCategory} from '../../route-files/event-function-routes/event-category-routes/edit-event-category.js';
+import {softDeleteEventCategory} from '../../route-files/event-function-routes/event-category-routes/delete-event-category.js';
+import {assignEventCategory} from '../../route-files/event-function-routes/event-category-routes/assign-event-category.js';
+import {editAssignedEventCategory} from '../../route-files/event-function-routes/event-category-routes/edit-assigned-event-category.js';
+import {softDeleteAssignedEventCategory} from '../../route-files/event-function-routes/event-category-routes/delete-assigned-event-category.js';
+
+const router = express.Router();
 
 router.use(express.json());
 
@@ -39,4 +40,4 @@ router.put('/:eventId/categories/edit/:categoryId', verifyJwt, validateEditAssig
 // Endpoint to soft delete an assigned event category
 router.delete('/:eventId/categories/soft-delete/:categoryId', verifyJwt, softDeleteAssignedEventCategory);
 
-module.exports = router;
+export default router;

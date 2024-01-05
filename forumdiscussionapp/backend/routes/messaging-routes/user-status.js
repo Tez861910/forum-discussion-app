@@ -3,10 +3,10 @@ import { verifyJwt } from '../../authvalid.js';
 import {
   validateStatusUpdate,
   validateUserStatusGet,
-} from '../../body-validation/user-status-validation.js';
+} from '../../body-validation/messaging-validation-functions/user-status-validation.js';
 
-import { handleStatusUpdate } from '../../route-files/user-status-routes/handle-status-update.js';
-import { handleUserStatusGet } from '../../route-files/user-status-routes/handle-user-status-get.js';
+import { handleStatusUpdate } from '../../route-files/messaging-function-routes/user-status-routes/handle-status-update.js';
+import { handleUserStatusGet } from '../../route-files/messaging-function-routes/user-status-routes/handle-user-status-get.js';
 
 const router = express.Router();
 
