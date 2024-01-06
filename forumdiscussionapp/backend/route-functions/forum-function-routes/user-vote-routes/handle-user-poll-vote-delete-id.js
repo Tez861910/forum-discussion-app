@@ -1,25 +1,23 @@
-const { query } = require('../../../db');
+import { query } from "../../../db.js";
 
-async function handleUserPollVoteDeleteById(req, res) {
+export const handleUserPollVoteDeleteById = async (req, res) => {
   const { userPollVoteId } = req.params;
 
   try {
-    const sql = 'DELETE FROM UserPollVotes WHERE UserPollVoteID = ?';
+    const sql = "DELETE FROM UserPollVotes WHERE UserPollVoteID = ?";
     const [result] = await query(sql, [userPollVoteId]);
 
     if (result.affectedRows === 1) {
-      console.log('User poll vote deleted successfully');
-      res.json({ message: 'User poll vote deleted successfully' });
+      console.log("User poll vote deleted successfully");
+      res.json({ message: "User poll vote deleted successfully" });
     } else {
-      console.error('User poll vote deletion failed');
-      res.status(500).json({ error: 'User poll vote deletion failed' });
+      console.error("User poll vote deletion failed");
+      res.status(500).json({ error: "User poll vote deletion failed" });
     }
   } catch (error) {
-    console.error('Error deleting user poll vote:', error);
-    res.status(500).json({ error: 'Error deleting user poll vote', details: error.message });
+    console.error("Error deleting user poll vote:", error);
+    res
+      .status(500)
+      .json({ error: "Error deleting user poll vote", details: error.message });
   }
-}
-
-module.exports = {
-  handleUserPollVoteDeleteById,
 };

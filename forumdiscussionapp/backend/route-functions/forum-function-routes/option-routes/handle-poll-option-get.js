@@ -1,18 +1,16 @@
-const { query } = require('../../../db');
+import { query } from "../../../db.js";
 
-async function handlePollOptionGet(req, res) {
+export const handlePollOptionGet = async (req, res) => {
   try {
-    const sql = 'SELECT * FROM PollOptions';
+    const sql = "SELECT * FROM PollOptions";
     const [result] = await query(sql);
 
-    console.log('Poll options retrieved successfully');
+    console.log("Poll options retrieved successfully");
     res.json(result);
   } catch (error) {
-    console.error('Error getting poll options:', error);
-    res.status(500).json({ error: 'Error getting poll options', details: error.message });
+    console.error("Error getting poll options:", error);
+    res
+      .status(500)
+      .json({ error: "Error getting poll options", details: error.message });
   }
-}
-
-module.exports = {
-  handlePollOptionGet,
 };

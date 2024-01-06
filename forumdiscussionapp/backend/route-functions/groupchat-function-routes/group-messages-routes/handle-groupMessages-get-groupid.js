@@ -1,20 +1,18 @@
-const { query } = require('../../../db');
+import { query } from "../../../db.js";
 
-async function handleGroupMessagesGetByGroupId(req, res) {
+export const handleGroupMessagesGetByGroupId = async (req, res) => {
   const { groupId } = req.params;
 
   try {
-    const sql = 'SELECT * FROM GroupMessages WHERE GroupID = ?';
+    const sql = "SELECT * FROM GroupMessages WHERE GroupID = ?";
     const [result] = await query(sql, [groupId]);
 
-    console.log('Group messages retrieved successfully');
+    console.log("Group messages retrieved successfully");
     res.json(result);
   } catch (error) {
-    console.error('Error getting group messages:', error);
-    res.status(500).json({ error: 'Error getting group messages', details: error.message });
+    console.error("Error getting group messages:", error);
+    res
+      .status(500)
+      .json({ error: "Error getting group messages", details: error.message });
   }
-}
-
-module.exports = {
-  handleGroupMessagesGetByGroupId,
 };

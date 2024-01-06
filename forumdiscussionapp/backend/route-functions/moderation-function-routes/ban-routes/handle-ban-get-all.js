@@ -1,18 +1,16 @@
-const { query } = require('../../../db');
+import { query } from "../../../db.js";
 
-async function handleBanGetAll(req, res) {
+export const handleBanGetAll = async (req, res) => {
   try {
-    const sql = 'SELECT * FROM Bans';
+    const sql = "SELECT * FROM Bans";
     const [result] = await query(sql);
 
-    console.log('Bans retrieved successfully');
+    console.log("Bans retrieved successfully");
     res.json({ bans: result });
   } catch (error) {
-    console.error('Error getting bans:', error);
-    res.status(500).json({ error: 'Error getting bans', details: error.message });
+    console.error("Error getting bans:", error);
+    res
+      .status(500)
+      .json({ error: "Error getting bans", details: error.message });
   }
-}
-
-module.exports = {
-  handleBanGetAll,
 };

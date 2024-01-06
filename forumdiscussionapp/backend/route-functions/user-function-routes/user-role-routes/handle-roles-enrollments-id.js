@@ -1,11 +1,13 @@
-const { query } = require('../../../db');
+import { query } from "../../../db.js";
 
-async function handleRolesEnrollmentsId(req, res) {
+export const handleRolesEnrollmentsId = async (req, res) => {
   const roleId = req.params.roleId;
 
   try {
     if (!query) {
-      throw new Error('Database connection not established or query function not defined.');
+      throw new Error(
+        "Database connection not established or query function not defined."
+      );
     }
 
     const sql = `
@@ -25,7 +27,9 @@ async function handleRolesEnrollmentsId(req, res) {
     const rows = await query(sql, [parseInt(roleId, 10)]);
 
     if (!rows || rows.length === 0) {
-      return res.status(404).json({ error: 'No users found for the specified role' });
+      return res
+        .status(404)
+        .json({ error: "No users found for the specified role" });
     }
 
     const enrollmentsResult = {};
@@ -39,11 +43,7 @@ async function handleRolesEnrollmentsId(req, res) {
 
     res.json({ enrollments: enrollmentsResult });
   } catch (error) {
-    console.error('Unexpected error:', error);
-    res.status(500).json({ error: 'Internal Server Error' });
+    console.error("Unexpected error:", error);
+    res.status(500).json({ error: "Internal Server Error" });
   }
-}
-
-module.exports = {
-  handleRolesEnrollmentsId,
 };

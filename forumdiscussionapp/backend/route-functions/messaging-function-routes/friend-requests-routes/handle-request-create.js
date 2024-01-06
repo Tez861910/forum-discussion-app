@@ -1,25 +1,27 @@
-const { query } = require('../../../db');
+import { query } from "../../../db.js";
 
-async function handleRequestCreate(req, res) {
+export const handleRequestCreate = async (req, res) => {
   const { senderId, receiverId } = req.body;
 
   try {
-    const sql = 'INSERT INTO FriendRequests (SenderID, ReceiverID) VALUES (?, ?)';
+    const sql =
+      "INSERT INTO FriendRequests (SenderID, ReceiverID) VALUES (?, ?)";
     const [result] = await query(sql, [senderId, receiverId]);
 
     if (result.affectedRows === 1) {
-      console.log('Friend request created successfully');
-      res.json({ message: 'Friend request created successfully' });
+      console.log("Friend request created successfully");
+      res.json({ message: "Friend request created successfully" });
     } else {
-      console.error('Friend request creation failed');
-      res.status(500).json({ error: 'Friend request creation failed' });
+      console.error("Friend request creation failed");
+      res.status(500).json({ error: "Friend request creation failed" });
     }
   } catch (error) {
-    console.error('Error creating friend request:', error);
-    res.status(500).json({ error: 'Friend request creation failed', details: error.message });
+    console.error("Error creating friend request:", error);
+    res
+      .status(500)
+      .json({
+        error: "Friend request creation failed",
+        details: error.message,
+      });
   }
-}
-
-module.exports = {
-  handleRequestCreate,
 };

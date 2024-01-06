@@ -1,20 +1,18 @@
-const { query } = require('../../../db');
+import { query } from "../../../db.js";
 
-async function handlePollGetCreatedByUserId(req, res) {
+export const handlePollGetCreatedByUserId = async (req, res) => {
   const { userId } = req.params;
 
   try {
-    const sql = 'SELECT * FROM Polls WHERE CreatedByUserID = ?';
+    const sql = "SELECT * FROM Polls WHERE CreatedByUserID = ?";
     const [result] = await query(sql, [userId]);
 
-    console.log('Polls retrieved successfully for createdByUserId:', userId);
+    console.log("Polls retrieved successfully for createdByUserId:", userId);
     res.json(result);
   } catch (error) {
-    console.error('Error getting polls for createdByUserId:', userId, error);
-    res.status(500).json({ error: 'Error getting polls', details: error.message });
+    console.error("Error getting polls for createdByUserId:", userId, error);
+    res
+      .status(500)
+      .json({ error: "Error getting polls", details: error.message });
   }
-}
-
-module.exports = {
-  handlePollGetCreatedByUserId,
 };

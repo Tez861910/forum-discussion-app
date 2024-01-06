@@ -1,6 +1,6 @@
-const { query } = require('../../../db');
+import { query } from "../../../db.js";
 
-async function handleUsersGetRoleId(req, res) {
+export const handleUsersGetRoleId = async (req, res) => {
   // Extracting roleId from request parameters
   const { roleId } = req.params;
 
@@ -13,21 +13,18 @@ async function handleUsersGetRoleId(req, res) {
       INNER JOIN CommonAttributes ON Users.CommonAttributeID = CommonAttributes.AttributeID
       WHERE UserRoles.RoleID = ? AND CommonAttributes.IsDeleted = FALSE;
     `;
-    
+
     // Executing the query with the provided role ID
     const results = await query(sql, [roleId]);
 
     // Logging success and sending JSON response with all user names
-    console.log('User names fetched successfully');
+    console.log("User names fetched successfully");
     res.json({ userNames: results.map((row) => row.userName) });
   } catch (error) {
     // Logging error and sending a 500 Internal Server Error response
-    console.error('Error fetching user names:', error);
-    res.status(500).json({ error: 'User names retrieval failed', details: error.message });
+    console.error("Error fetching user names:", error);
+    res
+      .status(500)
+      .json({ error: "User names retrieval failed", details: error.message });
   }
-}
-
-// Exporting the route handler function
-module.exports = {
-  handleUsersGetRoleId,
 };

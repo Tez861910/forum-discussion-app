@@ -1,18 +1,16 @@
-const { query } = require('../../../db');
+import { query } from "../../../db.js";
 
-async function handleDepartmentGetAll(req, res) {
+export const handleDepartmentGetAll = async (req, res) => {
   try {
-    const sql = 'SELECT * FROM Departments';
+    const sql = "SELECT * FROM Departments";
     const [result] = await query(sql);
 
-    console.log('Departments retrieved successfully');
+    console.log("Departments retrieved successfully");
     res.json({ departments: result });
   } catch (error) {
-    console.error('Error getting departments:', error);
-    res.status(500).json({ error: 'Error getting departments', details: error.message });
+    console.error("Error getting departments:", error);
+    res
+      .status(500)
+      .json({ error: "Error getting departments", details: error.message });
   }
-}
-
-module.exports = {
-  handleDepartmentGetAll,
 };

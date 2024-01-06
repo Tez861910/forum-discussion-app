@@ -1,26 +1,25 @@
-const { query } = require('../../../db');
+import { query } from "../../../db.js";
 
-async function handleManagerUpdate(req, res) {
+export const handleManagerUpdate = async (req, res) => {
   const { managerId } = req.params;
   const { groupId, managerUserId } = req.body;
 
   try {
-    const sql = 'UPDATE GroupManager SET GroupID = ?, ManagerUserID = ? WHERE ManagerID = ?';
+    const sql =
+      "UPDATE GroupManager SET GroupID = ?, ManagerUserID = ? WHERE ManagerID = ?";
     const [result] = await query(sql, [groupId, managerUserId, managerId]);
 
     if (result.affectedRows === 1) {
-      console.log('Group manager updated successfully');
-      res.json({ message: 'Group manager updated successfully' });
+      console.log("Group manager updated successfully");
+      res.json({ message: "Group manager updated successfully" });
     } else {
-      console.error('Group manager update failed');
-      res.status(500).json({ error: 'Group manager update failed' });
+      console.error("Group manager update failed");
+      res.status(500).json({ error: "Group manager update failed" });
     }
   } catch (error) {
-    console.error('Error updating group manager:', error);
-    res.status(500).json({ error: 'Error updating group manager', details: error.message });
+    console.error("Error updating group manager:", error);
+    res
+      .status(500)
+      .json({ error: "Error updating group manager", details: error.message });
   }
-}
-
-module.exports = {
-  handleManagerUpdate,
 };

@@ -1,20 +1,18 @@
-const { query } = require('../../../db');
+import { query } from "../../../db.js";
 
-async function handleFriendsGet(req, res) {
+export const handleFriendsGet = async (req, res) => {
   const { userId } = req.params;
 
   try {
-    const sql = 'SELECT * FROM Friends WHERE UserID1 = ? OR UserID2 = ?';
+    const sql = "SELECT * FROM Friends WHERE UserID1 = ? OR UserID2 = ?";
     const [result] = await query(sql, [userId, userId]);
 
-    console.log('User friends retrieved successfully');
+    console.log("User friends retrieved successfully");
     res.json({ friends: result });
   } catch (error) {
-    console.error('Error getting user friends:', error);
-    res.status(500).json({ error: 'Error getting user friends', details: error.message });
+    console.error("Error getting user friends:", error);
+    res
+      .status(500)
+      .json({ error: "Error getting user friends", details: error.message });
   }
-}
-
-module.exports = {
-  handleFriendsGet,
 };

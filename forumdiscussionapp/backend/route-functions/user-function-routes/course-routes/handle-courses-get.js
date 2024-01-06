@@ -1,6 +1,6 @@
-const { query } = require('../../../db');
+import { query } from "../../../db.js";
 
-async function handleCoursesGet(req, res) {
+export const handleCoursesGet = async (req, res) => {
   try {
     const sql = `
       SELECT c.CourseID, c.CourseName, c.CourseDescription
@@ -11,23 +11,21 @@ async function handleCoursesGet(req, res) {
     const results = await query(sql);
 
     if (!results.length) {
-      return res.status(404).json({ error: 'No courses found' });
+      return res.status(404).json({ error: "No courses found" });
     }
 
-    const courseData = results.map(row => ({
+    const courseData = results.map((row) => ({
       CourseID: row.CourseID,
       CourseName: row.CourseName,
       CourseDescription: row.CourseDescription,
     }));
 
-    console.log('Courses fetched successfully');
+    console.log("Courses fetched successfully");
     res.status(200).json({ courses: courseData });
   } catch (error) {
-    console.error('Error fetching courses:', error);
-    res.status(500).json({ error: 'Course retrieval failed', details: error.message });
+    console.error("Error fetching courses:", error);
+    res
+      .status(500)
+      .json({ error: "Course retrieval failed", details: error.message });
   }
-}
-
-module.exports = {
-  handleCoursesGet,
 };

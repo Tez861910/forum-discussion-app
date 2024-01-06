@@ -1,6 +1,6 @@
-const { query } = require('../../../db');
+import { query } from "../../../db.js";
 
-async function handleUsersGetId(req, res) {
+export const handleUsersGetId = async (req, res) => {
   const { id: userId } = req.params;
 
   try {
@@ -24,8 +24,8 @@ async function handleUsersGetId(req, res) {
 
       // Check if user is deleted in CommonAttributes
       if (user.CommonAttributeIsDeleted) {
-        console.error('User is deleted');
-        return res.status(404).json({ error: 'User not found' });
+        console.error("User is deleted");
+        return res.status(404).json({ error: "User not found" });
       }
 
       if (user.RoleID) {
@@ -44,18 +44,16 @@ async function handleUsersGetId(req, res) {
         }
       }
 
-      console.log('User fetched successfully');
+      console.log("User fetched successfully");
       res.json({ user });
     } else {
-      console.error('User not found');
-      res.status(404).json({ error: 'User not found' });
+      console.error("User not found");
+      res.status(404).json({ error: "User not found" });
     }
   } catch (error) {
-    console.error('Error fetching user by ID:', error);
-    res.status(500).json({ error: 'User retrieval by ID failed', details: error.message });
+    console.error("Error fetching user by ID:", error);
+    res
+      .status(500)
+      .json({ error: "User retrieval by ID failed", details: error.message });
   }
-}
-
-module.exports = {
-  handleUsersGetId,
 };

@@ -1,11 +1,11 @@
-const { query } = require('../../../db');
+import { query } from "../../../db.js";
 
-async function handleUsersGetUserName(req, res) {
+export const handleUsersGetUserName = async (req, res) => {
   const { userIds } = req.body;
 
   try {
     // Assuming CommonAttributes table has an IsDeleted column
-    const placeholders = userIds.map(() => '?').join(', ');
+    const placeholders = userIds.map(() => "?").join(", ");
     const sql = `
       SELECT u.UserID, u.UserName
       FROM users u
@@ -19,14 +19,12 @@ async function handleUsersGetUserName(req, res) {
       usernames[result.UserID] = result.UserName;
     });
 
-    console.log('Usernames fetched successfully');
+    console.log("Usernames fetched successfully");
     res.json({ usernames });
   } catch (error) {
-    console.error('Error fetching usernames:', error);
-    res.status(500).json({ error: 'Usernames retrieval failed', details: error.message });
+    console.error("Error fetching usernames:", error);
+    res
+      .status(500)
+      .json({ error: "Usernames retrieval failed", details: error.message });
   }
-}
-
-module.exports = {
-  handleUsersGetUserName,
 };

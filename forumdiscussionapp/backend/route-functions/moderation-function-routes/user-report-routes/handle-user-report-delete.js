@@ -1,25 +1,23 @@
-const { query } = require('../../../db');
+import { query } from "../../../db.js";
 
-async function handleUserReportDelete(req, res) {
+export const handleUserReportDelete = async (req, res) => {
   const { reportId } = req.params;
 
   try {
-    const sql = 'DELETE FROM UserReports WHERE ReportID = ?';
+    const sql = "DELETE FROM UserReports WHERE ReportID = ?";
     const [result] = await query(sql, [reportId]);
 
     if (result.affectedRows === 1) {
-      console.log('User report deleted successfully');
-      res.json({ message: 'User report deleted successfully' });
+      console.log("User report deleted successfully");
+      res.json({ message: "User report deleted successfully" });
     } else {
-      console.error('User report deletion failed');
-      res.status(500).json({ error: 'User report deletion failed' });
+      console.error("User report deletion failed");
+      res.status(500).json({ error: "User report deletion failed" });
     }
   } catch (error) {
-    console.error('Error deleting user report:', error);
-    res.status(500).json({ error: 'User report deletion failed', details: error.message });
+    console.error("Error deleting user report:", error);
+    res
+      .status(500)
+      .json({ error: "User report deletion failed", details: error.message });
   }
-}
-
-module.exports = {
-  handleUserReportDelete,
 };

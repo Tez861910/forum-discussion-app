@@ -1,12 +1,12 @@
-const { query } = require('../../../db');
+import { query } from "../../../db.js";
 
-async function handleUserCoursesGet(req, res) {
+export const handleUserCoursesGet = async (req, res) => {
   try {
     const userIds = req.body.userIds;
 
     // Validate userIds
     if (!userIds || userIds.length === 0) {
-      throw new Error('Invalid user IDs provided');
+      throw new Error("Invalid user IDs provided");
     }
 
     // Assuming CommonAttributes table has an IsDeleted column
@@ -14,18 +14,18 @@ async function handleUserCoursesGet(req, res) {
       SELECT uc.*
       FROM UserCourses uc
       INNER JOIN CommonAttributes ca ON uc.CommonAttributeID = ca.AttributeID
-      WHERE uc.UserID IN (${userIds.map(() => '?').join(', ')}) AND ca.IsDeleted = FALSE
+      WHERE uc.UserID IN (${userIds
+        .map(() => "?")
+        .join(", ")}) AND ca.IsDeleted = FALSE
     `;
 
     const userCourses = await query(userCoursesQuery, userIds);
 
     res.json({ userCourses });
   } catch (error) {
-    console.error('Error fetching user courses:', error);
-    res.status(500).json({ error: 'Error fetching user courses. Please try again later.' });
+    console.error("Error fetching user courses:", error);
+    res
+      .status(500)
+      .json({ error: "Error fetching user courses. Please try again later." });
   }
-}
-
-module.exports = {
-  handleUserCoursesGet,
 };
