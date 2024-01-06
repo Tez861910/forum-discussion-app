@@ -1,18 +1,16 @@
-const { query } = require('../../../db');
+import { query } from "../../../db.js";
 
-async function handleQuestionGetAll(req, res) {
+export const handleQuestionGetAll = async (req, res) => {
   try {
-    const sql = 'SELECT * FROM Question';
+    const sql = "SELECT * FROM Question";
     const [result] = await query(sql);
 
-    console.log('Questions retrieved successfully');
+    console.log("Questions retrieved successfully");
     res.json(result);
   } catch (error) {
-    console.error('Error getting questions:', error);
-    res.status(500).json({ error: 'Error getting questions', details: error.message });
+    console.error("Error getting questions:", error);
+    res
+      .status(500)
+      .json({ error: "Error getting questions", details: error.message });
   }
-}
-
-module.exports = {
-  handleQuestionGetAll,
 };

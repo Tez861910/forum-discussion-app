@@ -1,6 +1,6 @@
 import jwt from "jsonwebtoken";
 
-const createToken = (userId, email, roleId) => {
+export const createToken = (userId, email, roleId) => {
   const token = jwt.sign({ userId, email, roleId }, JWT_SECRET, {
     expiresIn: TOKEN_EXPIRATION,
   });
@@ -8,7 +8,7 @@ const createToken = (userId, email, roleId) => {
   return token;
 };
 
-const createRefreshToken = (userId, email, roleId, refreshTokens) => {
+export const createRefreshToken = (userId, email, roleId, refreshTokens) => {
   const refreshToken = jwt.sign(
     { userId, email, roleId },
     REFRESH_TOKEN_SECRET,
@@ -19,7 +19,7 @@ const createRefreshToken = (userId, email, roleId, refreshTokens) => {
   return refreshToken;
 };
 
-const verifyJwt = (req, res, next) => {
+export const verifyJwt = (req, res, next) => {
   const authHeader = req.headers["authorization"];
   console.log("Received auth header:", authHeader);
 
@@ -45,7 +45,7 @@ const verifyJwt = (req, res, next) => {
   }
 };
 
-const verifyRefreshToken = (req, res) => {
+export const verifyRefreshToken = (req, res) => {
   const refreshToken = req.body.token;
   if (refreshToken && refreshTokens.includes(refreshToken)) {
     jwt.verify(refreshToken, REFRESH_TOKEN_SECRET, (err, decoded) => {
@@ -65,7 +65,7 @@ const verifyRefreshToken = (req, res) => {
   }
 };
 
-const handleJwtVerificationError = (err, res) => {
+export const handleJwtVerificationError = (err, res) => {
   const errorResponse = (statusCode, message) =>
     res.status(statusCode).json({ error: message });
 
@@ -80,5 +80,3 @@ const handleJwtVerificationError = (err, res) => {
     return errorResponse(500, "Internal server error");
   }
 };
-
-export { createToken, createRefreshToken, verifyJwt, verifyRefreshToken };

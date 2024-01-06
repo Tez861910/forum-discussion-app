@@ -6,7 +6,7 @@ const logger = winston.createLogger({
   transports: [new winston.transports.Console()],
 });
 
-const hashPassword = async (password) => {
+export const hashPassword = async (password) => {
   try {
     const hashedPassword = await argon2.hash(password, {
       timeCost: parseInt(process.env.ARGON2_TIME_COST),
@@ -22,7 +22,7 @@ const hashPassword = async (password) => {
   }
 };
 
-const verifyPassword = async (password, hashedPassword) => {
+export const verifyPassword = async (password, hashedPassword) => {
   try {
     if (!hashedPassword) {
       logger.warn("No hashed password provided for verification");
@@ -38,5 +38,3 @@ const verifyPassword = async (password, hashedPassword) => {
     throw error; // Propagate the error
   }
 };
-
-export { hashPassword, verifyPassword };

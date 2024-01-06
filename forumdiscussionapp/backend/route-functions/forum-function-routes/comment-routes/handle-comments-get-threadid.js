@@ -1,18 +1,14 @@
-const { query } = require('../../../db');
+import { query } from "../../../db.js";
 
-async function handleCommentGetThreadId(req, res) {
+export const handleCommentGetThreadId = async (req, res) => {
   const { threadId } = req.params;
-  const sql = 'SELECT * FROM Comments WHERE ThreadID = ?';
-  
+  const sql = "SELECT * FROM Comments WHERE ThreadID = ?";
+
   try {
     const results = await query(sql, [threadId]);
     res.status(200).json({ comments: results });
   } catch (error) {
-    console.error('Failed to retrieve comments:', error);
-    res.status(500).json({ error: 'Failed to retrieve comments' });
+    console.error("Failed to retrieve comments:", error);
+    res.status(500).json({ error: "Failed to retrieve comments" });
   }
-}
-
-module.exports = {
-  handleCommentGetThreadId,
 };

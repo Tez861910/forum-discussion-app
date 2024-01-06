@@ -1,25 +1,23 @@
-const { query } = require('../../../db');
+import { query } from "../../../db.js";
 
-async function handleCategoryCreate(req, res) {
+export const handleCategoryCreate = async (req, res) => {
   const { categoryName } = req.body;
 
   try {
-    const sql = 'INSERT INTO ExamCategory (CategoryName) VALUES (?)';
+    const sql = "INSERT INTO ExamCategory (CategoryName) VALUES (?)";
     const [result] = await query(sql, [categoryName]);
 
     if (result.affectedRows === 1) {
-      console.log('Exam category created successfully');
-      res.json({ message: 'Exam category created successfully' });
+      console.log("Exam category created successfully");
+      res.json({ message: "Exam category created successfully" });
     } else {
-      console.error('Exam category creation failed');
-      res.status(500).json({ error: 'Exam category creation failed' });
+      console.error("Exam category creation failed");
+      res.status(500).json({ error: "Exam category creation failed" });
     }
   } catch (error) {
-    console.error('Error creating exam category:', error);
-    res.status(500).json({ error: 'Exam category creation failed', details: error.message });
+    console.error("Error creating exam category:", error);
+    res
+      .status(500)
+      .json({ error: "Exam category creation failed", details: error.message });
   }
-}
-
-module.exports = {
-  handleCategoryCreate,
 };

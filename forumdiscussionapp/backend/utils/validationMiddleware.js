@@ -1,6 +1,6 @@
 import Joi from "joi";
 
-function validate(schema) {
+export const validate = (schema) => {
   return (req, res, next) => {
     const { error } = schema.validate({ ...req.body, ...req.params });
 
@@ -13,6 +13,4 @@ function validate(schema) {
 
     next();
   };
-}
-
-export { validate };
+};

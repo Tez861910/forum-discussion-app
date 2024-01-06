@@ -1,25 +1,23 @@
-const { query } = require('../../../db');
+import { query } from "../../../db.js";
 
-async function handleCategoryDelete(req, res) {
+export const handleCategoryDelete = async (req, res) => {
   const { categoryId } = req.params;
 
   try {
-    const sql = 'DELETE FROM ExamCategory WHERE CategoryID = ?';
+    const sql = "DELETE FROM ExamCategory WHERE CategoryID = ?";
     const [result] = await query(sql, [categoryId]);
 
     if (result.affectedRows === 1) {
-      console.log('Exam category deleted successfully');
-      res.json({ message: 'Exam category deleted successfully' });
+      console.log("Exam category deleted successfully");
+      res.json({ message: "Exam category deleted successfully" });
     } else {
-      console.error('Exam category deletion failed');
-      res.status(500).json({ error: 'Exam category deletion failed' });
+      console.error("Exam category deletion failed");
+      res.status(500).json({ error: "Exam category deletion failed" });
     }
   } catch (error) {
-    console.error('Error deleting exam category:', error);
-    res.status(500).json({ error: 'Exam category deletion failed', details: error.message });
+    console.error("Error deleting exam category:", error);
+    res
+      .status(500)
+      .json({ error: "Exam category deletion failed", details: error.message });
   }
-}
-
-module.exports = {
-  handleCategoryDelete,
 };

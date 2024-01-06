@@ -1,4 +1,4 @@
-class CustomError extends Error {
+export class CustomError extends Error {
   constructor(message, statusCode = 500) {
     super(message);
     this.statusCode = validateStatusCode(statusCode);
@@ -12,7 +12,7 @@ function validateStatusCode(statusCode) {
   return validStatusCodes.includes(statusCode) ? statusCode : 500;
 }
 
-function handleError(err, req, res, next) {
+export function handleError(err, req, res, next) {
   if (res.headersSent) {
     return next(err);
   }
@@ -27,5 +27,3 @@ function handleError(err, req, res, next) {
 
   res.status(statusCode).json({ error: message });
 }
-
-export { handleError, CustomError };
