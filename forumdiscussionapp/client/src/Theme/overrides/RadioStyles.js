@@ -1,74 +1,72 @@
-import palette from '../palette';
+import palette from "../palette";
 
 const primaryMainColor = palette.palette.default.primary.main;
 const greyColor = palette.palette.default.grey[400];
-const transition = '0.3s'; 
+const transition = "0.3s";
 
-const radioStyles = {
+export const radioStyles = {
   defaultProps: {
     MuiRadio: {
       styleOverrides: {
         root: {
           color: primaryMainColor,
-          transition: transition, 
-          '&$checked': {
-            color: primaryMainColor,
-            transition: transition, 
-          },
-        },
-        
-        colorSecondary: {
-          '&$checked': {
-            color: primaryMainColor,
-            transition: transition, 
-          },
-          '&$disabled': {
-            color: greyColor,
-            transition: transition, 
-          },
-        },
-        
-        colorPrimary: {
-          '&$checked': {
+          transition: transition,
+          "&$checked": {
             color: primaryMainColor,
             transition: transition,
           },
-          '&$disabled': {
+        },
+
+        colorSecondary: {
+          "&$checked": {
+            color: primaryMainColor,
+            transition: transition,
+          },
+          "&$disabled": {
             color: greyColor,
-            transition: transition, 
+            transition: transition,
+          },
+        },
+
+        colorPrimary: {
+          "&$checked": {
+            color: primaryMainColor,
+            transition: transition,
+          },
+          "&$disabled": {
+            color: greyColor,
+            transition: transition,
           },
         },
       },
     },
-    
+
     MuiFormControlLabel: {
       styleOverrides: {
         root: {
           color: primaryMainColor,
-          transition: transition, 
+          transition: transition,
         },
-        
+
         label: {
           color: primaryMainColor,
-          transition: transition, 
+          transition: transition,
         },
-        
+
         disabled: {
           color: greyColor,
-          transition: transition, 
+          transition: transition,
         },
       },
     },
-    
+
     MuiRadioGroup: {
       styleOverrides: {
         root: {
-          flexDirection: 'row',
-          transition: transition, 
+          flexDirection: "row",
+          transition: transition,
         },
       },
     },
   },
 };
-
-export default radioStyles;

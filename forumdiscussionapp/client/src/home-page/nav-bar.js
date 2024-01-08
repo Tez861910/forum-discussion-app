@@ -1,5 +1,5 @@
-import React, { useState, useEffect } from 'react';
-import PropTypes from 'prop-types';
+import React, { useState, useEffect } from "react";
+import PropTypes from "prop-types";
 import {
   AppBar,
   Toolbar,
@@ -9,12 +9,12 @@ import {
   ButtonGroup,
   Stack,
   Alert,
-} from '@mui/material';
-import { useTheme } from '@mui/material/styles';
-import MenuIcon from '@mui/icons-material/Menu';
-import EnrolledCoursesDropdown from './enrolled-courses-dropdown';
+} from "@mui/material";
+import { useTheme } from "@mui/material/styles";
+import MenuIcon from "@mui/icons-material/Menu";
+import EnrolledCoursesDropdown from "./enrolled-courses-dropdown";
 
-const Navbar = ({
+export const Navbar = ({
   userId,
   roleId,
   onButtonClick,
@@ -25,25 +25,28 @@ const Navbar = ({
   handleDrawerToggle,
 }) => {
   const theme = useTheme();
-  const [activePage, setActivePage] = useState('scheduler');
+  const [activePage, setActivePage] = useState("scheduler");
 
   useEffect(() => {
-    onButtonClick('/home/scheduler', userId, roleId, selectedCourse);
+    onButtonClick("/home/scheduler", userId, roleId, selectedCourse);
   }, []);
 
   const getRoleHeaderText = (roleId) => {
     const roleTitles = {
-      '1': 'Admin Home Panel',
-      '2': 'Teacher Home Panel',
-      '3': 'Student Home Panel',
+      1: "Admin Home Panel",
+      2: "Teacher Home Panel",
+      3: "Student Home Panel",
     };
-    return roleTitles[roleId] || 'Home Panel';
+    return roleTitles[roleId] || "Home Panel";
   };
 
   return (
     <Stack sx={{ marginBottom: 2 }}>
-      <AppBar position="static" sx={{ boxShadow: 2, bgcolor: theme.palette.background.paper }}>
-        <Toolbar sx={{ display: 'flex', justifyContent: 'space-between' }}> 
+      <AppBar
+        position="static"
+        sx={{ boxShadow: 2, bgcolor: theme.palette.background.paper }}
+      >
+        <Toolbar sx={{ display: "flex", justifyContent: "space-between" }}>
           <Stack direction="row" alignItems="center" spacing={2}>
             <IconButton
               edge="start"
@@ -54,14 +57,14 @@ const Navbar = ({
               <MenuIcon />
             </IconButton>
 
-            {activePage === 'scheduler' && (
+            {activePage === "scheduler" && (
               <Typography
                 variant="h5"
                 color="inherit"
                 component="div"
                 sx={{
-                  whiteSpace: 'nowrap',
-                  mr:2,
+                  whiteSpace: "nowrap",
+                  mr: 2,
                 }}
               >
                 {getRoleHeaderText(roleId)}
@@ -69,11 +72,11 @@ const Navbar = ({
             )}
           </Stack>
 
-          {(isTeacherOrStudent && (roleId === '2' || roleId === '3')) && (
+          {isTeacherOrStudent && (roleId === "2" || roleId === "3") && (
             <EnrolledCoursesDropdown
               onCourseSelect={onCourseSelect}
               onCourseChange={handleCourseChange}
-              sx={{ flexGrow: 1, minWidth: '200px' }}
+              sx={{ flexGrow: 1, minWidth: "200px" }}
             />
           )}
 
@@ -82,52 +85,83 @@ const Navbar = ({
             color="secondary"
             aria-label="outlined primary button group"
             sx={{
-              '& .MuiButton-root': { mx: 1, width: '160px' },
+              "& .MuiButton-root": { mx: 1, width: "160px" },
             }}
           >
             <Button
               onClick={() => {
-                onButtonClick('/home/scheduler', userId, roleId, selectedCourse);
-                setActivePage('scheduler');
+                onButtonClick(
+                  "/home/scheduler",
+                  userId,
+                  roleId,
+                  selectedCourse
+                );
+                setActivePage("scheduler");
               }}
             >
               Scheduler
             </Button>
 
-            {roleId === '1' && (
+            {roleId === "1" && (
               <>
-                <Button onClick={() => onButtonClick('/home/admin-courses', userId, selectedCourse)}>
+                <Button
+                  onClick={() =>
+                    onButtonClick("/home/admin-courses", userId, selectedCourse)
+                  }
+                >
                   Manage Courses
                 </Button>
-                <Button onClick={() => onButtonClick('/home/admin-users', userId, selectedCourse)}>
+                <Button
+                  onClick={() =>
+                    onButtonClick("/home/admin-users", userId, selectedCourse)
+                  }
+                >
                   Manage Users
                 </Button>
-                <Button onClick={() => onButtonClick('/home/admin-roles', userId, selectedCourse)}>
+                <Button
+                  onClick={() =>
+                    onButtonClick("/home/admin-roles", userId, selectedCourse)
+                  }
+                >
                   Manage Roles
                 </Button>
               </>
             )}
 
-            {(roleId === '2' || roleId === '3') && (
+            {(roleId === "2" || roleId === "3") && (
               <>
                 <Button
-                  onClick={() => onButtonClick('/home/forum-discussion', userId, selectedCourse)}
+                  onClick={() =>
+                    onButtonClick(
+                      "/home/forum-discussion",
+                      userId,
+                      selectedCourse
+                    )
+                  }
                   disabled={!selectedCourse}
                 >
                   Forum Discussion
                 </Button>
 
-                {isTeacherOrStudent && roleId === '2' && (
+                {isTeacherOrStudent && roleId === "2" && (
                   <Button
-                    onClick={() => onButtonClick('/home/mcq-form', userId, selectedCourse)}
+                    onClick={() =>
+                      onButtonClick("/home/mcq-form", userId, selectedCourse)
+                    }
                     disabled={!selectedCourse}
                   >
                     Create MCQ
                   </Button>
                 )}
-                {isTeacherOrStudent && roleId === '3' && (
+                {isTeacherOrStudent && roleId === "3" && (
                   <Button
-                    onClick={() => onButtonClick('/home/mcq-answer-form', userId, selectedCourse)}
+                    onClick={() =>
+                      onButtonClick(
+                        "/home/mcq-answer-form",
+                        userId,
+                        selectedCourse
+                      )
+                    }
                     disabled={!selectedCourse}
                   >
                     Answer MCQ
@@ -138,7 +172,7 @@ const Navbar = ({
           </ButtonGroup>
         </Toolbar>
 
-        {((roleId === '2' || roleId === '3') && !selectedCourse) && (
+        {(roleId === "2" || roleId === "3") && !selectedCourse && (
           <Alert severity="info">
             <Typography variant="body2">
               Please select a course to enable more options.
@@ -160,5 +194,3 @@ Navbar.propTypes = {
   handleCourseChange: PropTypes.func.isRequired,
   handleDrawerToggle: PropTypes.func.isRequired,
 };
-
-export default Navbar;

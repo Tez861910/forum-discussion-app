@@ -1,17 +1,31 @@
-import React, { useState } from 'react';
-import { Typography, Button, TextField, Box, Dialog, DialogTitle, DialogContent } from '@mui/material';
-import MCQQuestionForm from './mcq-question-form';  
-import useApi from '../home-page/Api';
+import React, { useState } from "react";
+import {
+  Typography,
+  Button,
+  TextField,
+  Box,
+  Dialog,
+  DialogTitle,
+  DialogContent,
+} from "@mui/material";
+import MCQQuestionForm from "./mcq-question-form";
+import useApi from "../home-page/Api";
 
-function ExamForm({ onClose, courseId, fetchExams }) {
-  const [examTitle, setExamTitle] = useState('');
+export function ExamForm({ onClose, courseId, fetchExams }) {
+  const [examTitle, setExamTitle] = useState("");
   const [questions, setQuestions] = useState([]);
   const [showQuestionForm, setShowQuestionForm] = useState(false);
   const { api } = useApi();
-  const userId = localStorage.getItem('userId');
+  const userId = localStorage.getItem("userId");
 
   const handleSaveExam = async () => {
-    if (examTitle && questions.every((question) => question.question && question.options.every((opt) => opt !== ''))) {
+    if (
+      examTitle &&
+      questions.every(
+        (question) =>
+          question.question && question.options.every((opt) => opt !== "")
+      )
+    ) {
       const examData = {
         examTitle,
         questions,
@@ -19,16 +33,16 @@ function ExamForm({ onClose, courseId, fetchExams }) {
       };
 
       try {
-        const response = await api.post('/mcqform/mcqform/examsave', examData);
+        const response = await api.post("/mcqform/mcqform/examsave", examData);
 
         if (response.data.success) {
           fetchExams();
           onClose();
         } else {
-          console.error('Error saving exam data:', response.data.error);
+          console.error("Error saving exam data:", response.data.error);
         }
       } catch (error) {
-        console.error('Error saving exam data:', error);
+        console.error("Error saving exam data:", error);
       }
     }
   };
@@ -47,12 +61,12 @@ function ExamForm({ onClose, courseId, fetchExams }) {
   };
 
   const resetForm = () => {
-    setExamTitle('');
+    setExamTitle("");
     setQuestions([]);
   };
 
   return (
-    <Box sx={{ p: 2, bgcolor: 'background.paper' }}>
+    <Box sx={{ p: 2, bgcolor: "background.paper" }}>
       <Typography variant="h4" gutterBottom>
         Exam Details
       </Typography>
@@ -70,7 +84,9 @@ function ExamForm({ onClose, courseId, fetchExams }) {
       {questions.length > 0 ? (
         questions.map((question, index) => (
           <Box key={index} mb={2}>
-            <Typography variant="body1">{`${index + 1}. ${question.question}`}</Typography>
+            <Typography variant="body1">{`${index + 1}. ${
+              question.question
+            }`}</Typography>
             <ul>
               {question.options.map((option, optionIndex) => (
                 <li key={optionIndex}>{option}</li>
@@ -81,10 +97,15 @@ function ExamForm({ onClose, courseId, fetchExams }) {
       ) : (
         <Typography variant="body1">No questions added</Typography>
       )}
-      <Button onClick={handleAddQuestion} variant="contained" color="primary" sx={{ mb: 2 }}>
+      <Button
+        onClick={handleAddQuestion}
+        variant="contained"
+        color="primary"
+        sx={{ mb: 2 }}
+      >
         Add Question
       </Button>
-      <Box sx={{ display: 'flex', justifyContent: 'space-between' }}>
+      <Box sx={{ display: "flex", justifyContent: "space-between" }}>
         <Button onClick={handleSaveExam} variant="contained" color="primary">
           Save Exam
         </Button>
@@ -97,11 +118,13 @@ function ExamForm({ onClose, courseId, fetchExams }) {
       <Dialog open={showQuestionForm} onClose={handleCloseQuestionForm}>
         <DialogTitle>Create New Question</DialogTitle>
         <DialogContent>
-          <MCQQuestionForm onClose={handleCloseQuestionForm} onSave={handleQuestionSave} courseId={courseId}/>
+          <MCQQuestionForm
+            onClose={handleCloseQuestionForm}
+            onSave={handleQuestionSave}
+            courseId={courseId}
+          />
         </DialogContent>
       </Dialog>
     </Box>
   );
 }
-
-export default ExamForm;

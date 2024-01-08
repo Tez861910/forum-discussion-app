@@ -1,37 +1,31 @@
-import * as React from 'react';
-import {
-  Button,
-  Container,
-  Stack,
-  Typography,
-  Slide,
-} from '@mui/material';
-import UserTable from './UserTable';
-import CreateUserDialog from './CreateUserDialog';
-import EditUserDialog from './EditUserDialog';
-import DeleteConfirmationDialog from './DeleteConfirmationDialog';
-import useApi from '../../home-page/Api';
+import * as React from "react";
+import { Button, Container, Stack, Typography, Slide } from "@mui/material";
+import UserTable from "./UserTable";
+import CreateUserDialog from "./CreateUserDialog";
+import EditUserDialog from "./EditUserDialog";
+import DeleteConfirmationDialog from "./DeleteConfirmationDialog";
+import useApi from "../../home-page/Api";
 
 const Transition = React.forwardRef((props, ref) => (
   <Slide direction="up" ref={ref} {...props} />
 ));
 
-function AdminUsers() {
+export function AdminUsers() {
   const [users, setUsers] = React.useState([]);
   const [newUser, setNewUser] = React.useState({
-    UserName: '',
-    UserEmail: '',
-    RoleID: '',
-    UserPassword: '',
+    UserName: "",
+    UserEmail: "",
+    RoleID: "",
+    UserPassword: "",
   });
   const [roles, setRoles] = React.useState([]);
   const [error, setError] = React.useState(null);
   const [editingUserId, setEditingUserId] = React.useState(null);
   const [updatedUserData, setUpdatedUserData] = React.useState({
-    UserName: '',
-    UserEmail: '',
-    RoleID: '',
-    UserPassword: '',
+    UserName: "",
+    UserEmail: "",
+    RoleID: "",
+    UserPassword: "",
   });
   const [deleteConfirmation, setDeleteConfirmation] = React.useState({
     open: false,
@@ -43,21 +37,21 @@ function AdminUsers() {
 
   const fetchUsers = React.useCallback(async () => {
     try {
-      const response = await api.get('/users/users/get');
+      const response = await api.get("/users/users/get");
       setUsers(response.data.users);
-      console.log('Users fetched successfully');
+      console.log("Users fetched successfully");
     } catch (error) {
-      console.error('Error fetching users:', error);
+      console.error("Error fetching users:", error);
     }
   }, [api]);
 
   const fetchRoles = React.useCallback(async () => {
     try {
-      const response = await api.get('/roles/roles/get');
+      const response = await api.get("/roles/roles/get");
       setRoles(response.data.roles);
-      console.log('Roles fetched successfully');
+      console.log("Roles fetched successfully");
     } catch (error) {
-      console.error('Error fetching roles:', error);
+      console.error("Error fetching roles:", error);
     }
   }, [api]);
 
@@ -67,41 +61,44 @@ function AdminUsers() {
   }, [fetchUsers, fetchRoles]);
 
   const handleCreateUser = React.useCallback(async () => {
-    if (!newUser.UserName || !newUser.UserEmail || newUser.RoleID === '') {
-      console.error('Name, email, and roleId are required.');
+    if (!newUser.UserName || !newUser.UserEmail || newUser.RoleID === "") {
+      console.error("Name, email, and roleId are required.");
       return;
     }
 
     try {
-      const response = await api.post('/users/users/create', {
+      const response = await api.post("/users/users/create", {
         name: newUser.UserName,
         email: newUser.UserEmail,
         password: newUser.UserPassword,
         roleId: newUser.RoleID,
       });
 
-      if (response.data && response.data.message === 'User created successfully') {
-        console.log('User created successfully');
+      if (
+        response.data &&
+        response.data.message === "User created successfully"
+      ) {
+        console.log("User created successfully");
         setNewUser({
-          UserName: '',
-          UserEmail: '',
-          UserPassword: '',
-          RoleID: '',
+          UserName: "",
+          UserEmail: "",
+          UserPassword: "",
+          RoleID: "",
         });
-        
+
         await fetchUsers();
         setCreateUserModalOpen(false);
       } else {
-        console.error('Error creating user:', response.data);
+        console.error("Error creating user:", response.data);
         setCreateUserModalOpen(false);
         if (response.data && response.data.error) {
           setError(response.data.error);
         } else {
-          setError('Error creating user. Please try again.');
+          setError("Error creating user. Please try again.");
         }
       }
     } catch (error) {
-      console.error('Error creating user:', error);
+      console.error("Error creating user:", error);
     }
   }, [api, fetchUsers, newUser, setCreateUserModalOpen]);
 
@@ -111,7 +108,7 @@ function AdminUsers() {
       UserName: user.UserName,
       UserEmail: user.UserEmail,
       RoleID: user.RoleID,
-      UserPassword: '',
+      UserPassword: "",
     });
   };
 
@@ -119,14 +116,14 @@ function AdminUsers() {
     if (
       !updatedUserData.UserName ||
       !updatedUserData.UserEmail ||
-      updatedUserData.RoleID === ''
+      updatedUserData.RoleID === ""
     ) {
       setEditingUserId(null);
       return;
     }
 
     if (editingUserId === null || editingUserId === undefined) {
-      console.error('Invalid user ID for update');
+      console.error("Invalid user ID for update");
       return;
     }
 
@@ -148,27 +145,27 @@ function AdminUsers() {
 
       if (
         response.data &&
-        response.data.message === 'User updated successfully'
+        response.data.message === "User updated successfully"
       ) {
-        console.log('User updated successfully');
+        console.log("User updated successfully");
         setEditingUserId(null);
         setUpdatedUserData({
-          UserName: '',
-          UserEmail: '',
-          RoleID: '',
-          UserPassword: '',
+          UserName: "",
+          UserEmail: "",
+          RoleID: "",
+          UserPassword: "",
         });
         await fetchUsers();
       } else {
-        console.error('Error updating user:', response.data);
+        console.error("Error updating user:", response.data);
         if (response.data && response.data.error) {
           setError(response.data.error);
         } else {
-          setError('Error updating user. Please try again.');
+          setError("Error updating user. Please try again.");
         }
       }
     } catch (error) {
-      console.error('Error updating user:', error);
+      console.error("Error updating user:", error);
     }
   }, [api, fetchUsers, updatedUserData, editingUserId]);
 
@@ -184,21 +181,21 @@ function AdminUsers() {
 
       if (
         response.data &&
-        response.data.message === 'User deleted successfully'
+        response.data.message === "User deleted successfully"
       ) {
-        console.log('User deleted successfully');
+        console.log("User deleted successfully");
         setDeleteConfirmation({ open: false, userId: null });
         await fetchUsers();
       } else {
-        console.error('Error deleting user:', response.data);
+        console.error("Error deleting user:", response.data);
         if (response.data && response.data.error) {
           setError(response.data.error);
         } else {
-          setError('Error deleting user. Please try again.');
+          setError("Error deleting user. Please try again.");
         }
       }
     } catch (error) {
-      console.error('Error deleting user:', error);
+      console.error("Error deleting user:", error);
     }
   }, [api, deleteConfirmation, fetchUsers]);
 
@@ -211,31 +208,47 @@ function AdminUsers() {
 
   const getRoleName = (roleID) => {
     const role = roles.find((r) => r.roleId === roleID);
-    return role ? role.roleName : 'N/A';
+    return role ? role.roleName : "N/A";
   };
 
   return (
-    <Container maxWidth="md" sx={{ py: 4, backgroundColor: '#afabff', minHeight: '100vh' }}>
-      <Typography variant="h4" gutterBottom component="div" sx={{ color: 'text.primary' }}>
+    <Container
+      maxWidth="md"
+      sx={{ py: 4, backgroundColor: "#afabff", minHeight: "100vh" }}
+    >
+      <Typography
+        variant="h4"
+        gutterBottom
+        component="div"
+        sx={{ color: "text.primary" }}
+      >
         Admin User Management
       </Typography>
-      <Stack spacing={2} sx={{ 
-        p: 2, 
-        overflowY: 'scroll', 
-        maxHeight: '100vh',
-        '&::-webkit-scrollbar': {
-          width: '0.4em',
-        },
-        '&::-webkit-scrollbar-track': {
-          boxShadow: 'inset 0 0 6px rgba(0,0,0,0.00)',
-        },
-        '&::-webkit-scrollbar-thumb': {
-          backgroundColor: 'rgba(0,0,0,.1)',
-          outline: '1px solid slategrey',
-        },
-      }}>
-        <Button variant="contained" color="secondary" sx={{ marginBottom: 2 }} onClick={() => setCreateUserModalOpen(true)}>
-          Create 
+      <Stack
+        spacing={2}
+        sx={{
+          p: 2,
+          overflowY: "scroll",
+          maxHeight: "100vh",
+          "&::-webkit-scrollbar": {
+            width: "0.4em",
+          },
+          "&::-webkit-scrollbar-track": {
+            boxShadow: "inset 0 0 6px rgba(0,0,0,0.00)",
+          },
+          "&::-webkit-scrollbar-thumb": {
+            backgroundColor: "rgba(0,0,0,.1)",
+            outline: "1px solid slategrey",
+          },
+        }}
+      >
+        <Button
+          variant="contained"
+          color="secondary"
+          sx={{ marginBottom: 2 }}
+          onClick={() => setCreateUserModalOpen(true)}
+        >
+          Create
         </Button>
         <UserTable
           key={users.length}
@@ -272,5 +285,3 @@ function AdminUsers() {
     </Container>
   );
 }
-
-export default AdminUsers;

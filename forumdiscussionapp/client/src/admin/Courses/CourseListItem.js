@@ -1,13 +1,31 @@
-import * as React from 'react';
-import { ListItem, Grid, TextField, Button, ListItemText, Typography, ListItemSecondaryAction, IconButton, Box, Modal } from '@mui/material';
-import DeleteIcon from '@mui/icons-material/Delete';
-import EditIcon from '@mui/icons-material/Edit';
-import GroupIcon from '@mui/icons-material/Group';
+import * as React from "react";
+import {
+  ListItem,
+  Grid,
+  TextField,
+  Button,
+  ListItemText,
+  Typography,
+  ListItemSecondaryAction,
+  IconButton,
+  Box,
+  Modal,
+} from "@mui/material";
+import DeleteIcon from "@mui/icons-material/Delete";
+import EditIcon from "@mui/icons-material/Edit";
+import GroupIcon from "@mui/icons-material/Group";
 
-function CourseListItem({ course, handleEditCourse, handleDeleteCourse, handleCourseUserModal }) {
+export function CourseListItem({
+  course,
+  handleEditCourse,
+  handleDeleteCourse,
+  handleCourseUserModal,
+}) {
   const [isEditing, setIsEditing] = React.useState(false);
   const [open, setOpen] = React.useState(false);
-  const [updatedCourseName, setUpdatedCourseName] = React.useState(course.CourseName);
+  const [updatedCourseName, setUpdatedCourseName] = React.useState(
+    course.CourseName
+  );
 
   const handleOpen = () => setOpen(true);
   const handleClose = () => setOpen(false);
@@ -25,7 +43,7 @@ function CourseListItem({ course, handleEditCourse, handleDeleteCourse, handleCo
           <ListItemText
             primary={course.CourseName}
             onClick={() => handleCourseUserModal(course.CourseID)}
-            sx={{ cursor: 'pointer', color: 'primary.main' }}
+            sx={{ cursor: "pointer", color: "primary.main" }}
           />
         </Grid>
         <Grid item xs={4}>
@@ -54,7 +72,7 @@ function CourseListItem({ course, handleEditCourse, handleDeleteCourse, handleCo
               onClick={() => handleCourseUserModal(course.CourseID)}
               size="small"
             >
-               <GroupIcon />
+              <GroupIcon />
             </IconButton>
           </ListItemSecondaryAction>
         </Grid>
@@ -65,19 +83,25 @@ function CourseListItem({ course, handleEditCourse, handleDeleteCourse, handleCo
         aria-labelledby="modal-modal-title"
         aria-describedby="modal-modal-description"
       >
-        <Box sx={{ 
-            position: 'absolute',
-            top: '50%',
-            left: '50%',
-            transform: 'translate(-50%, -50%)',
+        <Box
+          sx={{
+            position: "absolute",
+            top: "50%",
+            left: "50%",
+            transform: "translate(-50%, -50%)",
             width: 400,
-            bgcolor: 'background.paper',
-            border: '2px solid #000',
+            bgcolor: "background.paper",
+            border: "2px solid #000",
             boxShadow: 24,
             p: 4,
             borderRadius: 2,
-         }}>
-          <Typography variant="h6" sx={{ marginBottom: 1 }} id="modal-modal-title">
+          }}
+        >
+          <Typography
+            variant="h6"
+            sx={{ marginBottom: 1 }}
+            id="modal-modal-title"
+          >
             Edit Course
           </Typography>
           <TextField
@@ -89,13 +113,20 @@ function CourseListItem({ course, handleEditCourse, handleDeleteCourse, handleCo
             size="small"
             id="modal-modal-description"
           />
-          <Box sx={{ display: 'flex', justifyContent: 'flex-end', gap: 1, marginTop: 2 }}>
+          <Box
+            sx={{
+              display: "flex",
+              justifyContent: "flex-end",
+              gap: 1,
+              marginTop: 2,
+            }}
+          >
             <Button
               variant="contained"
               color="primary"
               onClick={handleClose}
               size="small"
-              sx={{ textTransform: 'none' }}
+              sx={{ textTransform: "none" }}
             >
               Cancel
             </Button>
@@ -104,7 +135,7 @@ function CourseListItem({ course, handleEditCourse, handleDeleteCourse, handleCo
               color="secondary"
               onClick={handleSaveEdit}
               size="small"
-              sx={{ textTransform: 'none' }}
+              sx={{ textTransform: "none" }}
             >
               Save
             </Button>
@@ -114,5 +145,3 @@ function CourseListItem({ course, handleEditCourse, handleDeleteCourse, handleCo
     </ListItem>
   );
 }
-
-export default React.memo(CourseListItem);

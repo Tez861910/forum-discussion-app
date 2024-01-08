@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useCallback } from 'react';
+import React, { useState, useEffect, useCallback } from "react";
 import {
   Typography,
   Button,
@@ -12,23 +12,23 @@ import {
   Box,
   Paper,
   Container,
-} from '@mui/material';
-import DatePicker from 'react-datepicker';
-import 'react-datepicker/dist/react-datepicker.css';
-import Calendar from 'react-calendar';
-import 'react-calendar/dist/Calendar.css';
-import useApi from './Api';
+} from "@mui/material";
+import DatePicker from "react-datepicker";
+import "react-datepicker/dist/react-datepicker.css";
+import Calendar from "react-calendar";
+import "react-calendar/dist/Calendar.css";
+import useApi from "./Api";
 
-const Scheduler = ({ selectedCourse: courseId }) => {
-  const userId = localStorage.getItem('userId');
-  const roleId = localStorage.getItem('roleId');
+export const Scheduler = ({ selectedCourse: courseId }) => {
+  const userId = localStorage.getItem("userId");
+  const roleId = localStorage.getItem("roleId");
   const [events, setEvents] = useState([]);
   const [open, setOpen] = useState(false);
   const [selectedDate, setSelectedDate] = useState(new Date());
   const [newEvent, setNewEvent] = useState({
-    EventTitle: '',
-    EventDescription: '',
-    EventDate: '',
+    EventTitle: "",
+    EventDescription: "",
+    EventDate: "",
   });
   const [selectedEventId, setSelectedEventId] = useState(null);
   //const [isLoading, setIsLoading] = useState(true);
@@ -36,51 +36,48 @@ const Scheduler = ({ selectedCourse: courseId }) => {
 
   const fetchEvents = useCallback(async () => {
     try {
-      const response = await api.get('/events/events/get');
+      const response = await api.get("/events/events/get");
       setEvents(response.data.events);
     } catch (error) {
-      console.error('Error fetching events:', error);
+      console.error("Error fetching events:", error);
     }
   }, [api]);
 
   const createEvent = useCallback(async () => {
     try {
-      const response = await api.post('/events/events/create', {
+      const response = await api.post("/events/events/create", {
         EventTitle: newEvent.EventTitle,
         EventDescription: newEvent.EventDescription,
         EventDate: selectedDate.toISOString(),
-        courseId: parseInt(courseId), 
+        courseId: parseInt(courseId),
         userId: parseInt(userId),
       });
 
       if (response.data.success) {
         setEvents([...events, response.data.event]);
         setNewEvent({
-          EventTitle: '',
-          EventDescription: '',
-          EventDate: '',
+          EventTitle: "",
+          EventDescription: "",
+          EventDate: "",
         });
         handleClose();
       } else {
-        console.error('Error creating event:', response.data.error);
+        console.error("Error creating event:", response.data.error);
       }
     } catch (error) {
-      console.error('Error creating event:', error);
+      console.error("Error creating event:", error);
     }
   }, [api, courseId, events, newEvent, selectedDate, userId]);
 
   const editEvent = useCallback(async () => {
     try {
-      const response = await api.put(
-        `/events/events/edit/${selectedEventId}`,
-        {
-          EventTitle: newEvent.EventTitle,
-          EventDescription: newEvent.EventDescription,
-          EventDate: selectedDate.toISOString(),
-          courseId: parseInt(courseId), 
-          userd: parseInt(userId),
-        }
-      );
+      const response = await api.put(`/events/events/edit/${selectedEventId}`, {
+        EventTitle: newEvent.EventTitle,
+        EventDescription: newEvent.EventDescription,
+        EventDate: selectedDate.toISOString(),
+        courseId: parseInt(courseId),
+        userd: parseInt(userId),
+      });
 
       if (response.data.success) {
         setEvents((prevEvents) =>
@@ -89,30 +86,33 @@ const Scheduler = ({ selectedCourse: courseId }) => {
           )
         );
         setNewEvent({
-          EventTitle: '',
-          EventDescription: '',
-          EventDate: '',
+          EventTitle: "",
+          EventDescription: "",
+          EventDate: "",
         });
         handleClose();
       } else {
-        console.error('Error editing event:', response.data.error);
+        console.error("Error editing event:", response.data.error);
       }
     } catch (error) {
-      console.error('Error editing event:', error);
+      console.error("Error editing event:", error);
     }
   }, [api, courseId, newEvent, selectedDate, selectedEventId, userId]);
 
-  const deleteEvent = useCallback(async (eventId) => {
-    try {
-      await api.delete(`/events/events/delete/${eventId}`);
-      setEvents((prevEvents) =>
-        prevEvents.filter((event) => event.EventID !== eventId)
-      );
-      handleClose();
-    } catch (error) {
-      console.error('Error deleting event:', error);
-    }
-  }, [api]);
+  const deleteEvent = useCallback(
+    async (eventId) => {
+      try {
+        await api.delete(`/events/events/delete/${eventId}`);
+        setEvents((prevEvents) =>
+          prevEvents.filter((event) => event.EventID !== eventId)
+        );
+        handleClose();
+      } catch (error) {
+        console.error("Error deleting event:", error);
+      }
+    },
+    [api]
+  );
 
   const handleEditClick = (eventId) => {
     const selectedEvent = events.find((event) => event.EventID === eventId);
@@ -145,12 +145,12 @@ const Scheduler = ({ selectedCourse: courseId }) => {
         University Events Scheduler
       </Typography>
 
-      {roleId === '1' || roleId === '2' ? (
+      {roleId === "1" || roleId === "2" ? (
         <Box
           sx={{
-            display: 'flex',
-            flexDirection: 'column',
-            alignItems: 'flex-start',
+            display: "flex",
+            flexDirection: "column",
+            alignItems: "flex-start",
             mb: 2,
           }}
         >
@@ -162,33 +162,40 @@ const Scheduler = ({ selectedCourse: courseId }) => {
 
       <Box
         sx={{
-          display: 'flex',
-          justifyContent: 'space-between',
-          alignItems: 'flex-start',
-          flexDirection: 'row',
+          display: "flex",
+          justifyContent: "space-between",
+          alignItems: "flex-start",
+          flexDirection: "row",
           mt: 4,
         }}
       >
-        <Paper elevation={3} sx={{ width: '60%', p: 2 }}>
+        <Paper elevation={3} sx={{ width: "60%", p: 2 }}>
           <Typography variant="h6">Calendar</Typography>
           <Calendar />
         </Paper>
 
-        <Paper elevation={3} sx={{ width: '35%', p: 2 }}>
+        <Paper elevation={3} sx={{ width: "35%", p: 2 }}>
           <Typography variant="h6">Events</Typography>
           {events.length > 0 ? (
             events.map((event) => (
               <Box key={event.EventID} sx={{ my: 2 }}>
                 <Typography variant="subtitle1">{event.EventTitle}</Typography>
-                <Typography variant="body2">{event.EventDescription}</Typography>
+                <Typography variant="body2">
+                  {event.EventDescription}
+                </Typography>
                 <Typography variant="body2">
                   {new Date(event.EventDate).toLocaleDateString()}
                 </Typography>
                 <Box>
-                  {(roleId === '1' || (roleId === '2' && userId === event.UserID)) && (
+                  {(roleId === "1" ||
+                    (roleId === "2" && userId === event.UserID)) && (
                     <>
-                      <Button onClick={() => handleEditClick(event.EventID)}>Edit</Button>
-                      <Button onClick={() => deleteEvent(event.EventID)}>Delete</Button>
+                      <Button onClick={() => handleEditClick(event.EventID)}>
+                        Edit
+                      </Button>
+                      <Button onClick={() => deleteEvent(event.EventID)}>
+                        Delete
+                      </Button>
                     </>
                   )}
                 </Box>
@@ -200,13 +207,18 @@ const Scheduler = ({ selectedCourse: courseId }) => {
         </Paper>
       </Box>
 
-      <Dialog open={open} onClose={handleClose} aria-labelledby="form-dialog-title">
+      <Dialog
+        open={open}
+        onClose={handleClose}
+        aria-labelledby="form-dialog-title"
+      >
         <DialogTitle id="form-dialog-title">
-          {selectedEventId ? 'Edit Event' : 'Create New Event'}
+          {selectedEventId ? "Edit Event" : "Create New Event"}
         </DialogTitle>
         <DialogContent>
           <DialogContentText>
-            To create a new event, please enter the event title, description, and date here.
+            To create a new event, please enter the event title, description,
+            and date here.
           </DialogContentText>
           <Grid container spacing={2}>
             <Grid item xs={12} sm={6}>
@@ -218,7 +230,9 @@ const Scheduler = ({ selectedCourse: courseId }) => {
                 type="text"
                 fullWidth
                 value={newEvent.EventTitle}
-                onChange={(e) => setNewEvent({ ...newEvent, EventTitle: e.target.value })}
+                onChange={(e) =>
+                  setNewEvent({ ...newEvent, EventTitle: e.target.value })
+                }
               />
             </Grid>
             <Grid item xs={12} sm={6}>
@@ -235,19 +249,20 @@ const Scheduler = ({ selectedCourse: courseId }) => {
               />
             </Grid>
             <Grid item xs={12} sm={6}>
-              <DatePicker selected={selectedDate} onChange={(date) => setSelectedDate(date)} />
+              <DatePicker
+                selected={selectedDate}
+                onChange={(date) => setSelectedDate(date)}
+              />
             </Grid>
           </Grid>
         </DialogContent>
         <DialogActions>
           <Button onClick={handleClose}>Cancel</Button>
           <Button onClick={selectedEventId ? editEvent : createEvent}>
-            {selectedEventId ? 'Edit Event' : 'Create Event'}
+            {selectedEventId ? "Edit Event" : "Create Event"}
           </Button>
         </DialogActions>
       </Dialog>
     </Container>
   );
 };
-
-export default Scheduler;

@@ -1,7 +1,7 @@
-import React from 'react';
-import { List, ListItem, Typography } from '@mui/material';
+import React from "react";
+import { List, ListItem, Typography } from "@mui/material";
 
-const MCQSummary = ({ questions, answers }) => {
+export const MCQSummary = ({ questions, answers }) => {
   return (
     <div className="mcq-summary-container">
       <Typography variant="h2">Summary of Answers</Typography>
@@ -10,22 +10,16 @@ const MCQSummary = ({ questions, answers }) => {
           <ListItem key={index}>
             <div className="flex">
               <div className="flex">
-                <Typography variant="strong">
-                  Question {index + 1}:
-                </Typography>
-                {question.question} 
+                <Typography variant="strong">Question {index + 1}:</Typography>
+                {question.question}
               </div>
               <div className="flex">
-                <Typography variant="strong">
-                  Correct Answer:
-                </Typography>
+                <Typography variant="strong">Correct Answer:</Typography>
                 {question.correctAnswer}
               </div>
               <div className="flex">
-                <Typography variant="strong">
-                  Your Answer:
-                </Typography>
-                {answers[index].selectedOption || 'Not answered'} 
+                <Typography variant="strong">Your Answer:</Typography>
+                {answers[index].selectedOption || "Not answered"}
               </div>
             </div>
           </ListItem>
@@ -34,5 +28,3 @@ const MCQSummary = ({ questions, answers }) => {
     </div>
   );
 };
-
-export default MCQSummary;

@@ -1,63 +1,67 @@
-import React, { useState, useEffect, useCallback } from 'react';
-import Dialog from '@mui/material/Dialog';
-import DialogTitle from '@mui/material/DialogTitle';
-import DialogContent from '@mui/material/DialogContent';
-import DialogActions from '@mui/material/DialogActions';
-import Box from '@mui/material/Box';
-import Button from '@mui/material/Button';
-import Checkbox from '@mui/material/Checkbox';
-import List from '@mui/material/List';
-import ListItem from '@mui/material/ListItem';
-import ListItemText from '@mui/material/ListItemText';
-import TextField from '@mui/material/TextField';
-import Typography from '@mui/material/Typography';
-import SearchIcon from '@mui/icons-material/Search';
-import InputAdornment from '@mui/material/InputAdornment';
-import Autocomplete from '@mui/material/Autocomplete';
-import useApi from './Api';
+import React, { useState, useEffect, useCallback } from "react";
+import Dialog from "@mui/material/Dialog";
+import DialogTitle from "@mui/material/DialogTitle";
+import DialogContent from "@mui/material/DialogContent";
+import DialogActions from "@mui/material/DialogActions";
+import Box from "@mui/material/Box";
+import Button from "@mui/material/Button";
+import Checkbox from "@mui/material/Checkbox";
+import List from "@mui/material/List";
+import ListItem from "@mui/material/ListItem";
+import ListItemText from "@mui/material/ListItemText";
+import TextField from "@mui/material/TextField";
+import Typography from "@mui/material/Typography";
+import SearchIcon from "@mui/icons-material/Search";
+import InputAdornment from "@mui/material/InputAdornment";
+import Autocomplete from "@mui/material/Autocomplete";
+import useApi from "./Api";
 
-const CourseEnrollmentModal = ({ isOpen, onRequestClose, onEnrollSuccess }) => {
+export const CourseEnrollmentModal = ({
+  isOpen,
+  onRequestClose,
+  onEnrollSuccess,
+}) => {
   const [selectedCourses, setSelectedCourses] = useState([]);
   const [courses, setCourses] = useState([]);
-  const [searchTerm, setSearchTerm] = useState('');
+  const [searchTerm, setSearchTerm] = useState("");
   const [userCourses, setUserCourses] = useState([]);
   const { api } = useApi();
 
   const fetchCourses = useCallback(async () => {
     try {
-      const response = await api.get('/courses/courses/get');
+      const response = await api.get("/courses/courses/get");
 
       if (response.status === 200) {
         setCourses(response.data.courses);
       } else {
-        console.error('Failed to fetch courses:', response.status);
+        console.error("Failed to fetch courses:", response.status);
       }
     } catch (error) {
-      console.error('Error fetching courses:', error);
+      console.error("Error fetching courses:", error);
     }
   }, [api]);
 
   const fetchUserCourses = useCallback(async () => {
     try {
-      const userId = localStorage.getItem('userId');
+      const userId = localStorage.getItem("userId");
 
       if (!userId) {
-        console.error('User ID not found in local storage');
+        console.error("User ID not found in local storage");
         return [];
       }
 
-      const response = await api.get('/users/usercourses/get/id', {
+      const response = await api.get("/users/usercourses/get/id", {
         params: { userId: userId },
       });
 
       if (response.status === 200) {
         return response.data.userCourses;
       } else {
-        console.error('Failed to fetch user courses:', response.status);
+        console.error("Failed to fetch user courses:", response.status);
         return [];
       }
     } catch (error) {
-      console.error('Error fetching user courses:', error);
+      console.error("Error fetching user courses:", error);
       return [];
     }
   }, [api]);
@@ -69,13 +73,15 @@ const CourseEnrollmentModal = ({ isOpen, onRequestClose, onEnrollSuccess }) => {
       if (userCoursesData) {
         setUserCourses(userCoursesData);
 
-        const enrolledCourseIds = userCoursesData.map((course) => course.CourseID);
+        const enrolledCourseIds = userCoursesData.map(
+          (course) => course.CourseID
+        );
         setSelectedCourses(enrolledCourseIds);
       } else {
         // Handle the case where userCoursesData is undefined or empty
       }
     } catch (error) {
-      console.error('Error fetching user courses:', error);
+      console.error("Error fetching user courses:", error);
     }
   }, [fetchUserCourses]);
 
@@ -99,14 +105,14 @@ const CourseEnrollmentModal = ({ isOpen, onRequestClose, onEnrollSuccess }) => {
 
   const handleEnroll = async () => {
     try {
-      const userId = localStorage.getItem('userId');
+      const userId = localStorage.getItem("userId");
 
       if (!userId) {
-        console.error('User ID not found in local storage');
+        console.error("User ID not found in local storage");
         return;
       }
 
-      const response = await api.post('/courses/courses/enroll', {
+      const response = await api.post("/courses/courses/enroll", {
         userId: userId,
         courseIds: selectedCourses,
       });
@@ -117,16 +123,18 @@ const CourseEnrollmentModal = ({ isOpen, onRequestClose, onEnrollSuccess }) => {
         fetchUserCoursesAndSetState();
         // Do not close the modal on enrollment
       } else {
-        console.error('Enrollment failed:', response.status);
+        console.error("Enrollment failed:", response.status);
       }
     } catch (error) {
-      console.error('Error enrolling in courses:', error);
+      console.error("Error enrolling in courses:", error);
     }
   };
 
   const enrolledCoursesList = userCourses
     .map((userCourse) => {
-      const enrolledCourse = courses.find((course) => course.CourseID === userCourse.CourseID);
+      const enrolledCourse = courses.find(
+        (course) => course.CourseID === userCourse.CourseID
+      );
 
       if (enrolledCourse) {
         return enrolledCourse;
@@ -134,11 +142,17 @@ const CourseEnrollmentModal = ({ isOpen, onRequestClose, onEnrollSuccess }) => {
         return null;
       }
     })
-    .filter((course, index, self) => course && index === self.findIndex((c) => c.CourseID === course.CourseID));
+    .filter(
+      (course, index, self) =>
+        course &&
+        index === self.findIndex((c) => c.CourseID === course.CourseID)
+    );
 
   const selectableCoursesList = courses
     .filter((course) => !selectedCourses.includes(course?.CourseID))
-    .filter((course) => course?.CourseName.toLowerCase().includes(searchTerm.toLowerCase()));
+    .filter((course) =>
+      course?.CourseName.toLowerCase().includes(searchTerm.toLowerCase())
+    );
 
   return (
     <Dialog
@@ -149,7 +163,9 @@ const CourseEnrollmentModal = ({ isOpen, onRequestClose, onEnrollSuccess }) => {
       maxWidth="md"
       fullWidth
     >
-      <DialogTitle id="course-enrollment-modal-title">Course Enrollment</DialogTitle>
+      <DialogTitle id="course-enrollment-modal-title">
+        Course Enrollment
+      </DialogTitle>
       <DialogContent dividers>
         {enrolledCoursesList.length > 0 && (
           <Box sx={{ marginBottom: 2 }}>
@@ -168,8 +184,10 @@ const CourseEnrollmentModal = ({ isOpen, onRequestClose, onEnrollSuccess }) => {
           multiple
           id="add-course-autocomplete"
           options={selectableCoursesList ?? []}
-          getOptionLabel={(option) => option?.CourseName || ''}
-          isOptionEqualToValue={(option, value) => option?.CourseID === value?.CourseID}
+          getOptionLabel={(option) => option?.CourseName || ""}
+          isOptionEqualToValue={(option, value) =>
+            option?.CourseID === value?.CourseID
+          }
           onChange={(event, value) => {
             setSelectedCourses(value.map((course) => course.CourseID));
           }}
@@ -191,7 +209,9 @@ const CourseEnrollmentModal = ({ isOpen, onRequestClose, onEnrollSuccess }) => {
               }}
             />
           )}
-          value={selectableCoursesList.filter((course) => selectedCourses.includes(course?.CourseID))}
+          value={selectableCoursesList.filter((course) =>
+            selectedCourses.includes(course?.CourseID)
+          )}
           renderOption={(props, option) => (
             <ListItem {...props} disablePadding>
               <Checkbox
@@ -202,10 +222,13 @@ const CourseEnrollmentModal = ({ isOpen, onRequestClose, onEnrollSuccess }) => {
             </ListItem>
           )}
         />
-
       </DialogContent>
       <DialogActions>
-        <Button variant="contained" onClick={handleEnroll} sx={{ marginRight: 2 }}>
+        <Button
+          variant="contained"
+          onClick={handleEnroll}
+          sx={{ marginRight: 2 }}
+        >
           Enroll
         </Button>
         <Button variant="outlined" onClick={onRequestClose}>
@@ -215,5 +238,3 @@ const CourseEnrollmentModal = ({ isOpen, onRequestClose, onEnrollSuccess }) => {
     </Dialog>
   );
 };
-
-export default CourseEnrollmentModal;

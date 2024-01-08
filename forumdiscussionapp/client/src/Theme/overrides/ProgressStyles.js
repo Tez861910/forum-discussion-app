@@ -1,23 +1,23 @@
-import palette from '../palette';
+import palette from "../palette";
 
 const primaryColor = palette.palette.default.primary.main;
 const textColor = palette.palette.default.text.primary;
-const transition = '0.3s';
+const transition = "0.3s";
 
-const progressStyles = {
+export const progressStyles = {
   MuiLinearProgress: {
     styleOverrides: {
       root: {
         backgroundColor: primaryColor,
-        transition: transition, 
+        transition: transition,
       },
       bar: {
         backgroundColor: textColor,
-        transition: transition, 
+        transition: transition,
       },
     },
   },
-  
+
   MuiCircularProgress: {
     styleOverrides: {
       root: {
@@ -27,5 +27,3 @@ const progressStyles = {
     },
   },
 };
-
-export default progressStyles;

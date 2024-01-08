@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useCallback } from 'react';
+import React, { useState, useEffect, useCallback } from "react";
 import {
   Box,
   TextareaAutosize,
@@ -11,37 +11,35 @@ import {
   styled,
   CircularProgress,
   hello,
-} from '@mui/material';
+} from "@mui/material";
 import {
   Close as CloseIcon,
   Edit as EditIcon,
   Save as SaveIcon,
   Delete as DeleteIcon,
-} from '@mui/icons-material';
-import useApi from '../home-page/Api';
-
-
+} from "@mui/icons-material";
+import useApi from "../home-page/Api";
 
 const ResponseCard = styled(Box)(({ theme }) => ({
   marginBottom: theme.spacing(2),
   border: `1px solid ${theme.palette.divider}`,
   borderRadius: theme.shape.borderRadius,
   padding: theme.spacing(2),
-  display: 'flex',
-  flexDirection: 'column',
-  alignItems: 'start',
+  display: "flex",
+  flexDirection: "column",
+  alignItems: "start",
 }));
 
-const Responses = ({ commentId, open, onClose }) => {
-  const roleId = localStorage.getItem('roleId');
-  const userId = localStorage.getItem('userId');
+export const Responses = ({ commentId, open, onClose }) => {
+  const roleId = localStorage.getItem("roleId");
+  const userId = localStorage.getItem("userId");
   const [responses, setResponses] = useState([]);
   const [usernamesMap, setUsernamesMap] = useState({});
-  const [newResponse, setNewResponse] = useState('');
+  const [newResponse, setNewResponse] = useState("");
   const [fetchError, setFetchError] = useState(null);
   const [isLoading, setIsLoading] = useState(false);
   const [editingResponse, setEditingResponse] = useState(null);
-  const [editedContent, setEditedContent] = useState('');
+  const [editedContent, setEditedContent] = useState("");
   const { api } = useApi();
 
   const fetchResponses = useCallback(async () => {
@@ -53,25 +51,25 @@ const Responses = ({ commentId, open, onClose }) => {
       setResponses(retrievedResponses);
       setFetchError(null);
     } catch (error) {
-      console.error('Error fetching responses:', error);
-      setFetchError('Error loading responses');
+      console.error("Error fetching responses:", error);
+      setFetchError("Error loading responses");
     }
   }, [api, commentId]);
 
   const handleResponseSubmit = async (event) => {
     event.preventDefault();
 
-    if (commentId && newResponse.trim() !== '') {
+    if (commentId && newResponse.trim() !== "") {
       try {
         await api.post(`/responses/responses/create/${commentId}`, {
           ResponseContent: newResponse,
           userId,
         });
 
-        setNewResponse('');
+        setNewResponse("");
         await fetchResponses();
       } catch (error) {
-        console.error('Error adding response:', error);
+        console.error("Error adding response:", error);
         // Handle error gracefully, maybe show a notification to the user
       }
     }
@@ -85,9 +83,9 @@ const Responses = ({ commentId, open, onClose }) => {
 
       await fetchResponses();
       setEditingResponse(null);
-      setEditedContent('');
+      setEditedContent("");
     } catch (error) {
-      console.error('Error updating response:', error);
+      console.error("Error updating response:", error);
       // Handle error gracefully, maybe show a notification to the user
     }
   };
@@ -97,26 +95,33 @@ const Responses = ({ commentId, open, onClose }) => {
       await api.delete(`/responses/responses/delete/${responseId}`);
       await fetchResponses();
     } catch (error) {
-      console.error('Error deleting response:', error);
+      console.error("Error deleting response:", error);
       // Handle error gracefully, maybe show a notification to the user
     }
   };
 
-  const fetchUsernames = useCallback(async (responsesToFetchUsernames) => {
-    try {
-      const userIds = Array.from(new Set(responsesToFetchUsernames.map((response) => response.UserID)));
+  const fetchUsernames = useCallback(
+    async (responsesToFetchUsernames) => {
+      try {
+        const userIds = Array.from(
+          new Set(responsesToFetchUsernames.map((response) => response.UserID))
+        );
 
-      if (userIds.length > 0) {
-        const usernamesResponse = await api.post('/users/getUsernames', { userIds });
-        const usernames = usernamesResponse.data.usernames;
+        if (userIds.length > 0) {
+          const usernamesResponse = await api.post("/users/getUsernames", {
+            userIds,
+          });
+          const usernames = usernamesResponse.data.usernames;
 
-        setUsernamesMap(usernames);
+          setUsernamesMap(usernames);
+        }
+      } catch (error) {
+        console.error("Error fetching usernames:", error);
+        // Handle error gracefully, maybe show a notification to the user
       }
-    } catch (error) {
-      console.error('Error fetching usernames:', error);
-      // Handle error gracefully, maybe show a notification to the user
-    }
-  }, [api]);
+    },
+    [api]
+  );
 
   useEffect(() => {
     const fetchData = async () => {
@@ -126,7 +131,7 @@ const Responses = ({ commentId, open, onClose }) => {
         setIsLoading(false);
       } catch (error) {
         setIsLoading(false);
-        console.error('Error fetching responses:', error);
+        console.error("Error fetching responses:", error);
       }
     };
 
@@ -140,10 +145,24 @@ const Responses = ({ commentId, open, onClose }) => {
   }, [responses, fetchUsernames]);
 
   return (
-    <Dialog open={open} onClose={onClose} PaperProps={{ sx: { backgroundColor: 'palette.info.main', color: 'palette.info.contrastText' } }}>
-      <DialogTitle sx={{ fontWeight: 'typography.fontWeightBold' }}>
+    <Dialog
+      open={open}
+      onClose={onClose}
+      PaperProps={{
+        sx: {
+          backgroundColor: "palette.info.main",
+          color: "palette.info.contrastText",
+        },
+      }}
+    >
+      <DialogTitle sx={{ fontWeight: "typography.fontWeightBold" }}>
         Responses
-        <IconButton edge="end" color="inherit" onClick={onClose} aria-label="close">
+        <IconButton
+          edge="end"
+          color="inherit"
+          onClick={onClose}
+          aria-label="close"
+        >
           <CloseIcon />
         </IconButton>
       </DialogTitle>
@@ -161,29 +180,59 @@ const Responses = ({ commentId, open, onClose }) => {
                     aria-label="edit response"
                     minRows={4}
                     placeholder="Edit your response..."
-                    sx={{ width: '100%', marginBottom: 2, fontWeight: 'typography.fontWeightBold' }}
+                    sx={{
+                      width: "100%",
+                      marginBottom: 2,
+                      fontWeight: "typography.fontWeightBold",
+                    }}
                   />
-                  <Button onClick={() => handleEditResponse(response?.ResponseID)} sx={{ fontWeight: 'typography.fontWeightBold' }}>
+                  <Button
+                    onClick={() => handleEditResponse(response?.ResponseID)}
+                    sx={{ fontWeight: "typography.fontWeightBold" }}
+                  >
                     <SaveIcon /> Save
                   </Button>
-                  <Button onClick={() => setEditingResponse(null)} sx={{ fontWeight: 'typography.fontWeightBold' }}>
+                  <Button
+                    onClick={() => setEditingResponse(null)}
+                    sx={{ fontWeight: "typography.fontWeightBold" }}
+                  >
                     <CloseIcon /> Cancel
                   </Button>
                 </Box>
               ) : (
                 <>
-                  <Typography variant="body1" mb={2} sx={{ fontWeight: 'typography.fontWeightBold' }}>
+                  <Typography
+                    variant="body1"
+                    mb={2}
+                    sx={{ fontWeight: "typography.fontWeightBold" }}
+                  >
                     {response?.ResponseContent}
                   </Typography>
-                  <Typography variant="caption" color="textSecondary" mb={2} sx={{ fontWeight: 'typography.fontWeightBold' }}>
-                    {usernamesMap[response?.UserID] || 'Unknown User'}
+                  <Typography
+                    variant="caption"
+                    color="textSecondary"
+                    mb={2}
+                    sx={{ fontWeight: "typography.fontWeightBold" }}
+                  >
+                    {usernamesMap[response?.UserID] || "Unknown User"}
                   </Typography>
-                  {(roleId === '2' || userId === response?.UserID) && (
+                  {(roleId === "2" || userId === response?.UserID) && (
                     <Box sx={{ mt: 1 }}>
-                      <Button onClick={() => { setEditingResponse(response?.ResponseID); setEditedContent(response?.ResponseContent); }} sx={{ fontWeight: 'typography.fontWeightBold' }}>
+                      <Button
+                        onClick={() => {
+                          setEditingResponse(response?.ResponseID);
+                          setEditedContent(response?.ResponseContent);
+                        }}
+                        sx={{ fontWeight: "typography.fontWeightBold" }}
+                      >
                         <EditIcon />
                       </Button>
-                      <Button onClick={() => handleDeleteResponse(response?.ResponseID)} sx={{ fontWeight: 'typography.fontWeightBold' }}>
+                      <Button
+                        onClick={() =>
+                          handleDeleteResponse(response?.ResponseID)
+                        }
+                        sx={{ fontWeight: "typography.fontWeightBold" }}
+                      >
                         <DeleteIcon />
                       </Button>
                     </Box>
@@ -193,8 +242,8 @@ const Responses = ({ commentId, open, onClose }) => {
             </ResponseCard>
           ))
         )}
-  
-        {(roleId === '2' || roleId === '3') && (
+
+        {(roleId === "2" || roleId === "3") && (
           <form onSubmit={handleResponseSubmit}>
             <TextareaAutosize
               value={newResponse}
@@ -202,9 +251,17 @@ const Responses = ({ commentId, open, onClose }) => {
               aria-label="new response"
               minRows={4}
               placeholder="Add a new response..."
-              sx={{ width: '100%', marginTop: 2, fontWeight: 'typography.fontWeightBold' }}
+              sx={{
+                width: "100%",
+                marginTop: 2,
+                fontWeight: "typography.fontWeightBold",
+              }}
             />
-            <Button type="submit" variant="contained" sx={{ marginTop: 2, fontWeight: 'typography.fontWeightBold' }}>
+            <Button
+              type="submit"
+              variant="contained"
+              sx={{ marginTop: 2, fontWeight: "typography.fontWeightBold" }}
+            >
               Submit
             </Button>
           </form>
@@ -213,6 +270,3 @@ const Responses = ({ commentId, open, onClose }) => {
     </Dialog>
   );
 };
-  
-  export default Responses;
-  

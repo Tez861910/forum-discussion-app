@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useCallback } from 'react';
+import React, { useState, useEffect, useCallback } from "react";
 import {
   Dialog,
   DialogTitle,
@@ -18,9 +18,9 @@ import {
   IconButton,
   Divider,
   styled,
-} from '@mui/material';
-import DeleteIcon from '@mui/icons-material/Delete';
-import useApi from '../../home-page/Api';
+} from "@mui/material";
+import DeleteIcon from "@mui/icons-material/Delete";
+import useApi from "../../home-page/Api";
 
 const Transition = React.forwardRef(function Transition(props, ref) {
   return <Slide direction="up" ref={ref} {...props} />;
@@ -32,21 +32,25 @@ const StyledAutocomplete = styled(Autocomplete)({
 
 const StyledList = styled(List)({
   maxHeight: 300,
-  overflow: 'auto',
+  overflow: "auto",
 });
 
 const StyledButton = styled(Button)({
   marginLeft: 2,
 });
 
-function RoleUserModal({ open, onClose, selectedRoleId }) {
+export function RoleUserModal({ open, onClose, selectedRoleId }) {
   const [enrolledUsers, setEnrolledUsers] = useState([]);
   const [allUsers, setAllUsers] = useState([]);
-  const [removeConfirmation, setRemoveConfirmation] = useState({ open: false, user: null });
+  const [removeConfirmation, setRemoveConfirmation] = useState({
+    open: false,
+    user: null,
+  });
   const [noEnrollmentsFound, setNoEnrollmentsFound] = useState(false);
-  const [searchText, setSearchText] = useState('');
+  const [searchText, setSearchText] = useState("");
   const [selectedEnrolledUserIds, setSelectedEnrolledUserIds] = useState([]);
-  const [selectedAutocompleteUserIds, setSelectedAutocompleteUserIds] = useState([]);
+  const [selectedAutocompleteUserIds, setSelectedAutocompleteUserIds] =
+    useState([]);
   const [autocompleteValue, setAutocompleteValue] = useState([]);
   const { api } = useApi();
 
@@ -59,49 +63,61 @@ function RoleUserModal({ open, onClose, selectedRoleId }) {
 
   const fetchAllUsers = useCallback(async () => {
     try {
-      const response = await api.get('/users/users/get');
+      const response = await api.get("/users/users/get");
       if (response.data && Array.isArray(response.data.users)) {
         setAllUsers(response.data.users);
       } else {
-        console.error('Invalid response data format (Users):', response.data);
+        console.error("Invalid response data format (Users):", response.data);
         setAllUsers([]);
       }
     } catch (error) {
-      console.error('Error fetching users:', error);
+      console.error("Error fetching users:", error);
     }
   }, [api]);
 
   const fetchRoleUsers = useCallback(async () => {
     try {
-      const response = await api.get(`/roles/roles/enrollments/${selectedRoleId}`);
+      const response = await api.get(
+        `/roles/roles/enrollments/${selectedRoleId}`
+      );
 
       if (response.status === 404) {
-        console.error('No enrollments found for the role:', response.data.error);
+        console.error(
+          "No enrollments found for the role:",
+          response.data.error
+        );
         setEnrolledUsers([]);
         return;
       }
 
-      if (response.data && typeof response.data.enrollments === 'object') {
+      if (response.data && typeof response.data.enrollments === "object") {
         const enrollmentsData = response.data.enrollments;
-        const roleUsersData = Object.values(enrollmentsData).flatMap((enrollments) =>
-          enrollments.map((user) => ({ UserID: user.UserID, UserName: user.UserName }))
+        const roleUsersData = Object.values(enrollmentsData).flatMap(
+          (enrollments) =>
+            enrollments.map((user) => ({
+              UserID: user.UserID,
+              UserName: user.UserName,
+            }))
         );
         setEnrolledUsers(roleUsersData);
         setNoEnrollmentsFound(false);
       } else {
-        console.error('Invalid response data format (Role Users):', response.data);
+        console.error(
+          "Invalid response data format (Role Users):",
+          response.data
+        );
         setEnrolledUsers([]);
         setNoEnrollmentsFound(true);
       }
     } catch (error) {
-      console.error('Error fetching role users:', error);
+      console.error("Error fetching role users:", error);
     }
   }, [api, selectedRoleId]);
 
   const handleAddUserToRole = useCallback(async () => {
     try {
       if (selectedAutocompleteUserIds.length === 0) {
-        console.error('No users selected. Cannot enroll.');
+        console.error("No users selected. Cannot enroll.");
         return;
       }
 
@@ -110,31 +126,37 @@ function RoleUserModal({ open, onClose, selectedRoleId }) {
         userIds: selectedAutocompleteUserIds,
       });
 
-      if (response.data && response.data.message === 'Role created successfully') {
+      if (
+        response.data &&
+        response.data.message === "Role created successfully"
+      ) {
         setSelectedAutocompleteUserIds([]);
         setAutocompleteValue([]);
         fetchRoleUsers();
       } else {
-        console.error('Error creating role:', response.data);
+        console.error("Error creating role:", response.data);
       }
     } catch (error) {
-      console.error('Error creating role:', error);
+      console.error("Error creating role:", error);
     }
   }, [api, fetchRoleUsers, selectedRoleId, selectedAutocompleteUserIds]);
 
   const handleRemoveSelected = useCallback(async () => {
     if (selectedEnrolledUserIds.length === 0) {
-      console.error('No users selected for removal.');
+      console.error("No users selected for removal.");
       return;
     }
     try {
-      const response = await api.patch(`/roles/roles/${selectedRoleId}/enrollments`, {
-        userIds: selectedEnrolledUserIds,
-      });
-      console.log('API response:', response);
+      const response = await api.patch(
+        `/roles/roles/${selectedRoleId}/enrollments`,
+        {
+          userIds: selectedEnrolledUserIds,
+        }
+      );
+      console.log("API response:", response);
       fetchRoleUsers();
     } catch (error) {
-      console.error('Error removing users from role:', error);
+      console.error("Error removing users from role:", error);
     } finally {
       setSelectedEnrolledUserIds([]);
     }
@@ -147,15 +169,20 @@ function RoleUserModal({ open, onClose, selectedRoleId }) {
   const confirmRemoveUser = useCallback(async () => {
     try {
       if (!removeConfirmation.user || !removeConfirmation.user.UserID) {
-        console.error('Invalid user selected for removal', removeConfirmation.user);
+        console.error(
+          "Invalid user selected for removal",
+          removeConfirmation.user
+        );
         return;
       }
       const userId = removeConfirmation.user.UserID;
-      const response = await api.patch(`/roles/roles/${selectedRoleId}/enrollments/${userId}`);
-      console.log('API response:', response);
+      const response = await api.patch(
+        `/roles/roles/${selectedRoleId}/enrollments/${userId}`
+      );
+      console.log("API response:", response);
       fetchRoleUsers();
     } catch (error) {
-      console.error('Error removing user from role:', error);
+      console.error("Error removing user from role:", error);
     } finally {
       setRemoveConfirmation({ open: false, user: null });
     }
@@ -177,12 +204,13 @@ function RoleUserModal({ open, onClose, selectedRoleId }) {
     });
   };
 
-  const filteredEnrolledUsers = enrolledUsers.filter(
-    (user) => user.UserName.toLowerCase().includes(searchText.toLowerCase())
+  const filteredEnrolledUsers = enrolledUsers.filter((user) =>
+    user.UserName.toLowerCase().includes(searchText.toLowerCase())
   );
 
   const nonEnrolledUsers = allUsers.filter(
-    (user) => !enrolledUsers.some((enrolledUser) => enrolledUser.UserID === user.UserID)
+    (user) =>
+      !enrolledUsers.some((enrolledUser) => enrolledUser.UserID === user.UserID)
   );
 
   return (
@@ -201,7 +229,7 @@ function RoleUserModal({ open, onClose, selectedRoleId }) {
         },
       }}
     >
-      <DialogTitle id="role-modal-title" sx={{ textAlign: 'center', mb: 3 }}>
+      <DialogTitle id="role-modal-title" sx={{ textAlign: "center", mb: 3 }}>
         Users in Role
       </DialogTitle>
       <DialogContent>
@@ -235,7 +263,7 @@ function RoleUserModal({ open, onClose, selectedRoleId }) {
                       aria-label="delete"
                       size="small"
                       onClick={() => handleRemoveUserConfirmation(user)}
-                      sx={{ color: 'secondary.main' }}
+                      sx={{ color: "secondary.main" }}
                     >
                       <DeleteIcon />
                     </IconButton>
@@ -253,14 +281,22 @@ function RoleUserModal({ open, onClose, selectedRoleId }) {
       <DialogContent>
         <StyledAutocomplete
           options={nonEnrolledUsers ?? []}
-          getOptionLabel={(option) => option?.UserName || ''}
-          isOptionEqualToValue={(option, value) => option?.UserID === value?.UserID}
+          getOptionLabel={(option) => option?.UserName || ""}
+          isOptionEqualToValue={(option, value) =>
+            option?.UserID === value?.UserID
+          }
           onChange={(event, value) => {
             setAutocompleteValue(value);
             setSelectedAutocompleteUserIds(value.map((user) => user.UserID));
           }}
           renderInput={(params) => (
-            <TextField {...params} label="Add Users" variant="outlined" fullWidth size="small" />
+            <TextField
+              {...params}
+              label="Add Users"
+              variant="outlined"
+              fullWidth
+              size="small"
+            />
           )}
           value={autocompleteValue}
           multiple
@@ -271,8 +307,13 @@ function RoleUserModal({ open, onClose, selectedRoleId }) {
           )}
         />
       </DialogContent>
-      <DialogActions sx={{ justifyContent: 'center', mt: 3 }}>
-        <Button variant="contained" color="primary" onClick={onClose} size="small">
+      <DialogActions sx={{ justifyContent: "center", mt: 3 }}>
+        <Button
+          variant="contained"
+          color="primary"
+          onClick={onClose}
+          size="small"
+        >
           Close
         </Button>
         <Button
@@ -327,5 +368,3 @@ function RoleUserModal({ open, onClose, selectedRoleId }) {
     </Dialog>
   );
 }
-
-export default RoleUserModal;

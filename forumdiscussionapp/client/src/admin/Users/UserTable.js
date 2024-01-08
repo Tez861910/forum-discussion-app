@@ -1,5 +1,5 @@
-import * as React from 'react';
-import { useState, useEffect } from 'react';
+import * as React from "react";
+import { useState, useEffect } from "react";
 import {
   Box,
   IconButton,
@@ -12,17 +12,17 @@ import {
   Typography,
   Paper,
   TextField,
-} from '@mui/material';
-import SearchIcon from '@mui/icons-material/Search';
-import EditIcon from '@mui/icons-material/Edit';
-import DeleteIcon from '@mui/icons-material/Delete';
+} from "@mui/material";
+import SearchIcon from "@mui/icons-material/Search";
+import EditIcon from "@mui/icons-material/Edit";
+import DeleteIcon from "@mui/icons-material/Delete";
 
-function UserTable({ users, handleEditUser, handleDeleteUser }) {
-  const [searchTerm, setSearchTerm] = useState('');
+export function UserTable({ users, handleEditUser, handleDeleteUser }) {
+  const [searchTerm, setSearchTerm] = useState("");
 
   useEffect(() => {
-    setSearchTerm('');
-  }, [users]); 
+    setSearchTerm("");
+  }, [users]);
 
   const handleChange = (event) => {
     setSearchTerm(event.target.value);
@@ -34,11 +34,11 @@ function UserTable({ users, handleEditUser, handleDeleteUser }) {
 
   return (
     <TableContainer component={Paper} sx={{ mt: 3, maxHeight: 800 }}>
-      <Box sx={{ display: 'flex', justifyContent: 'space-between', p: 2 }}>
+      <Box sx={{ display: "flex", justifyContent: "space-between", p: 2 }}>
         <Typography variant="h6" component="div">
           User Table
         </Typography>
-        <Box sx={{ display: 'flex', alignItems: 'center' }}>
+        <Box sx={{ display: "flex", alignItems: "center" }}>
           <TextField
             id="search"
             type="search"
@@ -54,7 +54,7 @@ function UserTable({ users, handleEditUser, handleDeleteUser }) {
           </IconButton>
         </Box>
       </Box>
-      <Box sx={{ overflow: 'auto' }}>
+      <Box sx={{ overflow: "auto" }}>
         <Table sx={{ minWidth: 650 }} aria-label="simple table">
           <TableHead>
             <TableRow>
@@ -71,7 +71,7 @@ function UserTable({ users, handleEditUser, handleDeleteUser }) {
             {filteredUsers.map((user) => (
               <TableRow
                 key={user.UserID}
-                sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
+                sx={{ "&:last-child td, &:last-child th": { border: 0 } }}
               >
                 <TableCell component="th" scope="row">
                   {user.UserName}
@@ -104,5 +104,3 @@ function UserTable({ users, handleEditUser, handleDeleteUser }) {
     </TableContainer>
   );
 }
-
-export default UserTable;

@@ -1,22 +1,22 @@
-import palette from '../palette';
+import palette from "../palette";
 
 const primaryColor = palette.palette.default.primary.main;
 const secondaryColor = palette.palette.default.secondary.main;
-const paddingValue = '12px';
-const multilinePadding = '10px';
-const densePadding = '10.5px';
+const paddingValue = "12px";
+const multilinePadding = "10px";
+const densePadding = "10.5px";
 
-const outlinedInputStyles = {
+export const outlinedInputStyles = {
   root: {
-    '& fieldset': {
+    "& fieldset": {
       borderColor: secondaryColor,
-      transition: '0.3s',
-      boxShadow: '0px 2px 4px -1px rgba(0, 0, 0, 0.2)', 
+      transition: "0.3s",
+      boxShadow: "0px 2px 4px -1px rgba(0, 0, 0, 0.2)",
     },
-    '&:hover fieldset': {
+    "&:hover fieldset": {
       borderColor: primaryColor,
     },
-    '&.Mui-focused fieldset': {
+    "&.Mui-focused fieldset": {
       borderColor: primaryColor,
     },
   },
@@ -40,22 +40,20 @@ const outlinedInputStyles = {
     paddingBottom: densePadding,
   },
   inputMultiline: {
-    padding: '0',
+    padding: "0",
   },
   inputAdornedStart: {
-    paddingLeft: '0',
+    paddingLeft: "0",
   },
   inputAdornedEnd: {
-    paddingRight: '0',
+    paddingRight: "0",
   },
 
   inputLabel: {
-    transform: 'translate(-50%, -50%)',
-    left: '50%',
-    top: '50%',
-    position: 'absolute',
-    pointerEvents: 'none',
+    transform: "translate(-50%, -50%)",
+    left: "50%",
+    top: "50%",
+    position: "absolute",
+    pointerEvents: "none",
   },
 };
-
-export default outlinedInputStyles;

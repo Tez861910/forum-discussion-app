@@ -1,4 +1,9 @@
-import React, { useState, useEffect, useCallback, startTransition } from 'react';
+import React, {
+  useState,
+  useEffect,
+  useCallback,
+  startTransition,
+} from "react";
 import {
   Typography,
   Button,
@@ -8,19 +13,19 @@ import {
   DialogContent,
   DialogActions,
   Box,
-} from '@mui/material';
-import ThreadList from './ThreadList'; 
-import ThreadModal from './ThreadModal';
-import useApi from '../home-page/Api';
+} from "@mui/material";
+import ThreadList from "./ThreadList";
+import ThreadModal from "./ThreadModal";
+import useApi from "../home-page/Api";
 
-function ForumDiscussion({ selectedCourse: courseId }) {
-  const roleId = localStorage.getItem('roleId');
-  const userId = localStorage.getItem('userId');
+export function ForumDiscussion({ selectedCourse: courseId }) {
+  const roleId = localStorage.getItem("roleId");
+  const userId = localStorage.getItem("userId");
   const [threads, setThreads] = useState([]);
   const [selectedThread, setSelectedThread] = useState(null);
   const [showModal, setShowModal] = useState(false);
-  const [newThreadTitle, setNewThreadTitle] = useState('');
-  const [newThreadContent, setNewThreadContent] = useState('');
+  const [newThreadTitle, setNewThreadTitle] = useState("");
+  const [newThreadContent, setNewThreadContent] = useState("");
   const [showCreateModal, setShowCreateModal] = useState(false);
   const { api } = useApi();
 
@@ -28,17 +33,17 @@ function ForumDiscussion({ selectedCourse: courseId }) {
     try {
       const response = await api.get(`/threads/threads/get/${courseId}`);
       startTransition(() => {
-        setThreads(response.data[0]); 
+        setThreads(response.data[0]);
       });
     } catch (error) {
-      console.error('Error fetching threads:', error);
-      throw error; 
+      console.error("Error fetching threads:", error);
+      throw error;
     }
   }, [api, courseId]);
 
   useEffect(() => {
     fetchThreads();
-  }, [fetchThreads,courseId]);
+  }, [fetchThreads, courseId]);
 
   const handleThreadSelection = (threadId) => {
     setSelectedThread(threadId);
@@ -47,7 +52,7 @@ function ForumDiscussion({ selectedCourse: courseId }) {
 
   const handleModalClose = () => {
     setShowModal(false);
-    fetchThreads(); 
+    fetchThreads();
   };
 
   const handleOpenCreateModal = () => {
@@ -60,7 +65,7 @@ function ForumDiscussion({ selectedCourse: courseId }) {
 
   const handleCreateThread = async () => {
     try {
-      const response = await api.post('/threads/threads/create', {
+      const response = await api.post("/threads/threads/create", {
         title: newThreadTitle,
         content: newThreadContent,
         courseId,
@@ -71,26 +76,50 @@ function ForumDiscussion({ selectedCourse: courseId }) {
 
       setShowCreateModal(false);
 
-      setNewThreadTitle('');
-      setNewThreadContent('');
+      setNewThreadTitle("");
+      setNewThreadContent("");
       fetchThreads();
     } catch (error) {
-      console.error('Error creating thread:', error);
+      console.error("Error creating thread:", error);
     }
   };
 
   return (
-    <Box sx={{ my: 3, padding: 3, backgroundColor: 'primary.main', color: 'primary.contrastText' }}>
-      <Typography variant="h4" component="div" gutterBottom sx={{ fontWeight: 'bold', color: 'primary.contrastText' }}>
+    <Box
+      sx={{
+        my: 3,
+        padding: 3,
+        backgroundColor: "primary.main",
+        color: "primary.contrastText",
+      }}
+    >
+      <Typography
+        variant="h4"
+        component="div"
+        gutterBottom
+        sx={{ fontWeight: "bold", color: "primary.contrastText" }}
+      >
         Forum Discussion
       </Typography>
-      {roleId === '2' && (
+      {roleId === "2" && (
         <Box mt={2}>
-          <Button variant="contained" color="primary" onClick={handleOpenCreateModal} sx={{ mb: 2, fontWeight: 'bold' }}>
+          <Button
+            variant="contained"
+            color="primary"
+            onClick={handleOpenCreateModal}
+            sx={{ mb: 2, fontWeight: "bold" }}
+          >
             Create Thread
           </Button>
-          <Dialog open={showCreateModal} onClose={handleCloseCreateModal} maxWidth="sm" fullWidth>
-            <DialogTitle sx={{ fontWeight: 'bold', color: 'primary.main' }}>Create New Thread</DialogTitle>
+          <Dialog
+            open={showCreateModal}
+            onClose={handleCloseCreateModal}
+            maxWidth="sm"
+            fullWidth
+          >
+            <DialogTitle sx={{ fontWeight: "bold", color: "primary.main" }}>
+              Create New Thread
+            </DialogTitle>
             <DialogContent>
               <TextField
                 label="Thread Title"
@@ -98,7 +127,7 @@ function ForumDiscussion({ selectedCourse: courseId }) {
                 onChange={(e) => setNewThreadTitle(e.target.value)}
                 fullWidth
                 margin="dense"
-                sx={{ fontWeight: 'bold', color: 'text.primary' }}
+                sx={{ fontWeight: "bold", color: "text.primary" }}
               />
               <TextField
                 label="Thread Content"
@@ -108,26 +137,41 @@ function ForumDiscussion({ selectedCourse: courseId }) {
                 onChange={(e) => setNewThreadContent(e.target.value)}
                 fullWidth
                 margin="dense"
-                sx={{ fontWeight: 'bold', color: 'text.primary' }}
+                sx={{ fontWeight: "bold", color: "text.primary" }}
               />
             </DialogContent>
             <DialogActions>
-              <Button onClick={handleCloseCreateModal} color="error" sx={{ fontWeight: 'bold' }}>
+              <Button
+                onClick={handleCloseCreateModal}
+                color="error"
+                sx={{ fontWeight: "bold" }}
+              >
                 Cancel
               </Button>
-              <Button onClick={handleCreateThread} color="info" sx={{ fontWeight: 'bold' }}>
+              <Button
+                onClick={handleCreateThread}
+                color="info"
+                sx={{ fontWeight: "bold" }}
+              >
                 Create
               </Button>
             </DialogActions>
           </Dialog>
         </Box>
       )}
-        <ThreadList threads={threads} onThreadSelect={handleThreadSelection} roleId={roleId} />
+      <ThreadList
+        threads={threads}
+        onThreadSelect={handleThreadSelection}
+        roleId={roleId}
+      />
       {selectedThread && showModal && (
-        <ThreadModal threadId={selectedThread} onClose={handleModalClose} roleId={roleId} courseId={courseId} />
+        <ThreadModal
+          threadId={selectedThread}
+          onClose={handleModalClose}
+          roleId={roleId}
+          courseId={courseId}
+        />
       )}
     </Box>
   );
 }
-
-export default ForumDiscussion;

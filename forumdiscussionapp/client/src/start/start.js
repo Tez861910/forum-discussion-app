@@ -1,5 +1,5 @@
-import * as React from 'react';
-import { Link as RouterLink } from 'react-router-dom';
+import * as React from "react";
+import { Link as RouterLink } from "react-router-dom";
 import {
   AppBar,
   Toolbar,
@@ -10,14 +10,49 @@ import {
   List,
   ListItem,
   ListItemText,
-  ButtonBase,
   Avatar,
   Box,
   Paper,
-} from '@mui/material';
-import MenuIcon from '@mui/icons-material/Menu';
-import { useTheme } from '@mui/system';
-import logo from './logo.png';
+  Container,
+  Grid,
+  Card,
+  CardContent,
+} from "@mui/material";
+import MenuIcon from "@mui/icons-material/Menu";
+import { useTheme } from "@mui/system";
+import logo from "./logo.png";
+
+// Placeholder data (replace with actual data from your backend)
+const departments = [
+  {
+    DepartmentID: 1,
+    DepartmentName: "Computer Science",
+    DepartmentDescription: "Description 1",
+  },
+  {
+    DepartmentID: 2,
+    DepartmentName: "Physics",
+    DepartmentDescription: "Description 2",
+  },
+];
+
+const facultyMembers = [
+  { FacultyID: 1, FacultyName: "John Doe", DepartmentID: 1 },
+  { FacultyID: 2, FacultyName: "Jane Smith", DepartmentID: 2 },
+];
+
+const courses = [
+  {
+    CourseID: 1,
+    CourseName: "Web Development",
+    CourseDescription: "Description 1",
+  },
+  {
+    CourseID: 2,
+    CourseName: "Physics 101",
+    CourseDescription: "Description 2",
+  },
+];
 
 const NavigationButton = ({ to, color, children }) => (
   <Button
@@ -26,19 +61,19 @@ const NavigationButton = ({ to, color, children }) => (
     to={to}
     color={color}
     sx={{
-      fontSize: '1.2rem',
+      fontSize: "1.2rem",
       py: 1,
-      px: 2, 
+      px: 2,
       borderRadius: 2,
-      textTransform: 'none',
-      ml: 2, 
+      textTransform: "none",
+      ml: 2,
     }}
   >
     {children}
   </Button>
 );
 
-const Start = () => {
+export const Start = () => {
   const theme = useTheme();
   const [drawerOpen, setDrawerOpen] = React.useState(false);
 
@@ -47,9 +82,12 @@ const Start = () => {
   };
 
   return (
-    <Box sx={{p:6}}>
-      <AppBar position="static" sx={{ boxShadow: 2, bgcolor: theme.palette.background.paper }}>
-        <Toolbar sx={{ display: 'flex', justifyContent: 'space-between' }}>
+    <Box sx={{ p: 6 }}>
+      <AppBar
+        position="static"
+        sx={{ boxShadow: 2, bgcolor: theme.palette.background.paper }}
+      >
+        <Toolbar sx={{ display: "flex", justifyContent: "space-between" }}>
           <IconButton
             edge="start"
             color="inherit"
@@ -72,55 +110,96 @@ const Start = () => {
           </NavigationButton>
         </Toolbar>
       </AppBar>
-      <Drawer anchor="left" open={drawerOpen} onClose={handleDrawerToggle} sx={{ width: 240 }} > 
-        <AppBar position="static">
-          <Toolbar>
-            <Typography variant="h4" component="div">
-              Menu
-            </Typography>
-          </Toolbar>
-        </AppBar>
-        <List>
-          <ButtonBase component={ListItem} sx={{ py: 2 }}>
-            <ListItemText primary="Dummy Button 1" />
-          </ButtonBase>
-          <ButtonBase component={ListItem} sx={{ py: 2 }}>
-            <ListItemText primary="Dummy Button 2" />
-          </ButtonBase>
-        </List>
-      </Drawer>
-      <Box
-        sx={{
-          display: 'flex',
-          flexDirection: 'column',
-          alignItems: 'center',
-          justifyContent: 'center',
-          height: '100vh',
-          pt: 8,
-        }}
+      <Drawer
+        anchor="left"
+        open={drawerOpen}
+        onClose={handleDrawerToggle}
+        sx={{ width: 240 }}
       >
-        <Paper
-          elevation={3}
-          sx={{
-            p: 4, 
-            borderRadius: 2,
-            bgcolor: theme.palette.background.paper,
-            display: 'flex', 
-            flexDirection: 'column', 
-            alignItems: 'center', 
-            opacity: 0.9,
-            transition: 'opacity .3s',
-            '&:hover': { opacity: 1 },
-          }}
-        >
-          <Avatar src={logo} alt="Logo" sx={{ width: 200, height: 200 }} />
-          <Typography variant="h1" sx={{ mt: 4, textAlign: 'center' }}>
-            Welcome to the University Website!
-          </Typography>
-        </Paper>
-      </Box>
+        {/* Drawer content */}
+      </Drawer>
+      <Container maxWidth="lg">
+        <Grid container spacing={3}>
+          <Grid item xs={12}>
+            <Paper
+              elevation={3}
+              sx={{
+                p: 4,
+                borderRadius: 2,
+                bgcolor: theme.palette.background.paper,
+                display: "flex",
+                flexDirection: "column",
+                alignItems: "center",
+                opacity: 0.9,
+                transition: "opacity .3s",
+                "&:hover": { opacity: 1 },
+              }}
+            >
+              <Avatar src={logo} alt="Logo" sx={{ width: 200, height: 200 }} />
+              <Typography variant="h1" sx={{ mt: 4, textAlign: "center" }}>
+                Welcome to the University Website!
+              </Typography>
+            </Paper>
+          </Grid>
+
+          {/* Display Departments */}
+          <Grid item xs={12} md={4}>
+            <Card sx={{ height: "100%" }}>
+              <CardContent>
+                <Typography variant="h2">Departments:</Typography>
+                <List>
+                  {departments.map((department) => (
+                    <ListItem key={department.DepartmentID}>
+                      <ListItemText
+                        primary={department.DepartmentName}
+                        secondary={department.DepartmentDescription}
+                      />
+                    </ListItem>
+                  ))}
+                </List>
+              </CardContent>
+            </Card>
+          </Grid>
+
+          {/* Display Faculty Members */}
+          <Grid item xs={12} md={4}>
+            <Card sx={{ height: "100%" }}>
+              <CardContent>
+                <Typography variant="h2">Faculty Members:</Typography>
+                <List>
+                  {facultyMembers.map((faculty) => (
+                    <ListItem key={faculty.FacultyID}>
+                      <ListItemText
+                        primary={faculty.FacultyName}
+                        secondary={`Department ID: ${faculty.DepartmentID}`}
+                      />
+                    </ListItem>
+                  ))}
+                </List>
+              </CardContent>
+            </Card>
+          </Grid>
+
+          {/* Display Courses */}
+          <Grid item xs={12} md={4}>
+            <Card sx={{ height: "100%" }}>
+              <CardContent>
+                <Typography variant="h2">Courses:</Typography>
+                <List>
+                  {courses.map((course) => (
+                    <ListItem key={course.CourseID}>
+                      <ListItemText
+                        primary={course.CourseName}
+                        secondary={course.CourseDescription}
+                      />
+                    </ListItem>
+                  ))}
+                </List>
+              </CardContent>
+            </Card>
+          </Grid>
+        </Grid>
+      </Container>
     </Box>
   );
 };
-
-export default Start;

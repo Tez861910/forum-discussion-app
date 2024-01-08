@@ -1,93 +1,92 @@
-import * as React from 'react';
-import { useRoutes } from 'react-router-dom';
-import { Container, Box, Paper, useTheme} from '@mui/material';
-import useMediaQuery from '@mui/material/useMediaQuery';
-import { useNavigate } from 'react-router-dom';
-import { useCookies } from 'react-cookie'; 
-import Sidebar from './side-bar';
-import Navbar from './nav-bar';
-import AdminCourses from '../admin/Courses/AdminCourses';
-import AdminUsers from '../admin/Users/AdminUsers';
-import AdminRoles from '../admin/Roles/AdminRoles';
-import MCQForm from '../Examination/mcq-form';
-import MCQAnswerForm from '../Examination/mcq-answer-form';
-import ForumDiscussion from '../threads/Forumdiscussion';
-import Scheduler from './scheduler';
-import UserProfile from './user-profile';
-import CourseEnrollmentModal from './course-enrollment-modal';
+import * as React from "react";
+import { useRoutes } from "react-router-dom";
+import { Container, Box, Paper, useTheme } from "@mui/material";
+import useMediaQuery from "@mui/material/useMediaQuery";
+import { useNavigate } from "react-router-dom";
+import { useCookies } from "react-cookie";
+import Sidebar from "./side-bar";
+import Navbar from "./nav-bar";
+import AdminCourses from "../admin/Courses/AdminCourses";
+import AdminUsers from "../admin/Users/AdminUsers";
+import AdminRoles from "../admin/Roles/AdminRoles";
+import MCQForm from "../Examination/mcq-form";
+import MCQAnswerForm from "../Examination/mcq-answer-form";
+import ForumDiscussion from "../threads/Forumdiscussion";
+import Scheduler from "./scheduler";
+import UserProfile from "./user-profile";
+import CourseEnrollmentModal from "./course-enrollment-modal";
 
-const Home = () => {
+export const Home = () => {
   const theme = useTheme();
-  const matches = useMediaQuery(theme.breakpoints.up('md'));
-  const [roleId, setRoleId] = React.useState('');
-  const [userId,setUserId]=React.useState('');
+  const matches = useMediaQuery(theme.breakpoints.up("md"));
+  const [roleId, setRoleId] = React.useState("");
+  const [userId, setUserId] = React.useState("");
   const [refreshCourses, setRefreshCourses] = React.useState(false);
   const [navigateToPathState, setNavigateToPath] = React.useState(null);
   const [isUserProfileOpen, setUserProfileOpen] = React.useState(false);
   const [isEnrollmentModalOpen, setEnrollmentModalOpen] = React.useState(false);
   const [isLoggedIn, setIsLoggedIn] = React.useState(false);
-  const [activeView, setActiveView] = React.useState('scheduler');
+  const [activeView, setActiveView] = React.useState("scheduler");
   const [selectedCourse, setSelectedCourse] = React.useState(null);
   const [isCoursesEnrolled, setIsCoursesEnrolled] = React.useState(false);
-  const [userName, setUserName] = React.useState('');
+  const [userName, setUserName] = React.useState("");
   const [isSidebarOpen, setSidebarOpen] = React.useState(false);
-  
+
   const navigate = useNavigate();
-  const [cookies, removeCookie] = useCookies(['token', 'refreshToken']); 
+  const [cookies, removeCookie] = useCookies(["token", "refreshToken"]);
 
   const clearUserData = async () => {
     // Clear local storage
-    localStorage.removeItem('userId');
-    localStorage.removeItem('roleId');
+    localStorage.removeItem("userId");
+    localStorage.removeItem("roleId");
 
     // Clear cookies
-    removeCookie('token', { path: '/' }); 
-    removeCookie('refreshToken', { path: '/' }); 
-    console.log(`Token after removal: ${cookies.token}`);  
+    removeCookie("token", { path: "/" });
+    removeCookie("refreshToken", { path: "/" });
+    console.log(`Token after removal: ${cookies.token}`);
 
     // Update state
     setIsLoggedIn(false);
 
     // Redirect to login page
-    navigate('/login');
-  };  
+    navigate("/login");
+  };
 
   const handleRoleSpecificActions = (roleId) => {
-    if (['1', '2', '3'].includes(roleId)) {
+    if (["1", "2", "3"].includes(roleId)) {
       setIsCoursesEnrolled(true);
     }
   };
 
   React.useEffect(() => {
-    const storedRoleId = localStorage.getItem('roleId');
+    const storedRoleId = localStorage.getItem("roleId");
     if (storedRoleId) {
       setRoleId(storedRoleId);
       handleRoleSpecificActions(storedRoleId);
 
       switch (storedRoleId) {
-        case '1':
-          setActiveView('scheduler');
+        case "1":
+          setActiveView("scheduler");
           break;
-        case '2':
-        case '3':
-          setActiveView('scheduler');
+        case "2":
+        case "3":
+          setActiveView("scheduler");
           break;
         default:
-          setActiveView('scheduler');
+          setActiveView("scheduler");
       }
     }
-
 
     if (navigateToPathState && roleId) {
       navigate(navigateToPathState);
       setNavigateToPath(null);
     }
-  }, [ isLoggedIn, navigateToPathState, roleId,  navigate]);
+  }, [isLoggedIn, navigateToPathState, roleId, navigate]);
 
   const handleDrawerToggle = () => {
-    console.log('handleDrawerToggle triggered');
+    console.log("handleDrawerToggle triggered");
     setSidebarOpen(!isSidebarOpen);
-    console.log('Sidebar open state:', isSidebarOpen);
+    console.log("Sidebar open state:", isSidebarOpen);
   };
 
   const handleEnrollmentSuccess = () => {
@@ -108,7 +107,7 @@ const Home = () => {
   };
 
   const handleEnrolledCoursesButtonClick = () => {
-    setRefreshCourses((prev) => !prev); 
+    setRefreshCourses((prev) => !prev);
   };
 
   const Wrapper = ({ component: Component, view }) => {
@@ -120,25 +119,44 @@ const Home = () => {
   };
 
   const routes = useRoutes([
-    { path: 'admin-courses', element: <AdminCourses /> },
-    { path: 'admin-roles', element: <AdminRoles /> },
-    { path: 'admin-users', element: <AdminUsers /> },
-    { path: 'scheduler', element: <Wrapper component={Scheduler} view='scheduler' /> },
-    { path: 'user-profile', element: <UserProfile /> },
-    { path: 'course-enrollment-modal', element: <CourseEnrollmentModal /> },
-    { path: 'forum-discussion', element: <Wrapper component={ForumDiscussion} view='forum-discussion' /> },
-    { path: 'mcq-form', element: <Wrapper component={MCQForm} view='mcq-form' /> },
-    { path: 'mcq-answer-form', element: <Wrapper component={MCQAnswerForm} view='mcq-answer-form' /> },
+    { path: "admin-courses", element: <AdminCourses /> },
+    { path: "admin-roles", element: <AdminRoles /> },
+    { path: "admin-users", element: <AdminUsers /> },
+    {
+      path: "scheduler",
+      element: <Wrapper component={Scheduler} view="scheduler" />,
+    },
+    { path: "user-profile", element: <UserProfile /> },
+    { path: "course-enrollment-modal", element: <CourseEnrollmentModal /> },
+    {
+      path: "forum-discussion",
+      element: <Wrapper component={ForumDiscussion} view="forum-discussion" />,
+    },
+    {
+      path: "mcq-form",
+      element: <Wrapper component={MCQForm} view="mcq-form" />,
+    },
+    {
+      path: "mcq-answer-form",
+      element: <Wrapper component={MCQAnswerForm} view="mcq-answer-form" />,
+    },
   ]);
 
   return (
-    <Container sx={{ mt: 2, display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
-      <Box sx={{ flexGrow: 1, p: 2, display: 'flex', flexDirection: 'column' }}>
+    <Container
+      sx={{
+        mt: 2,
+        display: "flex",
+        flexDirection: "column",
+        alignItems: "center",
+      }}
+    >
+      <Box sx={{ flexGrow: 1, p: 2, display: "flex", flexDirection: "column" }}>
         <Navbar
           userId={userId}
           roleId={roleId}
           selectedCourse={selectedCourse}
-          isTeacherOrStudent={['2', '3'].includes(roleId)}
+          isTeacherOrStudent={["2", "3"].includes(roleId)}
           onCourseSelect={handleCourseSelect}
           handleCourseChange={handleCourseChange}
           handleDrawerToggle={() => setSidebarOpen(!isSidebarOpen)}
@@ -147,17 +165,23 @@ const Home = () => {
             navigate(view, { replace: true });
           }}
         />
-  
-        <Paper elevation={3} sx={{ p: 2, flexGrow: 1, overflow: 'auto' }}>
+
+        <Paper elevation={3} sx={{ p: 2, flexGrow: 1, overflow: "auto" }}>
           {routes}
         </Paper>
       </Box>
-  
-      <Box sx={{ display: 'flex', width: matches ? '100%' : 'auto', [theme.breakpoints.up('md')]: { maxWidth: 900 } }}>
+
+      <Box
+        sx={{
+          display: "flex",
+          width: matches ? "100%" : "auto",
+          [theme.breakpoints.up("md")]: { maxWidth: 900 },
+        }}
+      >
         <Sidebar
           open={isSidebarOpen}
           handleDrawerToggle={() => setSidebarOpen(!isSidebarOpen)}
-          key={isSidebarOpen} 
+          key={isSidebarOpen}
           isEnrollmentModalOpen={isEnrollmentModalOpen}
           setEnrollmentModalOpen={setEnrollmentModalOpen}
           handleEnrollmentSuccess={handleEnrollmentSuccess}
@@ -169,9 +193,9 @@ const Home = () => {
           isCoursesEnrolled={isCoursesEnrolled}
         />
       </Box>
-  
-      <UserProfile 
-        isOpen={isUserProfileOpen} 
+
+      <UserProfile
+        isOpen={isUserProfileOpen}
         onClose={() => setUserProfileOpen(false)}
         setUserName={setUserName}
       />
@@ -183,5 +207,3 @@ const Home = () => {
     </Container>
   );
 };
-
-export default Home;

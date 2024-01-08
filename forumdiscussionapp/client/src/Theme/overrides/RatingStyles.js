@@ -1,24 +1,22 @@
-import palette from '../palette';
+import palette from "../palette";
 
 const primaryMainColor = palette.palette.default.primary.main;
 const infoMainColor = palette.palette.default.info.main;
-const transition = '0.3s'; 
+const transition = "0.3s";
 
-const ratingStyles = {
+export const ratingStyles = {
   root: {
     color: primaryMainColor,
-    transition: transition, 
+    transition: transition,
   },
-  
+
   iconFilled: {
     color: primaryMainColor,
-    transition: transition, 
+    transition: transition,
   },
-  
+
   iconHover: {
     color: infoMainColor,
     transition: transition,
   },
 };
-
-export default ratingStyles;

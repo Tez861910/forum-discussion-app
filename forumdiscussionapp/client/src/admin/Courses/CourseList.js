@@ -1,10 +1,22 @@
-import * as React from 'react';
-import { List, ListItem, TextField, IconButton, Typography, Box } from '@mui/material';
-import CourseListItem from './CourseListItem';
-import SearchIcon from '@mui/icons-material/Search';
+import * as React from "react";
+import {
+  List,
+  ListItem,
+  TextField,
+  IconButton,
+  Typography,
+  Box,
+} from "@mui/material";
+import CourseListItem from "./CourseListItem";
+import SearchIcon from "@mui/icons-material/Search";
 
-function CourseList({ courses, handleEditCourse, handleDeleteCourse, handleCourseUserModal }) {
-  const [searchTerm, setSearchTerm] = React.useState('');
+export function CourseList({
+  courses,
+  handleEditCourse,
+  handleDeleteCourse,
+  handleCourseUserModal,
+}) {
+  const [searchTerm, setSearchTerm] = React.useState("");
 
   const handleSearchChange = (event) => {
     setSearchTerm(event.target.value);
@@ -15,10 +27,17 @@ function CourseList({ courses, handleEditCourse, handleDeleteCourse, handleCours
   );
 
   return (
-    <Box sx={{ width: '100%', bgcolor: '#fff0de', p: 2 }}>
-      <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 2 }}>
+    <Box sx={{ width: "100%", bgcolor: "#fff0de", p: 2 }}>
+      <Box
+        sx={{
+          display: "flex",
+          justifyContent: "space-between",
+          alignItems: "center",
+          marginBottom: 2,
+        }}
+      >
         <Typography variant="h6">Course List</Typography>
-        <Box sx={{ display: 'flex', alignItems: 'center' }}>
+        <Box sx={{ display: "flex", alignItems: "center" }}>
           <TextField
             type="text"
             value={searchTerm}
@@ -54,5 +73,3 @@ function CourseList({ courses, handleEditCourse, handleDeleteCourse, handleCours
     </Box>
   );
 }
-
-export default React.memo(CourseList);

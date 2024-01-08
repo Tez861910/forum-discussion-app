@@ -9,9 +9,9 @@ import {
 } from "../../body-validation/user-validation-functions/course-material-validation.js";
 
 import { handleCourseMaterialCreate } from "../../route-functions/user-function-routes/course-materials-routes/handle-course-material-create.js";
-import { handleCourseMaterialUpdate } from "../../route-functions/course-materials-routes/handle-course-material-update.js";
-import { handleCourseMaterialDelete } from "../../route-functions/course-materials-routes/handle-course-material-delete.js";
-import { handleCourseMaterialGet } from "../../route-functions/course-materials-routes/handle-course-material-get.js";
+import { handleCourseMaterialUpdate } from "../../route-functions/user-function-routes/course-materials-routes/handle-course-material-update.js";
+import { handleCourseMaterialDelete } from "../../route-functions/user-function-routes/course-materials-routes/handle-course-material-delete.js";
+import { handleCourseMaterialGet } from "../../route-functions/user-function-routes/course-materials-routes/handle-course-material-get.js";
 
 router.use(express.json());
 

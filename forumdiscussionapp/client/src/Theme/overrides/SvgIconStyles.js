@@ -1,4 +1,4 @@
-import palette from '../palette';
+import palette from "../palette";
 
 const {
   primary: { main: primaryMainColor },
@@ -7,12 +7,12 @@ const {
   error: { main: errorMainColor },
 } = palette.palette.default;
 
-const transition = '0.3s'; 
+const transition = "0.3s";
 
-const svgIconStyles = {
+export const svgIconStyles = {
   root: {
     color: primaryMainColor,
-    transition: transition, 
+    transition: transition,
   },
 
   colorPrimary: {
@@ -27,18 +27,16 @@ const svgIconStyles = {
 
   colorAction: {
     color: actionActiveColor,
-    transition: transition, 
+    transition: transition,
   },
 
   colorError: {
     color: errorMainColor,
-    transition: transition, 
+    transition: transition,
   },
 
   colorDisabled: {
     color: actionDisabledColor,
-    transition: transition, 
+    transition: transition,
   },
 };
-
-export default svgIconStyles;

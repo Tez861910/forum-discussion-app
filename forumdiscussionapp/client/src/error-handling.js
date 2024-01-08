@@ -1,7 +1,6 @@
+import React, { createContext, useContext, useState } from "react";
 
-import React, { createContext, useContext, useState } from 'react';
-
-const ErrorContext = createContext();
+export const ErrorContext = createContext();
 
 export const useError = () => useContext(ErrorContext);
 

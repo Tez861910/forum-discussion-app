@@ -1,17 +1,26 @@
-import * as React from 'react';
-import PropTypes from 'prop-types';
-import { Button, Box, Avatar, Typography, Drawer, IconButton, AppBar, Toolbar } from '@mui/material';
-import Brightness4Icon from '@mui/icons-material/Brightness4';
-import LogoutIcon from '@mui/icons-material/Logout';
-import AddIcon from '@mui/icons-material/Add';
-import ChevronLeftIcon from '@mui/icons-material/ChevronLeft';
-import CourseEnrollmentModal from './course-enrollment-modal';
-import UserProfile from './user-profile';
-import AvatarUploadModal from './AvatarUploadModal';
-import { useTheme } from '@mui/material/styles';
-import useMediaQuery from '@mui/material/useMediaQuery';
+import * as React from "react";
+import PropTypes from "prop-types";
+import {
+  Button,
+  Box,
+  Avatar,
+  Typography,
+  Drawer,
+  IconButton,
+  AppBar,
+  Toolbar,
+} from "@mui/material";
+import Brightness4Icon from "@mui/icons-material/Brightness4";
+import LogoutIcon from "@mui/icons-material/Logout";
+import AddIcon from "@mui/icons-material/Add";
+import ChevronLeftIcon from "@mui/icons-material/ChevronLeft";
+import CourseEnrollmentModal from "./course-enrollment-modal";
+import UserProfile from "./user-profile";
+import AvatarUploadModal from "./AvatarUploadModal";
+import { useTheme } from "@mui/material/styles";
+import useMediaQuery from "@mui/material/useMediaQuery";
 
-const Sidebar = ({
+export const Sidebar = ({
   open,
   handleDrawerToggle,
   isEnrollmentModalOpen,
@@ -24,18 +33,18 @@ const Sidebar = ({
   roleId,
 }) => {
   const theme = useTheme();
-  const [themeMode, setThemeMode] = React.useState('default');
-  const matches = useMediaQuery(theme.breakpoints.up('md'));
+  const [themeMode, setThemeMode] = React.useState("default");
+  const matches = useMediaQuery(theme.breakpoints.up("md"));
 
   const [isAvatarModalOpen, setAvatarModalOpen] = React.useState(false);
 
   const handleThemeChange = () => {
-    if (themeMode === 'default') {
-      setThemeMode('light');
-    } else if (themeMode === 'light') {
-      setThemeMode('dark');
+    if (themeMode === "default") {
+      setThemeMode("light");
+    } else if (themeMode === "light") {
+      setThemeMode("dark");
     } else {
-      setThemeMode('default');
+      setThemeMode("default");
     }
   };
 
@@ -44,7 +53,7 @@ const Sidebar = ({
   };
 
   const handleEnrollNowClick = () => {
-    if (roleId === '3') {
+    if (roleId === "3") {
       setEnrollmentModalOpen(true);
     }
   };
@@ -63,50 +72,59 @@ const Sidebar = ({
 
   const getRoleName = (roleId) => {
     const roleNames = {
-      '1': 'Admin',
-      '2': 'Teacher',
-      '3': 'Student',
+      1: "Admin",
+      2: "Teacher",
+      3: "Student",
     };
-    return roleNames[roleId] || 'User';
+    return roleNames[roleId] || "User";
   };
 
   return (
-    <Box sx={{ display: 'flex' }}>
+    <Box sx={{ display: "flex" }}>
       <Drawer
-        variant={matches ? 'persistent' : 'temporary'}
+        variant={matches ? "persistent" : "temporary"}
         anchor="left"
         open={open}
         onClose={handleDrawerToggle}
         sx={{
-          display: { sm: 'block' },
-          '& .MuiDrawer-paper': {
-            boxSizing: 'border-box',
+          display: { sm: "block" },
+          "& .MuiDrawer-paper": {
+            boxSizing: "border-box",
             width: 240,
-            bgcolor: 'background.default',
+            bgcolor: "background.default",
           },
         }}
         ModalProps={{
           keepMounted: true,
         }}
       >
-       <AppBar position="static">
-  <Toolbar>
-    <Typography variant="h4" component="div" sx={{ flexGrow: 1 }}>
-      Menu
-    </Typography>
-    <IconButton onClick={handleDrawerToggle} sx={{ color: 'contrastPrimary' }}>
-      <ChevronLeftIcon />
-    </IconButton>
-    <IconButton onClick={handleThemeChange} sx={{ color: 'contrastSecondary' }}>
-      <Brightness4Icon />
-    </IconButton>
-  </Toolbar>
-</AppBar>
+        <AppBar position="static">
+          <Toolbar>
+            <Typography variant="h4" component="div" sx={{ flexGrow: 1 }}>
+              Menu
+            </Typography>
+            <IconButton
+              onClick={handleDrawerToggle}
+              sx={{ color: "contrastPrimary" }}
+            >
+              <ChevronLeftIcon />
+            </IconButton>
+            <IconButton
+              onClick={handleThemeChange}
+              sx={{ color: "contrastSecondary" }}
+            >
+              <Brightness4Icon />
+            </IconButton>
+          </Toolbar>
+        </AppBar>
 
-        <Box sx={{ p: 2, display: 'flex', flexDirection: 'column', gap: 2 }}>
+        <Box sx={{ p: 2, display: "flex", flexDirection: "column", gap: 2 }}>
           {/* User Avatar */}
-          <Avatar sx={{ width: 56, height: 56, alignSelf: 'center' }} onClick={handleAvatarClick}>
-            {userName ? userName[0].toUpperCase() : 'U'}
+          <Avatar
+            sx={{ width: 56, height: 56, alignSelf: "center" }}
+            onClick={handleAvatarClick}
+          >
+            {userName ? userName[0].toUpperCase() : "U"}
           </Avatar>
 
           {/* User Role */}
@@ -115,30 +133,51 @@ const Sidebar = ({
           </Typography>
 
           {/* User Profile Button */}
-          <Button variant="contained" fullWidth onClick={handleUserProfileClick}>
+          <Button
+            variant="contained"
+            fullWidth
+            onClick={handleUserProfileClick}
+          >
             User Profile
           </Button>
 
           {/* Enroll Now Button (only for role 3) */}
-          {roleId === '3' && (
-            <Button fullWidth onClick={handleEnrollNowClick} variant="contained" startIcon={<AddIcon />}>
+          {roleId === "3" && (
+            <Button
+              fullWidth
+              onClick={handleEnrollNowClick}
+              variant="contained"
+              startIcon={<AddIcon />}
+            >
               Enroll Now
             </Button>
           )}
 
           {/* Logout Button */}
-          <Button fullWidth onClick={handleLogout} variant="contained" startIcon={<LogoutIcon />}>
+          <Button
+            fullWidth
+            onClick={handleLogout}
+            variant="contained"
+            startIcon={<LogoutIcon />}
+          >
             Logout
           </Button>
         </Box>
         {/* Course Enrollment Modal */}
-        <CourseEnrollmentModal isOpen={isEnrollmentModalOpen} onRequestClose={() => setEnrollmentModalOpen(false)} onEnrollSuccess={handleEnrollmentSuccess} />
+        <CourseEnrollmentModal
+          isOpen={isEnrollmentModalOpen}
+          onRequestClose={() => setEnrollmentModalOpen(false)}
+          onEnrollSuccess={handleEnrollmentSuccess}
+        />
 
         {/* User Profile Modal */}
         <UserProfile isOpen={isUserProfileOpen} onClose={handleModalClose} />
 
         {/* Avatar Upload Modal */}
-        <AvatarUploadModal isOpen={isAvatarModalOpen} onRequestClose={handleAvatarModalClose} />
+        <AvatarUploadModal
+          isOpen={isAvatarModalOpen}
+          onRequestClose={handleAvatarModalClose}
+        />
       </Drawer>
     </Box>
   );
@@ -155,5 +194,3 @@ Sidebar.propTypes = {
   setUserProfileOpen: PropTypes.func.isRequired,
   roleId: PropTypes.string.isRequired,
 };
-
-export default Sidebar;

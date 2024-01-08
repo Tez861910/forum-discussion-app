@@ -1,29 +1,29 @@
-import palette from '../palette';
+import palette from "../palette";
 
 const primaryMainColor = palette.palette.default.primary.main;
 const textPrimaryColor = palette.palette.default.text.primary;
-const transition = '0.3s';
+const transition = "0.3s";
 
-const tableStyles = {
+export const tableStyles = {
   defaultProps: {
     MuiTable: {
       styleOverrides: {
         root: {
           backgroundColor: primaryMainColor,
-          transition: transition, 
+          transition: transition,
         },
       },
     },
-    
+
     MuiTableCell: {
       styleOverrides: {
         root: {
           color: textPrimaryColor,
-          transition: transition, 
+          transition: transition,
         },
       },
     },
-    
+
     MuiTableHead: {
       styleOverrides: {
         root: {
@@ -32,18 +32,16 @@ const tableStyles = {
         },
       },
     },
-    
+
     MuiTableRow: {
       styleOverrides: {
         root: {
-          '&:nth-of-type(odd)': {
+          "&:nth-of-type(odd)": {
             backgroundColor: primaryMainColor,
-            transition: transition, 
+            transition: transition,
           },
         },
       },
     },
   },
 };
-
-export default tableStyles;

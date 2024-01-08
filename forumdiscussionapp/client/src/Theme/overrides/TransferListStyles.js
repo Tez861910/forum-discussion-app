@@ -1,37 +1,37 @@
-import palette from '../palette';
+import palette from "../palette";
 
 const primaryMainColor = palette.palette.default.primary.main;
 const textPrimaryColor = palette.palette.default.text.primary;
-const transition = '0.3s'; 
+const transition = "0.3s";
 
-const transferListStyles = {
+export const transferListStyles = {
   MuiList: {
     styleOverrides: {
       root: {
         backgroundColor: primaryMainColor,
-        transition: transition, 
+        transition: transition,
       },
     },
   },
-  
+
   MuiListItem: {
     styleOverrides: {
       root: {
         color: textPrimaryColor,
-        transition: transition, 
+        transition: transition,
       },
     },
   },
-  
+
   MuiCheckbox: {
     styleOverrides: {
       root: {
         color: primaryMainColor,
-        transition: transition, 
+        transition: transition,
       },
     },
   },
-  
+
   MuiButton: {
     styleOverrides: {
       root: {
@@ -41,5 +41,3 @@ const transferListStyles = {
     },
   },
 };
-
-export default transferListStyles;

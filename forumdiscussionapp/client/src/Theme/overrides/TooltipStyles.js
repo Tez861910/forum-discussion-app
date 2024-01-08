@@ -1,74 +1,72 @@
-import palette from '../palette';
+import palette from "../palette";
 
 const primaryMainColor = palette.palette.default.primary.main;
 const textPrimaryColor = palette.palette.default.text.primary;
-const transition = '0.3s'; 
+const transition = "0.3s";
 
-const tooltipStyles = {
+export const tooltipStyles = {
   tooltip: {
     backgroundColor: primaryMainColor,
     color: textPrimaryColor,
     transition: transition,
   },
-  
+
   tooltipPlacementLeft: {
     backgroundColor: primaryMainColor,
     color: textPrimaryColor,
-    transition: transition, 
+    transition: transition,
   },
-  
+
   tooltipPlacementRight: {
     backgroundColor: primaryMainColor,
     color: textPrimaryColor,
-    transition: transition, 
+    transition: transition,
   },
-  
+
   tooltipPlacementTop: {
     backgroundColor: primaryMainColor,
     color: textPrimaryColor,
-    transition: transition, 
+    transition: transition,
   },
-  
+
   tooltipPlacementBottom: {
     backgroundColor: primaryMainColor,
     color: textPrimaryColor,
-    transition: transition, 
+    transition: transition,
   },
-  
+
   arrow: {
     color: primaryMainColor,
-    transition: transition, 
+    transition: transition,
   },
-  
+
   touch: {
     color: primaryMainColor,
     transition: transition,
   },
-  
+
   popper: {
     color: primaryMainColor,
     transition: transition,
   },
-  
+
   popperInteractive: {
     color: primaryMainColor,
-    transition: transition, 
+    transition: transition,
   },
-  
+
   popperArrow: {
     color: primaryMainColor,
-    transition: transition, 
+    transition: transition,
   },
-  
+
   popperClose: {
     color: primaryMainColor,
-    transition: transition, 
+    transition: transition,
   },
-  
+
   popperOpen: {
     color: primaryMainColor,
-    transition: transition, 
+    transition: transition,
   },
 };
-
-export default tooltipStyles;

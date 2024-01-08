@@ -1,6 +1,6 @@
-import * as React from 'react';
-import axios from 'axios';
-import { Link as RouterLink, useNavigate } from 'react-router-dom';
+import * as React from "react";
+import axios from "axios";
+import { Link as RouterLink, useNavigate } from "react-router-dom";
 import {
   Container,
   Grid,
@@ -13,20 +13,20 @@ import {
   Select,
   MenuItem,
   Avatar,
-} from '@mui/material';
-import { useTheme } from '@mui/material/styles';
-import logo from '../start/logo.png';
-import SignupValidation from './sign-up-validation';
+} from "@mui/material";
+import { useTheme } from "@mui/material/styles";
+import logo from "../start/logo.png";
+import SignupValidation from "./sign-up-validation";
 
-const Signup = () => {
+export const Signup = () => {
   const [formData, setFormData] = React.useState({
-    name: '',
-    email: '',
-    password: '',
-    address: '',
-    phoneNumber: '',
-    dateOfBirth: '',
-    gender: 'Male',
+    name: "",
+    email: "",
+    password: "",
+    address: "",
+    phoneNumber: "",
+    dateOfBirth: "",
+    gender: "Male",
   });
   const navigate = useNavigate();
   const [errors, setErrors] = React.useState({});
@@ -35,41 +35,41 @@ const Signup = () => {
 
   const handleSubmit = async (event) => {
     event.preventDefault();
-    console.log('Form submitted');
+    console.log("Form submitted");
 
     const validationErrors = SignupValidation(formData);
-    console.log('Validation Errors:', validationErrors);
+    console.log("Validation Errors:", validationErrors);
     setErrors(validationErrors);
 
     if (Object.keys(validationErrors).length === 0) {
       try {
-        console.log('Sending request');
+        console.log("Sending request");
         const response = await axios.post(
-          'http://localhost:8081/signup/signup',
+          "http://localhost:8081/signup/signup",
           formData
         );
-        console.log('Response:', response);
+        console.log("Response:", response);
 
         if (response.status === 200) {
-          console.log('Signup successful');
-          setSuccessMessage(['Signup successful']);
-          navigate('/login');
+          console.log("Signup successful");
+          setSuccessMessage(["Signup successful"]);
+          navigate("/login");
           setFormData({
-            name: '',
-            email: '',
-            password: '',
-            address: '',
-            phoneNumber: '',
-            dateOfBirth: '',
-            gender: 'Male',
+            name: "",
+            email: "",
+            password: "",
+            address: "",
+            phoneNumber: "",
+            dateOfBirth: "",
+            gender: "Male",
           });
         } else {
-          console.error('Signup failed. Status:', response.status);
-          setErrors({ _error: 'Signup failed. Please try again.' });
+          console.error("Signup failed. Status:", response.status);
+          setErrors({ _error: "Signup failed. Please try again." });
         }
       } catch (error) {
-        console.error('Error signing up user:', error);
-        setErrors({ _error: 'Signup failed. Please try again.' });
+        console.error("Error signing up user:", error);
+        setErrors({ _error: "Signup failed. Please try again." });
       }
     }
   };
@@ -83,19 +83,23 @@ const Signup = () => {
           backgroundColor: theme.palette.background.paper,
           borderRadius: 2,
           opacity: 0.9,
-          transition: 'opacity .3s',
-          '&:hover': { opacity: 1 },
+          transition: "opacity .3s",
+          "&:hover": { opacity: 1 },
         }}
       >
         <Stack spacing={2} justifyContent="center" alignItems="center">
-          <Avatar src={logo} alt="Logo" sx={{ width: 100, height: 100, mb: 2 }} />
+          <Avatar
+            src={logo}
+            alt="Logo"
+            sx={{ width: 100, height: 100, mb: 2 }}
+          />
 
           <Typography variant="h3" align="center" gutterBottom>
             Sign-Up
           </Typography>
 
           {successMessage.length > 0 && (
-            <Box sx={{ color: 'green', mb: 2 }}>{successMessage}</Box>
+            <Box sx={{ color: "green", mb: 2 }}>{successMessage}</Box>
           )}
 
           <form onSubmit={handleSubmit}>
@@ -104,7 +108,9 @@ const Signup = () => {
               label="User Name"
               name="name"
               value={formData.name}
-              onChange={(e) => setFormData({ ...formData, name: e.target.value })}
+              onChange={(e) =>
+                setFormData({ ...formData, name: e.target.value })
+              }
               variant="outlined"
               error={!!errors.name}
               helperText={errors.name}
@@ -115,7 +121,9 @@ const Signup = () => {
               label="User Email"
               name="email"
               value={formData.email}
-              onChange={(e) => setFormData({ ...formData, email: e.target.value })}
+              onChange={(e) =>
+                setFormData({ ...formData, email: e.target.value })
+              }
               variant="outlined"
               error={!!errors.email}
               helperText={errors.email}
@@ -127,7 +135,9 @@ const Signup = () => {
               name="password"
               type="password"
               value={formData.password}
-              onChange={(e) => setFormData({ ...formData, password: e.target.value })}
+              onChange={(e) =>
+                setFormData({ ...formData, password: e.target.value })
+              }
               variant="outlined"
               error={!!errors.password}
               helperText={errors.password}
@@ -138,7 +148,9 @@ const Signup = () => {
               label="Address"
               name="address"
               value={formData.address}
-              onChange={(e) => setFormData({ ...formData, address: e.target.value })}
+              onChange={(e) =>
+                setFormData({ ...formData, address: e.target.value })
+              }
               variant="outlined"
             />
 
@@ -147,7 +159,9 @@ const Signup = () => {
               label="Phone Number"
               name="phoneNumber"
               value={formData.phoneNumber}
-              onChange={(e) => setFormData({ ...formData, phoneNumber: e.target.value })}
+              onChange={(e) =>
+                setFormData({ ...formData, phoneNumber: e.target.value })
+              }
               variant="outlined"
             />
 
@@ -157,7 +171,9 @@ const Signup = () => {
               name="dateOfBirth"
               type="date"
               value={formData.dateOfBirth}
-              onChange={(e) => setFormData({ ...formData, dateOfBirth: e.target.value })}
+              onChange={(e) =>
+                setFormData({ ...formData, dateOfBirth: e.target.value })
+              }
               variant="outlined"
             />
 
@@ -166,7 +182,9 @@ const Signup = () => {
               label="Gender"
               name="gender"
               value={formData.gender}
-              onChange={(e) => setFormData({ ...formData, gender: e.target.value })}
+              onChange={(e) =>
+                setFormData({ ...formData, gender: e.target.value })
+              }
               variant="outlined"
               sx={{ mt: 2 }}
             >
@@ -201,7 +219,7 @@ const Signup = () => {
                 color="secondary"
                 fullWidth
                 sx={{ opacity: 0.8 }}
-                onClick={() => navigate('/')}
+                onClick={() => navigate("/")}
               >
                 Go back to start
               </Button>
@@ -212,5 +230,3 @@ const Signup = () => {
     </Container>
   );
 };
-
-export default Signup;

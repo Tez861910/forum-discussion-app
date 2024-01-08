@@ -1,13 +1,20 @@
-import React, { useState, useEffect } from 'react';
-import { Typography, FormControl, RadioGroup, FormControlLabel, Radio, Button } from '@mui/material';
-import MCQSummary from './mcq-summary';
-import useApi from '../home-page/Api'; 
+import React, { useState, useEffect } from "react";
+import {
+  Typography,
+  FormControl,
+  RadioGroup,
+  FormControlLabel,
+  Radio,
+  Button,
+} from "@mui/material";
+import MCQSummary from "./mcq-summary";
+import useApi from "../home-page/Api";
 
-function MCQAnswerForm({ selectedCourse: courseId }) {
+export function MCQAnswerForm({ selectedCourse: courseId }) {
   const [isLoading, setIsLoading] = useState(true);
   const [questions, setQuestions] = useState([]);
   const [answers, setAnswers] = useState([]);
-  const [selectedOption, setSelectedOption] = useState('');
+  const [selectedOption, setSelectedOption] = useState("");
   const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
   const [allQuestionsAnswered, setAllQuestionsAnswered] = useState(false);
   const { api } = useApi();
@@ -15,11 +22,13 @@ function MCQAnswerForm({ selectedCourse: courseId }) {
   useEffect(() => {
     const fetchQuestions = async () => {
       try {
-        const response = await api.get(`/mcqanswerform/mcqanswerform/questions/get/${courseId}`);
+        const response = await api.get(
+          `/mcqanswerform/mcqanswerform/questions/get/${courseId}`
+        );
         setQuestions(response.data);
         setIsLoading(false);
       } catch (error) {
-        console.error('Error fetching MCQ questions:', error);
+        console.error("Error fetching MCQ questions:", error);
       }
     };
 
@@ -42,7 +51,7 @@ function MCQAnswerForm({ selectedCourse: courseId }) {
       setAllQuestionsAnswered(true);
     } else {
       setCurrentQuestionIndex(currentQuestionIndex + 1);
-      setSelectedOption('');
+      setSelectedOption("");
     }
   };
 
@@ -54,10 +63,16 @@ function MCQAnswerForm({ selectedCourse: courseId }) {
         <MCQSummary questions={questions} answers={answers} />
       ) : questions.length > 0 && currentQuestionIndex < questions.length ? (
         <div>
-          <Typography variant="h3">{questions[currentQuestionIndex].Question}</Typography>
+          <Typography variant="h3">
+            {questions[currentQuestionIndex].Question}
+          </Typography>
           <FormControl component="fieldset">
-            <RadioGroup value={selectedOption} onChange={(e) => setSelectedOption(e.target.value)}>
-              {questions[currentQuestionIndex].options && questions[currentQuestionIndex].options.length > 0 ? (
+            <RadioGroup
+              value={selectedOption}
+              onChange={(e) => setSelectedOption(e.target.value)}
+            >
+              {questions[currentQuestionIndex].options &&
+              questions[currentQuestionIndex].options.length > 0 ? (
                 questions[currentQuestionIndex].options.map((option, index) => (
                   <FormControlLabel
                     key={index}
@@ -67,7 +82,9 @@ function MCQAnswerForm({ selectedCourse: courseId }) {
                   />
                 ))
               ) : (
-                <Typography>No MCQ options available for this question.</Typography>
+                <Typography>
+                  No MCQ options available for this question.
+                </Typography>
               )}
             </RadioGroup>
           </FormControl>
@@ -76,10 +93,10 @@ function MCQAnswerForm({ selectedCourse: courseId }) {
           </Button>
         </div>
       ) : (
-        <Typography>No questions available or all questions answered.</Typography>
+        <Typography>
+          No questions available or all questions answered.
+        </Typography>
       )}
     </div>
   );
-};
-
-export default MCQAnswerForm;
+}

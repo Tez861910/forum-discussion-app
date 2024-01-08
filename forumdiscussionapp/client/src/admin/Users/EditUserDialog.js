@@ -1,4 +1,4 @@
-import * as React from 'react';
+import * as React from "react";
 import {
   Button,
   Dialog,
@@ -9,9 +9,9 @@ import {
   Select,
   MenuItem,
   Stack,
-} from '@mui/material';
+} from "@mui/material";
 
-function EditUserDialog({
+export function EditUserDialog({
   open,
   handleClose,
   handleUpdateUser,
@@ -28,53 +28,53 @@ function EditUserDialog({
     >
       <DialogTitle id="edit-dialog-title">Edit User</DialogTitle>
       <DialogContent sx={{ pt: 2 }}>
-        <Stack spacing={2} sx={{ width: '100%' }}>
+        <Stack spacing={2} sx={{ width: "100%" }}>
           <TextField
             label="Name"
             type="text"
             value={updatedUserData.UserName}
-            onChange={(e) => handleInputChange('UserName', e.target.value)}
+            onChange={(e) => handleInputChange("UserName", e.target.value)}
             fullWidth
           />
           <TextField
             label="Email"
             type="email"
             value={updatedUserData.UserEmail}
-            onChange={(e) => handleInputChange('UserEmail', e.target.value)}
+            onChange={(e) => handleInputChange("UserEmail", e.target.value)}
             fullWidth
           />
           <TextField
             label="Password"
             type="password"
             value={updatedUserData.UserPassword}
-            onChange={(e) => handleInputChange('UserPassword', e.target.value)}
+            onChange={(e) => handleInputChange("UserPassword", e.target.value)}
             fullWidth
           />
           <TextField
             label="Address"
             type="text"
             value={updatedUserData.Address}
-            onChange={(e) => handleInputChange('Address', e.target.value)}
+            onChange={(e) => handleInputChange("Address", e.target.value)}
             fullWidth
           />
           <TextField
             label="Phone Number"
             type="text"
             value={updatedUserData.PhoneNumber}
-            onChange={(e) => handleInputChange('PhoneNumber', e.target.value)}
+            onChange={(e) => handleInputChange("PhoneNumber", e.target.value)}
             fullWidth
           />
           <TextField
             label="Date of Birth"
             type="date"
             value={updatedUserData.DateOfBirth}
-            onChange={(e) => handleInputChange('DateOfBirth', e.target.value)}
+            onChange={(e) => handleInputChange("DateOfBirth", e.target.value)}
             fullWidth
           />
           <Select
             label="Gender"
             value={updatedUserData.Gender}
-            onChange={(e) => handleInputChange('Gender', e.target.value)}
+            onChange={(e) => handleInputChange("Gender", e.target.value)}
             fullWidth
           >
             <MenuItem value="Male">Male</MenuItem>
@@ -85,7 +85,7 @@ function EditUserDialog({
             label="Avatar Path"
             type="text"
             value={updatedUserData.AvatarPath}
-            onChange={(e) => handleInputChange('AvatarPath', e.target.value)}
+            onChange={(e) => handleInputChange("AvatarPath", e.target.value)}
             fullWidth
           />
         </Stack>
@@ -94,12 +94,14 @@ function EditUserDialog({
         <Button onClick={handleClose} variant="contained" color="primary">
           Cancel
         </Button>
-        <Button onClick={handleUpdateUser} variant="contained" color="secondary">
+        <Button
+          onClick={handleUpdateUser}
+          variant="contained"
+          color="secondary"
+        >
           Update
         </Button>
       </DialogActions>
     </Dialog>
   );
 }
-
-export default EditUserDialog;

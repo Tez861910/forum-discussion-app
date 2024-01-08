@@ -1,44 +1,41 @@
-import palette from '../palette';
-
+import palette from "../palette";
 
 const primaryMainColor = palette.palette.default.primary.main;
-const transition = '0.3s'; 
+const transition = "0.3s";
 
-const snackbarStyles = {
+export const snackbarStyles = {
   root: {
     backgroundColor: primaryMainColor,
-    transition: transition, 
+    transition: transition,
   },
-  
+
   anchorOriginTopCenter: {
     backgroundColor: primaryMainColor,
-    transition: transition, 
+    transition: transition,
   },
-  
+
   anchorOriginBottomCenter: {
     backgroundColor: primaryMainColor,
-    transition: transition, 
+    transition: transition,
   },
-  
+
   anchorOriginTopRight: {
     backgroundColor: primaryMainColor,
-    transition: transition, 
+    transition: transition,
   },
-  
+
   anchorOriginBottomRight: {
     backgroundColor: primaryMainColor,
-    transition: transition, 
+    transition: transition,
   },
-  
+
   anchorOriginTopLeft: {
     backgroundColor: primaryMainColor,
-    transition: transition, 
+    transition: transition,
   },
-  
+
   anchorOriginBottomLeft: {
     backgroundColor: primaryMainColor,
     transition: transition,
   },
 };
-
-export default snackbarStyles;

@@ -1,11 +1,11 @@
-import axios from 'axios';
-import { useState, useEffect } from 'react';
-import { useCookies } from 'react-cookie';
+import axios from "axios";
+import { useState, useEffect } from "react";
+import { useCookies } from "react-cookie";
 
-const useApi = () => {
+export const useApi = () => {
   const createApiInstance = () => {
     return axios.create({
-      baseURL: 'http://localhost:8081',
+      baseURL: "http://localhost:8081",
       timeout: 5000,
     });
   };
@@ -28,11 +28,11 @@ const useApi = () => {
 
     apiInstance.interceptors.response.use(
       (response) => {
-        console.log('Response:', response);
+        console.log("Response:", response);
         return response;
       },
       async (error) => {
-        console.error('Interceptor Error:', error);
+        console.error("Interceptor Error:", error);
 
         if (axios.isCancel(error)) {
           return Promise.reject(error);
@@ -41,24 +41,28 @@ const useApi = () => {
         const originalRequest = error.config;
 
         if (error.response.status === 401 && !originalRequest._retry) {
-          console.log('Refreshing Token...');
+          console.log("Refreshing Token...");
           originalRequest._retry = true;
 
           try {
-            const response = await apiInstance.post('/refresh-token', {}, {
-              headers: {
-                Authorization: `Bearer ${cookies.refreshToken}`,
-              },
-            });
+            const response = await apiInstance.post(
+              "/refresh-token",
+              {},
+              {
+                headers: {
+                  Authorization: `Bearer ${cookies.refreshToken}`,
+                },
+              }
+            );
 
             const newToken = response.data.access_token;
-            setCookie('token', newToken, { path: '/' });
+            setCookie("token", newToken, { path: "/" });
 
-            console.log('New Token:', newToken);
-            originalRequest.headers['Authorization'] = `Bearer ${newToken}`;
+            console.log("New Token:", newToken);
+            originalRequest.headers["Authorization"] = `Bearer ${newToken}`;
             return apiInstance(originalRequest);
           } catch (refreshError) {
-            console.error('Error refreshing token:', refreshError);
+            console.error("Error refreshing token:", refreshError);
             return Promise.reject(refreshError);
           }
         }
@@ -74,10 +78,10 @@ const useApi = () => {
     return initialApiInstance;
   });
 
-  const [cookies, setCookie] = useCookies(['token', 'refreshToken']);
+  const [cookies, setCookie] = useCookies(["token", "refreshToken"]);
 
   const cleanup = () => {
-    console.log('Cleanup: Request canceled due to component unmounting');
+    console.log("Cleanup: Request canceled due to component unmounting");
   };
 
   useEffect(() => {
@@ -86,5 +90,3 @@ const useApi = () => {
 
   return { api, cleanup };
 };
-
-export default useApi;
