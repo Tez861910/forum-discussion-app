@@ -1,10 +1,10 @@
 import * as React from "react";
 import { Typography, CircularProgress, Container, Stack } from "@mui/material";
-import CourseList from "./CourseList";
-import CreateCourseSection from "./CreateCourseSection";
-import DeleteConfirmationDialog from "./DeleteConfirmationDialog2";
-import CourseUserModal from "./CourseUserModal";
-import useApi from "../../home-page/Api";
+import { CourseList } from "./CourseList";
+import { CreateCourseSection } from "./CreateCourseSection";
+import { DeleteConfirmationDialog } from "./DeleteConfirmationDialog2";
+import { CourseUserModal } from "./CourseUserModal";
+import { useApi } from "../../home-page/Api";
 
 export function AdminCourses() {
   const [courses, setCourses] = React.useState([]);

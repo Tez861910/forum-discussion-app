@@ -13,8 +13,8 @@ import {
   IconButton,
 } from "@mui/material";
 import CloseIcon from "@mui/icons-material/Close";
-import CommentSection from "./comment-section";
-import useApi from "../home-page/Api";
+import { CommentSection } from "./comment-section";
+import { useApi } from "../home-page/Api";
 
 export function ThreadModal({ courseId, threadId, onClose, roleId, userId }) {
   const [thread, setThread] = React.useState({ title: "", content: "" });

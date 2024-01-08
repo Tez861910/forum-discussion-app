@@ -1,8 +1,8 @@
 import jwt from "jsonwebtoken";
 
 export const createToken = (userId, email, roleId) => {
-  const token = jwt.sign({ userId, email, roleId }, JWT_SECRET, {
-    expiresIn: TOKEN_EXPIRATION,
+  const token = jwt.sign({ userId, email, roleId }, process.env.JWT_SECRET, {
+    expiresIn: process.env.TOKEN_EXPIRATION,
   });
   console.log("Token created");
   return token;
@@ -11,8 +11,8 @@ export const createToken = (userId, email, roleId) => {
 export const createRefreshToken = (userId, email, roleId, refreshTokens) => {
   const refreshToken = jwt.sign(
     { userId, email, roleId },
-    REFRESH_TOKEN_SECRET,
-    { expiresIn: REFRESH_TOKEN_EXPIRATION }
+    process.env.REFRESH_TOKEN_SECRET,
+    { expiresIn: process.env.REFRESH_TOKEN_EXPIRATION }
   );
   refreshTokens.push(refreshToken);
   console.log("Refresh token created");
@@ -47,19 +47,23 @@ export const verifyJwt = (req, res, next) => {
 
 export const verifyRefreshToken = (req, res) => {
   const refreshToken = req.body.token;
-  if (refreshToken && refreshTokens.includes(refreshToken)) {
-    jwt.verify(refreshToken, REFRESH_TOKEN_SECRET, (err, decoded) => {
-      if (err) {
-        console.error("Refresh token verification error:", err);
-        return res.sendStatus(403);
+  if (refreshToken && refreshToken.includes(refreshToken)) {
+    jwt.verify(
+      refreshToken,
+      process.env.REFRESH_TOKEN_SECRET,
+      (err, decoded) => {
+        if (err) {
+          console.error("Refresh token verification error:", err);
+          return res.sendStatus(403);
+        }
+        const accessToken = createToken(
+          decoded.userId,
+          decoded.email,
+          decoded.roleId
+        );
+        return res.json({ accessToken });
       }
-      const accessToken = createToken(
-        decoded.userId,
-        decoded.email,
-        decoded.roleId
-      );
-      return res.json({ accessToken });
-    });
+    );
   } else {
     return res.sendStatus(403);
   }

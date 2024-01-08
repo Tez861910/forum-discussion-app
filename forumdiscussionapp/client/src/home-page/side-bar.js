@@ -14,11 +14,11 @@ import Brightness4Icon from "@mui/icons-material/Brightness4";
 import LogoutIcon from "@mui/icons-material/Logout";
 import AddIcon from "@mui/icons-material/Add";
 import ChevronLeftIcon from "@mui/icons-material/ChevronLeft";
-import CourseEnrollmentModal from "./course-enrollment-modal";
-import UserProfile from "./user-profile";
-import AvatarUploadModal from "./AvatarUploadModal";
 import { useTheme } from "@mui/material/styles";
 import useMediaQuery from "@mui/material/useMediaQuery";
+import { CourseEnrollmentModal } from "./course-enrollment-modal";
+import { UserProfile } from "./user-profile";
+import { AvatarUploadModal } from "./AvatarUploadModal";
 
 export const Sidebar = ({
   open,

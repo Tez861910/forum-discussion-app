@@ -1,4 +1,4 @@
-import palette from "../palette";
+import { palette } from "../palette";
 
 const primaryColor = palette.palette.default.primary.main;
 const contrastTextColor = palette.palette.default.primary.contrastText;

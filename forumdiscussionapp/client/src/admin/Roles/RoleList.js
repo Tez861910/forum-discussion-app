@@ -7,8 +7,8 @@ import {
   Typography,
   Box,
 } from "@mui/material";
-import RoleListItem from "./RoleListItem";
 import SearchIcon from "@mui/icons-material/Search";
+import { RoleListItem } from "./RoleListItem";
 
 export function RoleList({
   roles,

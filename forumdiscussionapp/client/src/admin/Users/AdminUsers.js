@@ -1,10 +1,10 @@
 import * as React from "react";
 import { Button, Container, Stack, Typography, Slide } from "@mui/material";
-import UserTable from "./UserTable";
-import CreateUserDialog from "./CreateUserDialog";
-import EditUserDialog from "./EditUserDialog";
-import DeleteConfirmationDialog from "./DeleteConfirmationDialog";
-import useApi from "../../home-page/Api";
+import { UserTable } from "./UserTable";
+import { CreateUserDialog } from "./CreateUserDialog";
+import { EditUserDialog } from "./EditUserDialog";
+import { DeleteConfirmationDialog } from "./DeleteConfirmationDialog";
+import { useApi } from "../../home-page/Api";
 
 const Transition = React.forwardRef((props, ref) => (
   <Slide direction="up" ref={ref} {...props} />

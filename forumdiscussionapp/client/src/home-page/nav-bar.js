@@ -12,7 +12,7 @@ import {
 } from "@mui/material";
 import { useTheme } from "@mui/material/styles";
 import MenuIcon from "@mui/icons-material/Menu";
-import EnrolledCoursesDropdown from "./enrolled-courses-dropdown";
+import { EnrolledCoursesDropdown } from "./enrolled-courses-dropdown";
 
 export const Navbar = ({
   userId,

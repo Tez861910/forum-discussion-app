@@ -7,7 +7,7 @@ import {
   Box,
   CircularProgress,
 } from "@mui/material";
-import useApi from "./Api";
+import { useApi } from "./Api";
 
 export const EnrolledCoursesDropdown = ({
   onCourseSelect,

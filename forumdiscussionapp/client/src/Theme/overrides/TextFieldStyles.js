@@ -1,4 +1,4 @@
-import palette from "../palette";
+import { palette } from "../palette";
 
 const greyColor = palette.palette.default.grey[200];
 const primaryMainColor = palette.palette.default.primary.main;

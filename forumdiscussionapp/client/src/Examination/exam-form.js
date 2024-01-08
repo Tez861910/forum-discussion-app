@@ -8,8 +8,8 @@ import {
   DialogTitle,
   DialogContent,
 } from "@mui/material";
-import MCQQuestionForm from "./mcq-question-form";
-import useApi from "../home-page/Api";
+import { MCQQuestionForm } from "./mcq-question-form";
+import { useApi } from "../home-page/Api";
 
 export function ExamForm({ onClose, courseId, fetchExams }) {
   const [examTitle, setExamTitle] = useState("");

@@ -1,10 +1,10 @@
-import palette from "../palette";
+import { palette } from "../palette";
 import logobg from "../logobg.jpg";
 
 const primaryColor = palette.palette.default.primary.main;
 const textColorPrimary = palette.palette.default.text.primary;
 
-export const cssBaseline = {
+export const cssBaselineStyles = {
   body: {
     backgroundImage: `url(${logobg})`,
     backgroundSize: "cover",

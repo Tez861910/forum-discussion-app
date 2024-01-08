@@ -4,17 +4,17 @@ import { Container, Box, Paper, useTheme } from "@mui/material";
 import useMediaQuery from "@mui/material/useMediaQuery";
 import { useNavigate } from "react-router-dom";
 import { useCookies } from "react-cookie";
-import Sidebar from "./side-bar";
-import Navbar from "./nav-bar";
-import AdminCourses from "../admin/Courses/AdminCourses";
-import AdminUsers from "../admin/Users/AdminUsers";
-import AdminRoles from "../admin/Roles/AdminRoles";
-import MCQForm from "../Examination/mcq-form";
-import MCQAnswerForm from "../Examination/mcq-answer-form";
-import ForumDiscussion from "../threads/Forumdiscussion";
-import Scheduler from "./scheduler";
-import UserProfile from "./user-profile";
-import CourseEnrollmentModal from "./course-enrollment-modal";
+import { Sidebar } from "./side-bar";
+import { Navbar } from "./nav-bar";
+import { AdminCourses } from "../admin/Courses/AdminCourses";
+import { AdminUsers } from "../admin/Users/AdminUsers";
+import { AdminRoles } from "../admin/Roles/AdminRoles";
+import { MCQForm } from "../Examination/mcq-form";
+import { MCQAnswerForm } from "../Examination/mcq-answer-form";
+import { ForumDiscussion } from "../threads/Forumdiscussion";
+import { Scheduler } from "./scheduler";
+import { UserProfile } from "./user-profile";
+import { CourseEnrollmentModal } from "./course-enrollment-modal";
 
 export const Home = () => {
   const theme = useTheme();

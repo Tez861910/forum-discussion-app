@@ -1,4 +1,4 @@
-import palette from "../palette";
+import { palette } from "../palette";
 
 const primaryMainColor = palette.palette.default.primary.main;
 const transition = "color 0.3s ease-in-out";

@@ -6,7 +6,7 @@ import compression from "compression";
 import winston from "winston";
 import dotenv from "dotenv";
 import "express-async-errors";
-import { handleError } from "./authvalid.js";
+import { handleError, logger } from "./authvalid.js";
 
 dotenv.config();
 
@@ -28,11 +28,6 @@ const corsOptions = {
   origin: process.env.CORS_ORIGIN,
   optionsSuccessStatus: 200,
 };
-
-// Logger configuration
-const logger = winston.createLogger({
-  transports: [new winston.transports.Console()],
-});
 
 // Middleware setup
 app.use(cors(corsOptions));

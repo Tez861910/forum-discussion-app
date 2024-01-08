@@ -1,4 +1,4 @@
-import palette from "../palette";
+import { palette } from "../palette";
 
 const primaryColor = palette.palette.default.primary.main;
 const textColor = palette.palette.default.text.primary;

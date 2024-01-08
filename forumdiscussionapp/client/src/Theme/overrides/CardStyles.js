@@ -1,5 +1,5 @@
 import { alpha } from "@mui/material/styles";
-import palette from "../palette";
+import { palette } from "../palette";
 
 const primaryColor = alpha(palette.palette.default.primary.main, 0.5);
 const secondaryColor = alpha(palette.palette.default.secondary.main, 0.5);

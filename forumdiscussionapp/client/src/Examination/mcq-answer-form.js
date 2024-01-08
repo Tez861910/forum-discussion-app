@@ -7,8 +7,8 @@ import {
   Radio,
   Button,
 } from "@mui/material";
-import MCQSummary from "./mcq-summary";
-import useApi from "../home-page/Api";
+import { MCQSummary } from "./mcq-summary";
+import { useApi } from "../home-page/Api";
 
 export function MCQAnswerForm({ selectedCourse: courseId }) {
   const [isLoading, setIsLoading] = useState(true);

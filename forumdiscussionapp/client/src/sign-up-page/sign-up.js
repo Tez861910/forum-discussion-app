@@ -16,7 +16,7 @@ import {
 } from "@mui/material";
 import { useTheme } from "@mui/material/styles";
 import logo from "../start/logo.png";
-import SignupValidation from "./sign-up-validation";
+import { SignUpValidation } from "./sign-up-validation";
 
 export const Signup = () => {
   const [formData, setFormData] = React.useState({
@@ -37,7 +37,7 @@ export const Signup = () => {
     event.preventDefault();
     console.log("Form submitted");
 
-    const validationErrors = SignupValidation(formData);
+    const validationErrors = SignUpValidation(formData);
     console.log("Validation Errors:", validationErrors);
     setErrors(validationErrors);
 

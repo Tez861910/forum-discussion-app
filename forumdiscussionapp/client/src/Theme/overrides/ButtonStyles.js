@@ -1,4 +1,4 @@
-import palette from "../palette";
+import { palette } from "../palette";
 
 const tertiaryColor = palette.palette.default.tertiary.main;
 const quaternaryColor = palette.palette.default.quaternary.main;

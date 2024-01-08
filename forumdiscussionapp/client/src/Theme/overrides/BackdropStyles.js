@@ -1,4 +1,4 @@
-import logobg from "../logobg.jpg";
+import { logobg } from "../logobg.jpg";
 
 export const backdropStyles = {
   root: {

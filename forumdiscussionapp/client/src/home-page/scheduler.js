@@ -17,7 +17,7 @@ import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 import Calendar from "react-calendar";
 import "react-calendar/dist/Calendar.css";
-import useApi from "./Api";
+import { useApi } from "./Api";
 
 export const Scheduler = ({ selectedCourse: courseId }) => {
   const userId = localStorage.getItem("userId");

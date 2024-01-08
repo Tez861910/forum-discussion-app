@@ -5,6 +5,9 @@
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="theme-color" content="#000000" />
   <meta name="description" content="Web site created using create-react-app" />
+  <meta name="keywords" content="Forum,Discussion,App" />
+  <meta name="author" content="Your Name" />
+  <link rel="icon" href="/favicon.ico" />
   <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png" />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
@@ -18,30 +21,7 @@
   />  
   <link rel="manifest" href="/manifest.json" />
   <title>Forum Discussion App</title>
-  <script>
-    if (window.MSInputMethodContext && document.documentMode) {
-      (async () => {
-        try {
-          const { createTheme } = await import('@mui/material/styles');
-          const theme = createTheme({
-            typography: {
-              fontFamily: '"Roboto", "Helvetica", "Arial", sans-serif',
-            },
-            components: {
-              MuiButton: {
-                defaultProps: {
-                  disableRipple: true,
-                },
-              },
-            },
-          });
-          window.MUI_THEME = theme;
-        } catch (error) {
-          console.error("Error creating MUI theme:", error);
-        }
-      })();
-    }
-  </script>
+  <script src="script.js"></script>
 </head>
 <body>
   <noscript>You need to enable JavaScript to run this app.</noscript>

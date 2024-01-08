@@ -8,7 +8,7 @@ import {
   CircularProgress,
   Box,
 } from "@mui/material";
-import useApi from "../home-page/Api";
+import { useApi } from "../home-page/Api";
 
 export const ThreadList = ({ threads, onThreadSelect }) => {
   const [loadingUsernames, setLoadingUsernames] = useState(true);

@@ -39,10 +39,13 @@ export const Login = () => {
   const handleSubmit = async (event) => {
     event.preventDefault();
     try {
-      const response = await axios.post("http://localhost:8081/Login/login", {
-        email: values.email,
-        password: values.password,
-      });
+      const response = await axios.post(
+        "http://localhost:8081/auth/login/login",
+        {
+          email: values.email,
+          password: values.password,
+        }
+      );
       if (response.data.success) {
         handleLoginSuccess(response.data);
       } else {

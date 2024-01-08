@@ -1,37 +1,21 @@
 import mysql from "mysql2/promise";
+import dotenv from "dotenv";
 
-// Define the MySQL database connection configuration
-const dbConfig = {
-  host: "localhost",
-  user: "root",
-  password: "",
-  database: "universitysystem",
-  port: 3307,
-};
+dotenv.config();
 
-let connection;
+const pool = mysql.createPool({
+  host: process.env.DB_HOST,
+  user: process.env.DB_USER,
+  password: process.env.DB_PASSWORD,
+  database: process.env.DB_NAME,
+  port: process.env.DB_PORT,
+  waitForConnections: true,
+  connectionLimit: 10,
+  queueLimit: 0,
+});
 
-export const handleDisconnect = async () => {
-  try {
-    connection = await mysql.createConnection(dbConfig);
-    console.log("Connected to the MySQL database");
-  } catch (err) {
-    console.error("MySQL Database connection error:", err);
-    setTimeout(handleDisconnect, 2000);
-  }
-
-  connection.on("error", async (err) => {
-    console.error("MySQL Database error", err);
-    if (err.code === "PROTOCOL_CONNECTION_LOST") {
-      await handleDisconnect();
-    } else {
-      throw err;
-    }
-  });
-};
-
-// Custom MySQL query function that returns a promise
 export const query = async (sql, values) => {
+  const connection = await pool.getConnection();
   try {
     const [results] = await connection.query(sql, values);
     return results;
@@ -39,25 +23,7 @@ export const query = async (sql, values) => {
     console.error("MySQL SQL Error:", error);
     console.error("MySQL SQL Query:", sql);
     throw error;
+  } finally {
+    connection.release();
   }
 };
-
-// Close MySQL connection function
-export const close = async () => {
-  try {
-    await connection.end();
-    console.log("MySQL Database connection closed");
-  } catch (err) {
-    console.error("Error closing MySQL connection:", err);
-    throw err;
-  }
-};
-
-// Immediately Invoked Function Expression (IIFE) to handle disconnect
-(async () => {
-  try {
-    await handleDisconnect();
-  } catch (err) {
-    console.error(err);
-  }
-})();

@@ -14,7 +14,7 @@ import Typography from "@mui/material/Typography";
 import SearchIcon from "@mui/icons-material/Search";
 import InputAdornment from "@mui/material/InputAdornment";
 import Autocomplete from "@mui/material/Autocomplete";
-import useApi from "./Api";
+import { useApi } from "./Api";
 
 export const CourseEnrollmentModal = ({
   isOpen,

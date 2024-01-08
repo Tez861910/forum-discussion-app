@@ -8,24 +8,22 @@ import {
 import { ThemeProvider, CssBaseline } from "@mui/material";
 import { ErrorBoundary } from "react-error-boundary";
 import { useCookies } from "react-cookie";
-import theme from "./Theme/Theme";
+import { theme } from "./Theme/Theme";
 
-const AdminCourses = React.lazy(() => import("./admin/Courses/AdminCourses"));
-const AdminRoles = React.lazy(() => import("./admin/Roles/AdminRoles"));
-const AdminUsers = React.lazy(() => import("./admin/Users/AdminUsers"));
-const Scheduler = React.lazy(() => import("./home-page/scheduler"));
-const UserProfile = React.lazy(() => import("./home-page/user-profile"));
-const CourseEnrollmentModal = React.lazy(() =>
-  import("./home-page/course-enrollment-modal")
-);
-const ForumDiscussion = React.lazy(() => import("./threads/Forumdiscussion"));
-const CommentSection = React.lazy(() => import("./threads/comment-section"));
-const MCQForm = React.lazy(() => import("./Examination/mcq-form"));
-const MCQAnswerForm = React.lazy(() => import("./Examination/mcq-answer-form"));
-const Home = React.lazy(() => import("./home-page/home"));
-const Login = React.lazy(() => import("./login/login"));
-const Start = React.lazy(() => import("./start/start"));
-const Signup = React.lazy(() => import("./sign-up-page/sign-up"));
+import { AdminCourses } from "./admin/Courses/AdminCourses";
+import { AdminRoles } from "./admin/Roles/AdminRoles";
+import { AdminUsers } from "./admin/Users/AdminUsers";
+import { Scheduler } from "./home-page/scheduler";
+import { UserProfile } from "./home-page/user-profile";
+import { CourseEnrollmentModal } from "./home-page/course-enrollment-modal";
+import { ForumDiscussion } from "./threads/Forumdiscussion";
+import { CommentSection } from "./threads/comment-section";
+import { MCQForm } from "./Examination/mcq-form";
+import { MCQAnswerForm } from "./Examination/mcq-answer-form";
+import { Home } from "./home-page/home";
+import { Login } from "./login/login";
+import { Start } from "./start/start";
+import { Signup } from "./sign-up-page/sign-up";
 
 function ErrorFallback({ error, resetErrorBoundary }) {
   return (

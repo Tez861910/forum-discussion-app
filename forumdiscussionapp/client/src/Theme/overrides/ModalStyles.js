@@ -1,4 +1,4 @@
-import palette from "../palette";
+import { palette } from "../palette";
 
 const backgroundColor = palette.palette.default.background.default;
 

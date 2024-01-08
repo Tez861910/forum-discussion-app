@@ -18,7 +18,7 @@ import {
   Save as SaveIcon,
   Delete as DeleteIcon,
 } from "@mui/icons-material";
-import useApi from "../home-page/Api";
+import { useApi } from "../home-page/Api";
 
 const ResponseCard = styled(Box)(({ theme }) => ({
   marginBottom: theme.spacing(2),

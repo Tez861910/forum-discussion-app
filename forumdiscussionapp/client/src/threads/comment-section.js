@@ -15,8 +15,8 @@ import {
   Save as SaveIcon,
   Delete as DeleteIcon,
 } from "@mui/icons-material";
-import Responses from "./Responses";
-import useApi from "../home-page/Api";
+import { Responses } from "./Responses";
+import { useApi } from "../home-page/Api";
 
 const CommentItem = styled(Box)(({ theme }) => ({
   marginBottom: theme.spacing(2),

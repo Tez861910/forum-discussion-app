@@ -9,8 +9,8 @@ import {
   DialogContent,
   Box,
 } from "@mui/material";
-import ExamForm from "./exam-form";
-import useApi from "../home-page/Api";
+import { ExamForm } from "./exam-form";
+import { useApi } from "../home-page/Api";
 
 export function MCQForm({ selectedCourse: courseId }) {
   const [showExamForm, setShowExamForm] = useState(false);

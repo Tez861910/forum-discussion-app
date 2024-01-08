@@ -10,17 +10,17 @@ import { validateLogin } from "../../body-validation/auth-validation-functions/l
 const router = express.Router();
 
 router.post("/login", async (req, res) => {
-  const { email, password } = req.body;
+  const { email, password } = req.body || {};
 
   try {
     // Validate request body
-    const validationResult = validateLogin({ email, password });
+    /*const validationResult = validateLogin({ email, password });
 
     if (validationResult.error) {
       return res
         .status(400)
         .json({ error: validationResult.error.details[0].message });
-    }
+    }*/
 
     if (!email || !password) {
       console.log("Email and password are required.");

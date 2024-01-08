@@ -7,8 +7,8 @@ import {
   Typography,
   Box,
 } from "@mui/material";
-import CourseListItem from "./CourseListItem";
 import SearchIcon from "@mui/icons-material/Search";
+import { CourseListItem } from "./CourseListItem";
 
 export function CourseList({
   courses,

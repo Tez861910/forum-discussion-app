@@ -1,4 +1,4 @@
-import palette from "../palette";
+import { palette } from "../palette";
 
 const greyColor = palette.palette.default.grey[200];
 const pulseAnimation = "$pulse 1.5s ease-in-out 0.5s infinite";

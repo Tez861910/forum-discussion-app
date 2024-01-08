@@ -13,7 +13,7 @@ import ArrowBackIcon from "@mui/icons-material/ArrowBack";
 import EditIcon from "@mui/icons-material/Edit";
 import CancelIcon from "@mui/icons-material/Cancel";
 import SaveIcon from "@mui/icons-material/Save";
-import useApi from "./Api";
+import { useApi } from "./Api";
 
 export const UserProfile = ({ isOpen, onClose, setUserName }) => {
   const [newName, setNewName] = useState("");

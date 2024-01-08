@@ -14,9 +14,9 @@ import {
   DialogActions,
   Box,
 } from "@mui/material";
-import ThreadList from "./ThreadList";
-import ThreadModal from "./ThreadModal";
-import useApi from "../home-page/Api";
+import { ThreadList } from "./ThreadList";
+import { ThreadModal } from "./ThreadModal";
+import { useApi } from "../home-page/Api";
 
 export function ForumDiscussion({ selectedCourse: courseId }) {
   const roleId = localStorage.getItem("roleId");
