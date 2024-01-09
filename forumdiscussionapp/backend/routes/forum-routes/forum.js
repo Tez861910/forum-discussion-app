@@ -4,6 +4,7 @@ import {
   validateForumCreate,
   validateForumUpdate,
   validateForumGetById,
+  validateThreadGetCourseId,
 } from "../../body-validation/forum-validation-functions/forum-validation.js";
 
 import { handleForumCreate } from "../../route-functions/forum-function-routes/forum-routes/handle-forum-create.js";
@@ -11,10 +12,19 @@ import { handleForumGetById } from "../../route-functions/forum-function-routes/
 import { handleForumGetAll } from "../../route-functions/forum-function-routes/forum-routes/handle-forum-get-all.js";
 import { handleForumUpdateById } from "../../route-functions/forum-function-routes/forum-routes/handle-forum-update-id.js";
 import { handleForumDeleteById } from "../../route-functions/forum-function-routes/forum-routes/handle-forum-delete-id.js";
+import { handleThreadsGetCourseId } from "../../route-functions/forum-function-routes/forum-routes/handle-forum-get-by-courseid.js";
 
 const router = express.Router();
 
 router.use(express.json());
+
+// Endpoint to get threads for a specific course
+router.get(
+  "/get/:courseId",
+  verifyJwt,
+  validateThreadGetCourseId,
+  handleThreadsGetCourseId
+);
 
 // Endpoint to get a forum by forumId
 router.get(

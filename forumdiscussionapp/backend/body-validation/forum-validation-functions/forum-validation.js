@@ -4,20 +4,30 @@ import { validate } from "../../authvalid.js";
 // Validation middleware for creating a forum
 export const validateForumCreate = validate(
   Joi.object({
-    // Define the schema for creating a forum
     // Adjust the properties and validation rules according to your needs
-    title: Joi.string().required(),
-    content: Joi.string().required(),
+    courseId: Joi.number().integer().min(1).required(),
+    forumName: Joi.string().required(),
+    forumDescription: Joi.string().required(),
+    createdByUserId: Joi.number().integer().min(1).required(),
   })
 );
 
 // Validation middleware for updating a forum
 export const validateForumUpdate = validate(
   Joi.object({
-    // Define the schema for updating a forum
     // Adjust the properties and validation rules according to your needs
-    title: Joi.string(),
-    content: Joi.string(),
+    forumId: Joi.number().integer().min(1).required(),
+    forumName: Joi.string(),
+    forumDescription: Joi.string(),
+    userId: Joi.number().integer().min(1).required(),
+  })
+);
+
+// Validation middleware for getting forums by courseId
+export const validateThreadGetCourseId = validate(
+  Joi.object({
+    // For example:
+    courseId: Joi.number().integer().min(1).required(),
   })
 );
 

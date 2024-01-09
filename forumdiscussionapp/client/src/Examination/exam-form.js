@@ -33,7 +33,7 @@ export function ExamForm({ onClose, courseId, fetchExams }) {
       };
 
       try {
-        const response = await api.post("/mcqform/mcqform/examsave", examData);
+        const response = await api.post("/exams/exams/create", examData);
 
         if (response.data.success) {
           fetchExams();

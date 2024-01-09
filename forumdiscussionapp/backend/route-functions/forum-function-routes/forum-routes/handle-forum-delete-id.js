@@ -5,7 +5,7 @@ export const handleForumDeleteById = async (req, res) => {
 
   try {
     const sql = "DELETE FROM Forums WHERE ForumID = ?";
-    const [result] = await query(sql, [forumId]);
+    const result = await query(sql, [forumId]);
 
     if (result.affectedRows === 1) {
       console.log("Forum deleted successfully");

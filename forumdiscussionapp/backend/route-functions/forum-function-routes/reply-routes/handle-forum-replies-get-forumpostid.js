@@ -5,7 +5,7 @@ export const handleForumReplyGetForumPostId = async (req, res) => {
 
   try {
     const sql = "SELECT * FROM ForumsReplies WHERE ForumPostID = ?";
-    const [result] = await query(sql, [forumPostId]);
+    const result = await query(sql, [forumPostId]);
 
     console.log(
       "Forum replies retrieved successfully for forumPostId:",

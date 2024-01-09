@@ -23,12 +23,12 @@ export const validateThreadUpdate = validate(
   })
 );
 
-// Validation middleware for getting threads by courseId
-export const validateThreadGetCourseId = validate(
+// Validation middleware for getting threads by forumId
+export const validateThreadGetForumId = validate(
   Joi.object({
-    // Define the required properties for getting threads by courseId
+    // Define the required properties for getting threads by forumId
     // For example:
-    courseId: Joi.number().integer().min(1).required(),
+    forumId: Joi.number().integer().min(1).required(),
   })
 );
 

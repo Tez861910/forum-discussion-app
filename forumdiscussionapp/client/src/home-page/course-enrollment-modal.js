@@ -29,7 +29,7 @@ export const CourseEnrollmentModal = ({
 
   const fetchCourses = useCallback(async () => {
     try {
-      const response = await api.get("/courses/courses/get");
+      const response = await api.get("/users/courses/get");
 
       if (response.status === 200) {
         setCourses(response.data.courses);
@@ -112,7 +112,7 @@ export const CourseEnrollmentModal = ({
         return;
       }
 
-      const response = await api.post("/courses/courses/enroll", {
+      const response = await api.post("/users/usercourses/enroll", {
         userId: userId,
         courseIds: selectedCourses,
       });

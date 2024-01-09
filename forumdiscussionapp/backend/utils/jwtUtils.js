@@ -8,13 +8,12 @@ export const createToken = (userId, email, roleId) => {
   return token;
 };
 
-export const createRefreshToken = (userId, email, roleId, refreshTokens) => {
+export const createRefreshToken = (userId, email, roleId) => {
   const refreshToken = jwt.sign(
     { userId, email, roleId },
     process.env.REFRESH_TOKEN_SECRET,
     { expiresIn: process.env.REFRESH_TOKEN_EXPIRATION }
   );
-  refreshTokens.push(refreshToken);
   console.log("Refresh token created");
   return refreshToken;
 };
@@ -26,7 +25,7 @@ export const verifyJwt = (req, res, next) => {
   if (authHeader && authHeader.startsWith("Bearer ")) {
     const token = authHeader.slice("Bearer ".length);
 
-    jwt.verify(token, JWT_SECRET, (err, decoded) => {
+    jwt.verify(token, process.env.JWT_SECRET, (err, decoded) => {
       if (err) {
         handleJwtVerificationError(err, res);
       }

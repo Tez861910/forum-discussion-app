@@ -27,7 +27,7 @@ export function ThreadModal({ courseId, threadId, onClose, roleId, userId }) {
       try {
         if (threadId) {
           const response = await api.get(
-            `/threads/threads/getThread/${threadId}`
+            `/forums/threads/getThread/${threadId}`
           );
           const threadData = response.data?.thread;
 
@@ -51,14 +51,13 @@ export function ThreadModal({ courseId, threadId, onClose, roleId, userId }) {
 
   const handleSaveChanges = async () => {
     try {
-      await api.put(`/threads/threads/update/${threadId}`, {
+      await api.put(`/forums/threads/update/${threadId}`, {
         title: editedTitle,
         content: editedContent,
         userId,
         courseId,
       });
 
-      // Directly update state with edited values
       setThread((prevThread) => ({
         ...prevThread,
         ThreadTitle: editedTitle,
@@ -72,7 +71,7 @@ export function ThreadModal({ courseId, threadId, onClose, roleId, userId }) {
 
   const handleDelete = async () => {
     try {
-      await api.delete(`/threads/threads/delete/${threadId}`);
+      await api.delete(`/forums/threads/delete/${threadId}`);
       onClose();
     } catch (error) {
       console.error("Error deleting thread:", error);

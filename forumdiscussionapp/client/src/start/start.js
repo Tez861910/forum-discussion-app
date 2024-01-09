@@ -17,12 +17,12 @@ import {
   Grid,
   Card,
   CardContent,
+  Stack,
 } from "@mui/material";
 import MenuIcon from "@mui/icons-material/Menu";
 import { useTheme } from "@mui/system";
 import logo from "./logo.png";
 
-// Placeholder data (replace with actual data from your backend)
 const departments = [
   {
     DepartmentID: 1,
@@ -82,124 +82,133 @@ export const Start = () => {
   };
 
   return (
-    <Box sx={{ p: 6 }}>
-      <AppBar
-        position="static"
-        sx={{ boxShadow: 2, bgcolor: theme.palette.background.paper }}
-      >
-        <Toolbar sx={{ display: "flex", justifyContent: "space-between" }}>
-          <IconButton
-            edge="start"
-            color="inherit"
-            aria-label="menu"
-            sx={{ mr: 2 }}
-            onClick={handleDrawerToggle}
-          >
-            <MenuIcon />
-          </IconButton>
-          <Box sx={{ flexGrow: 1 }}>
-            <Typography variant="h3" component="div">
-              University Website
-            </Typography>
-          </Box>
-          <NavigationButton to="/login" color="primary" sx={{ ml: 1 }}>
-            Login
-          </NavigationButton>
-          <NavigationButton to="/sign-up" color="secondary" sx={{ ml: 1 }}>
-            Signup
-          </NavigationButton>
-        </Toolbar>
-      </AppBar>
-      <Drawer
-        anchor="left"
-        open={drawerOpen}
-        onClose={handleDrawerToggle}
-        sx={{ width: 240 }}
-      >
-        {/* Drawer content */}
-      </Drawer>
-      <Container maxWidth="lg">
-        <Grid container spacing={3}>
-          <Grid item xs={12}>
-            <Paper
-              elevation={3}
-              sx={{
-                p: 4,
-                borderRadius: 2,
-                bgcolor: theme.palette.background.paper,
-                display: "flex",
-                flexDirection: "column",
-                alignItems: "center",
-                opacity: 0.9,
-                transition: "opacity .3s",
-                "&:hover": { opacity: 1 },
-              }}
+    <React.Suspense fallback={<div>Loading...</div>}>
+      <Container sx={{ p: 6, mb: 4, mt: 4 }}>
+        <AppBar
+          position="static"
+          sx={{ boxShadow: 2, bgcolor: theme.palette.background.paper }}
+        >
+          <Toolbar sx={{ display: "flex", justifyContent: "space-between" }}>
+            <IconButton
+              edge="start"
+              color="inherit"
+              aria-label="menu"
+              sx={{ mr: 2 }}
+              onClick={handleDrawerToggle}
             >
-              <Avatar src={logo} alt="Logo" sx={{ width: 200, height: 200 }} />
-              <Typography variant="h1" sx={{ mt: 4, textAlign: "center" }}>
-                Welcome to the University Website!
+              <MenuIcon />
+            </IconButton>
+            <Box sx={{ flexGrow: 1 }}>
+              <Typography variant="h3" component="div">
+                University Website
               </Typography>
-            </Paper>
-          </Grid>
+            </Box>
+            <Stack direction="row" spacing={1}>
+              <NavigationButton to="/login" color="primary">
+                Login
+              </NavigationButton>
+              <NavigationButton to="/sign-up" color="secondary">
+                Signup
+              </NavigationButton>
+            </Stack>
+          </Toolbar>
+        </AppBar>
+        <Drawer
+          anchor="left"
+          open={drawerOpen}
+          onClose={handleDrawerToggle}
+          sx={{ width: 240 }}
+        >
+          {/* Drawer content */}
+        </Drawer>
+        <Container maxWidth="lg">
+          <Grid container spacing={3}>
+            <Grid item xs={12}>
+              <Paper
+                elevation={3}
+                sx={{
+                  p: 4,
+                  mt: 4,
+                  borderRadius: 2,
+                  bgcolor: theme.palette.background.paper,
+                  display: "flex",
+                  flexDirection: "column",
+                  alignItems: "center",
+                  opacity: 0.9,
+                  transition: "opacity .3s",
+                  "&:hover": { opacity: 1 },
+                }}
+              >
+                <Avatar
+                  src={logo}
+                  alt="Logo"
+                  sx={{ width: 200, height: 200 }}
+                />
+                <Typography variant="h1" sx={{ mt: 4, textAlign: "center" }}>
+                  Welcome to the University Website!
+                </Typography>
+              </Paper>
+            </Grid>
 
-          {/* Display Departments */}
-          <Grid item xs={12} md={4}>
-            <Card sx={{ height: "100%" }}>
-              <CardContent>
-                <Typography variant="h2">Departments:</Typography>
-                <List>
-                  {departments.map((department) => (
-                    <ListItem key={department.DepartmentID}>
-                      <ListItemText
-                        primary={department.DepartmentName}
-                        secondary={department.DepartmentDescription}
-                      />
-                    </ListItem>
-                  ))}
-                </List>
-              </CardContent>
-            </Card>
-          </Grid>
+            {/* Display Departments */}
+            <Grid item xs={12} md={4}>
+              <Card sx={{ height: "100%" }}>
+                <CardContent>
+                  <Typography variant="h2">Departments:</Typography>
+                  <List>
+                    {departments.map((department) => (
+                      <ListItem key={department.DepartmentID}>
+                        <ListItemText
+                          primary={department.DepartmentName}
+                          secondary={department.DepartmentDescription}
+                        />
+                      </ListItem>
+                    ))}
+                  </List>
+                </CardContent>
+              </Card>
+            </Grid>
 
-          {/* Display Faculty Members */}
-          <Grid item xs={12} md={4}>
-            <Card sx={{ height: "100%" }}>
-              <CardContent>
-                <Typography variant="h2">Faculty Members:</Typography>
-                <List>
-                  {facultyMembers.map((faculty) => (
-                    <ListItem key={faculty.FacultyID}>
-                      <ListItemText
-                        primary={faculty.FacultyName}
-                        secondary={`Department ID: ${faculty.DepartmentID}`}
-                      />
-                    </ListItem>
-                  ))}
-                </List>
-              </CardContent>
-            </Card>
-          </Grid>
+            {/* Display Faculty Members */}
+            <Grid item xs={12} md={4}>
+              <Card sx={{ height: "100%" }}>
+                <CardContent>
+                  <Typography variant="h2">Faculty Members:</Typography>
+                  <List>
+                    {facultyMembers.map((faculty) => (
+                      <ListItem key={faculty.FacultyID}>
+                        <ListItemText
+                          primary={faculty.FacultyName}
+                          secondary={`Department ID: ${faculty.DepartmentID}`}
+                        />
+                      </ListItem>
+                    ))}
+                  </List>
+                </CardContent>
+              </Card>
+            </Grid>
 
-          {/* Display Courses */}
-          <Grid item xs={12} md={4}>
-            <Card sx={{ height: "100%" }}>
-              <CardContent>
-                <Typography variant="h2">Courses:</Typography>
-                <List>
-                  {courses.map((course) => (
-                    <ListItem key={course.CourseID}>
-                      <ListItemText
-                        primary={course.CourseName}
-                        secondary={course.CourseDescription}
-                      />
-                    </ListItem>
-                  ))}
-                </List>
-              </CardContent>
-            </Card>
+            {/* Display Courses */}
+            <Grid item xs={12} md={4}>
+              <Card sx={{ height: "100%" }}>
+                <CardContent>
+                  <Typography variant="h2">Courses:</Typography>
+                  <List>
+                    {courses.map((course) => (
+                      <ListItem key={course.CourseID}>
+                        <ListItemText
+                          primary={course.CourseName}
+                          secondary={course.CourseDescription}
+                        />
+                      </ListItem>
+                    ))}
+                  </List>
+                </CardContent>
+              </Card>
+            </Grid>
           </Grid>
-        </Grid>
+        </Container>
       </Container>
-    </Box>
+    </React.Suspense>
   );
 };

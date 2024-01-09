@@ -13,6 +13,8 @@ import {
   Select,
   MenuItem,
   Avatar,
+  FormControl,
+  InputLabel,
 } from "@mui/material";
 import { useTheme } from "@mui/material/styles";
 import logo from "../start/logo.png";
@@ -26,7 +28,7 @@ export const Signup = () => {
     address: "",
     phoneNumber: "",
     dateOfBirth: "",
-    gender: "Male",
+    gender: "",
   });
   const navigate = useNavigate();
   const [errors, setErrors] = React.useState({});
@@ -61,7 +63,7 @@ export const Signup = () => {
             address: "",
             phoneNumber: "",
             dateOfBirth: "",
-            gender: "Male",
+            gender: "",
           });
         } else {
           console.error("Signup failed. Status:", response.status);
@@ -177,21 +179,21 @@ export const Signup = () => {
               variant="outlined"
             />
 
-            <Select
-              fullWidth
-              label="Gender"
-              name="gender"
-              value={formData.gender}
-              onChange={(e) =>
-                setFormData({ ...formData, gender: e.target.value })
-              }
-              variant="outlined"
-              sx={{ mt: 2 }}
-            >
-              <MenuItem value="Male">Male</MenuItem>
-              <MenuItem value="Female">Female</MenuItem>
-              <MenuItem value="Other">Other</MenuItem>
-            </Select>
+            <FormControl fullWidth variant="outlined" sx={{ mt: 2 }}>
+              <InputLabel htmlFor="gender">Gender</InputLabel>
+              <Select
+                label="Gender"
+                name="gender"
+                value={formData.gender}
+                onChange={(e) =>
+                  setFormData({ ...formData, gender: e.target.value })
+                }
+              >
+                <MenuItem value="Male">Male</MenuItem>
+                <MenuItem value="Female">Female</MenuItem>
+                <MenuItem value="Other">Other</MenuItem>
+              </Select>
+            </FormControl>
 
             <Button
               type="submit"

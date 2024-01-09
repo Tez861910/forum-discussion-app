@@ -3,7 +3,7 @@ import cors from "cors";
 import { verifyJwt } from "../../authvalid.js";
 import {
   validateForumPostCreate,
-  validateForumPostUpdate,
+  validateForumPostUpdateById,
   validateForumPostDelete,
   validateForumPostGetForumId,
 } from "../../body-validation/forum-validation-functions/post-validation.js";
@@ -34,7 +34,7 @@ router.post(
 router.put(
   "/update/:forumPostId",
   verifyJwt,
-  validateForumPostUpdate,
+  validateForumPostUpdateById,
   handleForumPostUpdateById
 );
 

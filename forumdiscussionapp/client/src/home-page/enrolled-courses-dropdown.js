@@ -21,9 +21,11 @@ export const EnrolledCoursesDropdown = ({
   const { api } = useApi();
 
   const handleCourseChange = (courseId) => {
-    setSelectedCourse(courseId);
-    onCourseSelect(courseId);
-    onCourseChange(courseId);
+    if (courseId) {
+      setSelectedCourse(courseId);
+      onCourseSelect(courseId);
+      onCourseChange(courseId);
+    }
   };
 
   const fetchUserCourses = useCallback(async () => {
@@ -43,27 +45,23 @@ export const EnrolledCoursesDropdown = ({
         setUserCourses(response.data.userCourses);
       } else {
         console.error("Failed to fetch user courses:", response.status);
-        // Consider displaying an error message to the user
       }
     } catch (error) {
       console.error("Error fetching user courses:", error);
-      // Consider displaying an error message to the user
     }
   }, [api]);
 
   const fetchEnrolledCourses = useCallback(async () => {
     try {
-      const response = await api.get("/courses/courses/get");
+      const response = await api.get("/users/courses/get");
 
       if (response.status === 200) {
         setEnrolledCourses(response.data.courses);
       } else {
         console.error("Failed to fetch courses:", response.status);
-        // Consider displaying an error message to the user
       }
     } catch (error) {
       console.error("Error fetching courses:", error);
-      // Consider displaying an error message to the user
     }
   }, [api]);
 

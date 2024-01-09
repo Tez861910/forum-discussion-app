@@ -76,6 +76,7 @@ export const Navbar = ({
             <EnrolledCoursesDropdown
               onCourseSelect={onCourseSelect}
               onCourseChange={handleCourseChange}
+              refreshCourses={selectedCourse}
               sx={{ flexGrow: 1, minWidth: "200px" }}
             />
           )}

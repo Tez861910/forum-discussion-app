@@ -14,7 +14,7 @@ export const handleForumReplyCreate = async (req, res) => {
 
     const sql =
       "INSERT INTO ForumsReplies (ForumPostID, UserID, ReplyContent) VALUES (?, ?, ?)";
-    const [result] = await query(sql, [forumPostId, userId, replyContent]);
+    const result = await query(sql, [forumPostId, userId, replyContent]);
 
     if (result.affectedRows === 1) {
       console.log("Forum reply created successfully");

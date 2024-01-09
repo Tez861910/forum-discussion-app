@@ -33,7 +33,7 @@ export const AvatarUploadModal = ({ isOpen, onRequestClose }) => {
     formData.append("userId", userId);
 
     api
-      .post("/home/upload-avatar", formData)
+      .post("/auth/home/upload-avatar", formData)
       .then((response) => {
         console.log(response.data);
         onRequestClose();

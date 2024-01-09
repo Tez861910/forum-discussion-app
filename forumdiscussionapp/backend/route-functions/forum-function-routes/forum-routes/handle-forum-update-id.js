@@ -17,9 +17,9 @@ export const handleForumUpdateById = async (req, res) => {
 
     const sql =
       "UPDATE Forums SET ForumName = ?, ForumDescription = ? WHERE ForumID = ?";
-    const [result] = await query(sql, [forumName, forumDescription, forumId]);
+    const results = await query(sql, [forumName, forumDescription, forumId]);
 
-    if (result.affectedRows === 1) {
+    if (results.affectedRows === 1) {
       console.log("Forum updated successfully");
       res.json({ message: "Forum updated successfully" });
     } else {

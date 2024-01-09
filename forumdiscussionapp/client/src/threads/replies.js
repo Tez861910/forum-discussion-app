@@ -15,10 +15,9 @@ import {
   Save as SaveIcon,
   Delete as DeleteIcon,
 } from "@mui/icons-material";
-import { Responses } from "./Responses";
 import { useApi } from "../home-page/Api";
 
-const CommentItem = styled(Box)(({ theme }) => ({
+const ReplyItem = styled(Box)(({ theme }) => ({
   marginBottom: theme.spacing(2),
   border: `1px solid ${theme.palette.divider}`,
   borderRadius: theme.shape.borderRadius,
@@ -33,44 +32,45 @@ const EditDeleteWrapper = styled(Box)({
   marginLeft: "auto",
 });
 
-export const CommentSection = ({ threadId }) => {
+export const ReplySection = ({ postId }) => {
   const roleId = localStorage.getItem("roleId");
   const userId = localStorage.getItem("userId");
-  const [comments, setComments] = useState([]);
+  const [replies, setReplies] = useState([]);
   const [usernamesMap, setUsernamesMap] = useState({});
-  const [newComment, setNewComment] = useState("");
+  const [newReply, setNewReply] = useState("");
   const [fetchError, setFetchError] = useState(null);
   const [isLoading, setIsLoading] = useState(false);
-  const [editingComment, setEditingComment] = useState(null);
+  const [editingReply, setEditingReply] = useState(null);
   const [editedContent, setEditedContent] = useState("");
-  const [selectedComment, setSelectedComment] = useState(null);
   const { api } = useApi();
 
-  const fetchComments = useCallback(async () => {
+  const fetchReplies = useCallback(async () => {
     try {
-      const response = await api.get(`/forums/comments/get/${threadId}`);
-      const comments = Array.isArray(response.data.comments)
-        ? response.data.comments
-        : [response.data.comments];
-      setComments(comments);
+      const response = await api.get(`/forums/reply/get/${postId}`);
+      const replies = Array.isArray(response.data?.replies)
+        ? response.data.replies
+        : response.data?.replies
+        ? [response.data.replies]
+        : [];
+      setReplies(replies);
       setFetchError(null);
-      return comments;
+      return replies;
     } catch (error) {
-      console.error("Error fetching comments:", error);
-      setFetchError("Error loading comments");
+      console.error("Error fetching replies:", error);
+      setFetchError("Error loading replies");
     }
-  }, [api, threadId]);
+  }, [api, postId]);
 
   const fetchUsernames = useCallback(
-    async (commentsToFetchUsernames) => {
+    async (repliesToFetchUsernames) => {
       try {
         const userIds = Array.from(
-          new Set(commentsToFetchUsernames.map((comment) => comment.UserID))
+          new Set(repliesToFetchUsernames.map((reply) => reply?.UserID))
         );
         const usernamesResponse = await api.post("/users/users/getUsernames", {
           userIds,
         });
-        const usernames = usernamesResponse.data.usernames;
+        const usernames = usernamesResponse.data?.usernames || {};
 
         const usernameMap = {};
         userIds.forEach((userId) => {
@@ -88,78 +88,97 @@ export const CommentSection = ({ threadId }) => {
     [api]
   );
 
-  const createComment = async () => {
-    if (threadId && newComment.trim() !== "") {
+  const createReply = async () => {
+    if (postId && newReply.trim() !== "") {
       try {
-        await api.post(`/forums/comments/create/${threadId}`, {
-          CommentContent: newComment,
+        await api.post(`/forums/reply/create/${postId}`, {
+          replyContent: newReply,
           userId,
         });
 
-        setNewComment("");
+        setNewReply("");
       } catch (error) {
-        console.error("Error adding comment:", error);
+        console.error("Error adding reply:", error);
       }
     }
   };
 
-  const editComment = async (commentId) => {
+  const editReply = async (replyId) => {
     try {
-      const editedComment = comments.find(
-        (comment) => comment.CommentID === commentId
+      const editedReply = replies.find(
+        (reply) => reply?.ForumReplyID === replyId
       );
 
-      if (editedComment) {
-        await api.put(`/forums/comments/update/${commentId}`, {
-          content: editedContent,
+      if (editedReply) {
+        await api.put(`/forums/reply/update/${replyId}`, {
+          userId,
+          replyContent: editedContent,
         });
 
-        setEditingComment(null);
+        setEditingReply(null);
         setEditedContent("");
       } else {
-        console.error("Comment not found for editing:", commentId);
+        console.error("Reply not found for editing:", replyId);
       }
     } catch (error) {
-      console.error("Error updating comment:", error);
+      console.error("Error updating reply:", error);
     }
   };
 
-  const deleteComment = async (commentId) => {
+  const deleteReply = async (replyId) => {
     try {
-      await api.delete(`/forums/comments/delete/${commentId}`);
+      await api.delete(`/forums/reply/delete/${replyId}`);
     } catch (error) {
-      console.error("Error deleting comment:", error);
+      console.error("Error deleting reply:", error);
     }
   };
 
-  const handleCommentSubmit = async (event) => {
+  const handleReplySubmit = async (event) => {
     event.preventDefault();
-    await createComment();
-    const newComments = await fetchComments();
-    fetchUsernames(newComments);
+    await createReply();
+    const newReplies = await fetchReplies();
+    fetchUsernames(newReplies);
   };
 
-  const handleEditComment = async (commentId) => {
-    await editComment(commentId);
-    await fetchComments();
-    await fetchUsernames(comments);
+  const handleEditReply = async (replyId) => {
+    await editReply(replyId);
+    await fetchReplies();
+    await fetchUsernames(replies);
   };
 
-  const handleDeleteComment = async (commentId) => {
-    await deleteComment(commentId);
-    await fetchComments();
-    await fetchUsernames(comments);
+  const handleDeleteReply = async (replyId) => {
+    await deleteReply(replyId);
+    await fetchReplies();
+    await fetchUsernames(replies);
   };
 
   useEffect(() => {
-    if (!isLoading) {
-      setIsLoading(true);
-      fetchComments().then(() => {
-        fetchUsernames(comments);
+    const fetchData = async () => {
+      try {
+        setIsLoading(true);
+
+        // Fetch replies
+        const newReplies = await fetchReplies();
+
+        // Log the replies to the console
+        console.log("Replies:", newReplies);
+
+        // Check if replies are fetched successfully before proceeding
+        if (newReplies) {
+          // Fetch usernames based on the retrieved replies
+          await fetchUsernames(newReplies);
+        }
+
         setIsLoading(false);
-      });
-    }
-  }, []);
+      } catch (error) {
+        console.error("Error fetching data:", error);
+        setFetchError("Error loading data");
+        setIsLoading(false);
+      }
+    };
+
+    fetchData();
+  }, [fetchReplies, fetchUsernames]);
 
   return (
     <Box
@@ -170,27 +189,27 @@ export const CommentSection = ({ threadId }) => {
       }}
     >
       <Typography variant="h2" sx={{ fontWeight: "bold" }}>
-        Comment Section
+        Reply Section
       </Typography>
 
       {fetchError && <p>{fetchError}</p>}
 
       {(roleId === "2" || roleId === "3") && (
-        <form onSubmit={handleCommentSubmit}>
+        <form onSubmit={handleReplySubmit}>
           <TextareaAutosize
-            value={newComment}
-            onChange={(e) => setNewComment(e.target.value)}
-            aria-label="new comment"
+            value={newReply}
+            onChange={(e) => setNewReply(e.target.value)}
+            aria-label="new reply"
             minRows={4}
-            placeholder="Add a comment..."
+            placeholder="Add a reply..."
             sx={{ width: "100%", marginTop: 2, fontWeight: "bold" }}
           />
-          {newComment.trim() !== "" && (
+          {newReply.trim() !== "" && (
             <>
               <IconButton type="submit" color="primary">
                 <SendIcon />
               </IconButton>
-              <IconButton onClick={() => setNewComment("")}>
+              <IconButton onClick={() => setNewReply("")}>
                 <CloseIcon />
               </IconButton>
             </>
@@ -202,24 +221,24 @@ export const CommentSection = ({ threadId }) => {
         <CircularProgress />
       ) : (
         <Box sx={{ mt: 2 }}>
-          {comments.map((comment) => (
-            <CommentItem key={comment?.CommentID}>
-              {editingComment === comment?.CommentID ? (
+          {replies.map((reply) => (
+            <ReplyItem key={reply?.ForumReplyID}>
+              {editingReply === reply?.ForumReplyID ? (
                 <Box>
                   <TextareaAutosize
                     value={editedContent}
                     onChange={(e) => setEditedContent(e.target.value)}
-                    aria-label="edit comment"
+                    aria-label="edit reply"
                     minRows={4}
-                    placeholder="Edit your comment..."
+                    placeholder="Edit your reply..."
                     sx={{ width: "100%", marginBottom: 2, fontWeight: "bold" }}
                   />
                   <IconButton
-                    onClick={() => handleEditComment(comment?.CommentID)}
+                    onClick={() => handleEditReply(reply?.ForumReplyID)}
                   >
                     <SaveIcon />
                   </IconButton>
-                  <IconButton onClick={() => setEditingComment(null)}>
+                  <IconButton onClick={() => setEditingReply(null)}>
                     <CloseIcon />
                   </IconButton>
                 </Box>
@@ -230,55 +249,39 @@ export const CommentSection = ({ threadId }) => {
                     mb={2}
                     sx={{ fontWeight: "bold" }}
                   >
-                    {comment?.CommentContent}
+                    {reply?.replyContent}
                   </Typography>
                   <Typography
                     variant="body2"
                     color="textSecondary"
                     sx={{ fontWeight: "bold" }}
                   >
-                    by {usernamesMap[comment.UserID]}
+                    by {usernamesMap[reply?.UserID] ?? "Unknown User"}
                   </Typography>
                   {(roleId === "2" ||
-                    (roleId === "3" && userId === comment?.UserID)) && (
+                    (roleId === "3" && userId === reply?.UserID)) && (
                     <EditDeleteWrapper>
                       <IconButton
                         onClick={() => {
-                          setEditingComment(comment?.CommentID);
-                          setEditedContent(comment?.CommentContent);
+                          setEditingReply(reply?.ForumReplyID);
+                          setEditedContent(reply?.replyContent);
                         }}
                       >
                         <EditIcon />
                       </IconButton>
                       <IconButton
-                        onClick={() => handleDeleteComment(comment?.CommentID)}
+                        onClick={() => handleDeleteReply(reply?.ForumReplyID)}
                       >
                         <DeleteIcon />
                       </IconButton>
                     </EditDeleteWrapper>
                   )}
-                  <Button
-                    onClick={() => setSelectedComment(comment)}
-                    sx={{ fontWeight: "bold" }}
-                  >
-                    Responses
-                  </Button>
                 </>
               )}
-            </CommentItem>
+            </ReplyItem>
           ))}
         </Box>
-      )}
-
-      {selectedComment && (
-        <Responses
-          commentId={selectedComment.CommentID}
-          open={Boolean(selectedComment)}
-          onClose={() => setSelectedComment(null)}
-        />
       )}
     </Box>
   );
 };
-
-export default CommentSection;

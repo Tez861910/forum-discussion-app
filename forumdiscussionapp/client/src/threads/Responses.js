@@ -44,7 +44,7 @@ export const Responses = ({ commentId, open, onClose }) => {
 
   const fetchResponses = useCallback(async () => {
     try {
-      const response = await api.get(`/responses/responses/get/${commentId}`);
+      const response = await api.get(`/forums/responses/get/${commentId}`);
       const { responses } = response.data;
       const retrievedResponses = Array.isArray(responses) ? responses : [];
 
@@ -61,7 +61,7 @@ export const Responses = ({ commentId, open, onClose }) => {
 
     if (commentId && newResponse.trim() !== "") {
       try {
-        await api.post(`/responses/responses/create/${commentId}`, {
+        await api.post(`/forums/responses/create/${commentId}`, {
           ResponseContent: newResponse,
           userId,
         });
@@ -77,7 +77,7 @@ export const Responses = ({ commentId, open, onClose }) => {
 
   const handleEditResponse = async (responseId) => {
     try {
-      await api.put(`/responses/responses/update/${responseId}`, {
+      await api.put(`/forums/responses/update/${responseId}`, {
         content: editedContent,
       });
 
@@ -92,7 +92,7 @@ export const Responses = ({ commentId, open, onClose }) => {
 
   const handleDeleteResponse = async (responseId) => {
     try {
-      await api.delete(`/responses/responses/delete/${responseId}`);
+      await api.delete(`/forums/responses/delete/${responseId}`);
       await fetchResponses();
     } catch (error) {
       console.error("Error deleting response:", error);
@@ -108,9 +108,12 @@ export const Responses = ({ commentId, open, onClose }) => {
         );
 
         if (userIds.length > 0) {
-          const usernamesResponse = await api.post("/users/getUsernames", {
-            userIds,
-          });
+          const usernamesResponse = await api.post(
+            "/users/users/getUsernames",
+            {
+              userIds,
+            }
+          );
           const usernames = usernamesResponse.data.usernames;
 
           setUsernamesMap(usernames);

@@ -17,7 +17,7 @@ const pool = mysql.createPool({
 export const query = async (sql, values) => {
   const connection = await pool.getConnection();
   try {
-    const [results] = await connection.query(sql, values);
+    const [results] = await connection.execute(sql, values);
     return results;
   } catch (error) {
     console.error("MySQL SQL Error:", error);

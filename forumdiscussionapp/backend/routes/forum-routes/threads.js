@@ -3,12 +3,12 @@ import { verifyJwt } from "../../authvalid.js";
 import {
   validateThreadCreate,
   validateThreadUpdate,
-  validateThreadGetCourseId,
+  validateThreadGetForumId,
   validateThreadGetByThreadId,
 } from "../../body-validation/forum-validation-functions/thread-validation.js";
 
 import { handleThreadsCreate } from "../../route-functions/forum-function-routes/thread-routes/handle-threads-create.js";
-import { handleThreadsGetCourseId } from "../../route-functions/forum-function-routes/thread-routes/handle-threads-get-courseid.js";
+import { handleThreadsGetForumId } from "../../route-functions/forum-function-routes/thread-routes/handle-threads-get-by-forumid.js";
 import { handleThreadsGetAll } from "../../route-functions/forum-function-routes/thread-routes/handle-threads-get-all.js";
 import { handleThreadsGetByThreadId } from "../../route-functions/forum-function-routes/thread-routes/handle-threads-get-id.js";
 import { handleThreadsUpdateId } from "../../route-functions/forum-function-routes/thread-routes/handle-threads-update-id.js";
@@ -18,12 +18,12 @@ const router = express.Router();
 
 router.use(express.json());
 
-// Endpoint to get threads for a specific course
+// Endpoint to get threads for a specific forum
 router.get(
-  "/get/:courseId",
+  "/get/:forumId",
   verifyJwt,
-  validateThreadGetCourseId,
-  handleThreadsGetCourseId
+  validateThreadGetForumId,
+  handleThreadsGetForumId
 );
 
 // Endpoint to get a thread by threadId

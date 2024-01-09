@@ -6,7 +6,9 @@ export const validateForumReplyCreate = validate(
   Joi.object({
     // Define the schema for creating a forum reply
     // Adjust the properties and validation rules according to your needs
-    content: Joi.string().required(),
+    userId: Joi.number().integer().min(1).required(),
+    forumPostId: Joi.number().integer().min(1).required(),
+    replyContent: Joi.string().required(),
   })
 );
 
@@ -15,7 +17,9 @@ export const validateForumReplyUpdate = validate(
   Joi.object({
     // Define the schema for updating a forum reply
     // Adjust the properties and validation rules according to your needs
-    content: Joi.string().required(),
+    //userId: Joi.number().integer().min(1).required(),
+    forumReplyId: Joi.number().integer().min(1).required(),
+    replyContent: Joi.string().required(),
   })
 );
 
@@ -23,6 +27,7 @@ export const validateForumReplyUpdate = validate(
 export const validateForumReplyDelete = validate(
   Joi.object({
     // Define the schema for deleting a forum reply
+    userId: Joi.number().integer().min(1).required(),
     forumReplyId: Joi.number().integer().min(1).required(),
   })
 );

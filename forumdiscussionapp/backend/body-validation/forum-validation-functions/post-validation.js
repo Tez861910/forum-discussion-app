@@ -4,27 +4,28 @@ import { validate } from "../../authvalid.js";
 // Validation middleware for creating a forum post
 export const validateForumPostCreate = validate(
   Joi.object({
-    // Define the schema for creating a forum post
     // Adjust the properties and validation rules according to your needs
-    title: Joi.string().required(),
-    content: Joi.string().required(),
+    forumId: Joi.number().integer().min(1).required(),
+    userId: Joi.number().integer().min(1).required(),
+    postContent: Joi.string().required(),
   })
 );
 
 // Validation middleware for updating a forum post
-export const validateForumPostUpdate = validate(
+export const validateForumPostUpdateById = validate(
   Joi.object({
-    // Define the schema for updating a forum post
     // Adjust the properties and validation rules according to your needs
-    title: Joi.string(),
-    content: Joi.string(),
+    userId: Joi.number().integer().min(1).required(),
+    forumPostId: Joi.number().integer().min(1).required(),
+    postContent: Joi.string().required(),
   })
 );
 
 // Validation middleware for deleting a forum post
 export const validateForumPostDelete = validate(
   Joi.object({
-    // Define the schema for deleting a forum post
+    // Adjust the properties and validation rules according to your needs
+    userId: Joi.number().integer().min(1).required(),
     forumPostId: Joi.number().integer().min(1).required(),
   })
 );
@@ -32,7 +33,7 @@ export const validateForumPostDelete = validate(
 // Validation middleware for getting forum posts for a specific forum
 export const validateForumPostGetForumId = validate(
   Joi.object({
-    // Define the schema for getting forum posts for a specific forum
+    // Adjust the properties and validation rules according to your needs
     forumId: Joi.number().integer().min(1).required(),
   })
 );

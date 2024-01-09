@@ -1,10 +1,10 @@
 import { query } from "../../../db.js";
 
 export const handleForumCreate = async (req, res) => {
-  const { forumName, forumDescription, createdByUserId } = req.body;
+  const { courseId, forumName, forumDescription, createdByUserId } = req.body;
 
   try {
-    if (!forumName || !forumDescription || !createdByUserId) {
+    if (!courseId || !forumName || !forumDescription || !createdByUserId) {
       console.log(
         "ForumName, ForumDescription, and CreatedByUserId are required"
       );
@@ -14,14 +14,16 @@ export const handleForumCreate = async (req, res) => {
     }
 
     const sql =
-      "INSERT INTO Forums (ForumName, ForumDescription, CreatedByUserID) VALUES (?, ?, ?)";
-    const [result] = await query(sql, [
+      "INSERT INTO Forums (ForumName, ForumDescription, CreatedByUserID, CourseID) VALUES (?, ?, ?, ?)";
+
+    const result = await query(sql, [
       forumName,
       forumDescription,
       createdByUserId,
+      courseId,
     ]);
 
-    if (result.affectedRows === 1) {
+    if (result !== undefined && result.affectedRows === 1) {
       console.log("Forum created successfully");
       res.json({ message: "Forum created successfully" });
     } else {

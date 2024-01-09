@@ -46,7 +46,7 @@ export const useApi = () => {
 
           try {
             const response = await apiInstance.post(
-              "/refresh-token",
+              "/auth/home/refresh-token",
               {},
               {
                 headers: {

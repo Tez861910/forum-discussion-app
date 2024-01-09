@@ -13,7 +13,7 @@ export const handleForumPostUpdateById = async (req, res) => {
     }
 
     const sql = "UPDATE ForumsPosts SET PostContent = ? WHERE ForumPostID = ?";
-    const [result] = await query(sql, [postContent, forumPostId]);
+    const result = await query(sql, [postContent, forumPostId]);
 
     if (result.affectedRows === 1) {
       console.log("Forum post updated successfully");

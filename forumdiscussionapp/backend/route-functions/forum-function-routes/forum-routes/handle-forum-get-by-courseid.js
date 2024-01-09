@@ -5,15 +5,15 @@ export const handleThreadsGetCourseId = async (req, res) => {
   console.log("Received courseId:", courseId);
 
   try {
-    const sql = "SELECT * FROM threads WHERE CourseID = ?";
+    const sql = "SELECT * FROM Forums WHERE CourseID = ?";
     const results = await query(sql, [courseId]);
-    console.log("Threads data:", results);
+    console.log("Forums data:", results);
 
-    res.json([results]);
+    res.json(results);
   } catch (error) {
-    console.error("Error fetching threads:", error);
+    console.error("Error fetching forums:", error);
     res
       .status(500)
-      .json({ error: "Thread retrieval failed", details: error.message });
+      .json({ error: "Forum retrieval failed", details: error.message });
   }
 };
