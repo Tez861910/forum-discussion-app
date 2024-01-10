@@ -49,10 +49,10 @@ export const PostSection = ({ forumId }) => {
     try {
       const response = await api.get(`/forums/posts/get/${forumId}`);
       const responseData = response.data;
-
+  
       console.log("Response Data:", responseData);
-
-      if (responseData) {
+  
+      if (responseData !== null) {
         const posts = Array.isArray(responseData)
           ? responseData
           : [responseData];
@@ -60,13 +60,15 @@ export const PostSection = ({ forumId }) => {
         setFetchError(null);
         return posts;
       } else {
-        setFetchError("Invalid response format");
+        console.warn("No posts available for the forum.");
+        setFetchError("No posts available for the forum.");
       }
     } catch (error) {
       console.error("Error fetching posts:", error);
       setFetchError("Error loading posts");
     }
   }, [api, forumId]);
+  
 
   const fetchUsernames = useCallback(
     async (postsToFetchUsernames) => {

@@ -92,7 +92,7 @@ export const CommentSection = ({ threadId }) => {
     if (threadId && newComment.trim() !== "") {
       try {
         await api.post(`/forums/comments/create/${threadId}`, {
-          CommentContent: newComment,
+          content: newComment,
           userId,
         });
 

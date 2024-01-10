@@ -1,5 +1,7 @@
+import { StatusCodes } from "http-status-codes";
+
 export class CustomError extends Error {
-  constructor(message, statusCode = 500) {
+  constructor(message, statusCode = StatusCodes.INTERNAL_SERVER_ERROR) {
     super(message);
     this.statusCode = validateStatusCode(statusCode);
     this.name = this.constructor.name;
@@ -7,9 +9,32 @@ export class CustomError extends Error {
   }
 }
 
+export class AuthenticationError extends CustomError {
+  constructor(message) {
+    super(message, StatusCodes.UNAUTHORIZED);
+    this.name = "AuthenticationError";
+  }
+}
+
+export class NotFoundError extends CustomError {
+  constructor(message) {
+    super(message, StatusCodes.NOT_FOUND);
+    this.name = "NotFoundError";
+  }
+}
+
+export class ForbiddenError extends CustomError {
+  constructor(message) {
+    super(message, StatusCodes.FORBIDDEN);
+    this.name = "ForbiddenError";
+  }
+}
+
 function validateStatusCode(statusCode) {
-  const validStatusCodes = [400, 401, 403, 404, 500];
-  return validStatusCodes.includes(statusCode) ? statusCode : 500;
+  const validStatusCodes = Object.values(StatusCodes);
+  return validStatusCodes.includes(statusCode)
+    ? statusCode
+    : StatusCodes.INTERNAL_SERVER_ERROR;
 }
 
 export function handleError(err, req, res, next) {
@@ -17,13 +42,8 @@ export function handleError(err, req, res, next) {
     return next(err);
   }
 
-  if (!(err instanceof CustomError)) {
-    console.error(err.stack);
-  }
-
-  const statusCode = err instanceof CustomError ? err.statusCode : 500;
-  const message =
-    err instanceof CustomError ? err.message : "Internal Server Error";
+  const statusCode = err.statusCode || StatusCodes.INTERNAL_SERVER_ERROR;
+  const message = err.message || "Internal Server Error";
 
   res.status(statusCode).json({ error: message });
 }

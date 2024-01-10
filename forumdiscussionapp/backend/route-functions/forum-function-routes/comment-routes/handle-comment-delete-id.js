@@ -5,7 +5,7 @@ export const handleCommentDeleteId = async (req, res) => {
 
   try {
     const sql = "DELETE FROM comments WHERE CommentID = ?";
-    const [result] = await query(sql, [commentId]);
+    const result = await query(sql, [commentId]);
 
     if (result.affectedRows === 1) {
       console.log("Comment deleted successfully");

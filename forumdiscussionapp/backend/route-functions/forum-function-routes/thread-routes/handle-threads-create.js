@@ -1,17 +1,17 @@
 import { query } from "../../../db.js";
 
 export const handleThreadsCreate = async (req, res) => {
-  const { title, content, courseId, userId } = req.body;
+  const { title, content, forumId, userId } = req.body;
   try {
-    if (!title || !content || !courseId || !userId) {
-      console.log("Title, content, courseId, and userId are required");
+    if (!title || !content || !forumId || !userId) {
+      console.log("Title, content, forumId, and userId are required");
       return res
         .status(400)
-        .json({ error: "Title, content, courseId, and userId are required" });
+        .json({ error: "Title, content, forumId, and userId are required" });
     }
     const sql =
-      "INSERT INTO Threads (ThreadTitle, ThreadContent, CourseID, UserID) VALUES (?, ?, ?, ?)";
-    const [result] = await query(sql, [title, content, courseId, userId]);
+      "INSERT INTO Threads (ThreadTitle, ThreadContent, ForumID, UserID) VALUES (?, ?, ?, ?)";
+    const result = await query(sql, [title, content, forumId, userId]);
     if (result.affectedRows === 1) {
       console.log("Thread created successfully");
       res.json({ message: "Thread created successfully" });

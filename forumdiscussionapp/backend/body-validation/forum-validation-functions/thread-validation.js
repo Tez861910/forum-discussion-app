@@ -6,8 +6,10 @@ export const validateThreadCreate = validate(
   Joi.object({
     // Define the required properties for thread creation
     // For example:
-    courseId: Joi.number().integer().min(1).required(),
+    userId: Joi.number().integer().min(1).required(),
+    forumId: Joi.number().integer().min(1).required(),
     title: Joi.string().min(1).required(),
+    content: Joi.string().min(1).required(),
     // Add more properties as needed
   })
 );
@@ -17,8 +19,10 @@ export const validateThreadUpdate = validate(
   Joi.object({
     // Define the required properties for updating a thread
     // For example:
+    forumId: Joi.number().integer().min(1).required(),
     threadId: Joi.number().integer().min(1).required(),
     title: Joi.string().min(1).required(),
+    content: Joi.string().min(1).required(),
     // Add more properties as needed
   })
 );

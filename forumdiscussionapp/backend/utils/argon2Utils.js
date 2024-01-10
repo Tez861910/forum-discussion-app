@@ -10,7 +10,8 @@ export const hashPassword = async (password) => {
 
     return hashedPassword;
   } catch (error) {
-    throw error;
+    console.error(error);
+    throw new Error("Error while hashing password");
   }
 };
 
@@ -24,6 +25,7 @@ export const verifyPassword = async (password, hashedPassword) => {
 
     return isPasswordValid;
   } catch (error) {
-    throw error;
+    console.error(error);
+    throw new Error("Error while verifying password");
   }
 };

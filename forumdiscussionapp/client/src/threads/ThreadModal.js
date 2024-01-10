@@ -16,7 +16,14 @@ import CloseIcon from "@mui/icons-material/Close";
 import { CommentSection } from "./comment-section";
 import { useApi } from "../home-page/Api";
 
-export function ThreadModal({ courseId, threadId, onClose, roleId, userId }) {
+export function ThreadModal({
+  forumId,
+  threadId,
+  onClose,
+  roleId,
+  userId,
+  onThreadUpdate,
+}) {
   const [thread, setThread] = React.useState({ title: "", content: "" });
   const [editedTitle, setEditedTitle] = React.useState("");
   const [editedContent, setEditedContent] = React.useState("");
@@ -54,8 +61,7 @@ export function ThreadModal({ courseId, threadId, onClose, roleId, userId }) {
       await api.put(`/forums/threads/update/${threadId}`, {
         title: editedTitle,
         content: editedContent,
-        userId,
-        courseId,
+        forumId,
       });
 
       setThread((prevThread) => ({
@@ -64,6 +70,7 @@ export function ThreadModal({ courseId, threadId, onClose, roleId, userId }) {
         ThreadContent: editedContent,
       }));
       onClose();
+      onThreadUpdate();
     } catch (error) {
       console.error("Error updating thread:", error);
     }
@@ -73,6 +80,7 @@ export function ThreadModal({ courseId, threadId, onClose, roleId, userId }) {
     try {
       await api.delete(`/forums/threads/delete/${threadId}`);
       onClose();
+      onThreadUpdate();
     } catch (error) {
       console.error("Error deleting thread:", error);
     }
@@ -149,7 +157,7 @@ export function ThreadModal({ courseId, threadId, onClose, roleId, userId }) {
                   threadId={threadId}
                   roleId={roleId}
                   userId={userId}
-                  courseId={courseId}
+                  forumId={forumId}
                 />
               </Box>
             </Card>

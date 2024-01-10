@@ -31,7 +31,7 @@ export const ThreadList = ({ forumId }) => {
   const fetchThreads = useCallback(async () => {
     try {
       const response = await api.get(`/forums/threads/get/${forumId}`);
-      setThreads(response.data); // Assuming the threads are directly in the response data array
+      setThreads(response.data);
     } catch (error) {
       console.error("Error fetching threads:", error);
       throw error;
@@ -43,25 +43,7 @@ export const ThreadList = ({ forumId }) => {
   }, [fetchThreads, forumId]);
 
   const fetchUsernames = async () => {
-    try {
-      const userIds = Array.from(
-        new Set(threads.map((thread) => thread.UserID))
-      );
-      const usernamesResponse = await api.post("/users/users/getUsernames", {
-        userIds,
-      });
-      const usernames = usernamesResponse.data.usernames;
-
-      const usernameMap = {};
-      userIds.forEach((userId) => {
-        usernameMap[userId] = usernames[userId] || "Unknown User";
-      });
-
-      setUsernamesMap(usernameMap);
-      setLoadingUsernames(false);
-    } catch (error) {
-      console.error("Error fetching usernames for threads:", error);
-    }
+    // ... (existing code)
   };
 
   const handleOpenCreateModal = () => {
@@ -88,6 +70,7 @@ export const ThreadList = ({ forumId }) => {
       setNewThreadTitle("");
       setNewThreadContent("");
       fetchUsernames();
+      fetchThreads();
     } catch (error) {
       console.error("Error creating thread:", error);
     }
@@ -222,10 +205,12 @@ export const ThreadList = ({ forumId }) => {
       {/* Thread Modal */}
       {selectedThread && (
         <ThreadModal
+          forumId={forumId}
           threadId={selectedThread}
           onClose={() => setSelectedThread(null)}
           roleId={roleId}
-          forumId={forumId}
+          userId={userId}
+          onThreadUpdate={fetchThreads}
         />
       )}
     </Paper>

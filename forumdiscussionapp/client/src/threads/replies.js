@@ -5,7 +5,6 @@ import {
   Box,
   styled,
   IconButton,
-  Button,
   CircularProgress,
 } from "@mui/material";
 import {
@@ -47,14 +46,20 @@ export const ReplySection = ({ postId }) => {
   const fetchReplies = useCallback(async () => {
     try {
       const response = await api.get(`/forums/reply/get/${postId}`);
-      const replies = Array.isArray(response.data?.replies)
-        ? response.data.replies
-        : response.data?.replies
-        ? [response.data.replies]
-        : [];
-      setReplies(replies);
-      setFetchError(null);
-      return replies;
+      const responseData = response.data;
+
+      console.log("Response Data:", responseData);
+
+      if (responseData) {
+        const replies = Array.isArray(responseData)
+          ? responseData
+          : [responseData];
+        setReplies(replies);
+        setFetchError(null);
+        return replies;
+      } else {
+        setFetchError("Invalid response format");
+      }
     } catch (error) {
       console.error("Error fetching replies:", error);
       setFetchError("Error loading replies");
@@ -111,7 +116,7 @@ export const ReplySection = ({ postId }) => {
 
       if (editedReply) {
         await api.put(`/forums/reply/update/${replyId}`, {
-          userId,
+          //userId,
           replyContent: editedContent,
         });
 
@@ -156,19 +161,14 @@ export const ReplySection = ({ postId }) => {
     const fetchData = async () => {
       try {
         setIsLoading(true);
-
-        // Fetch replies
         const newReplies = await fetchReplies();
 
-        // Log the replies to the console
-        console.log("Replies:", newReplies);
+        // Log the replies after the state has been updated
+        console.log("Replies in useEffect:", newReplies);
 
-        // Check if replies are fetched successfully before proceeding
         if (newReplies) {
-          // Fetch usernames based on the retrieved replies
           await fetchUsernames(newReplies);
         }
-
         setIsLoading(false);
       } catch (error) {
         console.error("Error fetching data:", error);
@@ -178,7 +178,7 @@ export const ReplySection = ({ postId }) => {
     };
 
     fetchData();
-  }, [fetchReplies, fetchUsernames]);
+  }, [fetchReplies, fetchUsernames, postId]);
 
   return (
     <Box
@@ -249,7 +249,7 @@ export const ReplySection = ({ postId }) => {
                     mb={2}
                     sx={{ fontWeight: "bold" }}
                   >
-                    {reply?.replyContent}
+                    {reply?.ReplyContent}
                   </Typography>
                   <Typography
                     variant="body2"
@@ -264,7 +264,7 @@ export const ReplySection = ({ postId }) => {
                       <IconButton
                         onClick={() => {
                           setEditingReply(reply?.ForumReplyID);
-                          setEditedContent(reply?.replyContent);
+                          setEditedContent(reply?.ReplyContent);
                         }}
                       >
                         <EditIcon />

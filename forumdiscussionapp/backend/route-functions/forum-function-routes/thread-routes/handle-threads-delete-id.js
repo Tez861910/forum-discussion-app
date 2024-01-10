@@ -4,7 +4,7 @@ export const handleThreadsDeleteId = async (req, res) => {
   const { threadId } = req.params;
   try {
     const sql = "DELETE FROM Threads WHERE ThreadID = ?";
-    const [result] = await query(sql, [threadId]);
+    const result = await query(sql, [threadId]);
     if (result.affectedRows === 1) {
       console.log("Thread deleted successfully");
       res.json({ message: "Thread deleted successfully" });

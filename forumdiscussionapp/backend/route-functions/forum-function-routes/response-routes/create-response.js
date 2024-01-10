@@ -2,12 +2,12 @@ import { query } from "../../../db.js";
 
 export const createResponse = async (req, res) => {
   const { commentId } = req.params;
-  const { ResponseContent, userId } = req.body;
+  const { content, userId } = req.body;
 
   try {
     await query(
       "INSERT INTO responses (ResponseContent, UserID, CommentID) VALUES (?, ?, ?)",
-      [ResponseContent, userId, commentId]
+      [content, userId, commentId]
     );
 
     res.json({ message: "Response added successfully" });

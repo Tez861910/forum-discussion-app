@@ -6,6 +6,7 @@ export const validateCommentCreate = validate(
   Joi.object({
     // Define the required properties for comment creation
     // For example:
+    userId: Joi.number().integer().min(1).required(),
     threadId: Joi.number().integer().min(1).required(),
     content: Joi.string().min(1).required(),
     // Add more properties as needed

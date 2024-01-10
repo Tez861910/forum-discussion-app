@@ -62,7 +62,7 @@ export const Responses = ({ commentId, open, onClose }) => {
     if (commentId && newResponse.trim() !== "") {
       try {
         await api.post(`/forums/responses/create/${commentId}`, {
-          ResponseContent: newResponse,
+          content: newResponse,
           userId,
         });
 

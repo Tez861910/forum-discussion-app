@@ -1,10 +1,4 @@
-import React, {
-  useState,
-  useEffect,
-  useTransition,
-  useCallback,
-  useMemo,
-} from "react";
+import React, { useState, useEffect, useCallback } from "react";
 import {
   Typography,
   Box,
@@ -34,6 +28,7 @@ export const ForumDiscussion = ({ selectedCourse: courseId }) => {
   const { api } = useApi();
   const [loadingThreads, setLoadingThreads] = useState(true);
   const [currentPage, setCurrentPage] = useState(1);
+  const itemsPerPage = 1;
 
   const fetchForums = useCallback(async () => {
     try {
@@ -55,8 +50,10 @@ export const ForumDiscussion = ({ selectedCourse: courseId }) => {
     fetchForums();
   }, [fetchForums]);
 
-  const paginate = (pageNumber) => {
+  const paginate = (event, pageNumber) => {
     setCurrentPage(pageNumber);
+    const selectedForumIndex = (pageNumber - 1) * itemsPerPage;
+    setSelectedForum(forums[selectedForumIndex]);
   };
 
   const handleCreateForum = useCallback(async () => {
@@ -176,11 +173,6 @@ export const ForumDiscussion = ({ selectedCourse: courseId }) => {
     ]
   );
 
-  const itemsPerPage = 1;
-  const indexOfLastForum = currentPage * itemsPerPage;
-  const indexOfFirstForum = indexOfLastForum - itemsPerPage;
-  const currentForums = forums.slice(indexOfFirstForum, indexOfLastForum);
-
   return (
     <>
       {roleId === "2" && (
@@ -203,52 +195,58 @@ export const ForumDiscussion = ({ selectedCourse: courseId }) => {
           color: "primary.contrastText",
         }}
       >
-        {currentForums.map((forum) => (
-          <Box
-            key={forum.ForumID}
-            sx={{
-              borderBottom: "1px solid #ccc",
-              marginBottom: 2,
-              paddingBottom: 2,
-            }}
-          >
-            <Typography variant="h5" gutterBottom>
-              {forum.ForumName}
-            </Typography>
-            <Typography>{forum.ForumDescription}</Typography>
-            <ThreadList roleId={roleId} forumId={forum.ForumID} />
-            {selectedForum && selectedForum.ForumID === forum.ForumID && (
-              <PostSection forumId={forum.ForumID} />
-            )}
+        {forums
+          .slice((currentPage - 1) * itemsPerPage, currentPage * itemsPerPage)
+          .map((forum) => (
+            <Box
+              key={forum.ForumID}
+              sx={{
+                borderBottom: "1px solid #ccc",
+                marginBottom: 2,
+                paddingBottom: 2,
+              }}
+            >
+              <Typography variant="h5" gutterBottom>
+                {forum.ForumName}
+              </Typography>
+              <Typography>{forum.ForumDescription}</Typography>
+              <ThreadList roleId={roleId} forumId={forum.ForumID} />
 
-            {roleId === "2" && (
-              <>
-                <Button onClick={() => handleOpenEditDialog(forum)}>
-                  Edit Forum
-                </Button>
-                <Button onClick={() => handleDeleteForum(forum)}>
-                  Delete Forum
-                </Button>
+              {roleId === "2" && (
+                <>
+                  <Button onClick={() => handleOpenEditDialog(forum)}>
+                    Edit Forum
+                  </Button>
+                  <Button onClick={() => handleDeleteForum(forum)}>
+                    Delete Forum
+                  </Button>
 
-                {renderDialog(
-                  `Edit Forum - ${forum.ForumName}`,
-                  "Save Changes",
-                  () => handleEditForum(forum)
-                )}
-              </>
-            )}
-          </Box>
-        ))}
+                  {renderDialog(
+                    `Edit Forum - ${forum.ForumName}`,
+                    "Save Changes",
+                    () => handleEditForum(forum)
+                  )}
+                </>
+              )}
+
+              {selectedForum && selectedForum.ForumID === forum.ForumID && (
+                <PostSection
+                  key={selectedForum.ForumID}
+                  forumId={forum.ForumID}
+                />
+              )}
+            </Box>
+          ))}
 
         {loadingThreads ? (
           <Typography>Loading threads...</Typography>
         ) : (
           <>
-            {forums.length > 1 && (
+            {forums.length > itemsPerPage && (
               <Pagination
                 count={Math.ceil(forums.length / itemsPerPage)}
                 page={currentPage}
-                onChange={(event, value) => paginate(value)}
+                onChange={paginate}
                 color="primary"
                 sx={{ marginTop: 2 }}
               />

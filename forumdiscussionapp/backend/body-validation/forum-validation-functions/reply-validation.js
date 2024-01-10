@@ -27,7 +27,7 @@ export const validateForumReplyUpdate = validate(
 export const validateForumReplyDelete = validate(
   Joi.object({
     // Define the schema for deleting a forum reply
-    userId: Joi.number().integer().min(1).required(),
+    //userId: Joi.number().integer().min(1).required(),
     forumReplyId: Joi.number().integer().min(1).required(),
   })
 );

@@ -6,6 +6,7 @@ export const validateResponseCreate = validate(
   Joi.object({
     // Define the required properties for response creation
     // For example:
+    userId: Joi.number().integer().min(1).required(),
     commentId: Joi.number().integer().min(1).required(),
     content: Joi.string().min(1).required(),
     // Add more properties as needed

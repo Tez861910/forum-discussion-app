@@ -11,7 +11,7 @@ export const handleCommentUpdateId = async (req, res) => {
     }
 
     const sql = "UPDATE comments SET CommentContent = ? WHERE CommentID = ?";
-    const [result] = await query(sql, [content, commentId]);
+    const result = await query(sql, [content, commentId]);
 
     if (result.affectedRows === 1) {
       console.log("Comment updated successfully");

@@ -2,19 +2,19 @@ import { query } from "../../../db.js";
 
 export const handleThreadsUpdateId = async (req, res) => {
   const { threadId } = req.params;
-  const { title, content, courseId } = req.body;
+  const { title, content, forumId } = req.body;
 
   try {
-    if (!title || !content || !courseId) {
-      console.log("Title, content, courseId, and userId are required");
+    if (!title || !content || !forumId) {
+      console.log("Title, content, forumId, and userId are required");
       return res
         .status(400)
-        .json({ error: "Title, content, courseId, and userId are required" });
+        .json({ error: "Title, content, forumId, and userId are required" });
     }
 
     const sql =
-      "UPDATE Threads SET ThreadTitle = ?, ThreadContent = ?, CourseID = ? WHERE ThreadID = ?";
-    const [result] = await query(sql, [title, content, courseId, threadId]);
+      "UPDATE Threads SET ThreadTitle = ?, ThreadContent = ?, ForumID = ? WHERE ThreadID = ?";
+    const result = await query(sql, [title, content, forumId, threadId]);
 
     if (result.affectedRows === 1) {
       console.log("Thread updated successfully");

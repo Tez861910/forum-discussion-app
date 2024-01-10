@@ -2,7 +2,7 @@ import { query } from "../../../db.js";
 
 export const handleCommentCreate = async (req, res) => {
   const { threadId } = req.params;
-  const { CommentContent: content, userId } = req.body;
+  const { content, userId } = req.body;
 
   try {
     if (!content) {
@@ -12,7 +12,7 @@ export const handleCommentCreate = async (req, res) => {
 
     const sql =
       "INSERT INTO comments (CommentContent, UserID, ThreadID) VALUES (?, ?, ?)";
-    const [result] = await query(sql, [content, userId, threadId]);
+    const result = await query(sql, [content, userId, threadId]);
 
     if (result.affectedRows === 1) {
       console.log("Comment created successfully");
