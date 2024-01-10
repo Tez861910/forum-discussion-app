@@ -1,4 +1,4 @@
-import React, { Suspense, useEffect } from "react";
+import React, { Suspense } from "react";
 import {
   BrowserRouter as Router,
   Routes,
@@ -35,15 +35,12 @@ function ErrorFallback({ error, resetErrorBoundary }) {
   );
 }
 
-function RequireAuth({ children }) {
+const ProtectedRoute = ({ component: Component, ...rest }) => {
   const [cookies] = useCookies(["token"]);
-
   const isAuthenticated = Boolean(cookies.token);
 
-  useEffect(() => {}, []);
-
-  return isAuthenticated ? children : <Navigate to="/login" replace />;
-}
+  return isAuthenticated ? <Component {...rest} /> : <Navigate to="/login" />;
+};
 
 export const App = () => (
   <ErrorBoundary FallbackComponent={ErrorFallback}>
@@ -57,26 +54,21 @@ export const App = () => (
             <Route path="/sign-up" element={<Signup />} />
             <Route
               path="/home/*"
-              element={
-                <RequireAuth>
-                  <Home />
-                </RequireAuth>
-              }
-            >
-              <Route path="admin-courses" element={<AdminCourses />} />
-              <Route path="admin-roles" element={<AdminRoles />} />
-              <Route path="admin-users" element={<AdminUsers />} />
-              <Route path="scheduler" element={<Scheduler />} />
-              <Route path="user-profile" element={<UserProfile />} />
-              <Route
-                path="course-enrollment-modal"
-                element={<CourseEnrollmentModal />}
-              />
-              <Route path="forum-discussion" element={<ForumDiscussion />} />
-              <Route path="comment-section" element={<CommentSection />} />
-              <Route path="mcq-form" element={<MCQForm />} />
-              <Route path="mcq-answer-form" element={<MCQAnswerForm />} />
-            </Route>
+              element={<ProtectedRoute component={Home} />}
+            />
+            <Route path="admin-courses" element={<AdminCourses />} />
+            <Route path="admin-roles" element={<AdminRoles />} />
+            <Route path="admin-users" element={<AdminUsers />} />
+            <Route path="scheduler" element={<Scheduler />} />
+            <Route path="user-profile" element={<UserProfile />} />
+            <Route
+              path="course-enrollment-modal"
+              element={<CourseEnrollmentModal />}
+            />
+            <Route path="forum-discussion" element={<ForumDiscussion />} />
+            <Route path="comment-section" element={<CommentSection />} />
+            <Route path="mcq-form" element={<MCQForm />} />
+            <Route path="mcq-answer-form" element={<MCQAnswerForm />} />
           </Routes>
         </Suspense>
       </Router>

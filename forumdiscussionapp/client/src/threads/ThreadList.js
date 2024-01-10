@@ -43,7 +43,25 @@ export const ThreadList = ({ forumId }) => {
   }, [fetchThreads, forumId]);
 
   const fetchUsernames = async () => {
-    // ... (existing code)
+    try {
+      const userIds = Array.from(
+        new Set(threads.map((thread) => thread.UserID))
+      );
+      const usernamesResponse = await api.post("/users/users/getUsernames", {
+        userIds,
+      });
+      const usernames = usernamesResponse.data.usernames;
+
+      const usernameMap = {};
+      userIds.forEach((userId) => {
+        usernameMap[userId] = usernames[userId] || "Unknown User";
+      });
+
+      setUsernamesMap(usernameMap);
+      setLoadingUsernames(false);
+    } catch (error) {
+      console.error("Error fetching usernames for threads:", error);
+    }
   };
 
   const handleOpenCreateModal = () => {
@@ -112,7 +130,7 @@ export const ThreadList = ({ forumId }) => {
       >
         Create Thread
       </Button>
-      {/* Create Thread Dialog */}
+
       <Dialog
         open={showCreateModal}
         onClose={handleCloseCreateModal}
@@ -205,11 +223,10 @@ export const ThreadList = ({ forumId }) => {
       {/* Thread Modal */}
       {selectedThread && (
         <ThreadModal
-          forumId={forumId}
           threadId={selectedThread}
           onClose={() => setSelectedThread(null)}
           roleId={roleId}
-          userId={userId}
+          forumId={forumId}
           onThreadUpdate={fetchThreads}
         />
       )}
