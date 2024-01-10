@@ -8,37 +8,105 @@ import {
   DialogContent,
   DialogActions,
   TextField,
-  Pagination,
 } from "@mui/material";
 import { useApi } from "../home-page/Api";
 import { ThreadList } from "./ThreadList";
 import { PostSection } from "./posts";
 
+const CreateDialog = ({
+  openCreateDialog,
+  handleCloseDialogs,
+  createForumName,
+  setCreateForumName,
+  createForumDescription,
+  setCreateForumDescription,
+  handleCreateForum,
+}) => (
+  <Dialog open={openCreateDialog} onClose={handleCloseDialogs}>
+    <DialogTitle>Create Forum</DialogTitle>
+    <DialogContent>
+      <TextField
+        label="Forum Name"
+        value={createForumName}
+        onChange={(e) => setCreateForumName(e.target.value)}
+      />
+      <TextField
+        label="Forum Description"
+        value={createForumDescription}
+        onChange={(e) => setCreateForumDescription(e.target.value)}
+      />
+    </DialogContent>
+    <DialogActions>
+      <Button onClick={handleCloseDialogs}>Cancel</Button>
+      <Button onClick={handleCreateForum}>Create</Button>
+    </DialogActions>
+  </Dialog>
+);
+
+const EditDialog = ({
+  openEditDialog,
+  handleCloseDialogs,
+  forumName,
+  setForumName,
+  forumDescription,
+  setForumDescription,
+  handleEditForum,
+}) => (
+  <Dialog open={openEditDialog} onClose={handleCloseDialogs}>
+    <DialogTitle>Edit Forum</DialogTitle>
+    <DialogContent>
+      <TextField
+        label="Forum Name"
+        value={forumName}
+        onChange={(e) => setForumName(e.target.value)}
+      />
+      <TextField
+        label="Forum Description"
+        value={forumDescription}
+        onChange={(e) => setForumDescription(e.target.value)}
+      />
+    </DialogContent>
+    <DialogActions>
+      <Button onClick={handleCloseDialogs}>Cancel</Button>
+      <Button onClick={handleEditForum}>Save Changes</Button>
+    </DialogActions>
+  </Dialog>
+);
+
 export const ForumDiscussion = ({ selectedCourse: courseId }) => {
   const userId = localStorage.getItem("userId");
   const roleId = localStorage.getItem("roleId");
+  const { api } = useApi();
   const [forums, setForums] = useState([]);
   const [selectedForum, setSelectedForum] = useState(null);
   const [openCreateDialog, setOpenCreateDialog] = useState(false);
   const [openEditDialog, setOpenEditDialog] = useState(false);
+  const [openDeleteConfirmation, setOpenDeleteConfirmation] = useState(false);
+  const [forumToDelete, setForumToDelete] = useState(null);
   const [forumName, setForumName] = useState("");
   const [forumDescription, setForumDescription] = useState("");
   const [createForumName, setCreateForumName] = useState("");
   const [createForumDescription, setCreateForumDescription] = useState("");
-  const { api } = useApi();
   const [loadingThreads, setLoadingThreads] = useState(true);
-  const [currentPage, setCurrentPage] = useState(1);
-  const itemsPerPage = 1;
+  const [searchQuery, setSearchQuery] = useState("");
+
+  const filteredForums = forums.filter((forum) =>
+    forum.ForumName.toLowerCase().includes(searchQuery.toLowerCase())
+  );
+
+  const handleSearch = (e) => {
+    setSearchQuery(e.target.value);
+  };
+
+  const handleForumClick = (forum) => {
+    setSelectedForum(forum);
+  };
 
   const fetchForums = useCallback(async () => {
     try {
       const response = await api.get(`/forums/forums/get/${courseId}`);
       setForums(response.data);
       if (response.data.length > 0) {
-        const initialForum = response.data[0];
-        setSelectedForum(initialForum);
-        setForumName(initialForum.ForumName);
-        setForumDescription(initialForum.ForumDescription);
         setLoadingThreads(false);
       }
     } catch (error) {
@@ -49,12 +117,6 @@ export const ForumDiscussion = ({ selectedCourse: courseId }) => {
   useEffect(() => {
     fetchForums();
   }, [fetchForums]);
-
-  const paginate = (event, pageNumber) => {
-    setCurrentPage(pageNumber);
-    const selectedForumIndex = (pageNumber - 1) * itemsPerPage;
-    setSelectedForum(forums[selectedForumIndex]);
-  };
 
   const handleCreateForum = useCallback(async () => {
     try {
@@ -78,38 +140,41 @@ export const ForumDiscussion = ({ selectedCourse: courseId }) => {
     fetchForums,
   ]);
 
-  const handleEditForum = useCallback(
-    async (forum) => {
-      const forumId = forum ? forum.ForumID : null;
-      if (!forumId) return;
-      try {
-        await api.put(`/forums/forums/update/${forumId}`, {
-          forumName,
-          forumDescription,
-          userId,
-        });
-        fetchForums();
-        setOpenEditDialog(false);
-      } catch (error) {
-        console.error("Error editing forum:", error);
-      }
-    },
-    [api, forumName, forumDescription, userId, fetchForums]
-  );
+  const handleEditForum = useCallback(async () => {
+    const forumId = selectedForum ? selectedForum.ForumID : null;
+    if (!forumId) return;
+    try {
+      await api.put(`/forums/forums/update/${forumId}`, {
+        forumName,
+        forumDescription,
+        userId,
+      });
 
-  const handleDeleteForum = useCallback(
-    async (forum) => {
-      const forumId = forum ? forum.ForumID : null;
-      if (!forumId) return;
-      try {
-        await api.delete(`/forums/forums/delete/${forumId}`);
-        fetchForums();
-      } catch (error) {
-        console.error("Error deleting forum:", error);
-      }
-    },
-    [api, fetchForums]
-  );
+      // Update the selectedForum state with the new information
+      const updatedSelectedForum = {
+        ...selectedForum,
+        ForumName: forumName,
+        ForumDescription: forumDescription,
+      };
+
+      setSelectedForum(updatedSelectedForum);
+      setOpenEditDialog(false);
+    } catch (error) {
+      console.error("Error editing forum:", error);
+    }
+  }, [api, forumName, forumDescription, userId, fetchForums, selectedForum]);
+
+  const handleDeleteForum = useCallback(async () => {
+    const forumId = selectedForum ? selectedForum.ForumID : null;
+    if (!forumId) return;
+    try {
+      await api.delete(`/forums/forums/delete/${forumId}`);
+      fetchForums();
+      setSelectedForum(null);
+    } catch (error) {
+      console.error("Error deleting forum:", error);
+    }
+  }, [api, fetchForums, selectedForum]);
 
   const handleOpenCreateDialog = () => {
     setCreateForumName("");
@@ -117,22 +182,32 @@ export const ForumDiscussion = ({ selectedCourse: courseId }) => {
     setOpenCreateDialog(true);
   };
 
-  const handleOpenEditDialog = (forum) => {
-    setSelectedForum(forum);
-    setForumName(forum.ForumName);
-    setForumDescription(forum.ForumDescription);
+  const handleOpenEditDialog = () => {
+    setForumName(selectedForum ? selectedForum.ForumName : "");
+    setForumDescription(selectedForum ? selectedForum.ForumDescription : "");
     setOpenEditDialog(true);
+  };
+
+  const handleOpenDeleteConfirmation = () => {
+    setForumToDelete(selectedForum);
+    setOpenDeleteConfirmation(true);
   };
 
   const handleCloseDialogs = () => {
     setOpenCreateDialog(false);
     setOpenEditDialog(false);
+    setOpenDeleteConfirmation(false);
+  };
+
+  const handleDeleteForumConfirmed = () => {
+    handleDeleteForum();
+    setOpenDeleteConfirmation(false);
   };
 
   const renderDialog = useCallback(
     (title, actionButtonLabel, onClickAction) => (
       <Dialog
-        open={openCreateDialog || openEditDialog}
+        open={(openCreateDialog || openEditDialog) && selectedForum === null}
         onClose={handleCloseDialogs}
       >
         <DialogTitle>{title}</DialogTitle>
@@ -169,95 +244,114 @@ export const ForumDiscussion = ({ selectedCourse: courseId }) => {
       forumDescription,
       createForumName,
       createForumDescription,
+      selectedForum,
       handleCloseDialogs,
     ]
   );
 
-  return (
-    <>
-      {roleId === "2" && (
+  const renderForumList = () => (
+    <Box>
+      <TextField
+        label="Search Forum"
+        value={searchQuery}
+        onChange={handleSearch}
+        sx={{ marginBottom: 2 }}
+      />
+      {filteredForums.map((forum) => (
         <Box
+          key={forum.ForumID}
           sx={{
-            padding: 3,
-            backgroundColor: "primary.main",
-            color: "primary.contrastText",
+            borderBottom: "1px solid #ccc",
+            marginBottom: 2,
+            paddingBottom: 2,
           }}
         >
+          <Button onClick={() => handleForumClick(forum)}>
+            <Typography variant="h5" gutterBottom>
+              {forum.ForumName}
+            </Typography>
+          </Button>
+        </Box>
+      ))}
+      {roleId === "2" && (
+        <Box sx={{ marginTop: 2 }}>
           <Button onClick={handleOpenCreateDialog}>Create Forum</Button>
         </Box>
       )}
+      <CreateDialog
+        openCreateDialog={openCreateDialog}
+        handleCloseDialogs={handleCloseDialogs}
+        createForumName={createForumName}
+        setCreateForumName={setCreateForumName}
+        createForumDescription={createForumDescription}
+        setCreateForumDescription={setCreateForumDescription}
+        handleCreateForum={handleCreateForum}
+      />
+    </Box>
+  );
 
-      <Box
-        sx={{
-          my: 3,
-          padding: 3,
-          backgroundColor: "primary.main",
-          color: "primary.contrastText",
-        }}
-      >
-        {forums
-          .slice((currentPage - 1) * itemsPerPage, currentPage * itemsPerPage)
-          .map((forum) => (
-            <Box
-              key={forum.ForumID}
-              sx={{
-                borderBottom: "1px solid #ccc",
-                marginBottom: 2,
-                paddingBottom: 2,
-              }}
-            >
-              <Typography variant="h5" gutterBottom>
-                {forum.ForumName}
-              </Typography>
-              <Typography>{forum.ForumDescription}</Typography>
-              <ThreadList roleId={roleId} forumId={forum.ForumID} />
+  const renderForumPage = () => (
+    <Box>
+      <Typography variant="h5" gutterBottom>
+        {selectedForum.ForumName}
+      </Typography>
+      <Typography>{selectedForum.ForumDescription}</Typography>
+      <ThreadList roleId={roleId} forumId={selectedForum.ForumID} />
 
-              {roleId === "2" && (
-                <>
-                  <Button onClick={() => handleOpenEditDialog(forum)}>
-                    Edit Forum
-                  </Button>
-                  <Button onClick={() => handleDeleteForum(forum)}>
-                    Delete Forum
-                  </Button>
+      {roleId === "2" && (
+        <>
+          <Button onClick={handleOpenEditDialog}>Edit Forum</Button>
+          <Button onClick={handleOpenDeleteConfirmation}>Delete Forum</Button>
+        </>
+      )}
 
-                  {renderDialog(
-                    `Edit Forum - ${forum.ForumName}`,
-                    "Save Changes",
-                    () => handleEditForum(forum)
-                  )}
-                </>
-              )}
+      {openEditDialog && (
+        <EditDialog
+          openEditDialog={openEditDialog}
+          handleCloseDialogs={handleCloseDialogs}
+          forumName={forumName}
+          setForumName={setForumName}
+          forumDescription={forumDescription}
+          setForumDescription={setForumDescription}
+          handleEditForum={handleEditForum}
+        />
+      )}
+      {openDeleteConfirmation && (
+        <Dialog open={openDeleteConfirmation} onClose={handleCloseDialogs}>
+          <DialogTitle>Confirm Deletion</DialogTitle>
+          <DialogContent>
+            <Typography>Are you sure you want to delete the forum?</Typography>
+          </DialogContent>
+          <DialogActions>
+            <Button onClick={handleCloseDialogs}>Cancel</Button>
+            <Button onClick={handleDeleteForumConfirmed}>Delete</Button>
+          </DialogActions>
+        </Dialog>
+      )}
 
-              {selectedForum && selectedForum.ForumID === forum.ForumID && (
-                <PostSection
-                  key={selectedForum.ForumID}
-                  forumId={forum.ForumID}
-                />
-              )}
-            </Box>
-          ))}
+      <PostSection
+        key={selectedForum.ForumID}
+        forumId={selectedForum.ForumID}
+      />
 
-        {loadingThreads ? (
-          <Typography>Loading threads...</Typography>
-        ) : (
-          <>
-            {forums.length > itemsPerPage && (
-              <Pagination
-                count={Math.ceil(forums.length / itemsPerPage)}
-                page={currentPage}
-                onChange={paginate}
-                color="primary"
-                sx={{ marginTop: 2 }}
-              />
-            )}
-
-            {roleId === "2" && (
-              <>{renderDialog("Create Forum", "Create", handleCreateForum)}</>
-            )}
-          </>
-        )}
+      <Box sx={{ marginTop: 2 }}>
+        <Button onClick={() => setSelectedForum(null)}>
+          Back to Forum List
+        </Button>
       </Box>
-    </>
+    </Box>
+  );
+
+  return (
+    <Box
+      sx={{
+        padding: 3,
+        backgroundColor: "primary.main",
+        color: "primary.contrastText",
+      }}
+    >
+      {selectedForum === null ? renderForumList() : renderForumPage()}
+      {loadingThreads && <Typography>Loading threads...</Typography>}
+    </Box>
   );
 };

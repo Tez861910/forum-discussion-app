@@ -15,7 +15,7 @@ export const validateForumPostCreate = validate(
 export const validateForumPostUpdateById = validate(
   Joi.object({
     // Adjust the properties and validation rules according to your needs
-    userId: Joi.number().integer().min(1).required(),
+    //userId: Joi.number().integer().min(1).required(),
     forumPostId: Joi.number().integer().min(1).required(),
     postContent: Joi.string().required(),
   })
@@ -25,7 +25,7 @@ export const validateForumPostUpdateById = validate(
 export const validateForumPostDelete = validate(
   Joi.object({
     // Adjust the properties and validation rules according to your needs
-    userId: Joi.number().integer().min(1).required(),
+    //userId: Joi.number().integer().min(1).required(),
     forumPostId: Joi.number().integer().min(1).required(),
   })
 );
