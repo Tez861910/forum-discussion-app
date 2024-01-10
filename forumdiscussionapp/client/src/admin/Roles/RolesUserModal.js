@@ -78,7 +78,7 @@ export function RoleUserModal({ open, onClose, selectedRoleId }) {
   const fetchRoleUsers = useCallback(async () => {
     try {
       const response = await api.get(
-        `/roles/roles/enrollments/${selectedRoleId}`
+        `/users/roles/enrollments/${selectedRoleId}`
       );
 
       if (response.status === 404) {
@@ -121,7 +121,7 @@ export function RoleUserModal({ open, onClose, selectedRoleId }) {
         return;
       }
 
-      const response = await api.post(`/roles/roles/${selectedRoleId}/enroll`, {
+      const response = await api.post(`/users/roles/${selectedRoleId}/enroll`, {
         roleId: selectedRoleId,
         userIds: selectedAutocompleteUserIds,
       });
@@ -148,7 +148,7 @@ export function RoleUserModal({ open, onClose, selectedRoleId }) {
     }
     try {
       const response = await api.patch(
-        `/roles/roles/${selectedRoleId}/enrollments`,
+        `/users/roles/${selectedRoleId}/enrollments`,
         {
           userIds: selectedEnrolledUserIds,
         }
@@ -177,7 +177,7 @@ export function RoleUserModal({ open, onClose, selectedRoleId }) {
       }
       const userId = removeConfirmation.user.UserID;
       const response = await api.patch(
-        `/roles/roles/${selectedRoleId}/enrollments/${userId}`
+        `/users/roles/${selectedRoleId}/enrollments/${userId}`
       );
       console.log("API response:", response);
       fetchRoleUsers();

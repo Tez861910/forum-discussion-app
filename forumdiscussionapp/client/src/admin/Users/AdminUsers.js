@@ -47,7 +47,7 @@ export function AdminUsers() {
 
   const fetchRoles = React.useCallback(async () => {
     try {
-      const response = await api.get("/roles/roles/get");
+      const response = await api.get("/users/roles/get");
       setRoles(response.data.roles);
       console.log("Roles fetched successfully");
     } catch (error) {

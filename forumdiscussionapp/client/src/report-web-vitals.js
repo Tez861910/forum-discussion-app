@@ -1,15 +1,9 @@
-import { getCLS, getFID, getFCP, getLCP, getTTFB } from 'web-vitals';
+import { onLCP, onFID, onCLS } from "web-vitals/attribution";
 
-const reportWebVitals = onPerfEntry => {
+export const reportWebVitals = (onPerfEntry) => {
   if (onPerfEntry && onPerfEntry instanceof Function) {
-    Promise.all([
-      getCLS(onPerfEntry),
-      getFID(onPerfEntry),
-      getFCP(onPerfEntry),
-      getLCP(onPerfEntry),
-      getTTFB(onPerfEntry)
-    ]);
+    Promise.all([onCLS(onPerfEntry), onFID(onPerfEntry), onLCP(onPerfEntry)])
+      .then(() => console.log("Web vitals reported successfully."))
+      .catch((error) => console.error("Error reporting web vitals:", error));
   }
 };
-
-export default reportWebVitals;

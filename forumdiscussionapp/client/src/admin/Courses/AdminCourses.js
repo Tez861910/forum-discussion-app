@@ -23,7 +23,7 @@ export function AdminCourses() {
   const fetchCourses = React.useCallback(async () => {
     setLoading(true);
     try {
-      const response = await api.get("/courses/courses/get");
+      const response = await api.get("/users/courses/get");
       if (Array.isArray(response.data.courses)) {
         const transformedCourses = response.data.courses.map((row) => ({
           CourseID: row.CourseID,
@@ -48,7 +48,7 @@ export function AdminCourses() {
 
   const handleCreateCourse = async () => {
     try {
-      const response = await api.post("/courses/courses/create", {
+      const response = await api.post("/users/courses/create", {
         courseName: newCourseName,
       });
       console.log("Create Course Response:", response.data);
@@ -72,7 +72,7 @@ export function AdminCourses() {
         return;
       }
 
-      const response = await api.put(`/courses/courses/update/${courseId}`, {
+      const response = await api.put(`/users/courses/update/${courseId}`, {
         courseName: trimmedCourseName,
       });
 
@@ -92,7 +92,7 @@ export function AdminCourses() {
 
   const handleConfirmDelete = async () => {
     try {
-      await api.patch(`/courses/courses/delete/${deleteConfirmation.courseId}`);
+      await api.patch(`/users/courses/delete/${deleteConfirmation.courseId}`);
       console.log("Course deleted successfully");
       fetchCourses();
     } catch (error) {

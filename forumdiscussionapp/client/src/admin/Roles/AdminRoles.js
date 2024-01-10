@@ -24,7 +24,7 @@ export function AdminRoles() {
   const fetchRoles = React.useCallback(async () => {
     setLoading(true);
     try {
-      const response = await api.get("/roles/roles/get");
+      const response = await api.get("/users/roles/get");
       if (Array.isArray(response.data.roles)) {
         setRoles(response.data.roles);
       } else {
@@ -56,7 +56,7 @@ export function AdminRoles() {
 
         console.log("Creating role:", trimmedRoleName);
 
-        const response = await api.post("/roles/roles/create", {
+        const response = await api.post("/users/roles/create", {
           roleName: trimmedRoleName,
         });
 
@@ -88,7 +88,7 @@ export function AdminRoles() {
   const handleEditRole = React.useCallback(
     async (roleId, updatedRoleName) => {
       try {
-        const response = await api.put(`/roles/roles/update/${roleId}`, {
+        const response = await api.put(`/users/roles/update/${roleId}`, {
           roleName: updatedRoleName,
         });
         console.log("Edit Role Response:", response.data);
@@ -108,7 +108,7 @@ export function AdminRoles() {
   const confirmDelete = React.useCallback(async () => {
     try {
       const response = await api.patch(
-        `/roles/roles/delete/${deleteConfirmation.roleId}`
+        `/users/roles/delete/${deleteConfirmation.roleId}`
       );
       if (response.data.message === "Role soft-deleted successfully") {
         console.log("Role soft-deleted successfully");
