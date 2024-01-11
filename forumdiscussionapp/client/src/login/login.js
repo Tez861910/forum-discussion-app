@@ -55,7 +55,7 @@ export const Login = () => {
 
   const handleLoginSuccess = async (data) => {
     try {
-      const response = await api.post("/auth/login/refresh-token", {
+      const response = await api.post("/miscs/refreshtokens/refresh-token", {
         token: cookies.refreshToken,
       });
 

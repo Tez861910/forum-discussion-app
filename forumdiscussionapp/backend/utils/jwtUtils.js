@@ -1,23 +1,44 @@
 import jwt from "jsonwebtoken";
-import { readCookie } from "react-cookies";
+import cookieParser from "cookie-parser";
 
-// Function to create an access token
-export const createToken = (userId, email, roleId) => {
-  return jwt.sign({ userId, email, roleId }, process.env.JWT_SECRET, {
-    expiresIn: process.env.TOKEN_EXPIRATION,
-  });
+// Use cookie-parser middleware
+app.use(cookieParser());
+
+// Function to create an access token and set cookies
+export const createTokenAndSetCookies = (userId, email, roleId, res) => {
+  const accessToken = jwt.sign(
+    { userId, email, roleId },
+    process.env.JWT_SECRET,
+    {
+      expiresIn: process.env.TOKEN_EXPIRATION,
+    }
+  );
+
+  // Set cookies for the new access token
+  res.cookie("token", accessToken, { httpOnly: true });
+
+  return accessToken;
 };
 
-// Function to create a refresh token
-export const createRefreshToken = (userId, email, roleId) => {
-  return jwt.sign({ userId, email, roleId }, process.env.REFRESH_TOKEN_SECRET, {
-    expiresIn: process.env.REFRESH_TOKEN_EXPIRATION,
-  });
+// Function to create a refresh token and set cookies
+export const createRefreshTokenAndSetCookies = (userId, email, roleId, res) => {
+  const refreshToken = jwt.sign(
+    { userId, email, roleId },
+    process.env.REFRESH_TOKEN_SECRET,
+    {
+      expiresIn: process.env.REFRESH_TOKEN_EXPIRATION,
+    }
+  );
+
+  // Set cookies for the new refresh token
+  res.cookie("refreshToken", refreshToken, { httpOnly: true });
+
+  return refreshToken;
 };
 
-// Middleware to verify JWT in request headers
+// Middleware to verify JWT in request cookies
 export const verifyJwt = (req, res, next) => {
-  const authToken = readCookie(req, "token");
+  const authToken = req.cookies.token;
 
   if (authToken) {
     jwt.verify(authToken, process.env.JWT_SECRET, (err, decoded) => {
@@ -41,7 +62,7 @@ export const verifyJwt = (req, res, next) => {
 
 // Middleware to verify and refresh the refresh token
 export const verifyRefreshToken = async (req, res) => {
-  const refreshToken = readCookie(req, "refreshToken");
+  const refreshToken = req.cookies.refreshToken;
 
   if (!refreshToken) {
     return res.sendStatus(403);
@@ -53,13 +74,19 @@ export const verifyRefreshToken = async (req, res) => {
     const accessToken = createToken(
       decoded.userId,
       decoded.email,
-      decoded.roleId
+      decoded.roleId,
+      res
     );
 
-    // Set cookies for the new access token
-    res.cookie("token", accessToken, { httpOnly: true });
+    // Create and set cookies for the new refresh token
+    const newRefreshToken = createRefreshToken(
+      decoded.userId,
+      decoded.email,
+      decoded.roleId,
+      res
+    );
 
-    return res.json({ accessToken });
+    return res.json({ accessToken, refreshToken: newRefreshToken });
   } catch (error) {
     console.error("Refresh token verification error:", error);
     return res.sendStatus(403);

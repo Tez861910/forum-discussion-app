@@ -58,7 +58,7 @@ const ProtectedRoute = ({ component: Component, ...rest }) => {
   const isAuthenticated = useAuth();
 
   return isAuthenticated ? (
-    <Route {...rest} element={<Component />} />
+    <Component {...rest} />
   ) : (
     <Navigate to="/login" replace />
   );
@@ -76,7 +76,7 @@ export const App = () => (
             <Route path="/sign-up" element={<Signup />} />
             <Route
               path="/home/*"
-              element={<ProtectedRoute component={Home} />}
+              element={ProtectedRoute({ component: Home })}
             />
             <Route path="admin-courses" element={<AdminCourses />} />
             <Route path="admin-roles" element={<AdminRoles />} />

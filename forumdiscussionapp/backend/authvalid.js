@@ -1,8 +1,8 @@
 export { hashPassword, verifyPassword } from "./utils/argon2Utils.js";
 export {
-  createToken,
+  createTokenAndSetCookies,
   verifyJwt,
-  createRefreshToken,
+  createRefreshTokenAndSetCookies,
   verifyRefreshToken,
 } from "./utils/jwtUtils.js";
 export { validate } from "./utils/validationMiddleware.js";

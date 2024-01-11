@@ -7,11 +7,11 @@ import dotenv from "dotenv";
 import "express-async-errors";
 import { handleError, logger } from "./authvalid.js";
 import cookieParser from "cookie-parser";
-import { readCookie } from "react-cookies";
 
 dotenv.config();
 
 import authRoutes from "./modular-routes/auth-routes.js";
+import miscRoutes from "./modular-routes/misc.js";
 import usersRoutes from "./modular-routes/user-routes.js";
 import forumsRoutes from "./modular-routes/forum-routes.js";
 import examsRoutes from "./modular-routes/exam-routes.js";
@@ -52,18 +52,31 @@ app.use((req, res, next) => {
   next();
 });
 
-// Set SameSite attribute for cookies
+// Middleware to enforce token verification for specific routes
+const protectedRoutes = [
+  "/miscs",
+  "/users",
+  "/forums",
+  "/exams",
+  "/events",
+  "/messages",
+  "/groups",
+  "/accessories",
+  "/alerts",
+  "/moderation",
+  "/activity",
+];
+
 app.use((req, res, next) => {
-  const sessionCookie = readCookie(req, "session");
-
-  if (sessionCookie) {
-    res.cookie("session", sessionCookie, { httpOnly: true });
+  if (protectedRoutes.includes(req.path)) {
+    verifyJwt(req, res, next);
+  } else {
+    next();
   }
-
-  next();
 });
 
 app.use("/auth", authRoutes);
+app.use("/miscs", miscRoutes);
 app.use("/users", usersRoutes);
 app.use("/forums", forumsRoutes);
 app.use("/exams", examsRoutes);

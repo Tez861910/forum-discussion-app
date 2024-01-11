@@ -1,14 +1,15 @@
 import express from "express";
 import { query } from "../../db.js";
 import {
-  createToken,
+  createTokenAndSetCookies,
   verifyPassword,
-  createRefreshToken,
+  createRefreshTokenAndSetCookies,
 } from "../../authvalid.js";
 import { validateLogin } from "../../body-validation/auth-validation-functions/login-validation.js";
-import { readCookie } from "react-cookies";
+import cookieParser from "cookie-parser";
 
 const router = express.Router();
+router.use(cookieParser());
 
 // Handle user login
 router.post("/login", validateLogin, async (req, res) => {
@@ -48,22 +49,20 @@ router.post("/login", validateLogin, async (req, res) => {
     }
 
     // Generate access token and refresh token
-    const token = createToken(
+    const token = createTokenAndSetCookies(
       userData.UserID,
       userData.UserEmail,
-      userData.RoleID
+      userData.RoleID,
+      res
     );
-    const refreshToken = createRefreshToken(
+    const refreshToken = createRefreshTokenAndSetCookies(
       userData.UserID,
       userData.UserEmail,
-      userData.RoleID
+      userData.RoleID,
+      res
     );
 
     console.log("Login successful for email: " + email);
-
-    // Set cookies for tokens
-    res.cookie("token", token, { httpOnly: true });
-    res.cookie("refreshToken", refreshToken, { httpOnly: true });
 
     // Send response with user details and tokens
     res.json({
@@ -77,29 +76,6 @@ router.post("/login", validateLogin, async (req, res) => {
   } catch (error) {
     console.error("Login failed with error:", error);
     res.status(500).json({ error: "Login Failed", details: error.message });
-  }
-});
-
-router.post("/refresh-token", async (req, res) => {
-  try {
-    // Read refresh token from the request cookies
-    const refreshToken = readCookie(req, "refreshToken");
-
-    if (!refreshToken) {
-      console.log("No refresh token found in cookies");
-      return res.status(401).json({ error: "Invalid refresh token" });
-    }
-
-    // Generate a new access token
-    const newAccessToken = createToken(req.userId, req.email, req.roleId);
-
-    // Set the new access token in cookies
-    res.cookie("token", newAccessToken, { httpOnly: true });
-
-    res.json({ access_token: newAccessToken });
-  } catch (err) {
-    console.error("Error refreshing token:", err);
-    res.status(401).json({ error: "Invalid refresh token" });
   }
 });
 
