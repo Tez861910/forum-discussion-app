@@ -6,27 +6,16 @@ import {
   createRefreshToken,
 } from "../../authvalid.js";
 import { validateLogin } from "../../body-validation/auth-validation-functions/login-validation.js";
+import { readCookie } from "react-cookies";
 
 const router = express.Router();
 
-router.post("/login", async (req, res) => {
+// Handle user login
+router.post("/login", validateLogin, async (req, res) => {
   const { email, password } = req.body || {};
 
   try {
-    // Validate request body
-    /*const validationResult = validateLogin({ email, password });
-
-    if (validationResult.error) {
-      return res
-        .status(400)
-        .json({ error: validationResult.error.details[0].message });
-    }*/
-
-    if (!email || !password) {
-      console.log("Email and password are required.");
-      return res.status(400).json({ error: "Email and password are required" });
-    }
-
+    // Fetch user data from the database
     const sql = `
       SELECT users.*, userroles.RoleID
       FROM users
@@ -36,33 +25,29 @@ router.post("/login", async (req, res) => {
     `;
 
     const queryResult = await query(sql, [email]);
-    console.log("Query Result:", queryResult);
 
     if (!Array.isArray(queryResult) || queryResult.length === 0) {
       console.log("No active user found with this email: " + email);
-      return res
-        .status(401)
-        .json({ error: "No active user found with this email" });
+      return res.status(401).json({ error: "Invalid email or password" });
     }
 
     const userData = queryResult[0];
 
-    console.log("User Data:", userData);
-
     if (!userData || !userData.UserPassword) {
       console.log("User data is incomplete.");
-      return res.status(401).json({ error: "User data is incomplete" });
+      return res.status(401).json({ error: "Invalid email or password" });
     }
 
+    // Verify the provided password
     const hashedPassword = userData.UserPassword;
-
     const isPasswordValid = await verifyPassword(password, hashedPassword);
 
     if (!isPasswordValid) {
       console.log("Incorrect password for email: " + email);
-      return res.status(401).json({ error: "Incorrect password" });
+      return res.status(401).json({ error: "Invalid email or password" });
     }
 
+    // Generate access token and refresh token
     const token = createToken(
       userData.UserID,
       userData.UserEmail,
@@ -76,6 +61,11 @@ router.post("/login", async (req, res) => {
 
     console.log("Login successful for email: " + email);
 
+    // Set cookies for tokens
+    res.cookie("token", token, { httpOnly: true });
+    res.cookie("refreshToken", refreshToken, { httpOnly: true });
+
+    // Send response with user details and tokens
     res.json({
       success: true,
       message: "Login successful",
@@ -87,6 +77,29 @@ router.post("/login", async (req, res) => {
   } catch (error) {
     console.error("Login failed with error:", error);
     res.status(500).json({ error: "Login Failed", details: error.message });
+  }
+});
+
+router.post("/refresh-token", async (req, res) => {
+  try {
+    // Read refresh token from the request cookies
+    const refreshToken = readCookie(req, "refreshToken");
+
+    if (!refreshToken) {
+      console.log("No refresh token found in cookies");
+      return res.status(401).json({ error: "Invalid refresh token" });
+    }
+
+    // Generate a new access token
+    const newAccessToken = createToken(req.userId, req.email, req.roleId);
+
+    // Set the new access token in cookies
+    res.cookie("token", newAccessToken, { httpOnly: true });
+
+    res.json({ access_token: newAccessToken });
+  } catch (err) {
+    console.error("Error refreshing token:", err);
+    res.status(401).json({ error: "Invalid refresh token" });
   }
 });
 

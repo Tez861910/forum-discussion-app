@@ -1,6 +1,5 @@
 import * as React from "react";
 import { Link, useNavigate } from "react-router-dom";
-import axios from "axios";
 import { useCookies } from "react-cookie";
 import {
   Button,
@@ -15,37 +14,29 @@ import {
 } from "@mui/material";
 import { useTheme } from "@mui/material/styles";
 import logo from "../start/logo.png";
+import { useApi } from "../home-page/Api";
 
 export const Login = () => {
   const [values, setValues] = React.useState({ email: "", password: "" });
   const [error, setError] = React.useState("");
   const navigate = useNavigate();
-  const [cookies, setCookie] = useCookies(["token"]);
+  const [cookies, setCookie] = useCookies(["token", "refreshToken"]);
   const theme = useTheme();
+  const { api } = useApi();
 
   const handleInput = (event) => {
     const { name, value } = event.target;
     setValues({ ...values, [name]: value });
   };
 
-  const handleLoginSuccess = (data) => {
-    setCookie("token", data.token, { path: "/", sameSite: "lax" });
-    console.log(`Token set: ${cookies.token}`);
-    localStorage.setItem("userId", data.userId);
-    localStorage.setItem("roleId", data.roleId);
-    navigate("/home");
-  };
-
   const handleSubmit = async (event) => {
     event.preventDefault();
     try {
-      const response = await axios.post(
-        "http://localhost:8081/auth/login/login",
-        {
-          email: values.email,
-          password: values.password,
-        }
-      );
+      const response = await api.post("/auth/login/login", {
+        email: values.email,
+        password: values.password,
+      });
+
       if (response.data.success) {
         handleLoginSuccess(response.data);
       } else {
@@ -58,6 +49,35 @@ export const Login = () => {
         );
       } else {
         setError("Login failed. Please try again.");
+      }
+    }
+  };
+
+  const handleLoginSuccess = async (data) => {
+    try {
+      const response = await api.post("/auth/login/refresh-token", {
+        token: cookies.refreshToken,
+      });
+
+      // Set local storage data as needed
+      localStorage.setItem("userId", data.userId);
+      localStorage.setItem("roleId", data.roleId);
+
+      // Navigate to the home page or another route as needed
+      navigate("/home");
+    } catch (refreshError) {
+      console.error("Error refreshing access token:", refreshError);
+
+      if (refreshError.response) {
+        const status = refreshError.response.status;
+
+        if (status === 403) {
+          setError("Refresh token is invalid or expired. Please login again.");
+        } else {
+          setError(`Error refreshing access token: ${status}`);
+        }
+      } else {
+        setError("Error refreshing access token. Please try again.");
       }
     }
   };

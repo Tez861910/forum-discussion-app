@@ -1,9 +1,8 @@
 import * as React from "react";
-import { useRoutes } from "react-router-dom";
+import { useApi } from "./Api";
+import { useRoutes, useNavigate } from "react-router-dom";
 import { Container, Box, Paper, useTheme } from "@mui/material";
 import useMediaQuery from "@mui/material/useMediaQuery";
-import { useNavigate } from "react-router-dom";
-import { useCookies } from "react-cookie";
 import { Sidebar } from "./side-bar";
 import { Navbar } from "./nav-bar";
 import { AdminCourses } from "../admin/Courses/AdminCourses";
@@ -33,23 +32,16 @@ export const Home = () => {
   const [isSidebarOpen, setSidebarOpen] = React.useState(false);
 
   const navigate = useNavigate();
-  const [cookies, removeCookie] = useCookies(["token", "refreshToken"]);
-
-  const clearUserData = async () => {
-    // Clear local storage
-    localStorage.removeItem("userId");
-    localStorage.removeItem("roleId");
-
-    // Clear cookies
-    removeCookie("token", { path: "/" });
-    removeCookie("refreshToken", { path: "/" });
-    console.log(`Token after removal: ${cookies.token}`);
-
-    // Update state
-    setIsLoggedIn(false);
-
-    // Redirect to login page
-    navigate("/login");
+  const { api } = useApi();
+  const logout = async () => {
+    try {
+      await api.post("/auth/home/logout", {});
+      localStorage.removeItem("userId");
+      localStorage.removeItem("roleId");
+      navigate("/login");
+    } catch (error) {
+      console.error("Error logging out:", error);
+    }
   };
 
   const handleRoleSpecificActions = (roleId) => {
@@ -84,9 +76,7 @@ export const Home = () => {
   }, [isLoggedIn, navigateToPathState, roleId, navigate]);
 
   const handleDrawerToggle = () => {
-    console.log("handleDrawerToggle triggered");
     setSidebarOpen(!isSidebarOpen);
-    console.log("Sidebar open state:", isSidebarOpen);
   };
 
   const handleEnrollmentSuccess = () => {
@@ -94,7 +84,7 @@ export const Home = () => {
   };
 
   const handleLogout = () => {
-    clearUserData();
+    logout();
   };
 
   const handleCourseSelect = (courseId) => {

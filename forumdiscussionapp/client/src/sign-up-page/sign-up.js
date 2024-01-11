@@ -1,5 +1,5 @@
 import * as React from "react";
-import axios from "axios";
+import { useApi } from "../home-page/Api";
 import { Link as RouterLink, useNavigate } from "react-router-dom";
 import {
   Container,
@@ -21,6 +21,7 @@ import logo from "../start/logo.png";
 import { SignUpValidation } from "./sign-up-validation";
 
 export const Signup = () => {
+  const { api } = useApi();
   const [formData, setFormData] = React.useState({
     name: "",
     email: "",
@@ -46,10 +47,7 @@ export const Signup = () => {
     if (Object.keys(validationErrors).length === 0) {
       try {
         console.log("Sending request");
-        const response = await axios.post(
-          "http://localhost:8081/signup/signup",
-          formData
-        );
+        const response = await api.post("/signup/signup", formData);
         console.log("Response:", response);
 
         if (response.status === 200) {

@@ -1,4 +1,4 @@
-import React, { Suspense } from "react";
+import React, { Suspense, useState, useEffect } from "react";
 import {
   BrowserRouter as Router,
   Routes,
@@ -7,9 +7,8 @@ import {
 } from "react-router-dom";
 import { ThemeProvider, CssBaseline } from "@mui/material";
 import { ErrorBoundary } from "react-error-boundary";
-import { useCookies } from "react-cookie";
 import { theme } from "./Theme/Theme";
-
+import { useApi } from "./home-page/Api";
 import { AdminCourses } from "./admin/Courses/AdminCourses";
 import { AdminRoles } from "./admin/Roles/AdminRoles";
 import { AdminUsers } from "./admin/Users/AdminUsers";
@@ -35,11 +34,34 @@ function ErrorFallback({ error, resetErrorBoundary }) {
   );
 }
 
-const ProtectedRoute = ({ component: Component, ...rest }) => {
-  const [cookies] = useCookies(["token"]);
-  const isAuthenticated = Boolean(cookies.token);
+function useAuth() {
+  const [isAuthenticated, setIsAuthenticated] = useState(false);
+  const { api } = useApi();
 
-  return isAuthenticated ? <Component {...rest} /> : <Navigate to="/login" />;
+  useEffect(() => {
+    const checkAuth = async () => {
+      try {
+        const response = await api.get("/auth/home/check-auth");
+        setIsAuthenticated(response.data.isAuthenticated);
+      } catch (error) {
+        console.error("Error checking auth status:", error);
+      }
+    };
+
+    checkAuth();
+  }, []);
+
+  return isAuthenticated;
+}
+
+const ProtectedRoute = ({ component: Component, ...rest }) => {
+  const isAuthenticated = useAuth();
+
+  return isAuthenticated ? (
+    <Route {...rest} element={<Component />} />
+  ) : (
+    <Navigate to="/login" replace />
+  );
 };
 
 export const App = () => (

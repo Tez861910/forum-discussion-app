@@ -2,6 +2,7 @@ import React from "react";
 import { createRoot } from "react-dom/client";
 import { App } from "./App";
 import { reportWebVitals } from "./report-web-vitals";
+import { CookiesProvider } from "react-cookie";
 
 const rootElement = document.getElementById("root");
 
@@ -12,7 +13,9 @@ if (!rootElement) {
 try {
   createRoot(rootElement).render(
     <React.StrictMode>
-      <App />
+      <CookiesProvider>
+        <App />
+      </CookiesProvider>
     </React.StrictMode>
   );
 } catch (error) {

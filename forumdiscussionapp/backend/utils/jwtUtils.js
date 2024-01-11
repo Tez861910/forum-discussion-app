@@ -1,33 +1,28 @@
 import jwt from "jsonwebtoken";
+import { readCookie } from "react-cookies";
 
+// Function to create an access token
 export const createToken = (userId, email, roleId) => {
-  const token = jwt.sign({ userId, email, roleId }, process.env.JWT_SECRET, {
+  return jwt.sign({ userId, email, roleId }, process.env.JWT_SECRET, {
     expiresIn: process.env.TOKEN_EXPIRATION,
   });
-  console.log("Token created");
-  return token;
 };
 
+// Function to create a refresh token
 export const createRefreshToken = (userId, email, roleId) => {
-  const refreshToken = jwt.sign(
-    { userId, email, roleId },
-    process.env.REFRESH_TOKEN_SECRET,
-    { expiresIn: process.env.REFRESH_TOKEN_EXPIRATION }
-  );
-  console.log("Refresh token created");
-  return refreshToken;
+  return jwt.sign({ userId, email, roleId }, process.env.REFRESH_TOKEN_SECRET, {
+    expiresIn: process.env.REFRESH_TOKEN_EXPIRATION,
+  });
 };
 
+// Middleware to verify JWT in request headers
 export const verifyJwt = (req, res, next) => {
-  const authHeader = req.headers["authorization"];
-  console.log("Received auth header:", authHeader);
+  const authToken = readCookie(req, "token");
 
-  if (authHeader && authHeader.startsWith("Bearer ")) {
-    const token = authHeader.slice("Bearer ".length);
-
-    jwt.verify(token, process.env.JWT_SECRET, (err, decoded) => {
+  if (authToken) {
+    jwt.verify(authToken, process.env.JWT_SECRET, (err, decoded) => {
       if (err) {
-        handleJwtVerificationError(err, res);
+        return handleJwtVerificationError(err, res);
       }
 
       if (!decoded?.userId || !decoded?.roleId) {
@@ -44,30 +39,34 @@ export const verifyJwt = (req, res, next) => {
   }
 };
 
-export const verifyRefreshToken = (req, res) => {
-  const refreshToken = req.body.token;
-  if (refreshToken && refreshToken.includes(refreshToken)) {
-    jwt.verify(
-      refreshToken,
-      process.env.REFRESH_TOKEN_SECRET,
-      (err, decoded) => {
-        if (err) {
-          console.error("Refresh token verification error:", err);
-          return res.sendStatus(403);
-        }
-        const accessToken = createToken(
-          decoded.userId,
-          decoded.email,
-          decoded.roleId
-        );
-        return res.json({ accessToken });
-      }
+// Middleware to verify and refresh the refresh token
+export const verifyRefreshToken = async (req, res) => {
+  const refreshToken = readCookie(req, "refreshToken");
+
+  if (!refreshToken) {
+    return res.sendStatus(403);
+  }
+
+  try {
+    const decoded = jwt.verify(refreshToken, process.env.REFRESH_TOKEN_SECRET);
+
+    const accessToken = createToken(
+      decoded.userId,
+      decoded.email,
+      decoded.roleId
     );
-  } else {
+
+    // Set cookies for the new access token
+    res.cookie("token", accessToken, { httpOnly: true });
+
+    return res.json({ accessToken });
+  } catch (error) {
+    console.error("Refresh token verification error:", error);
     return res.sendStatus(403);
   }
 };
 
+// Function to handle JWT verification errors
 export const handleJwtVerificationError = (err, res) => {
   const errorResponse = (statusCode, message) =>
     res.status(statusCode).json({ error: message });

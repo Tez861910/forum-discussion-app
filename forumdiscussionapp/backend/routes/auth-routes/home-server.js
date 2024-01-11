@@ -1,7 +1,8 @@
 import express from "express";
-import { query } from "../../db.js";
 import multer from "multer";
 import path from "path";
+import { readCookie } from "react-cookies";
+import { query } from "../../db.js";
 import {
   validateAvatarUpload,
   validateTokenRefresh,
@@ -22,9 +23,13 @@ const storage = multer.diskStorage({
 
 const upload = multer({ storage: storage });
 
-// Avatar upload route
 router.post("/upload-avatar", upload.single("avatar"), async (req, res) => {
   console.log("Upload avatar route hit");
+
+  // Check if the user is authenticated
+  if (!req.userId) {
+    return res.status(401).json({ error: "Unauthorized" });
+  }
 
   // Validate request body
   const validationResult = validateAvatarUpload(req.body);
@@ -52,26 +57,19 @@ router.post("/upload-avatar", upload.single("avatar"), async (req, res) => {
   }
 });
 
-// Token refresh route
-router.post("/refresh-token", verifyRefreshToken, async (req, res) => {
-  // Validate request body
-  const validationResult = validateTokenRefresh(req.body);
-
-  if (validationResult.error) {
-    return res
-      .status(400)
-      .json({ error: validationResult.error.details[0].message });
+router.get("/check-auth", (req, res) => {
+  const token = readCookie(req, "token");
+  if (token) {
+    res.json({ isAuthenticated: true });
+  } else {
+    res.json({ isAuthenticated: false });
   }
+});
 
-  try {
-    // Generate a new access token
-    const newAccessToken = createToken(req.userId, req.email, req.roleId);
-
-    res.json({ access_token: newAccessToken });
-  } catch (err) {
-    console.error("Error refreshing token:", err);
-    res.status(401).json({ error: "Invalid refresh token" });
-  }
+router.post("/logout", (req, res) => {
+  res.clearCookie("token");
+  res.clearCookie("refreshToken");
+  res.json({ success: true });
 });
 
 export default router;

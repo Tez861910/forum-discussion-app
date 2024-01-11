@@ -7,25 +7,13 @@ export const useApi = () => {
     return axios.create({
       baseURL: "http://localhost:8081",
       timeout: 5000,
+      withCredentials: true,
     });
   };
 
+  const [cookies, setCookie] = useCookies(["token", "refreshToken"]);
+
   const setupInterceptors = (apiInstance) => {
-    apiInstance.interceptors.request.use(
-      (config) => {
-        const token = cookies.token;
-
-        if (token) {
-          config.headers.Authorization = `Bearer ${token}`;
-        }
-
-        return config;
-      },
-      (error) => {
-        return Promise.reject(error);
-      }
-    );
-
     apiInstance.interceptors.response.use(
       (response) => {
         console.log("Response:", response);
@@ -45,21 +33,16 @@ export const useApi = () => {
           originalRequest._retry = true;
 
           try {
-            const response = await apiInstance.post(
-              "/auth/home/refresh-token",
-              {},
-              {
-                headers: {
-                  Authorization: `Bearer ${cookies.refreshToken}`,
-                },
-              }
+            const refreshResponse = await apiInstance.post(
+              "/auth/login/refresh-token",
+              { token: cookies.refreshToken }
             );
 
-            const newToken = response.data.access_token;
-            setCookie("token", newToken, { path: "/" });
+            setCookie("token", refreshResponse.data.accessToken);
+            originalRequest.headers[
+              "Authorization"
+            ] = `Bearer ${refreshResponse.data.accessToken}`;
 
-            console.log("New Token:", newToken);
-            originalRequest.headers["Authorization"] = `Bearer ${newToken}`;
             return apiInstance(originalRequest);
           } catch (refreshError) {
             console.error("Error refreshing token:", refreshError);
@@ -72,13 +55,11 @@ export const useApi = () => {
     );
   };
 
-  const [api, setApi] = useState(() => {
+  const [api] = useState(() => {
     const initialApiInstance = createApiInstance();
     setupInterceptors(initialApiInstance);
     return initialApiInstance;
   });
-
-  const [cookies, setCookie] = useCookies(["token", "refreshToken"]);
 
   const cleanup = () => {
     console.log("Cleanup: Request canceled due to component unmounting");

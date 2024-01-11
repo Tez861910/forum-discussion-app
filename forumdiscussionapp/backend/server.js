@@ -6,6 +6,8 @@ import compression from "compression";
 import dotenv from "dotenv";
 import "express-async-errors";
 import { handleError, logger } from "./authvalid.js";
+import cookieParser from "cookie-parser";
+import { readCookie } from "react-cookies";
 
 dotenv.config();
 
@@ -26,6 +28,7 @@ const port = process.env.PORT;
 
 const corsOptions = {
   origin: process.env.CORS_ORIGIN,
+  credentials: true,
   optionsSuccessStatus: 200,
 };
 
@@ -34,9 +37,31 @@ app.use(cors(corsOptions));
 app.use(helmet());
 app.use(compression());
 app.use(express.json());
+app.use(cookieParser());
 app.use(
   morgan("combined", { stream: { write: (message) => logger.info(message) } })
 );
+
+// Set Access-Control-Allow-Origin header
+app.use((req, res, next) => {
+  res.setHeader("Access-Control-Allow-Origin", process.env.CORS_ORIGIN);
+  res.header(
+    "Access-Control-Allow-Headers",
+    "Origin, X-Requested-With, Content-Type, Accept"
+  );
+  next();
+});
+
+// Set SameSite attribute for cookies
+app.use((req, res, next) => {
+  const sessionCookie = readCookie(req, "session");
+
+  if (sessionCookie) {
+    res.cookie("session", sessionCookie, { httpOnly: true });
+  }
+
+  next();
+});
 
 app.use("/auth", authRoutes);
 app.use("/users", usersRoutes);

@@ -78,6 +78,11 @@ router.post("/signup", async (req, res) => {
         };
         const token = createToken(payload);
         const refreshToken = createRefreshToken(payload);
+
+        // Set cookies for tokens
+        res.cookie("token", token, { httpOnly: true });
+        res.cookie("refreshToken", refreshToken, { httpOnly: true });
+
         console.log("User registered successfully for email: " + email);
         res.json({
           message: "User registered successfully",
