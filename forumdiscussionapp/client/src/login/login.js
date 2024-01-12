@@ -15,6 +15,7 @@ import {
 import { useTheme } from "@mui/material/styles";
 import logo from "../start/logo.png";
 import { useApi } from "../home-page/Api";
+import { useAuth } from "../utils/auth";
 
 export const Login = () => {
   const [values, setValues] = React.useState({ email: "", password: "" });
@@ -23,6 +24,7 @@ export const Login = () => {
   const [cookies, setCookie] = useCookies(["token", "refreshToken"]);
   const theme = useTheme();
   const { api } = useApi();
+  const { login } = useAuth();
 
   const handleInput = (event) => {
     const { name, value } = event.target;
@@ -38,9 +40,15 @@ export const Login = () => {
     localStorage.setItem("userId", data.userId);
     localStorage.setItem("roleId", data.roleId);
 
-    // Navigate to the home page or another route as needed
-    navigate("/home");
+    // Check if navigation has already occurred
+    if (!alreadyNavigated) {
+      // Navigate to the home page or another route as needed
+      navigate("/home");
+      setAlreadyNavigated(true); // Set a state variable to indicate navigation has occurred
+    }
   };
+
+  const [alreadyNavigated, setAlreadyNavigated] = React.useState(false);
 
   const refreshAccessToken = async () => {
     try {
@@ -78,6 +86,7 @@ export const Login = () => {
 
       if (response.data.success) {
         handleLoginSuccess(response.data);
+        login(); // Call the login function from useAuth
       } else {
         setError("Login failed. Please check your email and password.");
       }
