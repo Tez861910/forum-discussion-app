@@ -1,5 +1,5 @@
 import express from "express";
-import { createTokenAndSetCookies } from "../../authvalid";
+import { createRefreshTokenAndSetCookies } from "../../authvalid.js";
 
 const router = express.Router();
 
@@ -7,7 +7,7 @@ const router = express.Router();
 router.post("/refresh-token", async (req, res) => {
   try {
     // Generate a new access token
-    const newAccessToken = createTokenAndSetCookies(
+    const newAccessToken = createRefreshTokenAndSetCookies(
       req.userId,
       req.email,
       req.roleId,

@@ -1,7 +1,7 @@
 import express from "express";
 import { query } from "../../db.js";
 import {
-  createTokenAndSetCookies,
+  createAccessTokenAndSetCookies,
   verifyPassword,
   createRefreshTokenAndSetCookies,
 } from "../../authvalid.js";
@@ -49,7 +49,7 @@ router.post("/login", validateLogin, async (req, res) => {
     }
 
     // Generate access token and refresh token
-    const token = createTokenAndSetCookies(
+    const token = createAccessTokenAndSetCookies(
       userData.UserID,
       userData.UserEmail,
       userData.RoleID,

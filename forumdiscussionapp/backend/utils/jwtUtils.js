@@ -1,39 +1,59 @@
 import jwt from "jsonwebtoken";
 import cookieParser from "cookie-parser";
+import express from "express";
+
+const router = express.Router();
 
 // Use cookie-parser middleware
-app.use(cookieParser());
+router.use(cookieParser());
 
-// Function to create an access token and set cookies
-export const createTokenAndSetCookies = (userId, email, roleId, res) => {
-  const accessToken = jwt.sign(
-    { userId, email, roleId },
-    process.env.JWT_SECRET,
-    {
-      expiresIn: process.env.TOKEN_EXPIRATION,
-    }
-  );
+// Function to create a token and set cookies
+const createTokenAndSetCookies = (
+  userId,
+  email,
+  roleId,
+  res,
+  secret,
+  tokenName,
+  expiresIn
+) => {
+  const token = jwt.sign({ userId, email, roleId }, secret, { expiresIn });
 
-  // Set cookies for the new access token
-  res.cookie("token", accessToken, { httpOnly: true });
+  // Set cookies for the new token
+  res.cookie(tokenName, token, { httpOnly: true });
 
-  return accessToken;
+  return token;
 };
 
-// Function to create a refresh token and set cookies
-export const createRefreshTokenAndSetCookies = (userId, email, roleId, res) => {
-  const refreshToken = jwt.sign(
-    { userId, email, roleId },
-    process.env.REFRESH_TOKEN_SECRET,
-    {
-      expiresIn: process.env.REFRESH_TOKEN_EXPIRATION,
-    }
+export const createAccessTokenAndSetCookies = (userId, email, roleId, res) =>
+  createTokenAndSetCookies(
+    userId,
+    email,
+    roleId,
+    res,
+    process.env.JWT_SECRET,
+    "token",
+    process.env.TOKEN_EXPIRATION
   );
 
-  // Set cookies for the new refresh token
-  res.cookie("refreshToken", refreshToken, { httpOnly: true });
+export const createRefreshTokenAndSetCookies = (userId, email, roleId, res) =>
+  createTokenAndSetCookies(
+    userId,
+    email,
+    roleId,
+    res,
+    process.env.REFRESH_TOKEN_SECRET,
+    "refreshToken",
+    process.env.REFRESH_TOKEN_EXPIRATION
+  );
 
-  return refreshToken;
+// Function to verify JWT
+const verifyJwtToken = (token, secret) => {
+  try {
+    return jwt.verify(token, secret);
+  } catch (err) {
+    return null;
+  }
 };
 
 // Middleware to verify JWT in request cookies
@@ -41,23 +61,18 @@ export const verifyJwt = (req, res, next) => {
   const authToken = req.cookies.token;
 
   if (authToken) {
-    jwt.verify(authToken, process.env.JWT_SECRET, (err, decoded) => {
-      if (err) {
-        return handleJwtVerificationError(err, res);
-      }
+    const decoded = verifyJwtToken(authToken, process.env.JWT_SECRET);
 
-      if (!decoded?.userId || !decoded?.roleId) {
-        console.log("Invalid token contents");
-        return res.status(401).json({ error: "Invalid token contents" });
-      }
+    if (!decoded || !decoded.userId || !decoded.roleId) {
+      console.log("Invalid token contents");
+      return res.status(401).json({ error: "Invalid token contents" });
+    }
 
-      req.roleId = decoded.roleId;
-      req.userId = decoded.userId;
-      next();
-    });
-  } else {
-    next();
+    req.roleId = decoded.roleId;
+    req.userId = decoded.userId;
   }
+
+  next();
 };
 
 // Middleware to verify and refresh the refresh token
@@ -68,29 +83,32 @@ export const verifyRefreshToken = async (req, res) => {
     return res.sendStatus(403);
   }
 
-  try {
-    const decoded = jwt.verify(refreshToken, process.env.REFRESH_TOKEN_SECRET);
+  const decoded = verifyJwtToken(
+    refreshToken,
+    process.env.REFRESH_TOKEN_SECRET
+  );
 
-    const accessToken = createToken(
-      decoded.userId,
-      decoded.email,
-      decoded.roleId,
-      res
-    );
-
-    // Create and set cookies for the new refresh token
-    const newRefreshToken = createRefreshToken(
-      decoded.userId,
-      decoded.email,
-      decoded.roleId,
-      res
-    );
-
-    return res.json({ accessToken, refreshToken: newRefreshToken });
-  } catch (error) {
-    console.error("Refresh token verification error:", error);
+  if (!decoded) {
+    console.error("Refresh token verification error");
     return res.sendStatus(403);
   }
+
+  const accessToken = createAccessTokenAndSetCookies(
+    decoded.userId,
+    decoded.email,
+    decoded.roleId,
+    res
+  );
+
+  // Create and set cookies for the new refresh token
+  const newRefreshToken = createRefreshTokenAndSetCookies(
+    decoded.userId,
+    decoded.email,
+    decoded.roleId,
+    res
+  );
+
+  return res.json({ accessToken, refreshToken: newRefreshToken });
 };
 
 // Function to handle JWT verification errors

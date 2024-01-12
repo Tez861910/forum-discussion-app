@@ -4,11 +4,16 @@ import { useCookies } from "react-cookie";
 
 export const useApi = () => {
   const createApiInstance = () => {
-    return axios.create({
+    const instance = axios.create({
       baseURL: "http://localhost:8081",
       timeout: 5000,
       withCredentials: true,
     });
+
+    // Ensure withCredentials is set for all requests
+    instance.defaults.withCredentials = true;
+
+    return instance;
   };
 
   const [cookies, setCookie] = useCookies(["token", "refreshToken"]);
@@ -20,21 +25,21 @@ export const useApi = () => {
         return response;
       },
       async (error) => {
-        console.error("Interceptor Error:", error);
-
-        if (axios.isCancel(error)) {
-          return Promise.reject(error);
-        }
-
         const originalRequest = error.config;
 
         if (error.response.status === 401 && !originalRequest._retry) {
-          console.log("Refreshing Token...");
           originalRequest._retry = true;
+
+          // Check if the refresh token exists
+          if (!cookies.refreshToken) {
+            // Redirect the user to the login page
+            window.location.href = "/login";
+            return Promise.reject(error);
+          }
 
           try {
             const refreshResponse = await apiInstance.post(
-              "/auth/login/refresh-token",
+              "/miscs/refreshtokens/refresh-token",
               { token: cookies.refreshToken }
             );
 
@@ -46,6 +51,13 @@ export const useApi = () => {
             return apiInstance(originalRequest);
           } catch (refreshError) {
             console.error("Error refreshing token:", refreshError);
+
+            // Handle refresh token errors
+            if (refreshError.response && refreshError.response.status === 401) {
+              // Redirect the user to the login page
+              window.location.href = "/login";
+            }
+
             return Promise.reject(refreshError);
           }
         }

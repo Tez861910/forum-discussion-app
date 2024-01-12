@@ -5,8 +5,9 @@ import helmet from "helmet";
 import compression from "compression";
 import dotenv from "dotenv";
 import "express-async-errors";
-import { handleError, logger } from "./authvalid.js";
+import { handleError, logger, verifyJwt } from "./authvalid.js";
 import cookieParser from "cookie-parser";
+import cookieSession from "cookie-session";
 
 dotenv.config();
 
@@ -23,17 +24,30 @@ import moderationRoutes from "./modular-routes/moderation-routes.js";
 import activityRoutes from "./modular-routes/activity-routes.js";
 import eventsRoutes from "./modular-routes/event-routes.js";
 
-const app = express();
 const port = process.env.PORT;
 
-const corsOptions = {
-  origin: process.env.CORS_ORIGIN,
-  credentials: true,
-  optionsSuccessStatus: 200,
-};
+const app = express();
 
-// Middleware setup
+// CORS setup
+const whitelist = [process.env.CORS_ORIGIN];
+const corsOptions = {
+  origin: function (origin, callback) {
+    if (whitelist.indexOf(origin) !== -1) {
+      callback(null, true);
+    } else {
+      callback(new Error("Not allowed by CORS"));
+    }
+  },
+  methods: "GET,PUT,POST,DELETE,OPTIONS,PATCH,HEAD",
+  credentials: true,
+  allowedHeaders: "Content-Type,Authorization,Content-Length,X-Requested-With",
+  //optionsSuccessStatus: 200,
+  //maxAge: 600,
+  //exposedHeaders: ["Custom-Header1", "Custom-Header2"],
+};
 app.use(cors(corsOptions));
+
+// Other middleware setup
 app.use(helmet());
 app.use(compression());
 app.use(express.json());
@@ -42,17 +56,22 @@ app.use(
   morgan("combined", { stream: { write: (message) => logger.info(message) } })
 );
 
-// Set Access-Control-Allow-Origin header
-app.use((req, res, next) => {
-  res.setHeader("Access-Control-Allow-Origin", process.env.CORS_ORIGIN);
-  res.header(
-    "Access-Control-Allow-Headers",
-    "Origin, X-Requested-With, Content-Type, Accept"
-  );
-  next();
-});
+// Cookie session setup
+app.use(
+  cookieSession({
+    name: "session",
+    keys: [" process.env.JWT_SECRET", "process.env.REFRESH_TOKEN_SECRET"],
+    cookie: {
+      //secure: true,
+      httpOnly: true,
+      // domain: "example.com",
+      // path: "foo/bar",
+      expires: new Date(Date.now() + 60 * 60 * 1000), // 1 hour
+    },
+  })
+);
 
-// Middleware to enforce token verification for specific routes
+/* Middleware to enforce token verification for specific routes
 const protectedRoutes = [
   "/miscs",
   "/users",
@@ -73,7 +92,7 @@ app.use((req, res, next) => {
   } else {
     next();
   }
-});
+});*/
 
 app.use("/auth", authRoutes);
 app.use("/miscs", miscRoutes);

@@ -29,6 +29,45 @@ export const Login = () => {
     setValues({ ...values, [name]: value });
   };
 
+  const handleLoginSuccess = async (data) => {
+    // Store the tokens in cookies
+    setCookie("token", data.token);
+    setCookie("refreshToken", data.refreshToken);
+
+    // Set local storage data as needed
+    localStorage.setItem("userId", data.userId);
+    localStorage.setItem("roleId", data.roleId);
+
+    // Navigate to the home page or another route as needed
+    navigate("/home");
+  };
+
+  const refreshAccessToken = async () => {
+    try {
+      const response = await api.post("/miscs/refreshtokens/refresh-token", {
+        token: cookies.refreshToken,
+      });
+
+      // Update the access token in the cookie
+      setCookie("token", response.data.accessToken);
+    } catch (refreshError) {
+      console.error("Error refreshing access token:", refreshError);
+
+      if (refreshError.response) {
+        const status = refreshError.response.status;
+
+        if (status === 403) {
+          // Redirect the user to the login page
+          navigate("/login");
+        } else {
+          setError(`Error refreshing access token: ${status}`);
+        }
+      } else {
+        setError("Error refreshing access token. Please try again.");
+      }
+    }
+  };
+
   const handleSubmit = async (event) => {
     event.preventDefault();
     try {
@@ -49,35 +88,6 @@ export const Login = () => {
         );
       } else {
         setError("Login failed. Please try again.");
-      }
-    }
-  };
-
-  const handleLoginSuccess = async (data) => {
-    try {
-      const response = await api.post("/miscs/refreshtokens/refresh-token", {
-        token: cookies.refreshToken,
-      });
-
-      // Set local storage data as needed
-      localStorage.setItem("userId", data.userId);
-      localStorage.setItem("roleId", data.roleId);
-
-      // Navigate to the home page or another route as needed
-      navigate("/home");
-    } catch (refreshError) {
-      console.error("Error refreshing access token:", refreshError);
-
-      if (refreshError.response) {
-        const status = refreshError.response.status;
-
-        if (status === 403) {
-          setError("Refresh token is invalid or expired. Please login again.");
-        } else {
-          setError(`Error refreshing access token: ${status}`);
-        }
-      } else {
-        setError("Error refreshing access token. Please try again.");
       }
     }
   };

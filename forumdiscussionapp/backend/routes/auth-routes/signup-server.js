@@ -1,15 +1,13 @@
 import express from "express";
 import {
-  createToken,
+  createAccessTokenAndSetCookies,
+  createRefreshTokenAndSetCookies,
   hashPassword,
-  createRefreshToken,
 } from "../../authvalid.js";
 import { query } from "../../db.js";
 import { validateSignup } from "../../body-validation/auth-validation-functions/signup-validation.js";
 
 const router = express.Router();
-const app = express();
-app.use(express.json());
 
 router.post("/signup", async (req, res) => {
   const { name, email, password, address, phoneNumber, dateOfBirth, genderID } =
@@ -76,12 +74,10 @@ router.post("/signup", async (req, res) => {
           email,
           roleId: studentRoleId,
         };
-        const token = createToken(payload);
-        const refreshToken = createRefreshToken(payload);
 
-        // Set cookies for tokens
-        res.cookie("token", token, { httpOnly: true });
-        res.cookie("refreshToken", refreshToken, { httpOnly: true });
+        // Create and set cookies for tokens
+        const token = createAccessTokenAndSetCookies(payload, res);
+        const refreshToken = createRefreshTokenAndSetCookies(payload, res);
 
         console.log("User registered successfully for email: " + email);
         res.json({

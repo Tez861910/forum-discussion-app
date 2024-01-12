@@ -1,6 +1,6 @@
 export { hashPassword, verifyPassword } from "./utils/argon2Utils.js";
 export {
-  createTokenAndSetCookies,
+  createAccessTokenAndSetCookies,
   verifyJwt,
   createRefreshTokenAndSetCookies,
   verifyRefreshToken,

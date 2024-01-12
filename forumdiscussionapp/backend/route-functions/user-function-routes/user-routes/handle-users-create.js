@@ -1,5 +1,8 @@
 import { query } from "../../../db.js";
-import { createToken, hashPassword } from "../../../authvalid.js";
+import {
+  hashPassword,
+  createAccessTokenAndSetCookies,
+} from "../../../authvalid.js";
 
 export const handleUsersCreate = async (req, res) => {
   const {
@@ -101,7 +104,8 @@ export const handleUsersCreate = async (req, res) => {
           email,
           roleId,
         };
-        const token = createToken(payload);
+        // Create and set cookies for the token
+        const token = createAccessTokenAndSetCookies(payload, res);
         console.log("User registered successfully for email: " + email);
         res.json({ message: "User registered successfully", token });
       } else {
