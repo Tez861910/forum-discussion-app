@@ -40,20 +40,17 @@ export const Login = () => {
     localStorage.setItem("userId", data.userId);
     localStorage.setItem("roleId", data.roleId);
 
-    // Check if navigation has already occurred
-    if (!alreadyNavigated) {
-      // Navigate to the home page or another route as needed
-      navigate("/home");
-      setAlreadyNavigated(true); // Set a state variable to indicate navigation has occurred
-    }
-  };
+    // Refresh access token after successful login
+    await refreshAccessToken();
 
-  const [alreadyNavigated, setAlreadyNavigated] = React.useState(false);
+    // Navigate to the home page or another route as needed
+    navigate("/home");
+  };
 
   const refreshAccessToken = async () => {
     try {
       const response = await api.post("/miscs/refreshtokens/refresh-token", {
-        token: cookies.refreshToken,
+        refreshToken: cookies.refreshToken,
       });
 
       // Update the access token in the cookie
@@ -86,7 +83,7 @@ export const Login = () => {
 
       if (response.data.success) {
         handleLoginSuccess(response.data);
-        login(); // Call the login function from useAuth
+        login();
       } else {
         setError("Login failed. Please check your email and password.");
       }
