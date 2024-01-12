@@ -1,5 +1,4 @@
 import express from "express";
-import { handleError } from "../authvalid.js";
 
 import userstatusRoutes from "../routes/messaging-routes/user-status.js";
 import friendrequestsRoutes from "../routes/messaging-routes/friend-requests.js";
@@ -16,8 +15,5 @@ router.use("/friends", friendsRoutes);
 router.use("/privatemessages", privatemessagesRoutes);
 router.use("/readreceipts", readreceiptsRoutes);
 router.use("/realtimeupdates", realtimeupdatesRoutes);
-
-// Error handling middleware
-router.use(handleError);
 
 export default router;

@@ -1,5 +1,4 @@
 import express from "express";
-import { verifyJwt } from "../../authvalid.js";
 import {
   validateManagerCreate,
   validateManagerUpdate,
@@ -14,28 +13,16 @@ import { handleManagerGet } from "../../route-functions/groupchat-function-route
 
 const router = express.Router();
 
-router.use(express.json());
-
 // Create group manager
-router.post("/create", verifyJwt, validateManagerCreate, handleManagerCreate);
+router.post("/create", validateManagerCreate, handleManagerCreate);
 
 // Update group manager by ID
-router.put(
-  "/update/:managerId",
-  verifyJwt,
-  validateManagerUpdate,
-  handleManagerUpdate
-);
+router.put("/update/:managerId", validateManagerUpdate, handleManagerUpdate);
 
 // Delete group manager by ID
-router.delete(
-  "/delete/:managerId",
-  verifyJwt,
-  validateManagerDelete,
-  handleManagerDelete
-);
+router.delete("/delete/:managerId", validateManagerDelete, handleManagerDelete);
 
 // Get group manager by ID
-router.get("/get/:managerId", verifyJwt, validateManagerGet, handleManagerGet);
+router.get("/get/:managerId", validateManagerGet, handleManagerGet);
 
 export default router;

@@ -1,6 +1,4 @@
 import express from "express";
-import cors from "cors";
-import { verifyJwt } from "../../authvalid.js";
 import {
   validateBanCreate,
   validateBanUpdate,
@@ -15,18 +13,17 @@ import { handleBanGetAll } from "../../route-functions/moderation-function-route
 const router = express.Router();
 
 router.use(express.json());
-router.use(cors());
 
 // Get all bans
-router.get("/get/all", verifyJwt, handleBanGetAll);
+router.get("/get/all", handleBanGetAll);
 
 // Create a new ban
-router.post("/create", verifyJwt, validateBanCreate, handleBanCreate);
+router.post("/create", validateBanCreate, handleBanCreate);
 
 // Update a ban
-router.put("/update/:banId", verifyJwt, validateBanUpdate, handleBanUpdate);
+router.put("/update/:banId", validateBanUpdate, handleBanUpdate);
 
 // Delete a ban
-router.delete("/delete/:banId", verifyJwt, validateBanDelete, handleBanDelete);
+router.delete("/delete/:banId", validateBanDelete, handleBanDelete);
 
 export default router;

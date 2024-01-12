@@ -1,6 +1,4 @@
 import express from "express";
-import cors from "cors";
-import { verifyJwt } from "../../authvalid.js";
 import {
   validateCourseCreate,
   validateCourseUpdate,
@@ -16,32 +14,19 @@ import { handleCoursesPatchId } from "../../route-functions/user-function-routes
 
 const router = express.Router();
 
-router.use(express.json());
-router.use(cors());
-
 // Create a new course
-router.post("/create", verifyJwt, validateCourseCreate, handleCoursesCreate);
+router.post("/create", validateCourseCreate, handleCoursesCreate);
 
 // Get all courses
-router.get("/get", verifyJwt, handleCoursesGet);
+router.get("/get", handleCoursesGet);
 
 // Get a course by ID
-router.get("/get/:id", verifyJwt, validateCourseGetId, handleCoursesGetId);
+router.get("/get/:id", validateCourseGetId, handleCoursesGetId);
 
 // Update a course by ID
-router.put(
-  "/update/:id",
-  verifyJwt,
-  validateCourseUpdate,
-  handleCoursesUpdateId
-);
+router.put("/update/:id", validateCourseUpdate, handleCoursesUpdateId);
 
 // Patch (soft delete) a course by ID
-router.patch(
-  "/delete/:id",
-  verifyJwt,
-  validateCourseDelete,
-  handleCoursesPatchId
-);
+router.patch("/delete/:id", validateCourseDelete, handleCoursesPatchId);
 
 export default router;

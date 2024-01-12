@@ -1,6 +1,4 @@
 import express from "express";
-import cors from "cors";
-import { verifyJwt } from "../../authvalid.js";
 import {
   validatePollOptionCreate,
   validatePollOptionUpdate,
@@ -16,24 +14,15 @@ import { handlePollOptionGetByPollId } from "../../route-functions/forum-functio
 
 const router = express.Router();
 
-router.use(express.json());
-router.use(cors());
-
 // Get all poll options
-router.get("/get", verifyJwt, handlePollOptionGet);
+router.get("/get", handlePollOptionGet);
 
 // Create a new poll option
-router.post(
-  "/create",
-  verifyJwt,
-  validatePollOptionCreate,
-  handlePollOptionCreate
-);
+router.post("/create", validatePollOptionCreate, handlePollOptionCreate);
 
 // Update a poll option
 router.put(
   "/update/:pollOptionId",
-  verifyJwt,
   validatePollOptionUpdate,
   handlePollOptionUpdateById
 );
@@ -41,7 +30,6 @@ router.put(
 // Delete a poll option
 router.delete(
   "/delete/:pollOptionId",
-  verifyJwt,
   validatePollOptionDelete,
   handlePollOptionDeleteById
 );
@@ -49,7 +37,6 @@ router.delete(
 // API for retrieving poll options for a specific poll.
 router.get(
   "/get/bypoll/:pollId",
-  verifyJwt,
   validatePollOptionGetByPollId,
   handlePollOptionGetByPollId
 );

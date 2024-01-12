@@ -1,5 +1,4 @@
 import express from "express";
-import { handleError } from "../authvalid.js";
 
 import eventsRoutes from "../routes/event-routes/events.js";
 import eventscategoryRoutes from "../routes/event-routes/event-category.js";
@@ -16,8 +15,5 @@ router.use("/recurringevents", recurringeventsRoutes);
 router.use("/reminders", remindersRoutes);
 router.use("/guestspeakers", guestspeakersRoutes);
 router.use("/eventimages", eventimagesRoutes);
-
-// Error handling middleware
-router.use(handleError);
 
 export default router;

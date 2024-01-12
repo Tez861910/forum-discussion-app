@@ -1,6 +1,4 @@
 import express from "express";
-import cors from "cors";
-import { verifyJwt } from "../../authvalid.js";
 import {
   validateAnnouncementCreate,
   validateAnnouncementUpdate,
@@ -14,24 +12,15 @@ import { handleAnnouncementGetAll } from "../../route-functions/alert-function-r
 
 const router = express.Router();
 
-router.use(express.json());
-router.use(cors());
-
 // Get all announcements
-router.get("/get/all", verifyJwt, handleAnnouncementGetAll);
+router.get("/get/all", handleAnnouncementGetAll);
 
 // Create a new announcement
-router.post(
-  "/create",
-  verifyJwt,
-  validateAnnouncementCreate,
-  handleAnnouncementCreate
-);
+router.post("/create", validateAnnouncementCreate, handleAnnouncementCreate);
 
 // Update an announcement
 router.put(
   "/update/:announcementId",
-  verifyJwt,
   validateAnnouncementUpdate,
   handleAnnouncementUpdate
 );
@@ -39,7 +28,6 @@ router.put(
 // Delete an announcement
 router.delete(
   "/delete/:announcementId",
-  verifyJwt,
   validateAnnouncementDelete,
   handleAnnouncementDelete
 );

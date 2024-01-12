@@ -1,5 +1,4 @@
 import express from "express";
-import { handleError } from "../authvalid.js";
 
 import groupchatsRoutes from "../routes/group-chats-routes/group-chats.js";
 import groupmanagersRoutes from "../routes/group-chats-routes/group-managers.js";
@@ -16,8 +15,5 @@ router.use("/groupmembers", groupmembersRoutes);
 router.use("/groupmessages", groupmessagesRoutes);
 router.use("/readreceiptgroups", readreceiptgroupsRoutes);
 router.use("/realtimegroupupdates", realtimegroupupdatesRoutes);
-
-// Error handling middleware
-router.use(handleError);
 
 export default router;

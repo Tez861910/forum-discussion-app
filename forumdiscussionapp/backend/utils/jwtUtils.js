@@ -1,11 +1,8 @@
 import jwt from "jsonwebtoken";
-import cookieParser from "cookie-parser";
 import express from "express";
+import config from "../config.js";
 
 const router = express.Router();
-
-// Use cookie-parser middleware
-router.use(cookieParser());
 
 // Function to create a token and set cookies
 const createTokenAndSetCookies = (
@@ -31,9 +28,9 @@ export const createAccessTokenAndSetCookies = (userId, email, roleId, res) =>
     email,
     roleId,
     res,
-    process.env.JWT_SECRET,
+    config.JWT_SECRET,
     "token",
-    process.env.TOKEN_EXPIRATION
+    config.TOKEN_EXPIRATION
   );
 
 export const createRefreshTokenAndSetCookies = (userId, email, roleId, res) =>
@@ -42,9 +39,9 @@ export const createRefreshTokenAndSetCookies = (userId, email, roleId, res) =>
     email,
     roleId,
     res,
-    process.env.REFRESH_TOKEN_SECRET,
+    config.REFRESH_TOKEN_SECRET,
     "refreshToken",
-    process.env.REFRESH_TOKEN_EXPIRATION
+    config.REFRESH_TOKEN_EXPIRATION
   );
 
 // Function to verify JWT
@@ -61,7 +58,7 @@ export const verifyJwt = (req, res, next) => {
   const authToken = req.cookies.token;
 
   if (authToken) {
-    const decoded = verifyJwtToken(authToken, process.env.JWT_SECRET);
+    const decoded = verifyJwtToken(authToken, config.JWT_SECRET);
 
     if (!decoded || !decoded.userId || !decoded.roleId) {
       console.log("Invalid token contents");
@@ -83,10 +80,7 @@ export const verifyRefreshToken = async (req, res) => {
     return res.sendStatus(403);
   }
 
-  const decoded = verifyJwtToken(
-    refreshToken,
-    process.env.REFRESH_TOKEN_SECRET
-  );
+  const decoded = verifyJwtToken(refreshToken, config.REFRESH_TOKEN_SECRET);
 
   if (!decoded) {
     console.error("Refresh token verification error");

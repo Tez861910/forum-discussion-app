@@ -1,6 +1,4 @@
 import express from "express";
-import cors from "cors";
-import { verifyJwt } from "../../authvalid.js";
 import {
   validateDepartmentCreate,
   validateDepartmentUpdate,
@@ -14,24 +12,15 @@ import { handleDepartmentGetAll } from "../../route-functions/user-function-rout
 
 const router = express.Router();
 
-router.use(express.json());
-router.use(cors());
-
 // Get all departments
-router.get("/get/all", verifyJwt, handleDepartmentGetAll);
+router.get("/get/all", handleDepartmentGetAll);
 
 // Create new department
-router.post(
-  "/create",
-  verifyJwt,
-  validateDepartmentCreate,
-  handleDepartmentCreate
-);
+router.post("/create", validateDepartmentCreate, handleDepartmentCreate);
 
 // Update department
 router.put(
   "/update/:departmentId",
-  verifyJwt,
   validateDepartmentUpdate,
   handleDepartmentUpdate
 );
@@ -39,7 +28,6 @@ router.put(
 // Delete department
 router.delete(
   "/delete/:departmentId",
-  verifyJwt,
   validateDepartmentDelete,
   handleDepartmentDelete
 );

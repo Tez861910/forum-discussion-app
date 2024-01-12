@@ -1,6 +1,4 @@
 import express from "express";
-import cors from "cors";
-import { verifyJwt } from "../../authvalid.js";
 import {
   validateQuestionTypeCreate,
   validateQuestionTypeUpdate,
@@ -14,24 +12,15 @@ import { handleQuestionTypeGetAll } from "../../route-functions/exam-function-ro
 
 const router = express.Router();
 
-router.use(express.json());
-router.use(cors());
-
 // Get all question types
-router.get("/get/all", verifyJwt, handleQuestionTypeGetAll);
+router.get("/get/all", handleQuestionTypeGetAll);
 
 // Create a new question type
-router.post(
-  "/create",
-  verifyJwt,
-  validateQuestionTypeCreate,
-  handleQuestionTypeCreate
-);
+router.post("/create", validateQuestionTypeCreate, handleQuestionTypeCreate);
 
 // Update a question type
 router.put(
   "/update/:questionTypeId",
-  verifyJwt,
   validateQuestionTypeUpdate,
   handleQuestionTypeUpdateById
 );
@@ -39,7 +28,6 @@ router.put(
 // Delete a question type
 router.delete(
   "/delete/:questionTypeId",
-  verifyJwt,
   validateQuestionTypeDelete,
   handleQuestionTypeDeleteById
 );

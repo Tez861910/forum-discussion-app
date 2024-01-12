@@ -1,6 +1,4 @@
 import express from "express";
-const router = express.Router();
-import { verifyJwt } from "../../authvalid.js";
 import {
   validateCourseMaterialCreate,
   validateCourseMaterialUpdate,
@@ -13,12 +11,11 @@ import { handleCourseMaterialUpdate } from "../../route-functions/user-function-
 import { handleCourseMaterialDelete } from "../../route-functions/user-function-routes/course-materials-routes/handle-course-material-delete.js";
 import { handleCourseMaterialGet } from "../../route-functions/user-function-routes/course-materials-routes/handle-course-material-get.js";
 
-router.use(express.json());
+const router = express.Router();
 
 // Create a new course material
 router.post(
   "/create",
-  verifyJwt,
   validateCourseMaterialCreate,
   handleCourseMaterialCreate
 );
@@ -26,7 +23,6 @@ router.post(
 // Update a course material
 router.put(
   "/update/:materialId",
-  verifyJwt,
   validateCourseMaterialUpdate,
   handleCourseMaterialUpdate
 );
@@ -34,7 +30,6 @@ router.put(
 // Delete a course material
 router.delete(
   "/delete/:materialId",
-  verifyJwt,
   validateCourseMaterialDelete,
   handleCourseMaterialDelete
 );
@@ -42,7 +37,6 @@ router.delete(
 // Get a course material by ID
 router.get(
   "/get/:materialId",
-  verifyJwt,
   validateCourseMaterialGet,
   handleCourseMaterialGet
 );

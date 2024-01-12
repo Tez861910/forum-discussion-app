@@ -1,5 +1,4 @@
 import express from "express";
-import { verifyJwt } from "../../authvalid.js";
 import {
   validateUpdateCreate,
   validateUpdateGet,
@@ -10,12 +9,10 @@ import { handleUpdateGet } from "../../route-functions/messaging-function-routes
 
 const router = express.Router();
 
-router.use(express.json());
-
 // Create real-time update
-router.post("/create", verifyJwt, validateUpdateCreate, handleUpdateCreate);
+router.post("/create", validateUpdateCreate, handleUpdateCreate);
 
 // Get real-time update by ID
-router.get("/get/:updateId", verifyJwt, validateUpdateGet, handleUpdateGet);
+router.get("/get/:updateId", validateUpdateGet, handleUpdateGet);
 
 export default router;

@@ -1,6 +1,4 @@
 import express from "express";
-import cors from "cors";
-import { verifyJwt } from "../../authvalid.js";
 import {
   validateUserReportCreate,
   validateUserReportUpdate,
@@ -14,24 +12,15 @@ import { handleUserReportGetAll } from "../../route-functions/moderation-functio
 
 const router = express.Router();
 
-router.use(express.json());
-router.use(cors());
-
 // Get all user reports
-router.get("/get/all", verifyJwt, handleUserReportGetAll);
+router.get("/get/all", handleUserReportGetAll);
 
 // Create a new user report
-router.post(
-  "/create",
-  verifyJwt,
-  validateUserReportCreate,
-  handleUserReportCreate
-);
+router.post("/create", validateUserReportCreate, handleUserReportCreate);
 
 // Update a user report
 router.put(
   "/update/:reportId",
-  verifyJwt,
   validateUserReportUpdate,
   handleUserReportUpdate
 );
@@ -39,7 +28,6 @@ router.put(
 // Delete a user report
 router.delete(
   "/delete/:reportId",
-  verifyJwt,
   validateUserReportDelete,
   handleUserReportDelete
 );

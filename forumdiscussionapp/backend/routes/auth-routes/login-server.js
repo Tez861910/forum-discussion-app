@@ -6,10 +6,8 @@ import {
   createRefreshTokenAndSetCookies,
 } from "../../authvalid.js";
 import { validateLogin } from "../../body-validation/auth-validation-functions/login-validation.js";
-import cookieParser from "cookie-parser";
 
 const router = express.Router();
-router.use(cookieParser());
 
 // Handle user login
 router.post("/login", validateLogin, async (req, res) => {

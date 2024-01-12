@@ -1,5 +1,4 @@
 import express from "express";
-import { handleError } from "../authvalid.js";
 
 import usersRoutes from "../routes/user-routes/users.js";
 import coursesRoutes from "../routes/user-routes/courses.js";
@@ -22,8 +21,5 @@ router.use("/departments", departmentsRoutes);
 router.use("/facultymembers", facultymembersRouters);
 router.use("/coursematerials", coursematerialsRouters);
 router.use("/avataruploads", avataruploadsRouters);
-
-// Error handling middleware
-router.use(handleError);
 
 export default router;

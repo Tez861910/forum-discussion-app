@@ -1,6 +1,4 @@
 import express from "express";
-import cors from "cors";
-import { verifyJwt } from "../../authvalid.js";
 import {
   validateFacultyCreate,
   validateFacultyUpdate,
@@ -14,29 +12,16 @@ import { handleFacultyGetAll } from "../../route-functions/user-function-routes/
 
 const router = express.Router();
 
-router.use(express.json());
-router.use(cors());
-
 // Get all faculty members
-router.get("/get/all", verifyJwt, handleFacultyGetAll);
+router.get("/get/all", handleFacultyGetAll);
 
 // Create new faculty member
-router.post("/create", verifyJwt, validateFacultyCreate, handleFacultyCreate);
+router.post("/create", validateFacultyCreate, handleFacultyCreate);
 
 // Update faculty member
-router.put(
-  "/update/:facultyId",
-  verifyJwt,
-  validateFacultyUpdate,
-  handleFacultyUpdate
-);
+router.put("/update/:facultyId", validateFacultyUpdate, handleFacultyUpdate);
 
 // Delete faculty member
-router.delete(
-  "/delete/:facultyId",
-  verifyJwt,
-  validateFacultyDelete,
-  handleFacultyDelete
-);
+router.delete("/delete/:facultyId", validateFacultyDelete, handleFacultyDelete);
 
 export default router;

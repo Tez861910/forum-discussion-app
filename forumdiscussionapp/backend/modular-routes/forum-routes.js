@@ -1,5 +1,4 @@
 import express from "express";
-import { handleError } from "../authvalid.js";
 
 import forumsRoutes from "../routes/forum-routes/forum.js";
 import threadsRoutes from "../routes/forum-routes/threads.js";
@@ -24,8 +23,5 @@ router.use("/polls", pollsRoutes);
 router.use("/options", optionsRoutes);
 router.use("/uservotes", uservotesRoutes);
 router.use("/moderators", moderatorRoutes);
-
-// Error handling middleware
-router.use(handleError);
 
 export default router;

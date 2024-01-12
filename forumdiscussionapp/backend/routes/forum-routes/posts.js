@@ -1,6 +1,4 @@
 import express from "express";
-import cors from "cors";
-import { verifyJwt } from "../../authvalid.js";
 import {
   validateForumPostCreate,
   validateForumPostUpdateById,
@@ -16,24 +14,15 @@ import { handleForumPostGetForumId } from "../../route-functions/forum-function-
 
 const router = express.Router();
 
-router.use(express.json());
-router.use(cors());
-
 // Get all forum posts
-router.get("/get", verifyJwt, handleForumPostGet);
+router.get("/get", handleForumPostGet);
 
 // Create a new forum post
-router.post(
-  "/create/:forumId",
-  verifyJwt,
-  validateForumPostCreate,
-  handleForumPostCreate
-);
+router.post("/create/:forumId", validateForumPostCreate, handleForumPostCreate);
 
 // Update a forum post
 router.put(
   "/update/:forumPostId",
-  verifyJwt,
   validateForumPostUpdateById,
   handleForumPostUpdateById
 );
@@ -41,7 +30,6 @@ router.put(
 // Delete a forum post
 router.delete(
   "/delete/:forumPostId",
-  verifyJwt,
   validateForumPostDelete,
   handleForumPostDeleteById
 );
@@ -49,7 +37,6 @@ router.delete(
 // API for retrieving forum posts for a specific forum.
 router.get(
   "/get/:forumId",
-  verifyJwt,
   validateForumPostGetForumId,
   handleForumPostGetForumId
 );

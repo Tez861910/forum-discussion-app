@@ -1,5 +1,4 @@
 import express from "express";
-import { verifyJwt } from "../../authvalid.js";
 import {
   validateCreateReminder,
   validateEditReminder,
@@ -13,15 +12,12 @@ import { softDeleteReminder } from "../../route-functions/event-function-routes/
 
 const router = express.Router();
 
-router.use(express.json());
-
 // Endpoint to get reminders for an event
-router.get("/:eventId/reminders", verifyJwt, getReminders);
+router.get("/:eventId/reminders", getReminders);
 
 // Endpoint to create a new reminder for an event
 router.post(
   "/:eventId/reminders/create",
-  verifyJwt,
   validateCreateReminder,
   createReminder
 );
@@ -29,7 +25,6 @@ router.post(
 // Endpoint to edit an existing reminder
 router.put(
   "/:eventId/reminders/edit/:reminderId",
-  verifyJwt,
   validateEditReminder,
   editReminder
 );
@@ -37,7 +32,6 @@ router.put(
 // Endpoint to soft delete a reminder
 router.delete(
   "/:eventId/reminders/soft-delete/:reminderId",
-  verifyJwt,
   validateSoftDeleteReminder,
   softDeleteReminder
 );

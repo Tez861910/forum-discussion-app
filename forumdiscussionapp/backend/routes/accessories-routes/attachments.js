@@ -1,6 +1,4 @@
 import express from "express";
-import cors from "cors";
-import { verifyJwt } from "../../authvalid.js";
 import {
   validateAttachmentCreate,
   validateAttachmentUpdate,
@@ -14,24 +12,15 @@ import { handleAttachmentGetAll } from "../../route-functions/accessories-functi
 
 const router = express.Router();
 
-router.use(express.json());
-router.use(cors());
-
 // Get all attachments
-router.get("/get/all", verifyJwt, handleAttachmentGetAll);
+router.get("/get/all", handleAttachmentGetAll);
 
 // Create a new attachment
-router.post(
-  "/create",
-  verifyJwt,
-  validateAttachmentCreate,
-  handleAttachmentCreate
-);
+router.post("/create", validateAttachmentCreate, handleAttachmentCreate);
 
 // Update an attachment
 router.put(
   "/update/:attachmentId",
-  verifyJwt,
   validateAttachmentUpdate,
   handleAttachmentUpdate
 );
@@ -39,7 +28,6 @@ router.put(
 // Delete an attachment
 router.delete(
   "/delete/:attachmentId",
-  verifyJwt,
   validateAttachmentDelete,
   handleAttachmentDelete
 );

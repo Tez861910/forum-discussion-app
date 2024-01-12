@@ -1,6 +1,4 @@
 import express from "express";
-import cors from "cors";
-import { verifyJwt } from "../../authvalid.js";
 import {
   validateUserActivityLogCreate,
   validateUserActivityLogUpdate,
@@ -14,16 +12,12 @@ import { handleUserActivityLogGetAll } from "../../route-functions/activity-func
 
 const router = express.Router();
 
-router.use(express.json());
-router.use(cors());
-
 // Get all user activity logs
-router.get("/get/all", verifyJwt, handleUserActivityLogGetAll);
+router.get("/get/all", handleUserActivityLogGetAll);
 
 // Create a new user activity log
 router.post(
   "/create",
-  verifyJwt,
   validateUserActivityLogCreate,
   handleUserActivityLogCreate
 );
@@ -31,7 +25,6 @@ router.post(
 // Update a user activity log
 router.put(
   "/update/:logId",
-  verifyJwt,
   validateUserActivityLogUpdate,
   handleUserActivityLogUpdate
 );
@@ -39,7 +32,6 @@ router.put(
 // Delete a user activity log
 router.delete(
   "/delete/:logId",
-  verifyJwt,
   validateUserActivityLogDelete,
   handleUserActivityLogDelete
 );

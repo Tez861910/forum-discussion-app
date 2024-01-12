@@ -1,6 +1,4 @@
 import express from "express";
-import cors from "cors";
-import { verifyJwt } from "../../authvalid.js";
 import {
   validateReactionTypeCreate,
   validateReactionTypeUpdate,
@@ -14,24 +12,15 @@ import { handleReactionTypeGetAll } from "../../route-functions/accessories-func
 
 const router = express.Router();
 
-router.use(express.json());
-router.use(cors());
-
 // Get all reaction types
-router.get("/get/all", verifyJwt, handleReactionTypeGetAll);
+router.get("/get/all", handleReactionTypeGetAll);
 
 // Create a new reaction type
-router.post(
-  "/create",
-  verifyJwt,
-  validateReactionTypeCreate,
-  handleReactionTypeCreate
-);
+router.post("/create", validateReactionTypeCreate, handleReactionTypeCreate);
 
 // Update a reaction type
 router.put(
   "/update/:reactionTypeId",
-  verifyJwt,
   validateReactionTypeUpdate,
   handleReactionTypeUpdate
 );
@@ -39,7 +28,6 @@ router.put(
 // Delete a reaction type
 router.delete(
   "/delete/:reactionTypeId",
-  verifyJwt,
   validateReactionTypeDelete,
   handleReactionTypeDelete
 );

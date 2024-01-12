@@ -1,6 +1,4 @@
 import express from "express";
-import cors from "cors";
-import { verifyJwt } from "../../authvalid.js";
 import {
   validateUserResponseCreate,
   validateUserResponseUpdate,
@@ -14,24 +12,15 @@ import { handleUserResponsesGetAll } from "../../route-functions/exam-function-r
 
 const router = express.Router();
 
-router.use(express.json());
-router.use(cors());
-
 // Get all user responses
-router.get("/get/all", verifyJwt, handleUserResponsesGetAll);
+router.get("/get/all", handleUserResponsesGetAll);
 
 // Create a new user response
-router.post(
-  "/create",
-  verifyJwt,
-  validateUserResponseCreate,
-  handleUserResponseCreate
-);
+router.post("/create", validateUserResponseCreate, handleUserResponseCreate);
 
 // Update a user response
 router.put(
   "/update/:userResponseId",
-  verifyJwt,
   validateUserResponseUpdate,
   handleUserResponseUpdateById
 );
@@ -39,7 +28,6 @@ router.put(
 // Delete a user response
 router.delete(
   "/delete/:userResponseId",
-  verifyJwt,
   validateUserResponseDelete,
   handleUserResponseDeleteById
 );

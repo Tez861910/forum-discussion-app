@@ -1,6 +1,4 @@
 import express from "express";
-import cors from "cors";
-import { verifyJwt } from "../../authvalid.js";
 import {
   validateNotificationCreate,
   validateNotificationUpdate,
@@ -14,24 +12,15 @@ import { handleNotificationGetAll } from "../../route-functions/alert-function-r
 
 const router = express.Router();
 
-router.use(express.json());
-router.use(cors());
-
 // Get all notifications
-router.get("/get/all", verifyJwt, handleNotificationGetAll);
+router.get("/get/all", handleNotificationGetAll);
 
 // Create a new notification
-router.post(
-  "/create",
-  verifyJwt,
-  validateNotificationCreate,
-  handleNotificationCreate
-);
+router.post("/create", validateNotificationCreate, handleNotificationCreate);
 
 // Update a notification
 router.put(
   "/update/:notificationId",
-  verifyJwt,
   validateNotificationUpdate,
   handleNotificationUpdate
 );
@@ -39,7 +28,6 @@ router.put(
 // Delete a notification
 router.delete(
   "/delete/:notificationId",
-  verifyJwt,
   validateNotificationDelete,
   handleNotificationDelete
 );

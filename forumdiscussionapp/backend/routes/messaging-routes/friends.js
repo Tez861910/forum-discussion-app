@@ -1,5 +1,4 @@
 import express from "express";
-import { verifyJwt } from "../../authvalid.js";
 import {
   validateFriendsCreate,
   validateFriendsGet,
@@ -10,12 +9,10 @@ import { handleFriendsGet } from "../../route-functions/messaging-function-route
 
 const router = express.Router();
 
-router.use(express.json());
-
 // Create friendship
-router.post("/create", verifyJwt, validateFriendsCreate, handleFriendsCreate);
+router.post("/create", validateFriendsCreate, handleFriendsCreate);
 
 // Get user's friends
-router.get("/get/:userId", verifyJwt, validateFriendsGet, handleFriendsGet);
+router.get("/get/:userId", validateFriendsGet, handleFriendsGet);
 
 export default router;

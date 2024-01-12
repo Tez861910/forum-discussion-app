@@ -1,5 +1,4 @@
 import express from "express";
-import { verifyJwt } from "../../authvalid.js";
 import {
   validateCreateEventCategory,
   validateEditEventCategory,
@@ -17,34 +16,21 @@ import { softDeleteAssignedEventCategory } from "../../route-functions/event-fun
 
 const router = express.Router();
 
-router.use(express.json());
-
 // Endpoint to get all event categories
-router.get("/get", verifyJwt, getEventCategories);
+router.get("/get", getEventCategories);
 
 // Endpoint to create a new event category
-router.post(
-  "/create",
-  verifyJwt,
-  validateCreateEventCategory,
-  createEventCategory
-);
+router.post("/create", validateCreateEventCategory, createEventCategory);
 
 // Endpoint to edit an existing event category
-router.put(
-  "/edit/:categoryId",
-  verifyJwt,
-  validateEditEventCategory,
-  editEventCategory
-);
+router.put("/edit/:categoryId", validateEditEventCategory, editEventCategory);
 
 // Endpoint to soft delete an event category
-router.delete("/soft-delete/:categoryId", verifyJwt, softDeleteEventCategory);
+router.delete("/soft-delete/:categoryId", softDeleteEventCategory);
 
 // Endpoint to assign an event category to an event
 router.post(
   "/:eventId/categories/assign/:categoryId",
-  verifyJwt,
   validateAssignEventCategory,
   assignEventCategory
 );
@@ -52,7 +38,6 @@ router.post(
 // Endpoint to edit an assigned event category
 router.put(
   "/:eventId/categories/edit/:categoryId",
-  verifyJwt,
   validateEditAssignedEventCategory,
   editAssignedEventCategory
 );
@@ -60,7 +45,6 @@ router.put(
 // Endpoint to soft delete an assigned event category
 router.delete(
   "/:eventId/categories/soft-delete/:categoryId",
-  verifyJwt,
   softDeleteAssignedEventCategory
 );
 

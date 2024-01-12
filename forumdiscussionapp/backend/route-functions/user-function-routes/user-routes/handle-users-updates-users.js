@@ -3,11 +3,15 @@ import { hashPassword } from "../../../authvalid.js";
 
 export const handleUsersUpdateUsers = async (req, res) => {
   const { id } = req.params;
-  const userData = req.body;
+  const updatedUserData = req.body;
   const createdByUserID = req.body.createdByUserID;
 
   try {
-    if (!userData.UserName && !userData.UserEmail && !userData.UserPassword) {
+    if (
+      !updatedUserData.UserName &&
+      !updatedUserData.UserEmail &&
+      !updatedUserData.UserPassword
+    ) {
       console.log("No valid fields provided for update");
       return res
         .status(400)
@@ -18,9 +22,9 @@ export const handleUsersUpdateUsers = async (req, res) => {
     const updateFields = [];
     const values = [];
 
-    if (userData.UserName) {
+    if (updatedUserData.UserName) {
       updateFields.push("UserName = ?");
-      values.push(userData.UserName);
+      values.push(updatedUserData.UserName);
     }
 
     if (userData.UserEmail) {
@@ -37,7 +41,7 @@ export const handleUsersUpdateUsers = async (req, res) => {
 
     // Include CommonAttributeID for IsDeleted and updated fields
     updateFields.push("CommonAttributeID = ?");
-    values.push(userData.CommonAttributeID); // Make sure to adjust based on your actual request structure
+    values.push(updatedUserData.CommonAttributeID);
 
     // Add fields for updated by and updated at
     updateFields.push("UpdatedByUserID = ?");
@@ -48,7 +52,7 @@ export const handleUsersUpdateUsers = async (req, res) => {
     const isDeletedSql =
       "SELECT IsDeleted FROM CommonAttributes WHERE AttributeID = ?";
     const [isDeletedResult] = await query(isDeletedSql, [
-      userData.CommonAttributeID,
+      updatedUserData.CommonAttributeID,
     ]);
 
     if (isDeletedResult.length === 1 && isDeletedResult[0].IsDeleted) {
@@ -68,7 +72,10 @@ export const handleUsersUpdateUsers = async (req, res) => {
       ", "
     )} WHERE UserID = ? AND CommonAttributeID = ?`;
 
-    const [result] = await query(sql, [...values, userData.CommonAttributeID]);
+    const [result] = await query(sql, [
+      ...values,
+      updatedUserData.CommonAttributeID,
+    ]);
 
     if (result.affectedRows === 1) {
       console.log("User updated successfully");

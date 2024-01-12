@@ -1,6 +1,4 @@
 import express from "express";
-import cors from "cors";
-import { verifyJwt } from "../../authvalid.js";
 import {
   validateUserSettingsCreate,
   validateUserSettingsUpdate,
@@ -14,24 +12,15 @@ import { handleUserSettingsGetAll } from "../../route-functions/activity-functio
 
 const router = express.Router();
 
-router.use(express.json());
-router.use(cors());
-
 // Get all user settings
-router.get("/get/all", verifyJwt, handleUserSettingsGetAll);
+router.get("/get/all", handleUserSettingsGetAll);
 
 // Create new user settings
-router.post(
-  "/create",
-  verifyJwt,
-  validateUserSettingsCreate,
-  handleUserSettingsCreate
-);
+router.post("/create", validateUserSettingsCreate, handleUserSettingsCreate);
 
 // Update user settings
 router.put(
   "/update/:settingId",
-  verifyJwt,
   validateUserSettingsUpdate,
   handleUserSettingsUpdate
 );
@@ -39,7 +28,6 @@ router.put(
 // Delete user settings
 router.delete(
   "/delete/:settingId",
-  verifyJwt,
   validateUserSettingsDelete,
   handleUserSettingsDelete
 );

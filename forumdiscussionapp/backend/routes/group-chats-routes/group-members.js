@@ -1,6 +1,4 @@
 import express from "express";
-import cors from "cors";
-import { verifyJwt } from "../../authvalid.js";
 import {
   validateGroupMembersCreate,
   validateGroupMembersDelete,
@@ -15,21 +13,12 @@ import { handleGroupMembersGetByUserId } from "../../route-functions/groupchat-f
 
 const router = express.Router();
 
-router.use(express.json());
-router.use(cors());
-
 // Create a new group member
-router.post(
-  "/create",
-  verifyJwt,
-  validateGroupMembersCreate,
-  handleGroupMembersCreate
-);
+router.post("/create", validateGroupMembersCreate, handleGroupMembersCreate);
 
 // Delete a group member
 router.delete(
   "/delete/:groupId/:userId",
-  verifyJwt,
   validateGroupMembersDelete,
   handleGroupMembersDelete
 );
@@ -37,7 +26,6 @@ router.delete(
 // Get group members by group ID
 router.get(
   "/get/group/:groupId",
-  verifyJwt,
   validateGroupMembersGetByGroupId,
   handleGroupMembersGetByGroupId
 );
@@ -45,7 +33,6 @@ router.get(
 // Get groups by user ID
 router.get(
   "/get/user/:userId",
-  verifyJwt,
   validateGroupMembersGetByUserId,
   handleGroupMembersGetByUserId
 );

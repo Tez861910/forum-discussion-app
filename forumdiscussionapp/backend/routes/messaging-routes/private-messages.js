@@ -1,6 +1,4 @@
 import express from "express";
-import cors from "cors";
-import { verifyJwt } from "../../authvalid.js";
 import {
   validatePrivateMessageCreate,
   validatePrivateMessageUpdate,
@@ -15,13 +13,9 @@ import { handlePrivateMessagesGetByUser } from "../../route-functions/messaging-
 
 const router = express.Router();
 
-router.use(express.json());
-router.use(cors());
-
 // Get all private messages for a user
 router.get(
   "/get/user/:userId",
-  verifyJwt,
   validatePrivateMessagesGetByUser,
   handlePrivateMessagesGetByUser
 );
@@ -29,7 +23,6 @@ router.get(
 // Create a new private message
 router.post(
   "/create",
-  verifyJwt,
   validatePrivateMessageCreate,
   handlePrivateMessageCreate
 );
@@ -37,7 +30,6 @@ router.post(
 // Update a private message
 router.put(
   "/update/:messageId",
-  verifyJwt,
   validatePrivateMessageUpdate,
   handlePrivateMessageUpdateById
 );
@@ -45,7 +37,6 @@ router.put(
 // Delete a private message
 router.delete(
   "/delete/:messageId",
-  verifyJwt,
   validatePrivateMessageDelete,
   handlePrivateMessageDeleteById
 );

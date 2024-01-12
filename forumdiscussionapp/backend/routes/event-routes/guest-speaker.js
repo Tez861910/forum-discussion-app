@@ -1,5 +1,4 @@
 import express from "express";
-import { verifyJwt } from "../../authvalid.js";
 import {
   validateCreateGuestSpeaker,
   validateEditGuestSpeaker,
@@ -13,15 +12,12 @@ import { softDeleteGuestSpeaker } from "../../route-functions/event-function-rou
 
 const router = express.Router();
 
-router.use(express.json());
-
 // Endpoint to get guest speakers for an event
-router.get("/:eventId/guest-speakers/get", verifyJwt, getGuestSpeakers);
+router.get("/:eventId/guest-speakers/get", getGuestSpeakers);
 
 // Endpoint to create a new guest speaker for an event
 router.post(
   "/:eventId/guest-speakers/create",
-  verifyJwt,
   validateCreateGuestSpeaker,
   createGuestSpeaker
 );
@@ -29,7 +25,6 @@ router.post(
 // Endpoint to edit an existing guest speaker
 router.put(
   "/:eventId/guest-speakers/edit/:guestSpeakerId",
-  verifyJwt,
   validateEditGuestSpeaker,
   editGuestSpeaker
 );
@@ -37,7 +32,6 @@ router.put(
 // Endpoint to soft delete a guest speaker
 router.delete(
   "/:eventId/guest-speakers/soft-delete/:guestSpeakerId",
-  verifyJwt,
   validateSoftDeleteGuestSpeaker,
   softDeleteGuestSpeaker
 );

@@ -1,5 +1,4 @@
 import express from "express";
-import { verifyJwt } from "../../authvalid.js";
 import {
   validateRealTimeGroupUpdateCreate,
   validateRealTimeGroupUpdateGet,
@@ -10,12 +9,9 @@ import { handleRealTimeGroupUpdateGet } from "../../route-functions/groupchat-fu
 
 const router = express.Router();
 
-router.use(express.json());
-
 // Create real-time update for group
 router.post(
   "/create",
-  verifyJwt,
   validateRealTimeGroupUpdateCreate,
   handleRealTimeGroupUpdateCreate
 );
@@ -23,7 +19,6 @@ router.post(
 // Get real-time update for group by ID
 router.get(
   "/get/:updateId",
-  verifyJwt,
   validateRealTimeGroupUpdateGet,
   handleRealTimeGroupUpdateGet
 );

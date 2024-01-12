@@ -1,6 +1,4 @@
 import express from "express";
-import cors from "cors";
-import { verifyJwt } from "../../authvalid.js";
 import {
   validateUserPollVoteCreate,
   validateUserPollVoteDelete,
@@ -13,21 +11,12 @@ import { handleUserPollVoteGetByUserId } from "../../route-functions/forum-funct
 
 const router = express.Router();
 
-router.use(express.json());
-router.use(cors());
-
 // Create a new user poll vote
-router.post(
-  "/create",
-  verifyJwt,
-  validateUserPollVoteCreate,
-  handleUserPollVoteCreate
-);
+router.post("/create", validateUserPollVoteCreate, handleUserPollVoteCreate);
 
 // Delete a user poll vote
 router.delete(
   "/delete/:userPollVoteId",
-  verifyJwt,
   validateUserPollVoteDelete,
   handleUserPollVoteDeleteById
 );
@@ -35,7 +24,6 @@ router.delete(
 // API for retrieving user poll votes for a specific user.
 router.get(
   "/get/byuser/:userId",
-  verifyJwt,
   validateUserPollVoteGetByUserId,
   handleUserPollVoteGetByUserId
 );

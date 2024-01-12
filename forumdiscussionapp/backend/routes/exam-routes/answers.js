@@ -1,6 +1,4 @@
 import express from "express";
-import cors from "cors";
-import { verifyJwt } from "../../authvalid.js";
 import {
   validateAnswerCreate,
   validateAnswerUpdate,
@@ -14,27 +12,18 @@ import { handleAnswersGetAll } from "../../route-functions/exam-function-routes/
 
 const router = express.Router();
 
-router.use(express.json());
-router.use(cors());
-
 // Get all answers
-router.get("/get/all", verifyJwt, handleAnswersGetAll);
+router.get("/get/all", handleAnswersGetAll);
 
 // Create a new answer
-router.post("/create", verifyJwt, validateAnswerCreate, handleAnswerCreate);
+router.post("/create", validateAnswerCreate, handleAnswerCreate);
 
 // Update an answer
-router.put(
-  "/update/:answerId",
-  verifyJwt,
-  validateAnswerUpdate,
-  handleAnswerUpdateById
-);
+router.put("/update/:answerId", validateAnswerUpdate, handleAnswerUpdateById);
 
 // Delete an answer
 router.delete(
   "/delete/:answerId",
-  verifyJwt,
   validateAnswerDelete,
   handleAnswerDeleteById
 );

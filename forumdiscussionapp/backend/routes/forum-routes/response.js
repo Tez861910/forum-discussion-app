@@ -1,5 +1,4 @@
 import express from "express";
-import { verifyJwt } from "../../authvalid.js";
 import {
   validateResponseCreate,
   validateResponseUpdate,
@@ -13,33 +12,16 @@ import { deleteResponse } from "../../route-functions/forum-function-routes/resp
 
 const router = express.Router();
 
-router.use(express.json());
-
 // Get all responses for a comment
-router.get("/get/:commentId", verifyJwt, getAllResponses);
+router.get("/get/:commentId", getAllResponses);
 
 // Create a new response for a comment
-router.post(
-  "/create/:commentId",
-  verifyJwt,
-  validateResponseCreate,
-  createResponse
-);
+router.post("/create/:commentId", validateResponseCreate, createResponse);
 
 // Update a response
-router.put(
-  "/update/:responseId",
-  verifyJwt,
-  validateResponseUpdate,
-  updateResponse
-);
+router.put("/update/:responseId", validateResponseUpdate, updateResponse);
 
 // Delete a response
-router.delete(
-  "/delete/:responseId",
-  verifyJwt,
-  validateResponseDelete,
-  deleteResponse
-);
+router.delete("/delete/:responseId", validateResponseDelete, deleteResponse);
 
 export default router;

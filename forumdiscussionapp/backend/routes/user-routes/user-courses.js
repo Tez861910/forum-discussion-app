@@ -1,6 +1,4 @@
 import express from "express";
-import cors from "cors";
-import { verifyJwt } from "../../authvalid.js";
 import {
   validateCourseEnroll,
   validateRemoveUsersFromCourse,
@@ -16,33 +14,24 @@ import { handleCIDEnrollmentsEID } from "../../route-functions/user-function-rou
 
 const router = express.Router();
 
-router.use(express.json());
-router.use(cors());
-
 // Get all user courses
-router.get("/get", verifyJwt, handleUserCoursesGet);
+router.get("/get", handleUserCoursesGet);
 
 // Get all user courses by userId
-router.get("/get/id", verifyJwt, handleUserCoursesGetId);
+router.get("/get/id", handleUserCoursesGetId);
 
 // Get course enrollments
-router.get("/enrollments/:courseId", verifyJwt, handleCoursesEnrollmentsId);
+router.get("/enrollments/:courseId", handleCoursesEnrollmentsId);
 
 // Enroll courses in a user
-router.post("/enroll", verifyJwt, validateCourseEnroll, handleCoursesEnroll);
+router.post("/enroll", validateCourseEnroll, handleCoursesEnroll);
 
 // Enroll users in a course
-router.post(
-  "/:courseId/enroll",
-  verifyJwt,
-  validateCourseEnroll,
-  handleCoursesIdEnroll
-);
+router.post("/:courseId/enroll", validateCourseEnroll, handleCoursesIdEnroll);
 
 // Patch (soft delete) removing users from a course
 router.patch(
   "/:courseId/enrollments",
-  verifyJwt,
   validateRemoveUsersFromCourse,
   handleRemoveUsersFromCourse
 );
@@ -50,7 +39,6 @@ router.patch(
 // Patch (soft delete) removing a user from a course
 router.patch(
   "/:courseId/enrollments/:userId",
-  verifyJwt,
   validateRemoveUsersFromCourse,
   handleCIDEnrollmentsEID
 );

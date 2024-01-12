@@ -1,5 +1,4 @@
 import express from "express";
-import { verifyJwt } from "../../authvalid.js";
 import {
   validateThreadCreate,
   validateThreadUpdate,
@@ -16,39 +15,26 @@ import { handleThreadsDeleteId } from "../../route-functions/forum-function-rout
 
 const router = express.Router();
 
-router.use(express.json());
-
 // Endpoint to get threads for a specific forum
-router.get(
-  "/get/:forumId",
-  verifyJwt,
-  validateThreadGetForumId,
-  handleThreadsGetForumId
-);
+router.get("/get/:forumId", validateThreadGetForumId, handleThreadsGetForumId);
 
 // Endpoint to get a thread by threadId
 router.get(
   "/getthread/:threadId",
-  verifyJwt,
   validateThreadGetByThreadId,
   handleThreadsGetByThreadId
 );
 
 // Endpoint to get all threads
-router.get("/get/all", verifyJwt, handleThreadsGetAll);
+router.get("/get/all", handleThreadsGetAll);
 
 // Create a new thread
-router.post("/create", verifyJwt, validateThreadCreate, handleThreadsCreate);
+router.post("/create", validateThreadCreate, handleThreadsCreate);
 
 // Update a thread
-router.put(
-  "/update/:threadId",
-  verifyJwt,
-  validateThreadUpdate,
-  handleThreadsUpdateId
-);
+router.put("/update/:threadId", validateThreadUpdate, handleThreadsUpdateId);
 
 // Delete a thread
-router.delete("/delete/:threadId", verifyJwt, handleThreadsDeleteId);
+router.delete("/delete/:threadId", handleThreadsDeleteId);
 
 export default router;

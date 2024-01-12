@@ -1,5 +1,4 @@
 import express from "express";
-import { verifyJwt } from "../../authvalid.js";
 import {
   validateCreateRecurringEvent,
   validateEditRecurringEvent,
@@ -13,15 +12,12 @@ import { softDeleteRecurringEvent } from "../../route-functions/event-function-r
 
 const router = express.Router();
 
-router.use(express.json());
-
 // Endpoint to get recurring events for an event
-router.get("/:eventId/recurring", verifyJwt, getRecurringEvents);
+router.get("/:eventId/recurring", getRecurringEvents);
 
 // Endpoint to create a new recurring event for an event
 router.post(
   "/:eventId/recurring/create",
-  verifyJwt,
   validateCreateRecurringEvent,
   createRecurringEvent
 );
@@ -29,7 +25,6 @@ router.post(
 // Endpoint to edit an existing recurring event
 router.put(
   "/:eventId/recurring/edit/:recurringEventId",
-  verifyJwt,
   validateEditRecurringEvent,
   editRecurringEvent
 );
@@ -37,7 +32,6 @@ router.put(
 // Endpoint to soft delete a recurring event
 router.delete(
   "/:eventId/recurring/soft-delete/:recurringEventId",
-  verifyJwt,
   validateSoftDeleteRecurringEvent,
   softDeleteRecurringEvent
 );

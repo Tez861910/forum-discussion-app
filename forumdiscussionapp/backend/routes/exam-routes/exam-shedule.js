@@ -1,6 +1,4 @@
 import express from "express";
-import cors from "cors";
-import { verifyJwt } from "../../authvalid.js";
 import {
   validateScheduleCreate,
   validateScheduleUpdate,
@@ -14,27 +12,18 @@ import { handleScheduleGetAll } from "../../route-functions/exam-function-routes
 
 const router = express.Router();
 
-router.use(express.json());
-router.use(cors());
-
 // Get all exam schedules
-router.get("/get/all", verifyJwt, handleScheduleGetAll);
+router.get("/get/all", handleScheduleGetAll);
 
 // Create new exam schedule
-router.post("/create", verifyJwt, validateScheduleCreate, handleScheduleCreate);
+router.post("/create", validateScheduleCreate, handleScheduleCreate);
 
 // Update exam schedule
-router.put(
-  "/update/:scheduleId",
-  verifyJwt,
-  validateScheduleUpdate,
-  handleScheduleUpdate
-);
+router.put("/update/:scheduleId", validateScheduleUpdate, handleScheduleUpdate);
 
 // Delete exam schedule
 router.delete(
   "/delete/:scheduleId",
-  verifyJwt,
   validateScheduleDelete,
   handleScheduleDelete
 );

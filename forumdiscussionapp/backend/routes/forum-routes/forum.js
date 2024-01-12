@@ -1,5 +1,4 @@
 import express from "express";
-import { verifyJwt } from "../../authvalid.js";
 import {
   validateForumCreate,
   validateForumUpdate,
@@ -16,39 +15,26 @@ import { handleThreadsGetCourseId } from "../../route-functions/forum-function-r
 
 const router = express.Router();
 
-router.use(express.json());
-
 // Endpoint to get threads for a specific course
 router.get(
   "/get/:courseId",
-  verifyJwt,
   validateThreadGetCourseId,
   handleThreadsGetCourseId
 );
 
 // Endpoint to get a forum by forumId
-router.get(
-  "/get/:forumId",
-  verifyJwt,
-  validateForumGetById,
-  handleForumGetById
-);
+router.get("/get/:forumId", validateForumGetById, handleForumGetById);
 
 // Endpoint to get all forums
-router.get("/get/all", verifyJwt, handleForumGetAll);
+router.get("/get/all", handleForumGetAll);
 
 // Create a new forum
-router.post("/create", verifyJwt, validateForumCreate, handleForumCreate);
+router.post("/create", validateForumCreate, handleForumCreate);
 
 // Update a forum
-router.put(
-  "/update/:forumId",
-  verifyJwt,
-  validateForumUpdate,
-  handleForumUpdateById
-);
+router.put("/update/:forumId", validateForumUpdate, handleForumUpdateById);
 
 // Delete a forum
-router.delete("/delete/:forumId", verifyJwt, handleForumDeleteById);
+router.delete("/delete/:forumId", handleForumDeleteById);
 
 export default router;

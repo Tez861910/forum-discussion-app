@@ -1,57 +1,46 @@
 import express from "express";
 import cors from "cors";
+import dotenv from "dotenv";
 import morgan from "morgan";
 import helmet from "helmet";
 import compression from "compression";
-import dotenv from "dotenv";
+import rateLimit from "express-rate-limit";
+import hpp from "hpp";
 import "express-async-errors";
-import { handleError, logger, verifyJwt } from "./authvalid.js";
+import { logger, verifyJwt, handleError } from "./authvalid.js";
 import cookieParser from "cookie-parser";
 import cookieSession from "cookie-session";
-
-dotenv.config();
-
-import authRoutes from "./modular-routes/auth-routes.js";
-import miscRoutes from "./modular-routes/misc.js";
-import usersRoutes from "./modular-routes/user-routes.js";
-import forumsRoutes from "./modular-routes/forum-routes.js";
-import examsRoutes from "./modular-routes/exam-routes.js";
-import messagingRoutes from "./modular-routes/messaging-routes.js";
-import groupsRoutes from "./modular-routes/group-chats-routes.js";
-import accessoriesRoutes from "./modular-routes/accessories-routes.js";
-import alertsRoutes from "./modular-routes/alert-routes.js";
-import moderationRoutes from "./modular-routes/moderation-routes.js";
-import activityRoutes from "./modular-routes/activity-routes.js";
-import eventsRoutes from "./modular-routes/event-routes.js";
-
-const port = process.env.PORT;
+import config from "./config.js";
 
 const app = express();
 
+dotenv.config();
+
+// Body parser
+app.use(express.json({ limit: "1mb" }));
+app.use(express.urlencoded({ extended: true }));
+
 // CORS setup
-const whitelist = [process.env.CORS_ORIGIN];
 const corsOptions = {
-  origin: function (origin, callback) {
-    if (whitelist.indexOf(origin) !== -1) {
+  origin: (origin, callback) => {
+    if (config.CORS_ORIGIN.split(",").indexOf(origin) !== -1) {
       callback(null, true);
     } else {
-      callback(new Error("Not allowed by CORS"));
+      callback(new ErrorHandler("Not allowed by CORS", 401));
     }
   },
   methods: "GET,PUT,POST,DELETE,OPTIONS,PATCH,HEAD",
   credentials: true,
   allowedHeaders: "Content-Type,Authorization,Content-Length,X-Requested-With",
-  //optionsSuccessStatus: 200,
-  //maxAge: 600,
-  //exposedHeaders: ["Custom-Header1", "Custom-Header2"],
+  optionsSuccessStatus: 200,
 };
-app.use(cors(corsOptions));
 
-// Other middleware setup
+app.use(cors(corsOptions));
 app.use(helmet());
 app.use(compression());
-app.use(express.json());
 app.use(cookieParser());
+app.use(hpp());
+app.use(rateLimit({ windowMs: 15 * 60 * 1000, max: 100 }));
 app.use(
   morgan("combined", { stream: { write: (message) => logger.info(message) } })
 );
@@ -60,18 +49,15 @@ app.use(
 app.use(
   cookieSession({
     name: "session",
-    keys: [" process.env.JWT_SECRET", "process.env.REFRESH_TOKEN_SECRET"],
+    keys: [config.JWT_SECRET, config.REFRESH_TOKEN_SECRET],
     cookie: {
-      //secure: true,
       httpOnly: true,
-      // domain: "example.com",
-      // path: "foo/bar",
-      expires: new Date(Date.now() + 60 * 60 * 1000), // 1 hour
+      expires: new Date(Date.now() + 60 * 60 * 1000),
     },
   })
 );
 
-/* Middleware to enforce token verification for specific routes
+// Middleware to enforce token verification for specific routes
 const protectedRoutes = [
   "/miscs",
   "/users",
@@ -85,14 +71,26 @@ const protectedRoutes = [
   "/moderation",
   "/activity",
 ];
-
 app.use((req, res, next) => {
   if (protectedRoutes.includes(req.path)) {
     verifyJwt(req, res, next);
   } else {
     next();
   }
-});*/
+});
+
+import authRoutes from "./modular-routes/auth-routes.js";
+import miscRoutes from "./modular-routes/misc.js";
+import usersRoutes from "./modular-routes/user-routes.js";
+import forumsRoutes from "./modular-routes/forum-routes.js";
+import examsRoutes from "./modular-routes/exam-routes.js";
+import messagingRoutes from "./modular-routes/messaging-routes.js";
+import groupsRoutes from "./modular-routes/group-chats-routes.js";
+import accessoriesRoutes from "./modular-routes/accessories-routes.js";
+import alertsRoutes from "./modular-routes/alert-routes.js";
+import moderationRoutes from "./modular-routes/moderation-routes.js";
+import activityRoutes from "./modular-routes/activity-routes.js";
+import eventsRoutes from "./modular-routes/event-routes.js";
 
 app.use("/auth", authRoutes);
 app.use("/miscs", miscRoutes);
@@ -116,6 +114,6 @@ app.get("/", (req, res) => {
 // Error handling middleware
 app.use(handleError);
 
-app.listen(port, () => {
-  console.log(`Server is running on port ${port}`);
+app.listen(config.PORT, () => {
+  console.log(`Server is running on port ${config.PORT}`);
 });

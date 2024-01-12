@@ -1,5 +1,4 @@
 import express from "express";
-import { verifyJwt } from "../../authvalid.js";
 import {
   validateUserCreate,
   validateUserUpdate,
@@ -19,40 +18,32 @@ import { handleUsersUpdateUsers } from "../../route-functions/user-function-rout
 
 const router = express.Router();
 
-router.use(express.json());
-
 // Create a new user
-router.post("/create", verifyJwt, validateUserCreate, handleUsersCreate);
+router.post("/create", validateUserCreate, handleUsersCreate);
 
 // Get all users
-router.get("/get", verifyJwt, handleUsersGet);
+router.get("/get", handleUsersGet);
 
 // Get username
-router.post("/getUsernames", verifyJwt, handleUsersGetUserName);
+router.post("/getUsernames", handleUsersGetUserName);
 
 // Get a user by ID with RoleName
-router.get("/get/:id", verifyJwt, validateUserGetId, handleUsersGetId);
+router.get("/get/:id", validateUserGetId, handleUsersGetId);
 
 // Update a user
-router.put("/update/:id", verifyJwt, validateUserUpdate, handleUsersUpdateId);
+router.put("/update/:id", validateUserUpdate, handleUsersUpdateId);
 
 // Update a user profile
 router.put(
   "/update/users/:id",
-  verifyJwt,
   validateUserUpdateUsers,
   handleUsersUpdateUsers
 );
 
 // Delete a user
-router.delete("/delete/:id", verifyJwt, handleUsersDeleteId);
+router.delete("/delete/:id", handleUsersDeleteId);
 
 // Get users by RoleID
-router.get(
-  "/get/role/:roleId",
-  verifyJwt,
-  validateUserGetRoleId,
-  handleUsersGetRoleId
-);
+router.get("/get/role/:roleId", validateUserGetRoleId, handleUsersGetRoleId);
 
 export default router;

@@ -1,6 +1,4 @@
 import express from "express";
-import cors from "cors";
-import { verifyJwt } from "../../authvalid.js";
 import {
   validateCategoryCreate,
   validateCategoryUpdate,
@@ -14,27 +12,18 @@ import { handleCategoryGetAll } from "../../route-functions/exam-function-routes
 
 const router = express.Router();
 
-router.use(express.json());
-router.use(cors());
-
 // Get all exam categories
-router.get("/get/all", verifyJwt, handleCategoryGetAll);
+router.get("/get/all", handleCategoryGetAll);
 
 // Create new exam category
-router.post("/create", verifyJwt, validateCategoryCreate, handleCategoryCreate);
+router.post("/create", validateCategoryCreate, handleCategoryCreate);
 
 // Update exam category
-router.put(
-  "/update/:categoryId",
-  verifyJwt,
-  validateCategoryUpdate,
-  handleCategoryUpdate
-);
+router.put("/update/:categoryId", validateCategoryUpdate, handleCategoryUpdate);
 
 // Delete exam category
 router.delete(
   "/delete/:categoryId",
-  verifyJwt,
   validateCategoryDelete,
   handleCategoryDelete
 );

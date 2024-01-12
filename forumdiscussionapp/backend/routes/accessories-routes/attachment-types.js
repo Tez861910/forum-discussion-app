@@ -1,6 +1,4 @@
 import express from "express";
-import cors from "cors";
-import { verifyJwt } from "../../authvalid.js";
 import {
   validateAttachmentTypeCreate,
   validateAttachmentTypeUpdate,
@@ -14,16 +12,12 @@ import { handleAttachmentTypeGetAll } from "../../route-functions/accessories-fu
 
 const router = express.Router();
 
-router.use(express.json());
-router.use(cors());
-
 // Get all attachment types
-router.get("/get/all", verifyJwt, handleAttachmentTypeGetAll);
+router.get("/get/all", handleAttachmentTypeGetAll);
 
 // Create a new attachment type
 router.post(
   "/create",
-  verifyJwt,
   validateAttachmentTypeCreate,
   handleAttachmentTypeCreate
 );
@@ -31,7 +25,6 @@ router.post(
 // Update an attachment type
 router.put(
   "/update/:attachmentTypeId",
-  verifyJwt,
   validateAttachmentTypeUpdate,
   handleAttachmentTypeUpdate
 );
@@ -39,7 +32,6 @@ router.put(
 // Delete an attachment type
 router.delete(
   "/delete/:attachmentTypeId",
-  verifyJwt,
   validateAttachmentTypeDelete,
   handleAttachmentTypeDelete
 );

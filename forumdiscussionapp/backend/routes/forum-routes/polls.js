@@ -1,6 +1,4 @@
 import express from "express";
-import cors from "cors";
-import { verifyJwt } from "../../authvalid.js";
 import {
   validatePollCreate,
   validatePollUpdate,
@@ -16,40 +14,21 @@ import { handlePollGetCreatedByUserId } from "../../route-functions/forum-functi
 
 const router = express.Router();
 
-router.use(express.json());
-router.use(cors());
-
 // Get all polls
-router.get("/get", verifyJwt, handlePollGet);
+router.get("/get", handlePollGet);
 
 // Create a new poll
-router.post(
-  "/create/:forumId",
-  verifyJwt,
-  validatePollCreate,
-  handlePollCreate
-);
+router.post("/create/:forumId", validatePollCreate, handlePollCreate);
 
 // Update a poll
-router.put(
-  "/update/:pollId",
-  verifyJwt,
-  validatePollUpdate,
-  handlePollUpdateById
-);
+router.put("/update/:pollId", validatePollUpdate, handlePollUpdateById);
 
 // Delete a poll
-router.delete(
-  "/delete/:pollId",
-  verifyJwt,
-  validatePollDelete,
-  handlePollDeleteById
-);
+router.delete("/delete/:pollId", validatePollDelete, handlePollDeleteById);
 
 // API for retrieving polls created by a specific user.
 router.get(
   "/get/createdbyuser/:userId",
-  verifyJwt,
   validatePollGetCreatedByUserId,
   handlePollGetCreatedByUserId
 );

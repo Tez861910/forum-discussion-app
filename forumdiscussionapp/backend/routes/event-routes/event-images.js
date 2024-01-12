@@ -1,6 +1,4 @@
 import express from "express";
-import cors from "cors";
-import { verifyJwt } from "../../authvalid.js";
 import {
   validateImageCreate,
   validateImageUpdate,
@@ -14,29 +12,16 @@ import { handleImageGetAll } from "../../route-functions/event-function-routes/e
 
 const router = express.Router();
 
-router.use(express.json());
-router.use(cors());
-
 // Get all event images
-router.get("/get/all", verifyJwt, handleImageGetAll);
+router.get("/get/all", handleImageGetAll);
 
 // Create new event image
-router.post("/create", verifyJwt, validateImageCreate, handleImageCreate);
+router.post("/create", validateImageCreate, handleImageCreate);
 
 // Update event image
-router.put(
-  "/update/:imageId",
-  verifyJwt,
-  validateImageUpdate,
-  handleImageUpdate
-);
+router.put("/update/:imageId", validateImageUpdate, handleImageUpdate);
 
 // Delete event image
-router.delete(
-  "/delete/:imageId",
-  verifyJwt,
-  validateImageDelete,
-  handleImageDelete
-);
+router.delete("/delete/:imageId", validateImageDelete, handleImageDelete);
 
 export default router;

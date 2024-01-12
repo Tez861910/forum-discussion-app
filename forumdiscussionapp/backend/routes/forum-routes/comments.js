@@ -1,6 +1,4 @@
 import express from "express";
-import cors from "cors";
-import { verifyJwt } from "../../authvalid.js";
 import {
   validateCommentCreate,
   validateCommentUpdate,
@@ -16,32 +14,18 @@ import { handleCommentGetThreadId } from "../../route-functions/forum-function-r
 
 const router = express.Router();
 
-router.use(express.json());
-router.use(cors());
-
 // Get all comments
-router.get("/get", verifyJwt, handleCommentGet);
+router.get("/get", handleCommentGet);
 
 // Create a new comment
-router.post(
-  "/create/:threadId",
-  verifyJwt,
-  validateCommentCreate,
-  handleCommentCreate
-);
+router.post("/create/:threadId", validateCommentCreate, handleCommentCreate);
 
 // Update a comment
-router.put(
-  "/update/:commentId",
-  verifyJwt,
-  validateCommentUpdate,
-  handleCommentUpdateId
-);
+router.put("/update/:commentId", validateCommentUpdate, handleCommentUpdateId);
 
 // Delete a comment
 router.delete(
   "/delete/:commentId",
-  verifyJwt,
   validateCommentDelete,
   handleCommentDeleteId
 );
@@ -49,7 +33,6 @@ router.delete(
 // API for retrieving comments for a specific thread.
 router.get(
   "/get/:threadId",
-  verifyJwt,
   validateCommentGetThreadId,
   handleCommentGetThreadId
 );

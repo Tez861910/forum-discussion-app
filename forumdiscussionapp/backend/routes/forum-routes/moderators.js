@@ -1,6 +1,4 @@
 import express from "express";
-import cors from "cors";
-import { verifyJwt } from "../../authvalid.js";
 import {
   validateForumModeratorCreate,
   validateForumModeratorUpdate,
@@ -18,16 +16,12 @@ import { handleForumModeratorGetForumId } from "../../route-functions/forum-func
 
 const router = express.Router();
 
-router.use(express.json());
-router.use(cors());
-
 // Get all forum moderators
-router.get("/get", verifyJwt, handleForumModeratorGet);
+router.get("/get", handleForumModeratorGet);
 
 // Create a new forum moderator
 router.post(
   "/create",
-  verifyJwt,
   validateForumModeratorCreate,
   handleForumModeratorCreate
 );
@@ -35,7 +29,6 @@ router.post(
 // Update a forum moderator
 router.put(
   "/update/:forumModeratorId",
-  verifyJwt,
   validateForumModeratorUpdate,
   handleForumModeratorUpdateById
 );
@@ -43,7 +36,6 @@ router.put(
 // Delete a forum moderator
 router.delete(
   "/delete/:forumModeratorId",
-  verifyJwt,
   validateForumModeratorDelete,
   handleForumModeratorDeleteById
 );
@@ -51,7 +43,6 @@ router.delete(
 // API for retrieving forum moderators for a specific user.
 router.get(
   "/get/user/:userId",
-  verifyJwt,
   validateForumModeratorGetUserId,
   handleForumModeratorGetUserId
 );
@@ -59,7 +50,6 @@ router.get(
 // API for retrieving forum moderators for a specific forum.
 router.get(
   "/get/forum/:forumId",
-  verifyJwt,
   validateForumModeratorGetForumId,
   handleForumModeratorGetForumId
 );

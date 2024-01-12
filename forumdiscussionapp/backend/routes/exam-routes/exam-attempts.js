@@ -1,6 +1,4 @@
 import express from "express";
-import cors from "cors";
-import { verifyJwt } from "../../authvalid.js";
 import {
   validateAttemptCreate,
   validateAttemptUpdate,
@@ -14,29 +12,16 @@ import { handleAttemptGetAll } from "../../route-functions/exam-function-routes/
 
 const router = express.Router();
 
-router.use(express.json());
-router.use(cors());
-
 // Get all exam attempts
-router.get("/get/all", verifyJwt, handleAttemptGetAll);
+router.get("/get/all", handleAttemptGetAll);
 
 // Create new exam attempt
-router.post("/create", verifyJwt, validateAttemptCreate, handleAttemptCreate);
+router.post("/create", validateAttemptCreate, handleAttemptCreate);
 
 // Update exam attempt
-router.put(
-  "/update/:attemptId",
-  verifyJwt,
-  validateAttemptUpdate,
-  handleAttemptUpdate
-);
+router.put("/update/:attemptId", validateAttemptUpdate, handleAttemptUpdate);
 
 // Delete exam attempt
-router.delete(
-  "/delete/:attemptId",
-  verifyJwt,
-  validateAttemptDelete,
-  handleAttemptDelete
-);
+router.delete("/delete/:attemptId", validateAttemptDelete, handleAttemptDelete);
 
 export default router;

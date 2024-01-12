@@ -1,5 +1,4 @@
 import express from "express";
-import { verifyJwt } from "../../authvalid.js";
 import {
   validateReadReceiptGroupCreate,
   validateReadReceiptGroupGet,
@@ -10,12 +9,9 @@ import { handleReadReceiptGroupGet } from "../../route-functions/groupchat-funct
 
 const router = express.Router();
 
-router.use(express.json());
-
 // Create read receipt for group message
 router.post(
   "/create",
-  verifyJwt,
   validateReadReceiptGroupCreate,
   handleReadReceiptGroupCreate
 );
@@ -23,7 +19,6 @@ router.post(
 // Get read receipt for group message by ID
 router.get(
   "/get/:receiptId",
-  verifyJwt,
   validateReadReceiptGroupGet,
   handleReadReceiptGroupGet
 );

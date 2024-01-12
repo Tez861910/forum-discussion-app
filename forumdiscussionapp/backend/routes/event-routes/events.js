@@ -1,5 +1,4 @@
 import express from "express";
-import { verifyJwt } from "../../authvalid.js";
 import {
   validateEventCreate,
   validateEventEdit,
@@ -13,18 +12,16 @@ import { deleteEvent } from "../../route-functions/event-function-routes/event-r
 
 const router = express.Router();
 
-router.use(express.json());
-
 // Endpoint to create a new event
-router.post("/create", verifyJwt, validateEventCreate, createEvent);
+router.post("/create", validateEventCreate, createEvent);
 
 // Endpoint to get all events
-router.get("/get", verifyJwt, getAllEvents);
+router.get("/get", getAllEvents);
 
 // Endpoint to edit an existing event
-router.put("/edit/:eventId", verifyJwt, validateEventEdit, editEvent);
+router.put("/edit/:eventId", validateEventEdit, editEvent);
 
 // Endpoint to delete an event
-router.delete("/delete/:eventId", verifyJwt, validateEventDelete, deleteEvent);
+router.delete("/delete/:eventId", validateEventDelete, deleteEvent);
 
 export default router;

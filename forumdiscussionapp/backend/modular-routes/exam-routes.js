@@ -1,5 +1,4 @@
 import express from "express";
-import { handleError } from "../authvalid.js";
 
 import examsRoutes from "../routes/exam-routes/exams.js";
 import questiontypesRoutes from "../routes/exam-routes/question-types.js";
@@ -24,8 +23,5 @@ router.use("/examcategories", examcategoriesRoutes);
 router.use("/examschedules", examshcedulesRoutes);
 router.use("/results", resultsRoutes);
 router.use("/examattempts", examattemptsRoutes);
-
-// Error handling middleware
-router.use(handleError);
 
 export default router;

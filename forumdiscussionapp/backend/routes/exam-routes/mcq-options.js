@@ -1,6 +1,4 @@
 import express from "express";
-import cors from "cors";
-import { verifyJwt } from "../../authvalid.js";
 import {
   validateMCQOptionCreate,
   validateMCQOptionUpdate,
@@ -14,24 +12,15 @@ import { handleMCQOptionsGetAll } from "../../route-functions/exam-function-rout
 
 const router = express.Router();
 
-router.use(express.json());
-router.use(cors());
-
 // Get all MCQ options
-router.get("/get/all", verifyJwt, handleMCQOptionsGetAll);
+router.get("/get/all", handleMCQOptionsGetAll);
 
 // Create a new MCQ option
-router.post(
-  "/create",
-  verifyJwt,
-  validateMCQOptionCreate,
-  handleMCQOptionCreate
-);
+router.post("/create", validateMCQOptionCreate, handleMCQOptionCreate);
 
 // Update an MCQ option
 router.put(
   "/update/:mcqOptionId",
-  verifyJwt,
   validateMCQOptionUpdate,
   handleMCQOptionUpdateById
 );
@@ -39,7 +28,6 @@ router.put(
 // Delete an MCQ option
 router.delete(
   "/delete/:mcqOptionId",
-  verifyJwt,
   validateMCQOptionDelete,
   handleMCQOptionDeleteById
 );

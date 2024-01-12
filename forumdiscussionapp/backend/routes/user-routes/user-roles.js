@@ -1,6 +1,4 @@
 import express from "express";
-import cors from "cors";
-import { verifyJwt } from "../../authvalid.js";
 
 import { handleRolesEnrollmentsId } from "../../route-functions/user-function-routes/user-role-routes/handle-roles-enrollments-id.js";
 import { handleRolesIdEnroll } from "../../route-functions/user-function-routes/user-role-routes/handle-roles-id-enroll.js";
@@ -16,29 +14,15 @@ import {
 
 const router = express.Router();
 
-router.use(express.json());
-router.use(cors());
-
 // Get role enrollments
-router.get(
-  "/enrollments/:roleId",
-  verifyJwt,
-  validateRoleId,
-  handleRolesEnrollmentsId
-);
+router.get("/enrollments/:roleId", validateRoleId, handleRolesEnrollmentsId);
 
 // Enroll user in a role
-router.post(
-  "/:roleId/enroll",
-  verifyJwt,
-  validateRoleIdUserIdEnroll,
-  handleRolesIdEnroll
-);
+router.post("/:roleId/enroll", validateRoleIdUserIdEnroll, handleRolesIdEnroll);
 
 // Patch (soft delete) removing user from a role
 router.patch(
   "/:roleId/enrollments/:userId",
-  verifyJwt,
   validateRoleIdUserIdRemoveById,
   handleRIDEnrollmentsUID
 );
@@ -46,7 +30,6 @@ router.patch(
 // Patch (soft delete) removing users from a role
 router.patch(
   "/:roleId/enrollments",
-  verifyJwt,
   validateRoleIdUserIdsRemove,
   handleRemoveUsersFromRole
 );

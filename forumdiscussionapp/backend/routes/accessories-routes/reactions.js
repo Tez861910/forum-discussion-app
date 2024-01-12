@@ -1,6 +1,4 @@
 import express from "express";
-import cors from "cors";
-import { verifyJwt } from "../../authvalid.js";
 import {
   validateReactionCreate,
   validateReactionUpdate,
@@ -14,27 +12,18 @@ import { handleReactionGetAll } from "../../route-functions/accessories-function
 
 const router = express.Router();
 
-router.use(express.json());
-router.use(cors());
-
 // Get all reactions
-router.get("/get/all", verifyJwt, handleReactionGetAll);
+router.get("/get/all", handleReactionGetAll);
 
 // Create a new reaction
-router.post("/create", verifyJwt, validateReactionCreate, handleReactionCreate);
+router.post("/create", validateReactionCreate, handleReactionCreate);
 
 // Update a reaction
-router.put(
-  "/update/:reactionId",
-  verifyJwt,
-  validateReactionUpdate,
-  handleReactionUpdate
-);
+router.put("/update/:reactionId", validateReactionUpdate, handleReactionUpdate);
 
 // Delete a reaction
 router.delete(
   "/delete/:reactionId",
-  verifyJwt,
   validateReactionDelete,
   handleReactionDelete
 );

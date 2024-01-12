@@ -1,5 +1,4 @@
 import express from "express";
-import { verifyJwt } from "../../authvalid.js";
 import {
   validateStatusUpdate,
   validateUserStatusGet,
@@ -10,22 +9,10 @@ import { handleUserStatusGet } from "../../route-functions/messaging-function-ro
 
 const router = express.Router();
 
-router.use(express.json());
-
 // Update user status
-router.put(
-  "/update/:userId",
-  verifyJwt,
-  validateStatusUpdate,
-  handleStatusUpdate
-);
+router.put("/update/:userId", validateStatusUpdate, handleStatusUpdate);
 
 // Get user status
-router.get(
-  "/get/:userId",
-  verifyJwt,
-  validateUserStatusGet,
-  handleUserStatusGet
-);
+router.get("/get/:userId", validateUserStatusGet, handleUserStatusGet);
 
 export default router;

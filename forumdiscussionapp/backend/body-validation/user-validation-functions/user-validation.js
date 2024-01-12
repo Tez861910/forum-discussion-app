@@ -23,7 +23,8 @@ export const validateUserUpdate = validate(
 export const validateUserUpdateUsers = validate(
   Joi.object({
     id: Joi.number().integer().min(1).required(),
-    newField: Joi.string().min(1).required(),
+    updatedUserData: Joi.string().min(1).required(),
+    createdByUserID: Joi.number().integer().min(1).required(),
     // Add more properties as needed
   })
 );

@@ -1,5 +1,4 @@
 import express from "express";
-import { verifyJwt } from "../../authvalid.js";
 import {
   validateRequestCreate,
   validateRequestUpdate,
@@ -12,20 +11,13 @@ import { handleRequestGet } from "../../route-functions/messaging-function-route
 
 const router = express.Router();
 
-router.use(express.json());
-
 // Create new friend request
-router.post("/create", verifyJwt, validateRequestCreate, handleRequestCreate);
+router.post("/create", validateRequestCreate, handleRequestCreate);
 
 // Update friend request status
-router.put(
-  "/update/:requestId",
-  verifyJwt,
-  validateRequestUpdate,
-  handleRequestUpdate
-);
+router.put("/update/:requestId", validateRequestUpdate, handleRequestUpdate);
 
 // Get friend request by ID
-router.get("/get/:requestId", verifyJwt, validateRequestGet, handleRequestGet);
+router.get("/get/:requestId", validateRequestGet, handleRequestGet);
 
 export default router;
