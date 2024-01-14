@@ -1,13 +1,15 @@
-import { query } from "../../../db.js";
+import { Friends } from "../../../db.js";
 
 export const handleFriendsCreate = async (req, res) => {
   const { userId1, userId2 } = req.body;
 
   try {
-    const sql = "INSERT INTO Friends (UserID1, UserID2) VALUES (?, ?)";
-    const [result] = await query(sql, [userId1, userId2]);
+    const result = await Friends.create({
+      UserID1: userId1,
+      UserID2: userId2,
+    });
 
-    if (result.affectedRows === 1) {
+    if (result) {
       console.log("Friendship created successfully");
       res.json({ message: "Friendship created successfully" });
     } else {

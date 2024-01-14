@@ -1,49 +1,49 @@
-import { query } from "../../../db.js";
+import { User, UserRoles, CommonAttributes } from "../../../db.js";
+import { Op } from "sequelize";
 
 export const handleRolesEnrollmentsId = async (req, res) => {
-  const roleId = req.params.roleId;
+  const { roleId } = req.params;
 
   try {
-    if (!query) {
-      throw new Error(
-        "Database connection not established or query function not defined."
-      );
-    }
-
-    const sql = `
-      SELECT
-        users.UserID,
-        users.UserName
-      FROM
-        users
-      JOIN
-        userroles ON users.UserID = userroles.UserID
-        JOIN CommonAttributes caUsers ON users.CommonAttributeID = caUsers.AttributeID
-        JOIN CommonAttributes caUserRoles ON userroles.CommonAttributeID = caUserRoles.AttributeID
-      WHERE
-        userroles.RoleID = ? AND caUsers.IsDeleted = FALSE AND caUserRoles.IsDeleted = FALSE;
-    `;
-
-    const rows = await query(sql, [parseInt(roleId, 10)]);
-
-    if (!rows || rows.length === 0) {
-      return res
-        .status(404)
-        .json({ error: "No users found for the specified role" });
-    }
-
-    const enrollmentsResult = {};
-
-    rows.forEach(({ UserID, UserName }) => {
-      if (!enrollmentsResult[UserID]) {
-        enrollmentsResult[UserID] = [];
-      }
-      enrollmentsResult[UserID].push({ UserID, UserName });
+    // Fetch user data for a given role ID
+    const users = await User.findAll({
+      where: {
+        "$UserRoles.RoleID$": roleId,
+        "$UserRoles.CommonAttributes.IsDeleted$": false,
+      },
+      include: [
+        {
+          model: UserRoles,
+          include: [
+            {
+              model: CommonAttributes,
+              attributes: [],
+            },
+          ],
+          attributes: [],
+        },
+      ],
+      attributes: ["UserID", "UserName"],
     });
 
+    const enrollmentsResult = {};
+    users.forEach((user) => {
+      if (!enrollmentsResult[user.UserID]) {
+        enrollmentsResult[user.UserID] = [];
+      }
+      enrollmentsResult[user.UserID].push({
+        UserID: user.UserID,
+        UserName: user.UserName,
+      });
+    });
+
+    console.log("Usernames fetched successfully");
     res.json({ enrollments: enrollmentsResult });
   } catch (error) {
-    console.error("Unexpected error:", error);
-    res.status(500).json({ error: "Internal Server Error" });
+    console.error("Error fetching usernames by role ID:", error);
+    res.status(500).json({
+      error: "Usernames retrieval by role ID failed",
+      details: error.message,
+    });
   }
 };

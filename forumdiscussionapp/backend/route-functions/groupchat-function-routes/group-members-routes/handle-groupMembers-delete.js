@@ -1,13 +1,14 @@
-import { query } from "../../../db.js";
+import { GroupMembers } from "../../../db.js";
 
 export const handleGroupMembersDelete = async (req, res) => {
   const { groupId, userId } = req.params;
 
   try {
-    const sql = "DELETE FROM GroupMembers WHERE GroupID = ? AND UserID = ?";
-    const [result] = await query(sql, [groupId, userId]);
+    const result = await GroupMembers.destroy({
+      where: { GroupID: groupId, UserID: userId },
+    });
 
-    if (result.affectedRows === 1) {
+    if (result === 1) {
       console.log("Group member deleted successfully");
       res.json({ message: "Group member deleted successfully" });
     } else {
@@ -18,6 +19,6 @@ export const handleGroupMembersDelete = async (req, res) => {
     console.error("Error deleting group member:", error);
     res
       .status(500)
-      .json({ error: "Error deleting group member", details: error.message });
+      .json({ error: "Group member deletion failed", details: error.message });
   }
 };

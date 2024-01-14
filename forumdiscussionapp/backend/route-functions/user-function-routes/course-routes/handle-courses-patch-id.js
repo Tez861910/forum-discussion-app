@@ -1,28 +1,38 @@
-import { query } from "../../../db.js";
+import { Courses, CommonAttributes } from "../../../db.js";
 
 export const handleCoursesPatchId = async (req, res) => {
   const deletedByUserID = req.user.id;
+  const { id } = req.params;
 
   try {
-    const { id } = req.params;
+    // Fetch the course with the provided ID
+    const course = await Courses.findOne({
+      where: { CourseID: id },
+      include: [
+        {
+          model: CommonAttributes,
+          as: "commonAttributes",
+          where: { IsDeleted: false },
+        },
+      ],
+    });
 
-    // Updated SQL query to use CommonAttributeID for soft deletion
-    const updateSql = `
-      UPDATE Courses AS C
-      INNER JOIN CommonAttributes AS CA ON C.CommonAttributeID = CA.AttributeID
-      SET CA.IsDeleted = TRUE, CA.DeletedAt = CURRENT_TIMESTAMP, CA.DeletedByUserID = ?
-      WHERE C.CourseID = ? AND CA.IsDeleted = FALSE
-    `;
-
-    const [result] = await query(updateSql, [deletedByUserID, id]);
-
-    if (result.affectedRows === 1) {
-      console.log("Course soft-deleted successfully");
-      res.json({ message: "Course soft-deleted successfully" });
-    } else {
-      console.error("Course soft-deletion failed");
-      res.status(500).json({ error: "Course soft-deletion failed" });
+    if (!course) {
+      console.error("Course not found");
+      return res.status(404).json({ error: "Course not found" });
     }
+
+    // Soft-delete the course
+    const commonAttributes = await CommonAttributes.findOne({
+      where: { AttributeID: course.CommonAttributeID },
+    });
+    commonAttributes.IsDeleted = true;
+    commonAttributes.DeletedAt = new Date();
+    commonAttributes.DeletedByUserID = deletedByUserID;
+    await commonAttributes.save();
+
+    console.log("Course soft-deleted successfully");
+    res.json({ message: "Course soft-deleted successfully" });
   } catch (error) {
     console.error("Error soft-deleting course:", error);
     res

@@ -1,12 +1,15 @@
-import { query } from "../../../db.js";
+import { PrivateMessages } from "../../../db.js";
+import { Op } from "sequelize";
 
 export const handlePrivateMessagesGetByUser = async (req, res) => {
   const { userId } = req.params;
 
   try {
-    const sql =
-      "SELECT * FROM PrivateMessages WHERE SenderID = ? OR ReceiverID = ?";
-    const [result] = await query(sql, [userId, userId]);
+    const result = await PrivateMessages.findAll({
+      where: {
+        [Op.or]: [{ SenderID: userId }, { ReceiverID: userId }],
+      },
+    });
 
     console.log("Private messages retrieved successfully");
     res.json(result);

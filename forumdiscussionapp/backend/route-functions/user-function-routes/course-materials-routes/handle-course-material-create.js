@@ -1,32 +1,28 @@
-import { query } from "../../../db.js";
+import { CourseMaterials } from "../../../db.js";
 
 export const handleCourseMaterialCreate = async (req, res) => {
   const { courseId, materialName, materialType, filePath, description } =
     req.body;
 
   try {
-    const sql =
-      "INSERT INTO CourseMaterials (CourseID, MaterialName, MaterialType, FilePath, Description) VALUES (?, ?, ?, ?, ?)";
-    const [result] = await query(sql, [
-      courseId,
-      materialName,
-      materialType,
-      filePath,
-      description,
-    ]);
+    // Create a new CourseMaterial
+    const courseMaterial = await CourseMaterials.create({
+      CourseID: courseId,
+      MaterialName: materialName,
+      MaterialType: materialType,
+      FilePath: filePath,
+      Description: description,
+    });
 
-    if (result.affectedRows === 1) {
-      console.log("Course material created successfully");
-      res.json({ message: "Course material created successfully" });
-    } else {
-      console.error("Course material creation failed");
-      res.status(500).json({ error: "Course material creation failed" });
-    }
+    console.log("Course material created successfully");
+    res.json({ message: "Course material created successfully" });
   } catch (error) {
     console.error("Error creating course material:", error);
-    res.status(500).json({
-      error: "Course material creation failed",
-      details: error.message,
-    });
+    res
+      .status(500)
+      .json({
+        error: "Course material creation failed",
+        details: error.message,
+      });
   }
 };

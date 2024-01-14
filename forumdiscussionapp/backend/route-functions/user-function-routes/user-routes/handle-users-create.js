@@ -1,4 +1,9 @@
-import { query } from "../../../db.js";
+import {
+  CommonAttributes,
+  User,
+  UserRoles,
+  UserSettings,
+} from "../../../db.js";
 import {
   hashPassword,
   createAccessTokenAndSetCookies,
@@ -16,6 +21,10 @@ export const handleUsersCreate = async (req, res) => {
     avatarPath,
     dateOfBirth,
     createdByUserId,
+    theme,
+    darkMode,
+    language,
+    emailNotifications,
   } = req.body;
 
   try {
@@ -26,7 +35,9 @@ export const handleUsersCreate = async (req, res) => {
       !roleId ||
       !genderId ||
       !createdByUserId ||
-      !avatarPath
+      !avatarPath ||
+      !theme ||
+      !language
     ) {
       console.log("Missing user data");
       return res.status(400).json({ error: "Missing user data" });
@@ -35,83 +46,65 @@ export const handleUsersCreate = async (req, res) => {
     const hashedPassword = await hashPassword(password);
 
     // Create a record in the CommonAttributes table
-    const sqlCommonAttributes = `
-      INSERT INTO CommonAttributes (CreatedAt, CreatedByUserID, IsDeleted)
-      VALUES (NOW(), ?, FALSE)
-    `;
-    const [commonAttributesResult] = await query(sqlCommonAttributes, [
-      createdByUserId,
-    ]);
-
-    if (commonAttributesResult.affectedRows !== 1) {
-      console.log("Error creating common attributes");
-      return res.status(500).json({ error: "User registration failed" });
-    }
-
-    const commonAttributeId = commonAttributesResult.insertId;
+    const commonAttributes = await CommonAttributes.create({
+      CreatedAt: new Date(),
+      CreatedByUserID: createdByUserId,
+      IsDeleted: false,
+    });
 
     // Insert user data with CommonAttributeID
-    const sqlUser = `
-      INSERT INTO Users (UserName, UserEmail, UserPassword, GenderID, Address, PhoneNumber, AvatarPath, DateOfBirth, CommonAttributeID)
-      VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)
-    `;
-    const [userResult] = await query(sqlUser, [
-      name,
-      email,
-      hashedPassword,
-      genderId,
-      address,
-      phoneNumber,
-      avatarPath,
-      dateOfBirth,
-      commonAttributeId,
-    ]);
+    const user = await User.create({
+      UserName: name,
+      UserEmail: email,
+      UserPassword: hashedPassword,
+      GenderID: genderId,
+      Address: address,
+      PhoneNumber: phoneNumber,
+      AvatarPath: avatarPath,
+      DateOfBirth: dateOfBirth,
+      CommonAttributeID: commonAttributes.id,
+    });
 
-    if (userResult.affectedRows === 1) {
-      const userId = userResult.insertId;
+    // Create a new CommonAttributes record for UserRoles
+    const commonAttributesUserRoles = await CommonAttributes.create({
+      CreatedAt: new Date(),
+      CreatedByUserID: createdByUserId,
+      IsDeleted: false,
+    });
 
-      // Create a new CommonAttributes record for UserRoles
-      const sqlCommonAttributesUserRoles = `
-        INSERT INTO CommonAttributes (CreatedAt, CreatedByUserID, IsDeleted)
-        VALUES (NOW(), ?, FALSE)
-      `;
-      const [commonAttributesUserRolesResult] = await query(
-        sqlCommonAttributesUserRoles,
-        [createdByUserId]
-      );
+    // Insert a record into userroles to associate the user with the role
+    const userRoles = await UserRoles.create({
+      UserID: user.id,
+      RoleID: roleId,
+      CommonAttributeID: commonAttributesUserRoles.id,
+    });
 
-      if (commonAttributesUserRolesResult.affectedRows !== 1) {
-        console.log("Error creating common attributes for UserRoles");
-        return res.status(500).json({ error: "User registration failed" });
-      }
+    // Create a new CommonAttributes record for UserSettings
+    const commonAttributesUserSettings = await CommonAttributes.create({
+      CreatedAt: new Date(),
+      CreatedByUserID: createdByUserId,
+      IsDeleted: false,
+    });
 
-      const commonAttributeIdUserRoles =
-        commonAttributesUserRolesResult.insertId;
+    // Insert a record into usersettings to associate the user with the settings
+    const userSettings = await UserSettings.create({
+      UserID: user.id,
+      Theme: theme,
+      DarkMode: darkMode,
+      Language: language,
+      EmailNotifications: emailNotifications,
+      CommonAttributeID: commonAttributesUserSettings.id,
+    });
 
-      // Insert a record into userroles to associate the user with the role
-      const sqlUserRoles = `
-        INSERT INTO UserRoles (UserID, RoleID, CommonAttributeID)
-        VALUES (?, ?, ?)
-      `;
-      const [userRolesResult] = await query(sqlUserRoles, [
-        userId,
+    if (user && userRoles && userSettings) {
+      const payload = {
+        email,
         roleId,
-        commonAttributeIdUserRoles,
-      ]);
-
-      if (userRolesResult.affectedRows === 1) {
-        const payload = {
-          email,
-          roleId,
-        };
-        // Create and set cookies for the token
-        const token = createAccessTokenAndSetCookies(payload, res);
-        console.log("User registered successfully for email: " + email);
-        res.json({ message: "User registered successfully", token });
-      } else {
-        console.log("User registration failed for email: " + email);
-        res.status(500).json({ error: "User registration failed" });
-      }
+      };
+      // Create and set cookies for the token
+      const token = createAccessTokenAndSetCookies(payload, res);
+      console.log("User registered successfully for email: " + email);
+      res.json({ message: "User registered successfully", token });
     } else {
       console.log("User registration failed for email: " + email);
       res.status(500).json({ error: "User registration failed" });

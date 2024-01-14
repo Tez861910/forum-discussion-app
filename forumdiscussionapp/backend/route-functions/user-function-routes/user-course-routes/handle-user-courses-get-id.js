@@ -1,29 +1,26 @@
-import { query } from "../../../db.js";
+import { UserCourses, CommonAttributes } from "../../../db.js";
 
 export const handleUserCoursesGetId = async (req, res) => {
+  const { userId } = req.query;
+
   try {
-    const userId = req.query.userId;
+    // Fetch user courses for the given user ID
+    const userCourses = await UserCourses.findAll({
+      where: { UserID: userId, "$CommonAttributes.IsDeleted$": false },
+      include: [
+        {
+          model: CommonAttributes,
+          attributes: [],
+        },
+      ],
+    });
 
-    // Validate userId
-    if (!userId) {
-      throw new Error("Invalid user ID provided");
-    }
-
-    // Assuming CommonAttributes table has an IsDeleted column
-    const userCoursesQuery = `
-      SELECT uc.*
-      FROM UserCourses uc
-      INNER JOIN CommonAttributes ca ON uc.CommonAttributeID = ca.AttributeID
-      WHERE uc.UserID = ? AND ca.IsDeleted = FALSE
-    `;
-
-    const userCourses = await query(userCoursesQuery, [userId]);
-
+    console.log("User courses fetched successfully");
     res.json({ userCourses });
   } catch (error) {
     console.error("Error fetching user courses:", error);
     res
       .status(500)
-      .json({ error: "Error fetching user courses. Please try again later." });
+      .json({ error: "User courses retrieval failed", details: error.message });
   }
 };

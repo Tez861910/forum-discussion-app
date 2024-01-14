@@ -1,13 +1,15 @@
-import { query } from "../../../db.js";
+import { Bans } from "../../../db.js";
 
 export const handleBanDelete = async (req, res) => {
   const { banId } = req.params;
 
   try {
-    const sql = "DELETE FROM Bans WHERE BanID = ?";
-    const [result] = await query(sql, [banId]);
+    // Delete the ban
+    const result = await Bans.destroy({
+      where: { BanID: banId },
+    });
 
-    if (result.affectedRows === 1) {
+    if (result === 1) {
       console.log("Ban deleted successfully");
       res.json({ message: "Ban deleted successfully" });
     } else {

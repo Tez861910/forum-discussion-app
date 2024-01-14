@@ -14,6 +14,7 @@ import { ForumDiscussion } from "../threads/Forumdiscussion";
 import { Scheduler } from "./scheduler";
 import { UserProfile } from "./user-profile";
 import { CourseEnrollmentModal } from "./course-enrollment-modal";
+import { ChatApplication } from "../chats/chat-application";
 
 export const Home = () => {
   const theme = useTheme();
@@ -130,6 +131,7 @@ export const Home = () => {
       path: "mcq-answer-form",
       element: <Wrapper component={MCQAnswerForm} view="mcq-answer-form" />,
     },
+    { path: "chat", element: <ChatApplication /> },
   ]);
 
   return (

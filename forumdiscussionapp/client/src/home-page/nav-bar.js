@@ -10,9 +10,11 @@ import {
   Stack,
   Alert,
 } from "@mui/material";
+import ChatBubbleOutlineIcon from "@mui/icons-material/ChatBubbleOutline";
 import { useTheme } from "@mui/material/styles";
 import MenuIcon from "@mui/icons-material/Menu";
 import { EnrolledCoursesDropdown } from "./enrolled-courses-dropdown";
+import { Link } from "react-router-dom";
 
 export const Navbar = ({
   userId,
@@ -170,6 +172,15 @@ export const Navbar = ({
                 )}
               </>
             )}
+
+            {/* Chat Link */}
+            <Button
+              component={Link}
+              to="/home/chat"
+              startIcon={<ChatBubbleOutlineIcon />}
+            >
+              Chat
+            </Button>
           </ButtonGroup>
         </Toolbar>
 

@@ -1,13 +1,14 @@
-import { query } from "../../../db.js";
+import { GroupManager } from "../../../db.js";
 
 export const handleManagerDelete = async (req, res) => {
   const { managerId } = req.params;
 
   try {
-    const sql = "DELETE FROM GroupManager WHERE ManagerID = ?";
-    const [result] = await query(sql, [managerId]);
+    const result = await GroupManager.destroy({
+      where: { ManagerID: managerId },
+    });
 
-    if (result.affectedRows === 1) {
+    if (result === 1) {
       console.log("Group manager deleted successfully");
       res.json({ message: "Group manager deleted successfully" });
     } else {
@@ -18,6 +19,6 @@ export const handleManagerDelete = async (req, res) => {
     console.error("Error deleting group manager:", error);
     res
       .status(500)
-      .json({ error: "Error deleting group manager", details: error.message });
+      .json({ error: "Group manager deletion failed", details: error.message });
   }
 };

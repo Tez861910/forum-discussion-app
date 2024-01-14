@@ -1,13 +1,14 @@
-import { query } from "../../../db.js";
+import { GroupChat } from "../../../db.js";
 
 export const handleGroupChatDeleteById = async (req, res) => {
   const { groupId } = req.params;
 
   try {
-    const sql = "DELETE FROM GroupChat WHERE GroupID = ?";
-    const [result] = await query(sql, [groupId]);
+    const result = await GroupChat.destroy({
+      where: { GroupID: groupId },
+    });
 
-    if (result.affectedRows === 1) {
+    if (result === 1) {
       console.log("Group chat deleted successfully");
       res.json({ message: "Group chat deleted successfully" });
     } else {
@@ -18,6 +19,6 @@ export const handleGroupChatDeleteById = async (req, res) => {
     console.error("Error deleting group chat:", error);
     res
       .status(500)
-      .json({ error: "Error deleting group chat", details: error.message });
+      .json({ error: "Group chat deletion failed", details: error.message });
   }
 };

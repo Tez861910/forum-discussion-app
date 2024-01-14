@@ -5,7 +5,8 @@ import { validate } from "../../authvalid.js";
 export const validateCourseCreate = validate(
   Joi.object({
     courseName: Joi.string().min(1).required(),
-    // Add more properties as needed
+    createdByUserID: Joi.number().integer().min(1).required(),
+    courseDescription: Joi.string().min(1).required(),
   })
 );
 
@@ -14,7 +15,8 @@ export const validateCourseUpdate = validate(
   Joi.object({
     id: Joi.number().integer().min(1).required(),
     courseName: Joi.string().min(1).required(),
-    // Add more properties as needed
+    updatedByUserID: Joi.number().integer().min(1).required(),
+    courseDescription: Joi.string().min(1).required(),
   })
 );
 

@@ -1,49 +1,25 @@
-import { query } from "../../../db.js";
+import { User, UserRoles, UserSettings } from "../../../db.js";
 
 export const handleUsersGetId = async (req, res) => {
   const { id: userId } = req.params;
 
   try {
-    // Fetch user data including the role ID
-    const userSql = `
-      SELECT 
-        users.*,
-        roles.RoleID,
-        commonAttributes.IsDeleted AS CommonAttributeIsDeleted
-      FROM users
-      LEFT JOIN userroles ON users.UserID = userroles.UserID
-      LEFT JOIN roles ON userroles.RoleID = roles.RoleID
-      LEFT JOIN commonattributes ON users.CommonAttributeID = commonattributes.AttributeID
-      WHERE users.UserID = ?
-    `;
+    // Fetch user data including the role ID and user settings
+    const user = await User.findOne({
+      where: { UserID: userId },
+      include: [
+        {
+          model: UserRoles,
+          attributes: ["RoleID"],
+        },
+        {
+          model: UserSettings,
+          attributes: ["Theme", "DarkMode", "Language", "EmailNotifications"],
+        },
+      ],
+    });
 
-    const userResults = await query(userSql, [userId]);
-
-    if (userResults.length > 0) {
-      const user = userResults[0];
-
-      // Check if user is deleted in CommonAttributes
-      if (user.CommonAttributeIsDeleted) {
-        console.error("User is deleted");
-        return res.status(404).json({ error: "User not found" });
-      }
-
-      if (user.RoleID) {
-        // Fetch role name based on the retrieved RoleID
-        const roleNameSql = `
-          SELECT RoleName
-          FROM roles
-          LEFT JOIN commonattributes ON roles.CommonAttributeID = commonattributes.AttributeID
-          WHERE RoleID = ? AND commonattributes.IsDeleted = FALSE
-        `;
-
-        const roleNameResult = await query(roleNameSql, [user.RoleID]);
-
-        if (roleNameResult.length > 0) {
-          user.RoleName = roleNameResult[0].RoleName;
-        }
-      }
-
+    if (user) {
       console.log("User fetched successfully");
       res.json({ user });
     } else {

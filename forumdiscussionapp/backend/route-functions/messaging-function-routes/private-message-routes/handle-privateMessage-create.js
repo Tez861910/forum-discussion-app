@@ -1,4 +1,4 @@
-import { query } from "../../../db.js";
+import { PrivateMessages } from "../../../db.js";
 
 export const handlePrivateMessageCreate = async (req, res) => {
   const { senderId, receiverId, messageContent } = req.body;
@@ -11,11 +11,13 @@ export const handlePrivateMessageCreate = async (req, res) => {
       });
     }
 
-    const sql =
-      "INSERT INTO PrivateMessages (SenderID, ReceiverID, MessageContent) VALUES (?, ?, ?)";
-    const [result] = await query(sql, [senderId, receiverId, messageContent]);
+    const result = await PrivateMessages.create({
+      SenderID: senderId,
+      ReceiverID: receiverId,
+      MessageContent: messageContent,
+    });
 
-    if (result.affectedRows === 1) {
+    if (result) {
       console.log("Private message created successfully");
       res.json({ message: "Private message created successfully" });
     } else {
@@ -24,11 +26,9 @@ export const handlePrivateMessageCreate = async (req, res) => {
     }
   } catch (error) {
     console.error("Error creating private message:", error);
-    res
-      .status(500)
-      .json({
-        error: "Private message creation failed",
-        details: error.message,
-      });
+    res.status(500).json({
+      error: "Private message creation failed",
+      details: error.message,
+    });
   }
 };

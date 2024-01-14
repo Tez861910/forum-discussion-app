@@ -1,23 +1,41 @@
-import { query } from "../../../db.js";
+import {
+  User,
+  UserCourses,
+  UserRoles,
+  UserSettings,
+  CommonAttributes,
+} from "../../../db.js";
 
 export const handleUsersDeleteId = async (req, res) => {
   const { id } = req.params;
 
   try {
-    // Update the user's IsDeleted status
-    const deleteUserSql =
-      "UPDATE users SET IsDeleted = TRUE WHERE UserID = ? AND CommonAttributeID IN (SELECT AttributeID FROM CommonAttributes WHERE IsDeleted = FALSE)";
-    const [deleteUserResult] = await query(deleteUserSql, [id]);
+    // Fetch the user's CommonAttributeID
+    const user = await User.findOne({ where: { UserID: id } });
+    const commonAttributeId = user.CommonAttributeID;
 
-    if (deleteUserResult.affectedRows === 1) {
+    // Update the IsDeleted status in the CommonAttributes table
+    const deleteCommonAttributesResult = await CommonAttributes.update(
+      { IsDeleted: true },
+      { where: { AttributeID: commonAttributeId } }
+    );
+
+    if (deleteCommonAttributesResult[0] === 1) {
       // Soft delete user-related records in other tables
-      const deleteUserCoursesSql =
-        "UPDATE usercourses SET IsDeleted = TRUE WHERE UserID = ? AND CommonAttributeID IN (SELECT AttributeID FROM CommonAttributes WHERE IsDeleted = FALSE)";
-      await query(deleteUserCoursesSql, [id]);
+      await UserCourses.update(
+        { IsDeleted: true },
+        { where: { UserID: id, CommonAttributeID: commonAttributeId } }
+      );
 
-      const deleteUserRolesSql =
-        "UPDATE userroles SET IsDeleted = TRUE WHERE UserID = ? AND CommonAttributeID IN (SELECT AttributeID FROM CommonAttributes WHERE IsDeleted = FALSE)";
-      await query(deleteUserRolesSql, [id]);
+      await UserRoles.update(
+        { IsDeleted: true },
+        { where: { UserID: id, CommonAttributeID: commonAttributeId } }
+      );
+
+      await UserSettings.update(
+        { IsDeleted: true },
+        { where: { UserID: id, CommonAttributeID: commonAttributeId } }
+      );
 
       console.log("User and associated records marked as deleted successfully");
       res.json({

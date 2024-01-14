@@ -1,5 +1,12 @@
 import * as React from "react";
-import { Typography, CircularProgress, Container, Stack } from "@mui/material";
+import {
+  Typography,
+  CircularProgress,
+  Container,
+  Stack,
+  Button,
+  TextField,
+} from "@mui/material";
 import { CourseList } from "./CourseList";
 import { CreateCourseSection } from "./CreateCourseSection";
 import { DeleteConfirmationDialog } from "./DeleteConfirmationDialog2";
@@ -9,6 +16,7 @@ import { useApi } from "../../home-page/Api";
 export function AdminCourses() {
   const [courses, setCourses] = React.useState([]);
   const [newCourseName, setNewCourseName] = React.useState("");
+  const [newCourseDescription, setNewCourseDescription] = React.useState("");
   const [deleteConfirmation, setDeleteConfirmation] = React.useState({
     open: false,
     courseId: null,
@@ -17,6 +25,7 @@ export function AdminCourses() {
   const [loading, setLoading] = React.useState(false);
   const [userModalOpen, setUserModalOpen] = React.useState(false);
   const [selectedCourseId, setSelectedCourseId] = React.useState(null);
+  const userId = localStorage.getItem("userId");
 
   const { api } = useApi();
 
@@ -28,6 +37,7 @@ export function AdminCourses() {
         const transformedCourses = response.data.courses.map((row) => ({
           CourseID: row.CourseID,
           CourseName: row.CourseName,
+          CourseDescription: row.CourseDescription,
         }));
         setCourses(transformedCourses);
       } else {
@@ -50,9 +60,13 @@ export function AdminCourses() {
     try {
       const response = await api.post("/users/courses/create", {
         courseName: newCourseName,
+        courseDescription: newCourseDescription,
+        createdByUserID: userId,
       });
+
       console.log("Create Course Response:", response.data);
       setNewCourseName("");
+      setNewCourseDescription("");
       fetchCourses();
     } catch (error) {
       console.error("Error creating course:", error);
@@ -60,11 +74,26 @@ export function AdminCourses() {
     }
   };
 
-  const handleEditCourse = async (courseId, updatedName) => {
+  const handleEditCourse = async (
+    courseId,
+    updatedName,
+    updatedDescription
+  ) => {
     try {
-      const trimmedCourseName = updatedName.trim();
+      console.log(
+        "Edit Course - ID:",
+        courseId,
+        "Name:",
+        updatedName,
+        "Description:",
+        updatedDescription
+      );
+      const trimmedUpdatedName = (String(updatedName) || "").replace(
+        /^\s+|\s+$/g,
+        ""
+      );
 
-      if (!trimmedCourseName) {
+      if (!trimmedUpdatedName) {
         console.error("Course name cannot be empty.");
         setError(
           "Course name cannot be empty. Please enter a valid course name."
@@ -73,16 +102,18 @@ export function AdminCourses() {
       }
 
       const response = await api.put(`/users/courses/update/${courseId}`, {
-        courseName: trimmedCourseName,
+        courseName: trimmedUpdatedName,
+        courseDescription: String(updatedDescription),
+        updatedByUserID: userId,
       });
 
       console.log("Edit Course Response:", response.data);
       setError(null);
+      fetchCourses();
     } catch (error) {
       console.error("Error updating course:", error);
       setError("Error updating course. Please try again.");
-    } finally {
-      fetchCourses();
+      throw error;
     }
   };
 
@@ -92,7 +123,7 @@ export function AdminCourses() {
 
   const handleConfirmDelete = async () => {
     try {
-      await api.patch(`/users/courses/delete/${deleteConfirmation.courseId}`);
+      await api.delete(`/users/courses/delete/${deleteConfirmation.courseId}`);
       console.log("Course deleted successfully");
       fetchCourses();
     } catch (error) {
@@ -135,6 +166,8 @@ export function AdminCourses() {
           handleCreateCourse={handleCreateCourse}
           newCourseName={newCourseName}
           setNewCourseName={setNewCourseName}
+          newCourseDescription={newCourseDescription}
+          setNewCourseDescription={setNewCourseDescription}
         />
         <CourseList
           courses={courses}

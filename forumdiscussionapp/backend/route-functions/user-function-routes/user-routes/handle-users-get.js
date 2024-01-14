@@ -1,13 +1,19 @@
-import { query } from "../../../db.js";
+import { User, CommonAttributes } from "../../../db.js";
 
 export const handleUsersGet = async (req, res) => {
   try {
-    const sql =
-      "SELECT * FROM users u INNER JOIN CommonAttributes ca ON u.CommonAttributeID = ca.AttributeID WHERE ca.IsDeleted = FALSE";
-    const results = await query(sql);
+    const users = await User.findAll({
+      include: [
+        {
+          model: CommonAttributes,
+          where: { IsDeleted: false },
+          attributes: [],
+        },
+      ],
+    });
 
     console.log("Users fetched successfully");
-    res.json({ users: results });
+    res.json({ users });
   } catch (error) {
     console.error("Error fetching users:", error);
     res

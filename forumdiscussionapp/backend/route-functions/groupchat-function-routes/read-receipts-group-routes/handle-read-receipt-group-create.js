@@ -1,14 +1,15 @@
-import { query } from "../../../db.js";
+import { ReadReceiptsGroup } from "../../../db.js";
 
 export const handleReadReceiptGroupCreate = async (req, res) => {
   const { groupMessageId, userId } = req.body;
 
   try {
-    const sql =
-      "INSERT INTO ReadReceiptsGroup (GroupMessageID, UserID) VALUES (?, ?)";
-    const [result] = await query(sql, [groupMessageId, userId]);
+    const result = await ReadReceiptsGroup.create({
+      GroupMessageID: groupMessageId,
+      UserID: userId,
+    });
 
-    if (result.affectedRows === 1) {
+    if (result) {
       console.log("Read receipt for group message created successfully");
       res.json({
         message: "Read receipt for group message created successfully",
@@ -21,11 +22,9 @@ export const handleReadReceiptGroupCreate = async (req, res) => {
     }
   } catch (error) {
     console.error("Error creating read receipt for group message:", error);
-    res
-      .status(500)
-      .json({
-        error: "Read receipt creation for group message failed",
-        details: error.message,
-      });
+    res.status(500).json({
+      error: "Read receipt creation for group message failed",
+      details: error.message,
+    });
   }
 };

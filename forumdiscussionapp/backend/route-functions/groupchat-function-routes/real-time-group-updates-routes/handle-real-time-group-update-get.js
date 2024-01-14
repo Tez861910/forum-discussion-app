@@ -1,26 +1,25 @@
-import { query } from "../../../db.js";
+import { RealTimeGroupUpdates } from "../../../db.js";
 
 export const handleRealTimeGroupUpdateGet = async (req, res) => {
   const { updateId } = req.params;
 
   try {
-    const sql = "SELECT * FROM RealTimeGroupUpdates WHERE RTGUpdateID = ?";
-    const [result] = await query(sql, [updateId]);
+    const result = await RealTimeGroupUpdates.findOne({
+      where: { RTGUpdateID: updateId },
+    });
 
-    if (result.length > 0) {
+    if (result) {
       console.log("Real-time update for group retrieved successfully");
-      res.json({ realTimeGroupUpdate: result[0] });
+      res.json({ realTimeGroupUpdate: result });
     } else {
       console.error("Real-time update for group not found");
       res.status(404).json({ error: "Real-time update for group not found" });
     }
   } catch (error) {
     console.error("Error getting real-time update for group:", error);
-    res
-      .status(500)
-      .json({
-        error: "Error getting real-time update for group",
-        details: error.message,
-      });
+    res.status(500).json({
+      error: "Error getting real-time update for group",
+      details: error.message,
+    });
   }
 };

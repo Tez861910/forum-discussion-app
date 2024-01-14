@@ -1,56 +1,56 @@
-import { query } from "../../../db.js";
+import { UserCourses, CommonAttributes } from "../../../db.js";
+import { Op } from "sequelize";
 
 export const handleRemoveUsersFromCourse = async (req, res) => {
-  const deletedByUserID = req.user.id;
+  const { courseId, userIds } = req.body;
+  const { deletedByUserID } = req.body;
 
   try {
-    const courseId = req.params.courseId;
-    const userIds = req.body.userIds;
+    // Fetch the user course for the given user IDs and course ID
+    const userCourses = await UserCourses.findAll({
+      where: {
+        UserID: { [Op.in]: userIds },
+        CourseID: courseId,
+        "$CommonAttributes.IsDeleted$": false,
+      },
+      include: [
+        {
+          model: CommonAttributes,
+          attributes: [],
+        },
+      ],
+    });
 
-    if (!userIds || !Array.isArray(userIds) || userIds.length === 0) {
-      return res
-        .status(400)
-        .json({ error: "Invalid or empty user IDs provided" });
-    }
-
-    // Get CommonAttributeID for marking deletions
-    const commonAttributeSql =
-      "SELECT AttributeID FROM commonattributes WHERE IsDeleted = false LIMIT 1";
-    const [commonAttributeResult] = await query(commonAttributeSql);
-
-    if (!commonAttributeResult || commonAttributeResult.length === 0) {
-      return res
-        .status(500)
-        .json({
-          error: "No available CommonAttributeID for marking deletions",
-        });
-    }
-
-    const commonAttributeId = commonAttributeResult[0].AttributeID;
-
-    const updateSql =
-      "UPDATE UserCourses " +
-      "SET CommonAttributeID = ?, DeletedAt = CURRENT_TIMESTAMP, IsDeleted = TRUE, DeletedByUserID = ? " +
-      "WHERE UserID IN (?) AND CourseID = ?";
-
-    const updateResult = await query(updateSql, [
-      commonAttributeId,
-      deletedByUserID,
-      userIds,
-      courseId,
-    ]);
-
-    if (updateResult.affectedRows === 0) {
+    if (!userCourses || userCourses.length === 0) {
       return res
         .status(404)
         .json({ error: "Enrollment not found or already removed" });
     }
 
-    console.log(`Users removed from the course ${courseId}.`);
+    // Soft-delete the enrollments
+    await CommonAttributes.update(
+      {
+        IsDeleted: true,
+        DeletedAt: new Date(),
+        DeletedByUserID: deletedByUserID,
+      },
+      {
+        where: {
+          AttributeID: {
+            [Op.in]: userCourses.map(
+              (userCourse) => userCourse.CommonAttributeID
+            ),
+          },
+        },
+      }
+    );
 
+    console.log(`Users removed from the course ${courseId}.`);
     res.json({ message: "Users removed from the course successfully" });
   } catch (error) {
     console.error("Error removing users from course:", error);
-    res.status(500).json({ error: "Internal Server Error" });
+    res
+      .status(500)
+      .json({ error: "Internal Server Error", details: error.message });
   }
 };

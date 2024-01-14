@@ -1,13 +1,15 @@
-import { query } from "../../../db.js";
+import { CourseMaterials } from "../../../db.js";
 
 export const handleCourseMaterialDelete = async (req, res) => {
   const { materialId } = req.params;
 
   try {
-    const sql = "DELETE FROM CourseMaterials WHERE MaterialID = ?";
-    const [result] = await query(sql, [materialId]);
+    // Delete the course material
+    const result = await CourseMaterials.destroy({
+      where: { MaterialID: materialId },
+    });
 
-    if (result.affectedRows === 1) {
+    if (result === 1) {
       console.log("Course material deleted successfully");
       res.json({ message: "Course material deleted successfully" });
     } else {
@@ -16,9 +18,11 @@ export const handleCourseMaterialDelete = async (req, res) => {
     }
   } catch (error) {
     console.error("Error deleting course material:", error);
-    res.status(500).json({
-      error: "Course material deletion failed",
-      details: error.message,
-    });
+    res
+      .status(500)
+      .json({
+        error: "Course material deletion failed",
+        details: error.message,
+      });
   }
 };

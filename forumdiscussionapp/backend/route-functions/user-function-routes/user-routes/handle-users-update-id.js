@@ -1,4 +1,4 @@
-import { query } from "../../../db.js";
+import { User, UserRoles, CommonAttributes } from "../../../db.js";
 import { hashPassword } from "../../../authvalid.js";
 
 export const handleUsersUpdateId = async (req, res) => {
@@ -15,63 +15,38 @@ export const handleUsersUpdateId = async (req, res) => {
         .json({ error: "User Data and UpdatedByUserId are required" });
     }
 
-    // Create an SQL query dynamically based on the provided user data
-    const updateFields = [];
-    const values = [];
-
-    for (const key in userData) {
-      if (
-        userData.hasOwnProperty(key) &&
-        key !== "UserID" &&
-        key !== "UserPassword"
-      ) {
-        // Check if the field is provided and not empty (for fields like UserPassword)
-        if (userData[key] !== null && userData[key] !== undefined) {
-          updateFields.push(`${key} = ?`);
-          values.push(userData[key]);
-        }
-      }
-    }
-
-    if (values.length === 0) {
-      return res
-        .status(400)
-        .json({ error: "No valid fields provided for update" });
-    }
+    // Fetch the user's CommonAttributeID
+    const user = await User.findOne({ where: { UserID: id } });
+    const commonAttributeId = user.CommonAttributeID;
 
     // Hash the password if provided
     if (userData.UserPassword) {
-      const hashedPassword = await hashPassword(userData.UserPassword);
-      updateFields.push("UserPassword = ?");
-      values.push(hashedPassword);
+      userData.UserPassword = await hashPassword(userData.UserPassword);
     }
 
-    values.push(updatedByUserId, id);
-
     // Update the user and associated records only if not soft deleted
-    const sql = `
-      UPDATE users
-      SET ${updateFields.join(", ")},
-          UpdatedAt = NOW(),
-          UpdatedByUserID = ?
-      WHERE UserID = ?
-        AND CommonAttributeID IN (SELECT AttributeID FROM CommonAttributes WHERE IsDeleted = FALSE)
-        AND IsDeleted = FALSE
-    `;
+    const updateUserResult = await User.update(userData, {
+      where: { UserID: id, CommonAttributeID: commonAttributeId },
+    });
 
-    const [result] = await query(sql, values);
-
-    if (result.affectedRows === 1) {
+    if (updateUserResult[0] === 1) {
       console.log("User updated successfully");
 
       // Update userroles table
       if (userRoleData && userRoleData.length > 0) {
-        const userRolesSql =
-          "UPDATE userroles SET RoleID = ? WHERE UserID = ? AND IsDeleted = FALSE";
         for (const role of userRoleData) {
-          await query(userRolesSql, [role.RoleID, id]);
+          await UserRoles.update(
+            { RoleID: role.RoleID },
+            { where: { UserID: id, CommonAttributeID: commonAttributeId } }
+          );
         }
       }
+
+      // Update the CommonAttributes table
+      await CommonAttributes.update(
+        { UpdatedAt: new Date(), UpdatedByUserID: updatedByUserId },
+        { where: { AttributeID: commonAttributeId } }
+      );
 
       res.json({ message: "User updated successfully" });
     } else {

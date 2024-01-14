@@ -1,15 +1,19 @@
-import { query } from "../../../db.js";
+import { GroupManager } from "../../../db.js";
 
 export const handleManagerUpdate = async (req, res) => {
   const { managerId } = req.params;
   const { groupId, managerUserId } = req.body;
 
   try {
-    const sql =
-      "UPDATE GroupManager SET GroupID = ?, ManagerUserID = ? WHERE ManagerID = ?";
-    const [result] = await query(sql, [groupId, managerUserId, managerId]);
+    const result = await GroupManager.update(
+      {
+        GroupID: groupId,
+        ManagerUserID: managerUserId,
+      },
+      { where: { ManagerID: managerId } }
+    );
 
-    if (result.affectedRows === 1) {
+    if (result[0] === 1) {
       console.log("Group manager updated successfully");
       res.json({ message: "Group manager updated successfully" });
     } else {
@@ -20,6 +24,6 @@ export const handleManagerUpdate = async (req, res) => {
     console.error("Error updating group manager:", error);
     res
       .status(500)
-      .json({ error: "Error updating group manager", details: error.message });
+      .json({ error: "Group manager update failed", details: error.message });
   }
 };

@@ -56,7 +56,6 @@ export const App = () => {
                   element={<CourseEnrollmentModal />}
                 />
                 <Route path="forum-discussion" element={<ForumDiscussion />} />
-                <Route path="comment-section" element={<CommentSection />} />
                 <Route path="mcq-form" element={<MCQForm />} />
                 <Route path="mcq-answer-form" element={<MCQAnswerForm />} />
               </Routes>

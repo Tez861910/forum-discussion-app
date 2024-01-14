@@ -6,6 +6,7 @@ import {
   IconButton,
   Typography,
   Box,
+  Button,
 } from "@mui/material";
 import SearchIcon from "@mui/icons-material/Search";
 import { CourseListItem } from "./CourseListItem";
@@ -57,9 +58,17 @@ export function CourseList({
             <CourseListItem
               key={course.CourseID}
               course={course}
-              handleEditCourse={handleEditCourse}
-              handleDeleteCourse={handleDeleteCourse}
-              handleCourseUserModal={handleCourseUserModal}
+              handleEditCourse={(updatedName, updatedDescription) =>
+                handleEditCourse(
+                  course.CourseID,
+                  updatedName,
+                  updatedDescription
+                )
+              }
+              handleDeleteCourse={() => handleDeleteCourse(course.CourseID)}
+              handleCourseUserModal={() =>
+                handleCourseUserModal(course.CourseID)
+              }
             />
           ))
         ) : (

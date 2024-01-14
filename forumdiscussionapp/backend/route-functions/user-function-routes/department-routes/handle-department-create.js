@@ -1,20 +1,17 @@
-import { query } from "../../../db.js";
+import { Departments } from "../../../db.js";
 
 export const handleDepartmentCreate = async (req, res) => {
   const { departmentName, departmentDescription } = req.body;
 
   try {
-    const sql =
-      "INSERT INTO Departments (DepartmentName, DepartmentDescription) VALUES (?, ?)";
-    const [result] = await query(sql, [departmentName, departmentDescription]);
+    // Create a new Department
+    const department = await Departments.create({
+      DepartmentName: departmentName,
+      DepartmentDescription: departmentDescription,
+    });
 
-    if (result.affectedRows === 1) {
-      console.log("Department created successfully");
-      res.json({ message: "Department created successfully" });
-    } else {
-      console.error("Department creation failed");
-      res.status(500).json({ error: "Department creation failed" });
-    }
+    console.log("Department created successfully");
+    res.json({ message: "Department created successfully" });
   } catch (error) {
     console.error("Error creating department:", error);
     res

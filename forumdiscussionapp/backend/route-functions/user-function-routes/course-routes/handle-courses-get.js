@@ -1,31 +1,28 @@
-import { query } from "../../../db.js";
+import { Courses, CommonAttributes } from "../../../db.js";
 
 export const handleCoursesGet = async (req, res) => {
   try {
-    const sql = `
-      SELECT c.CourseID, c.CourseName, c.CourseDescription
-      FROM Courses c
-      JOIN CommonAttributes ca ON c.CommonAttributeID = ca.AttributeID
-      WHERE ca.IsDeleted = FALSE
-    `;
-    const results = await query(sql);
+    const courses = await Courses.findAll({
+      include: [
+        {
+          model: CommonAttributes,
+          as: "commonAttributes",
+          where: { IsDeleted: false },
+        },
+      ],
+    });
 
-    if (!results.length) {
+    if (!Array.isArray(courses) || courses.length === 0) {
+      console.error("No courses found in the database");
       return res.status(404).json({ error: "No courses found" });
     }
 
-    const courseData = results.map((row) => ({
-      CourseID: row.CourseID,
-      CourseName: row.CourseName,
-      CourseDescription: row.CourseDescription,
-    }));
-
     console.log("Courses fetched successfully");
-    res.status(200).json({ courses: courseData });
+    res.status(200).json({ courses });
   } catch (error) {
-    console.error("Error fetching courses:", error);
+    console.error("Error getting courses:", error);
     res
       .status(500)
-      .json({ error: "Course retrieval failed", details: error.message });
+      .json({ error: "Error getting courses", details: error.message });
   }
 };

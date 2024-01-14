@@ -1,14 +1,15 @@
-import { query } from "../../../db.js";
+import { UserStatus } from "../../../db.js";
 
 export const handleStatusUpdate = async (req, res) => {
   const { userId } = req.params;
   const { isOnline } = req.body;
 
   try {
-    const sql =
-      "INSERT INTO UserStatus (UserID, IsOnline, LastOnline) VALUES (?, ?, CURRENT_TIMESTAMP) " +
-      "ON DUPLICATE KEY UPDATE IsOnline = VALUES(IsOnline), LastOnline = CURRENT_TIMESTAMP";
-    await query(sql, [userId, isOnline]);
+    const result = await UserStatus.upsert({
+      UserID: userId,
+      IsOnline: isOnline,
+      LastOnline: new Date(),
+    });
 
     console.log("User status updated successfully");
     res.json({ message: "User status updated successfully" });

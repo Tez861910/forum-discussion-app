@@ -1,13 +1,15 @@
-import { query } from "../../../db.js";
+import { UserReports } from "../../../db.js";
 
 export const handleUserReportDelete = async (req, res) => {
   const { reportId } = req.params;
 
   try {
-    const sql = "DELETE FROM UserReports WHERE ReportID = ?";
-    const [result] = await query(sql, [reportId]);
+    // Delete the user report
+    const result = await UserReports.destroy({
+      where: { ReportID: reportId },
+    });
 
-    if (result.affectedRows === 1) {
+    if (result === 1) {
       console.log("User report deleted successfully");
       res.json({ message: "User report deleted successfully" });
     } else {

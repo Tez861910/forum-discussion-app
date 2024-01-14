@@ -1,60 +1,51 @@
-import { query } from "../../../db.js";
+import { UserCourses, CommonAttributes } from "../../../db.js";
+import { Op } from "sequelize";
 
 export const handleCoursesEnroll = async (req, res) => {
+  const { userId, courseIds } = req.body;
+
   try {
-    const userId = req.body.userId;
-    const courseIds = req.body.courseIds;
-
     // Check if any user is already enrolled in any of the selected courses
-    const existingEnrollmentSql = `
-      SELECT UC.UserCourseID
-      FROM UserCourses AS UC
-      JOIN CommonAttributes AS CA_UC ON UC.CommonAttributeID = CA_UC.AttributeID
-      WHERE UC.UserID = ? AND UC.CourseID IN (?) AND CA_UC.IsDeleted = FALSE
-    `;
+    const existingEnrollments = await UserCourses.findAll({
+      where: {
+        UserID: userId,
+        CourseID: { [Op.in]: courseIds },
+        "$CommonAttributes.IsDeleted$": false,
+      },
+      include: [
+        {
+          model: CommonAttributes,
+          attributes: [],
+        },
+      ],
+    });
 
-    const [existingEnrollmentResult] = await query(existingEnrollmentSql, [
-      userId,
-      courseIds,
-    ]);
-
-    // Check if any user is already enrolled in any of the selected courses
-    if (existingEnrollmentResult && existingEnrollmentResult.length > 0) {
-      return res
-        .status(400)
-        .json({
-          error: "The user is already enrolled in one or more selected courses",
-        });
+    if (existingEnrollments && existingEnrollments.length > 0) {
+      return res.status(400).json({
+        error: "The user is already enrolled in one or more selected courses",
+      });
     }
 
     // Get the UserCoursesAttributeID for the new enrollments
-    const userCoursesAttributeIdSql =
-      "SELECT AttributeID FROM CommonAttributes WHERE IsDeleted = FALSE LIMIT 1";
-    const [userCoursesAttributeIdResult] = await query(
-      userCoursesAttributeIdSql
-    );
+    const commonAttributes = await CommonAttributes.findOne({
+      where: { IsDeleted: false },
+    });
 
-    if (
-      !userCoursesAttributeIdResult ||
-      userCoursesAttributeIdResult.length === 0
-    ) {
+    if (!commonAttributes) {
       return res
         .status(500)
         .json({ error: "Failed to retrieve UserCoursesAttributeID" });
     }
 
-    const userCoursesAttributeId = userCoursesAttributeIdResult[0].AttributeID;
-
     // Enroll the user in all selected courses using the new UserCoursesAttributeID
-    const enrollSql =
-      "INSERT INTO UserCourses (UserID, CourseID, CommonAttributeID) VALUES ?";
-    const enrollValues = courseIds.map((courseId) => [
-      userId,
-      courseId,
-      userCoursesAttributeId,
-    ]);
-    await query(enrollSql, [enrollValues]);
+    const enrollValues = courseIds.map((courseId) => ({
+      UserID: userId,
+      CourseID: courseId,
+      CommonAttributeID: commonAttributes.AttributeID,
+    }));
+    await UserCourses.bulkCreate(enrollValues);
 
+    console.log("User enrolled in the selected courses successfully");
     res.json({ message: "User enrolled in the selected courses successfully" });
   } catch (error) {
     console.error("Error enrolling user in courses:", error);

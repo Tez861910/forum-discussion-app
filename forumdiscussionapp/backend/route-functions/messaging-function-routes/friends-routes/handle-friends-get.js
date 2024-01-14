@@ -1,11 +1,15 @@
-import { query } from "../../../db.js";
+import { Friends } from "../../../db.js";
+import { Op } from "sequelize";
 
 export const handleFriendsGet = async (req, res) => {
   const { userId } = req.params;
 
   try {
-    const sql = "SELECT * FROM Friends WHERE UserID1 = ? OR UserID2 = ?";
-    const [result] = await query(sql, [userId, userId]);
+    const result = await Friends.findAll({
+      where: {
+        [Op.or]: [{ UserID1: userId }, { UserID2: userId }],
+      },
+    });
 
     console.log("User friends retrieved successfully");
     res.json({ friends: result });

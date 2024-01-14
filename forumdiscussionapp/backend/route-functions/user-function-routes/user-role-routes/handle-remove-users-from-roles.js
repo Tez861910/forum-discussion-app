@@ -1,42 +1,46 @@
-import { query } from "../../../db.js";
+import { UserRoles, CommonAttributes } from "../../../db.js";
+import { Op } from "sequelize";
 
 export const handleRemoveUsersFromRole = async (req, res) => {
-  try {
-    const roleId = req.params.roleId;
-    const userIds = req.body.userIds;
+  const { roleId } = req.params;
+  const { userIds } = req.body;
 
+  try {
     if (!userIds || !Array.isArray(userIds) || userIds.length === 0) {
       return res
         .status(400)
         .json({ error: "Invalid or empty user IDs provided" });
     }
 
-    // Check if the role assignments exist and are not deleted
-    const checkRolesSql =
-      "SELECT * FROM UserRoles ur INNER JOIN CommonAttributes ca ON ur.CommonAttributeID = ca.AttributeID WHERE ur.RoleID = ? AND ur.UserID IN (?) AND ca.IsDeleted = FALSE";
-    const [checkRolesResult] = await query(checkRolesSql, [roleId, userIds]);
+    // Fetch the user roles for the given user IDs and role ID
+    const userRoles = await UserRoles.findAll({
+      where: { RoleID: roleId, UserID: { [Op.in]: userIds } },
+      include: [
+        {
+          model: CommonAttributes,
+          where: { IsDeleted: false },
+          attributes: [],
+        },
+      ],
+    });
 
-    if (!checkRolesResult || checkRolesResult.length === 0) {
+    if (!userRoles || userRoles.length === 0) {
       return res
         .status(404)
         .json({ error: "Enrollment not found or already removed" });
     }
 
     // Soft-delete the role assignments
-    const updateSql =
-      "UPDATE CommonAttributes SET IsDeleted = TRUE WHERE AttributeID IN (?)";
-    const commonAttributeIds = checkRolesResult.map(
-      (role) => role.CommonAttributeID
+    const commonAttributeIds = userRoles.map(
+      (userRole) => userRole.CommonAttributeID
     );
-    const [updateResult] = await query(updateSql, [commonAttributeIds]);
 
-    if (updateResult.affectedRows === 0) {
-      console.error("Error removing users from role");
-      return res.status(500).json({ error: "Internal Server Error" });
-    }
+    await CommonAttributes.update(
+      { IsDeleted: true },
+      { where: { AttributeID: { [Op.in]: commonAttributeIds } } }
+    );
 
     console.log(`Users removed from the role ${roleId}.`);
-
     res.json({ message: "Users removed from the role successfully" });
   } catch (error) {
     console.error("Error removing users from role:", error);

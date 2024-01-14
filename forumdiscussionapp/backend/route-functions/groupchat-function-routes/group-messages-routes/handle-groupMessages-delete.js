@@ -1,13 +1,14 @@
-import { query } from "../../../db.js";
+import { GroupMessages } from "../../../db.js";
 
 export const handleGroupMessagesDelete = async (req, res) => {
   const { messageId } = req.params;
 
   try {
-    const sql = "DELETE FROM GroupMessages WHERE MessageID = ?";
-    const [result] = await query(sql, [messageId]);
+    const result = await GroupMessages.destroy({
+      where: { MessageID: messageId },
+    });
 
-    if (result.affectedRows === 1) {
+    if (result === 1) {
       console.log("Group message deleted successfully");
       res.json({ message: "Group message deleted successfully" });
     } else {
@@ -18,6 +19,6 @@ export const handleGroupMessagesDelete = async (req, res) => {
     console.error("Error deleting group message:", error);
     res
       .status(500)
-      .json({ error: "Error deleting group message", details: error.message });
+      .json({ error: "Group message deletion failed", details: error.message });
   }
 };

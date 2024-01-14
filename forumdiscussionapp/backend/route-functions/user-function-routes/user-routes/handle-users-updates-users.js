@@ -1,4 +1,4 @@
-import { query } from "../../../db.js";
+import { User, CommonAttributes } from "../../../db.js";
 import { hashPassword } from "../../../authvalid.js";
 
 export const handleUsersUpdateUsers = async (req, res) => {
@@ -18,66 +18,38 @@ export const handleUsersUpdateUsers = async (req, res) => {
         .json({ error: "No valid fields provided for update" });
     }
 
-    // Create an SQL query dynamically based on the provided user data
-    const updateFields = [];
-    const values = [];
-
-    if (updatedUserData.UserName) {
-      updateFields.push("UserName = ?");
-      values.push(updatedUserData.UserName);
-    }
-
-    if (userData.UserEmail) {
-      updateFields.push("UserEmail = ?");
-      values.push(userData.UserEmail);
-    }
-
     // Hash the password if provided
-    if (userData.UserPassword) {
-      const hashedPassword = await hashPassword(userData.UserPassword);
-      updateFields.push("UserPassword = ?");
-      values.push(hashedPassword);
+    if (updatedUserData.UserPassword) {
+      updatedUserData.UserPassword = await hashPassword(
+        updatedUserData.UserPassword
+      );
     }
 
-    // Include CommonAttributeID for IsDeleted and updated fields
-    updateFields.push("CommonAttributeID = ?");
-    values.push(updatedUserData.CommonAttributeID);
-
-    // Add fields for updated by and updated at
-    updateFields.push("UpdatedByUserID = ?");
-    values.push(createdByUserID);
-    updateFields.push("UpdatedAt = CURRENT_TIMESTAMP");
+    // Fetch the user's CommonAttributeID
+    const user = await User.findOne({ where: { UserID: id } });
+    const commonAttributeId = user.CommonAttributeID;
 
     // Check IsDeleted in common attributes table
-    const isDeletedSql =
-      "SELECT IsDeleted FROM CommonAttributes WHERE AttributeID = ?";
-    const [isDeletedResult] = await query(isDeletedSql, [
-      updatedUserData.CommonAttributeID,
-    ]);
+    const commonAttributes = await CommonAttributes.findOne({
+      where: { AttributeID: commonAttributeId },
+    });
 
-    if (isDeletedResult.length === 1 && isDeletedResult[0].IsDeleted) {
+    if (commonAttributes.IsDeleted) {
       return res.status(400).json({ error: "User is marked as deleted" });
     }
 
-    values.push(id);
+    // Update the user and associated records only if not soft deleted
+    const updateUserResult = await User.update(updatedUserData, {
+      where: { UserID: id, CommonAttributeID: commonAttributeId },
+    });
 
-    if (updateFields.length === 0) {
-      console.log("No valid fields provided for update");
-      return res
-        .status(400)
-        .json({ error: "No valid fields provided for update" });
-    }
+    // Update the CommonAttributes table
+    await CommonAttributes.update(
+      { UpdatedAt: new Date(), UpdatedByUserID: createdByUserID },
+      { where: { AttributeID: commonAttributeId } }
+    );
 
-    const sql = `UPDATE Users SET ${updateFields.join(
-      ", "
-    )} WHERE UserID = ? AND CommonAttributeID = ?`;
-
-    const [result] = await query(sql, [
-      ...values,
-      updatedUserData.CommonAttributeID,
-    ]);
-
-    if (result.affectedRows === 1) {
+    if (updateUserResult[0] === 1) {
       console.log("User updated successfully");
       res.json({ message: "User updated successfully" });
     } else {
@@ -85,7 +57,7 @@ export const handleUsersUpdateUsers = async (req, res) => {
       res.status(500).json({ error: "User update failed" });
     }
   } catch (error) {
-    console.error("Error updating user:", error);
+    console.error("Error updating user and associated records:", error);
     res
       .status(500)
       .json({ error: "User update failed", details: error.message });

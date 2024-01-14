@@ -1,18 +1,19 @@
-import { query } from "../../../db.js";
+import { GroupMembers } from "../../../db.js";
 
-export const handleGroupMembersGetByUserId = async (req, res) => {
-  const { userId } = req.params;
+export const handleGroupMembersGetByGroupId = async (req, res) => {
+  const { groupId } = req.params;
 
   try {
-    const sql = "SELECT * FROM GroupMembers WHERE UserID = ?";
-    const [result] = await query(sql, [userId]);
+    const result = await GroupMembers.findAll({
+      where: { GroupID: groupId },
+    });
 
-    console.log("Groups retrieved successfully");
+    console.log("Group members retrieved successfully");
     res.json(result);
   } catch (error) {
-    console.error("Error getting groups:", error);
+    console.error("Error getting group members:", error);
     res
       .status(500)
-      .json({ error: "Error getting groups", details: error.message });
+      .json({ error: "Error getting group members", details: error.message });
   }
 };

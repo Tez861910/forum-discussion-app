@@ -1,15 +1,16 @@
-import { query } from "../../../db.js";
+import { ReadReceiptsGroup } from "../../../db.js";
 
 export const handleReadReceiptGroupGet = async (req, res) => {
   const { receiptId } = req.params;
 
   try {
-    const sql = "SELECT * FROM ReadReceiptsGroup WHERE GReceiptID = ?";
-    const [result] = await query(sql, [receiptId]);
+    const result = await ReadReceiptsGroup.findOne({
+      where: { GReceiptID: receiptId },
+    });
 
-    if (result.length > 0) {
+    if (result) {
       console.log("Read receipt for group message retrieved successfully");
-      res.json({ readReceiptGroup: result[0] });
+      res.json({ readReceiptGroup: result });
     } else {
       console.error("Read receipt for group message not found");
       res
@@ -18,11 +19,9 @@ export const handleReadReceiptGroupGet = async (req, res) => {
     }
   } catch (error) {
     console.error("Error getting read receipt for group message:", error);
-    res
-      .status(500)
-      .json({
-        error: "Error getting read receipt for group message",
-        details: error.message,
-      });
+    res.status(500).json({
+      error: "Error getting read receipt for group message",
+      details: error.message,
+    });
   }
 };

@@ -1,13 +1,14 @@
-import { query } from "../../../db.js";
+import { PrivateMessages } from "../../../db.js";
 
 export const handlePrivateMessageDeleteById = async (req, res) => {
   const { messageId } = req.params;
 
   try {
-    const sql = "DELETE FROM PrivateMessages WHERE MessageID = ?";
-    const [result] = await query(sql, [messageId]);
+    const result = await PrivateMessages.destroy({
+      where: { MessageID: messageId },
+    });
 
-    if (result.affectedRows === 1) {
+    if (result === 1) {
       console.log("Private message deleted successfully");
       res.json({ message: "Private message deleted successfully" });
     } else {
@@ -19,7 +20,7 @@ export const handlePrivateMessageDeleteById = async (req, res) => {
     res
       .status(500)
       .json({
-        error: "Error deleting private message",
+        error: "Private message deletion failed",
         details: error.message,
       });
   }

@@ -1,22 +1,28 @@
-import { query } from "../../../db.js";
+import { Roles, CommonAttributes } from "../../../db.js";
 
 export const handleRolesGet = async (req, res) => {
   try {
-    const sql =
-      "SELECT r.*, ca.IsDeleted as CommonAttributeIsDeleted FROM Roles r INNER JOIN CommonAttributes ca ON r.CommonAttributeID = ca.AttributeID WHERE ca.IsDeleted = false";
-    const results = await query(sql);
+    const roles = await Roles.findAll({
+      include: [
+        {
+          model: CommonAttributes,
+          as: "commonAttributes",
+          where: { IsDeleted: false },
+        },
+      ],
+    });
 
-    if (!Array.isArray(results) || results.length === 0) {
+    if (!Array.isArray(roles) || roles.length === 0) {
       console.error("No roles found in the database");
       return res.status(404).json({ error: "No roles found" });
     }
 
-    const rolesData = results.map((row) => ({
-      roleId: row.RoleID,
-      roleName: row.RoleName,
-      roleDescription: row.RoleDescription,
-      commonAttributeId: row.CommonAttributeID,
-      commonAttributeIsDeleted: row.CommonAttributeIsDeleted,
+    const rolesData = roles.map((role) => ({
+      roleId: role.RoleID,
+      roleName: role.RoleName,
+      roleDescription: role.RoleDescription,
+      commonAttributeId: role.CommonAttributeID,
+      commonAttributeIsDeleted: role.commonAttributes.IsDeleted,
     }));
 
     console.log("Roles fetched successfully");

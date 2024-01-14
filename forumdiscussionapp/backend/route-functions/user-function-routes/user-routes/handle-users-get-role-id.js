@@ -1,30 +1,39 @@
-import { query } from "../../../db.js";
+import { User, UserRoles, CommonAttributes } from "../../../db.js";
+import { Op } from "sequelize";
 
 export const handleUsersGetRoleId = async (req, res) => {
-  // Extracting roleId from request parameters
   const { roleId } = req.params;
 
   try {
-    // SQL query to fetch all user names for a given role ID
-    const sql = `
-      SELECT Users.userName
-      FROM Users
-      INNER JOIN UserRoles ON Users.UserID = UserRoles.UserID
-      INNER JOIN CommonAttributes ON Users.CommonAttributeID = CommonAttributes.AttributeID
-      WHERE UserRoles.RoleID = ? AND CommonAttributes.IsDeleted = FALSE;
-    `;
+    // Fetch user data for a given role ID
+    const users = await User.findAll({
+      where: { "$CommonAttributes.IsDeleted$": false },
+      include: [
+        {
+          model: UserRoles,
+          where: { RoleID: roleId },
+          attributes: [],
+        },
+        {
+          model: CommonAttributes,
+          attributes: [],
+        },
+      ],
+      attributes: ["userName"],
+    });
 
-    // Executing the query with the provided role ID
-    const results = await query(sql, [roleId]);
-
-    // Logging success and sending JSON response with all user names
-    console.log("User names fetched successfully");
-    res.json({ userNames: results.map((row) => row.userName) });
+    if (users && users.length > 0) {
+      console.log("User names fetched successfully");
+      res.json({ userNames: users.map((user) => user.userName) });
+    } else {
+      console.error("User names not found");
+      res.status(404).json({ error: "User names not found" });
+    }
   } catch (error) {
-    // Logging error and sending a 500 Internal Server Error response
-    console.error("Error fetching user names:", error);
-    res
-      .status(500)
-      .json({ error: "User names retrieval failed", details: error.message });
+    console.error("Error fetching user names by role ID:", error);
+    res.status(500).json({
+      error: "User names retrieval by role ID failed",
+      details: error.message,
+    });
   }
 };

@@ -1,14 +1,16 @@
-import { query } from "../../../db.js";
+import { RealTimeUpdates } from "../../../db.js";
 
 export const handleUpdateCreate = async (req, res) => {
   const { userId, updateType, data } = req.body;
 
   try {
-    const sql =
-      "INSERT INTO RealTimeUpdates (UserID, UpdateType, Data) VALUES (?, ?, ?)";
-    const [result] = await query(sql, [userId, updateType, data]);
+    const result = await RealTimeUpdates.create({
+      UserID: userId,
+      UpdateType: updateType,
+      Data: data,
+    });
 
-    if (result.affectedRows === 1) {
+    if (result) {
       console.log("Real-time update created successfully");
       res.json({ message: "Real-time update created successfully" });
     } else {

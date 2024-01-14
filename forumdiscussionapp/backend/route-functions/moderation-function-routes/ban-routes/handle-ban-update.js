@@ -1,4 +1,4 @@
-import { query } from "../../../db.js";
+import { Bans } from "../../../db.js";
 
 export const handleBanUpdate = async (req, res) => {
   const { banId } = req.params;
@@ -7,24 +7,22 @@ export const handleBanUpdate = async (req, res) => {
   try {
     if (!bannedUserId || !bannedByUserId || !banReason) {
       console.log("BannedUserId, BannedByUserId, and BanReason are required");
-      return res
-        .status(400)
-        .json({
-          error: "BannedUserId, BannedByUserId, and BanReason are required",
-        });
+      return res.status(400).json({
+        error: "BannedUserId, BannedByUserId, and BanReason are required",
+      });
     }
 
-    const sql =
-      "UPDATE Bans SET BannedUserID = ?, BannedByUserID = ?, BanReason = ?, BanExpiresAt = ? WHERE BanID = ?";
-    const [result] = await query(sql, [
-      bannedUserId,
-      bannedByUserId,
-      banReason,
-      banExpiresAt,
-      banId,
-    ]);
+    const result = await Bans.update(
+      {
+        BannedUserID: bannedUserId,
+        BannedByUserID: bannedByUserId,
+        BanReason: banReason,
+        BanExpiresAt: banExpiresAt,
+      },
+      { where: { BanID: banId } }
+    );
 
-    if (result.affectedRows === 1) {
+    if (result[0] === 1) {
       console.log("Ban updated successfully");
       res.json({ message: "Ban updated successfully" });
     } else {

@@ -5,11 +5,18 @@ export function CreateCourseSection({
   handleCreateCourse,
   newCourseName,
   setNewCourseName,
+  newCourseDescription,
+  setNewCourseDescription,
 }) {
   const [open, setOpen] = React.useState(false);
 
   const handleOpen = () => setOpen(true);
-  const handleClose = () => setOpen(false);
+  const handleClose = () => {
+    setOpen(false);
+    // Clear the inputs after closing the modal
+    setNewCourseName("");
+    setNewCourseDescription("");
+  };
 
   const handleSave = () => {
     handleCreateCourse();
@@ -48,21 +55,42 @@ export function CreateCourseSection({
         >
           <Typography
             variant="h6"
-            sx={{ marginBottom: 1 }}
+            sx={{ marginBottom: 2 }}
             id="modal-modal-title"
           >
             Create Course
           </Typography>
+          <Typography
+            variant="body2"
+            color="text.secondary"
+            sx={{ marginBottom: 1 }}
+          >
+            Course Name:
+          </Typography>
           <TextField
             type="text"
-            label="Course Name"
             variant="outlined"
             fullWidth
             value={newCourseName}
             onChange={(e) => setNewCourseName(e.target.value)}
             size="small"
+            sx={{ marginBottom: 2 }}
+          />
+          <Typography
+            variant="body2"
+            color="text.secondary"
             sx={{ marginBottom: 1 }}
-            id="modal-modal-description"
+          >
+            Course Description:
+          </Typography>
+          <TextField
+            type="text"
+            variant="outlined"
+            fullWidth
+            value={newCourseDescription}
+            onChange={(e) => setNewCourseDescription(e.target.value)}
+            size="small"
+            sx={{ marginBottom: 2 }}
           />
           <Box sx={{ display: "flex", justifyContent: "flex-end", gap: 1 }}>
             <Button

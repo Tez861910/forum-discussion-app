@@ -1,12 +1,11 @@
-import { query } from "../../../db.js";
+import { UserReports } from "../../../db.js";
 
 export const handleUserReportGetAll = async (req, res) => {
   try {
-    const sql = "SELECT * FROM UserReports";
-    const [result] = await query(sql);
+    const userReports = await UserReports.findAll();
 
     console.log("User reports retrieved successfully");
-    res.json({ userReports: result });
+    res.json({ userReports });
   } catch (error) {
     console.error("Error getting user reports:", error);
     res

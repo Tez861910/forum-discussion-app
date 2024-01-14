@@ -1,4 +1,4 @@
-import { query } from "../../../db.js";
+import { Roles, CommonAttributes } from "../../../db.js";
 
 export const handleRolesUpdateId = async (req, res) => {
   const { id } = req.params;
@@ -11,31 +11,29 @@ export const handleRolesUpdateId = async (req, res) => {
     }
 
     // Check if the role with the provided ID exists and is not deleted
-    const checkRoleSql =
-      "SELECT * FROM Roles r INNER JOIN CommonAttributes ca ON r.CommonAttributeID = ca.AttributeID WHERE r.RoleID = ? AND ca.IsDeleted = false";
-    const [checkRoleResult] = await query(checkRoleSql, [id]);
+    const role = await Roles.findOne({
+      where: { RoleID: id },
+      include: [
+        {
+          model: CommonAttributes,
+          as: "commonAttributes",
+          where: { IsDeleted: false },
+        },
+      ],
+    });
 
-    if (!checkRoleResult || checkRoleResult.length !== 1) {
+    if (!role) {
       console.error("Role not found");
       return res.status(404).json({ error: "Role not found" });
     }
 
     // Update the role
-    const updateRoleSql =
-      "UPDATE Roles r SET r.RoleName = ?, r.RoleDescription = ? WHERE r.RoleID = ?";
-    const [result] = await query(updateRoleSql, [
-      roleName,
-      roleDescription,
-      id,
-    ]);
+    role.RoleName = roleName;
+    role.RoleDescription = roleDescription;
+    await role.save();
 
-    if (result.affectedRows === 1) {
-      console.log("Role updated successfully");
-      res.json({ message: "Role updated successfully" });
-    } else {
-      console.error("Role update failed");
-      res.status(500).json({ error: "Role update failed" });
-    }
+    console.log("Role updated successfully");
+    res.json({ message: "Role updated successfully" });
   } catch (error) {
     console.error("Error updating role:", error);
     res

@@ -1,4 +1,4 @@
-import { query } from "../../../db.js";
+import { GroupChat } from "../../../db.js";
 
 export const handleGroupChatCreate = async (req, res) => {
   const {
@@ -21,21 +21,19 @@ export const handleGroupChatCreate = async (req, res) => {
       });
     }
 
-    const sql =
-      "INSERT INTO GroupChat (GroupName, Description, CreatorUserID, IsPublic, MaxMembers, Category, CoverPhotoURL, WelcomeMessage, ModeratorUserID) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)";
-    const [result] = await query(sql, [
-      groupName,
-      description,
-      creatorUserId,
-      isPublic,
-      maxMembers,
-      category,
-      coverPhotoURL,
-      welcomeMessage,
-      moderatorUserId,
-    ]);
+    const result = await GroupChat.create({
+      GroupName: groupName,
+      Description: description,
+      CreatorUserID: creatorUserId,
+      IsPublic: isPublic,
+      MaxMembers: maxMembers,
+      Category: category,
+      CoverPhotoURL: coverPhotoURL,
+      WelcomeMessage: welcomeMessage,
+      ModeratorUserID: moderatorUserId,
+    });
 
-    if (result.affectedRows === 1) {
+    if (result) {
       console.log("Group chat created successfully");
       res.json({ message: "Group chat created successfully" });
     } else {

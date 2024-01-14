@@ -1,14 +1,15 @@
-import { query } from "../../../db.js";
+import { GroupManager } from "../../../db.js";
 
 export const handleManagerCreate = async (req, res) => {
   const { groupId, managerUserId } = req.body;
 
   try {
-    const sql =
-      "INSERT INTO GroupManager (GroupID, ManagerUserID) VALUES (?, ?)";
-    const [result] = await query(sql, [groupId, managerUserId]);
+    const result = await GroupManager.create({
+      GroupID: groupId,
+      ManagerUserID: managerUserId,
+    });
 
-    if (result.affectedRows === 1) {
+    if (result) {
       console.log("Group manager created successfully");
       res.json({ message: "Group manager created successfully" });
     } else {

@@ -1,20 +1,20 @@
-import { query } from "../../../db.js";
+import { PrivateMessages } from "../../../db.js";
 
 export const handlePrivateMessageUpdateById = async (req, res) => {
   const { messageId } = req.params;
   const { senderId, receiverId, messageContent } = req.body;
 
   try {
-    const sql =
-      "UPDATE PrivateMessages SET SenderID = ?, ReceiverID = ?, MessageContent = ? WHERE MessageID = ?";
-    const [result] = await query(sql, [
-      senderId,
-      receiverId,
-      messageContent,
-      messageId,
-    ]);
+    const result = await PrivateMessages.update(
+      {
+        SenderID: senderId,
+        ReceiverID: receiverId,
+        MessageContent: messageContent,
+      },
+      { where: { MessageID: messageId } }
+    );
 
-    if (result.affectedRows === 1) {
+    if (result[0] === 1) {
       console.log("Private message updated successfully");
       res.json({ message: "Private message updated successfully" });
     } else {

@@ -1,4 +1,4 @@
-import { query } from "../../../db.js";
+import { GroupChat } from "../../../db.js";
 
 export const handleGroupChatUpdateById = async (req, res) => {
   const { groupId } = req.params;
@@ -14,21 +14,21 @@ export const handleGroupChatUpdateById = async (req, res) => {
   } = req.body;
 
   try {
-    const sql =
-      "UPDATE GroupChat SET GroupName = ?, Description = ?, IsPublic = ?, MaxMembers = ?, Category = ?, CoverPhotoURL = ?, WelcomeMessage = ?, ModeratorUserID = ? WHERE GroupID = ?";
-    const [result] = await query(sql, [
-      groupName,
-      description,
-      isPublic,
-      maxMembers,
-      category,
-      coverPhotoURL,
-      welcomeMessage,
-      moderatorUserId,
-      groupId,
-    ]);
+    const result = await GroupChat.update(
+      {
+        GroupName: groupName,
+        Description: description,
+        IsPublic: isPublic,
+        MaxMembers: maxMembers,
+        Category: category,
+        CoverPhotoURL: coverPhotoURL,
+        WelcomeMessage: welcomeMessage,
+        ModeratorUserID: moderatorUserId,
+      },
+      { where: { GroupID: groupId } }
+    );
 
-    if (result.affectedRows === 1) {
+    if (result[0] === 1) {
       console.log("Group chat updated successfully");
       res.json({ message: "Group chat updated successfully" });
     } else {

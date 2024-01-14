@@ -2,7 +2,6 @@ import express from "express";
 import {
   validateRequestCreate,
   validateRequestUpdate,
-  validateRequestGet,
 } from "../../body-validation/messaging-validation-functions/friend-requests-validation.js";
 
 import { handleRequestCreate } from "../../route-functions/messaging-function-routes/friend-requests-routes/handle-request-create.js";
@@ -18,6 +17,6 @@ router.post("/create", validateRequestCreate, handleRequestCreate);
 router.put("/update/:requestId", validateRequestUpdate, handleRequestUpdate);
 
 // Get friend request by ID
-router.get("/get/:requestId", validateRequestGet, handleRequestGet);
+router.get("/get", handleRequestGet);
 
 export default router;

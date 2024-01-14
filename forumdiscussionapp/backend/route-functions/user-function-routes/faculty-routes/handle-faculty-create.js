@@ -1,20 +1,17 @@
-import { query } from "../../../db.js";
+import { FacultyMembers } from "../../../db.js";
 
 export const handleFacultyCreate = async (req, res) => {
   const { facultyName, departmentId } = req.body;
 
   try {
-    const sql =
-      "INSERT INTO FacultyMembers (FacultyName, DepartmentID) VALUES (?, ?)";
-    const [result] = await query(sql, [facultyName, departmentId]);
+    // Create a new FacultyMember
+    const facultyMember = await FacultyMembers.create({
+      FacultyName: facultyName,
+      DepartmentID: departmentId,
+    });
 
-    if (result.affectedRows === 1) {
-      console.log("Faculty member created successfully");
-      res.json({ message: "Faculty member created successfully" });
-    } else {
-      console.error("Faculty member creation failed");
-      res.status(500).json({ error: "Faculty member creation failed" });
-    }
+    console.log("Faculty member created successfully");
+    res.json({ message: "Faculty member created successfully" });
   } catch (error) {
     console.error("Error creating faculty member:", error);
     res

@@ -1,15 +1,16 @@
-import { query } from "../../../db.js";
+import { CourseMaterials } from "../../../db.js";
 
 export const handleCourseMaterialGet = async (req, res) => {
   const { materialId } = req.params;
 
   try {
-    const sql = "SELECT * FROM CourseMaterials WHERE MaterialID = ?";
-    const [result] = await query(sql, [materialId]);
+    const courseMaterial = await CourseMaterials.findOne({
+      where: { MaterialID: materialId },
+    });
 
-    if (result.length > 0) {
+    if (courseMaterial) {
       console.log("Course material retrieved successfully");
-      res.json({ courseMaterial: result[0] });
+      res.json({ courseMaterial });
     } else {
       console.error("Course material not found");
       res.status(404).json({ error: "Course material not found" });

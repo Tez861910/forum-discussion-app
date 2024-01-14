@@ -20,10 +20,10 @@ dotenv.config();
 app.use(express.json({ limit: "1mb" }));
 app.use(express.urlencoded({ extended: true }));
 
-// CORS setup
 const corsOptions = {
   origin: (origin, callback) => {
-    if (config.CORS_ORIGIN.split(",").indexOf(origin) !== -1) {
+    const allowedOrigins = JSON.parse(process.env.CORS_ORIGIN);
+    if (allowedOrigins.indexOf(origin) !== -1) {
       callback(null, true);
     } else {
       callback(new ErrorHandler("Not allowed by CORS", 401));
@@ -40,7 +40,7 @@ app.use(helmet());
 app.use(compression());
 app.use(cookieParser());
 app.use(hpp());
-app.use(rateLimit({ windowMs: 15 * 60 * 1000, max: 100 }));
+app.use(rateLimit({ windowMs: 60 * 60 * 1000, max: 500 }));
 app.use(
   morgan("combined", { stream: { write: (message) => logger.info(message) } })
 );

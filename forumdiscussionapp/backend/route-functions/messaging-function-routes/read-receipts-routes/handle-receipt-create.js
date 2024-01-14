@@ -1,13 +1,15 @@
-import { query } from "../../../db.js";
+import { ReadReceipts } from "../../../db.js";
 
 export const handleReceiptCreate = async (req, res) => {
   const { messageId, userId } = req.body;
 
   try {
-    const sql = "INSERT INTO ReadReceipts (MessageID, UserID) VALUES (?, ?)";
-    const [result] = await query(sql, [messageId, userId]);
+    const result = await ReadReceipts.create({
+      MessageID: messageId,
+      UserID: userId,
+    });
 
-    if (result.affectedRows === 1) {
+    if (result) {
       console.log("Read receipt created successfully");
       res.json({ message: "Read receipt created successfully" });
     } else {

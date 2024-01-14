@@ -1,9 +1,8 @@
-import { query } from "../../../db.js";
-
 export const handleRolesCreate = async (req, res) => {
   const { roleName, description, createdByUserID } = req.body;
 
   try {
+    // Validate inputs
     if (!roleName || !createdByUserID) {
       console.log("Role name and createdByUserID are required");
       return res
@@ -11,38 +10,20 @@ export const handleRolesCreate = async (req, res) => {
         .json({ error: "Role name and createdByUserID are required" });
     }
 
-    // Insert CommonAttributes
-    const commonAttributesSql =
-      "INSERT INTO CommonAttributes (CreatedByUserID) VALUES (?)";
-    const [commonAttributesResult] = await query(commonAttributesSql, [
-      createdByUserID,
-    ]);
+    // Create a new CommonAttributes entry
+    const commonAttributes = await CommonAttributes.create({
+      CreatedByUserID: createdByUserID,
+    });
 
-    if (commonAttributesResult.affectedRows !== 1) {
-      console.error("CommonAttributes creation failed");
-      return res
-        .status(500)
-        .json({ error: "CommonAttributes creation failed" });
-    }
+    // Create a new Role
+    const role = await Roles.create({
+      RoleName: roleName,
+      RoleDescription: description,
+      CommonAttributeID: commonAttributes.AttributeID,
+    });
 
-    const commonAttributeID = commonAttributesResult.insertId;
-
-    // Insert Role
-    const roleSql =
-      "INSERT INTO Roles (RoleName, RoleDescription, CommonAttributeID) VALUES (?, ?, ?)";
-    const [result] = await query(roleSql, [
-      roleName,
-      description,
-      commonAttributeID,
-    ]);
-
-    if (result.affectedRows === 1) {
-      console.log("Role created successfully");
-      res.json({ message: "Role created successfully" });
-    } else {
-      console.error("Role creation failed");
-      res.status(500).json({ error: "Role creation failed" });
-    }
+    console.log("Role created successfully");
+    res.json({ message: "Role created successfully" });
   } catch (error) {
     console.error("Error creating role:", error);
     res

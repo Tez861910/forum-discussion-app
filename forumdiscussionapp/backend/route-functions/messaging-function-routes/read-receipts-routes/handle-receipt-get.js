@@ -1,15 +1,16 @@
-import { query } from "../../../db.js";
+import { ReadReceipts } from "../../../db.js";
 
 export const handleReceiptGet = async (req, res) => {
   const { receiptId } = req.params;
 
   try {
-    const sql = "SELECT * FROM ReadReceipts WHERE ReceiptID = ?";
-    const [result] = await query(sql, [receiptId]);
+    const result = await ReadReceipts.findOne({
+      where: { ReceiptID: receiptId },
+    });
 
-    if (result.length > 0) {
+    if (result) {
       console.log("Read receipt retrieved successfully");
-      res.json({ readReceipt: result[0] });
+      res.json({ readReceipt: result });
     } else {
       console.error("Read receipt not found");
       res.status(404).json({ error: "Read receipt not found" });

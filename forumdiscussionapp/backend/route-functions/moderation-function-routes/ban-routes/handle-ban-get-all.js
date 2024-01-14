@@ -1,9 +1,8 @@
-import { query } from "../../../db.js";
+import { Bans } from "../../../db.js";
 
 export const handleBanGetAll = async (req, res) => {
   try {
-    const sql = "SELECT * FROM Bans";
-    const [result] = await query(sql);
+    const result = await Bans.findAll();
 
     console.log("Bans retrieved successfully");
     res.json({ bans: result });

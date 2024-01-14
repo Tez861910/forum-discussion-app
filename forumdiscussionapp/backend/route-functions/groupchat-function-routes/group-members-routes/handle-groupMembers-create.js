@@ -1,4 +1,4 @@
-import { query } from "../../../db.js";
+import { GroupMembers } from "../../../db.js";
 
 export const handleGroupMembersCreate = async (req, res) => {
   const { groupId, userId } = req.body;
@@ -11,10 +11,12 @@ export const handleGroupMembersCreate = async (req, res) => {
       });
     }
 
-    const sql = "INSERT INTO GroupMembers (GroupID, UserID) VALUES (?, ?)";
-    const [result] = await query(sql, [groupId, userId]);
+    const result = await GroupMembers.create({
+      GroupID: groupId,
+      UserID: userId,
+    });
 
-    if (result.affectedRows === 1) {
+    if (result) {
       console.log("Group member added successfully");
       res.json({ message: "Group member added successfully" });
     } else {

@@ -1,15 +1,16 @@
-import { query } from "../../../db.js";
+import { RealTimeUpdates } from "../../../db.js";
 
 export const handleUpdateGet = async (req, res) => {
   const { updateId } = req.params;
 
   try {
-    const sql = "SELECT * FROM RealTimeUpdates WHERE RTUpdateID = ?";
-    const [result] = await query(sql, [updateId]);
+    const result = await RealTimeUpdates.findOne({
+      where: { RTUpdateID: updateId },
+    });
 
-    if (result.length > 0) {
+    if (result) {
       console.log("Real-time update retrieved successfully");
-      res.json({ realTimeUpdate: result[0] });
+      res.json({ realTimeUpdate: result });
     } else {
       console.error("Real-time update not found");
       res.status(404).json({ error: "Real-time update not found" });

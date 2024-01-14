@@ -1,15 +1,16 @@
-import { query } from "../../../db.js";
+import { GroupManager } from "../../../db.js";
 
 export const handleManagerGet = async (req, res) => {
   const { managerId } = req.params;
 
   try {
-    const sql = "SELECT * FROM GroupManager WHERE ManagerID = ?";
-    const [result] = await query(sql, [managerId]);
+    const result = await GroupManager.findOne({
+      where: { ManagerID: managerId },
+    });
 
-    if (result.length > 0) {
+    if (result) {
       console.log("Group manager retrieved successfully");
-      res.json({ groupManager: result[0] });
+      res.json({ groupManager: result });
     } else {
       console.error("Group manager not found");
       res.status(404).json({ error: "Group manager not found" });

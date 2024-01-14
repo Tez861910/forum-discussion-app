@@ -1,14 +1,15 @@
-import { query } from "../../../db.js";
+import { FriendRequests } from "../../../db.js";
 
 export const handleRequestCreate = async (req, res) => {
   const { senderId, receiverId } = req.body;
 
   try {
-    const sql =
-      "INSERT INTO FriendRequests (SenderID, ReceiverID) VALUES (?, ?)";
-    const [result] = await query(sql, [senderId, receiverId]);
+    const result = await FriendRequests.create({
+      SenderID: senderId,
+      ReceiverID: receiverId,
+    });
 
-    if (result.affectedRows === 1) {
+    if (result) {
       console.log("Friend request created successfully");
       res.json({ message: "Friend request created successfully" });
     } else {
@@ -17,11 +18,9 @@ export const handleRequestCreate = async (req, res) => {
     }
   } catch (error) {
     console.error("Error creating friend request:", error);
-    res
-      .status(500)
-      .json({
-        error: "Friend request creation failed",
-        details: error.message,
-      });
+    res.status(500).json({
+      error: "Friend request creation failed",
+      details: error.message,
+    });
   }
 };

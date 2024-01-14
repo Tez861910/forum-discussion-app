@@ -1,15 +1,16 @@
-import { query } from "../../../db.js";
+import { UserStatus } from "../../../db.js";
 
 export const handleUserStatusGet = async (req, res) => {
   const { userId } = req.params;
 
   try {
-    const sql = "SELECT * FROM UserStatus WHERE UserID = ?";
-    const [result] = await query(sql, [userId]);
+    const result = await UserStatus.findOne({
+      where: { UserID: userId },
+    });
 
-    if (result.length > 0) {
+    if (result) {
       console.log("User status retrieved successfully");
-      res.json({ userStatus: result[0] });
+      res.json({ userStatus: result });
     } else {
       console.error("User status not found");
       res.status(404).json({ error: "User status not found" });

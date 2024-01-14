@@ -1,14 +1,17 @@
-import { query } from "../../../db.js";
+import { RealTimeGroupUpdates } from "../../../db.js";
 
 export const handleRealTimeGroupUpdateCreate = async (req, res) => {
   const { groupId, userId, updateType, data } = req.body;
 
   try {
-    const sql =
-      "INSERT INTO RealTimeGroupUpdates (GroupID, UserID, UpdateType, Data) VALUES (?, ?, ?, ?)";
-    const [result] = await query(sql, [groupId, userId, updateType, data]);
+    const result = await RealTimeGroupUpdates.create({
+      GroupID: groupId,
+      UserID: userId,
+      UpdateType: updateType,
+      Data: data,
+    });
 
-    if (result.affectedRows === 1) {
+    if (result) {
       console.log("Real-time update for group created successfully");
       res.json({ message: "Real-time update for group created successfully" });
     } else {
@@ -19,11 +22,9 @@ export const handleRealTimeGroupUpdateCreate = async (req, res) => {
     }
   } catch (error) {
     console.error("Error creating real-time update for group:", error);
-    res
-      .status(500)
-      .json({
-        error: "Real-time update creation for group failed",
-        details: error.message,
-      });
+    res.status(500).json({
+      error: "Real-time update creation for group failed",
+      details: error.message,
+    });
   }
 };

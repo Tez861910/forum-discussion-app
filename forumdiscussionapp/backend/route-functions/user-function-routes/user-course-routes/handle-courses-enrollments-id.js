@@ -1,60 +1,66 @@
-import { query } from "../../../db.js";
+import { User, UserCourses, Courses, CommonAttributes } from "../../../db.js";
 
 export const handleCoursesEnrollmentsId = async (req, res) => {
-  const courseId = req.params.courseId;
-  console.log("Received courseId:", courseId);
+  const { courseId } = req.params;
 
   try {
-    if (!query) {
-      throw new Error(
-        "Database connection not established or query function not defined."
-      );
-    }
-
-    const sql = `
-      SELECT
-        users.UserID,
-        users.UserName
-      FROM
-        users
-      JOIN
-        usercourses ON users.UserID = usercourses.UserID
-      JOIN
-        courses ON usercourses.CourseID = courses.CourseID
-      JOIN
-        commonattributes AS ca_courses ON courses.CommonAttributeID = ca_courses.AttributeID
-      JOIN
-        commonattributes AS ca_usercourses ON usercourses.CommonAttributeID = ca_usercourses.AttributeID
-      JOIN
-        commonattributes AS ca_users ON users.CommonAttributeID = ca_users.AttributeID
-      WHERE
-        courses.CourseID = ? AND ca_courses.IsDeleted = FALSE 
-        AND ca_usercourses.IsDeleted = FALSE AND ca_users.IsDeleted = FALSE;
-    `;
-    console.log("SQL Query:", sql);
-
-    const rows = await query(sql, [parseInt(courseId, 10)]);
-
-    console.log("Query Result:", rows);
-
-    if (!rows || rows.length === 0) {
-      return res
-        .status(404)
-        .json({ error: "No enrollments found for the course" });
-    }
-
-    const enrollmentsResult = {};
-    rows.forEach((row) => {
-      const { UserID, UserName } = row;
-      if (!enrollmentsResult[UserID]) {
-        enrollmentsResult[UserID] = [];
-      }
-      enrollmentsResult[UserID].push({ UserID, UserName });
+    // Fetch user data for a given course ID
+    const users = await User.findAll({
+      where: {
+        "$UserCourses.CourseID$": courseId,
+        "$UserCourses.CommonAttributes.IsDeleted$": false,
+      },
+      include: [
+        {
+          model: UserCourses,
+          where: { CourseID: courseId },
+          include: [
+            {
+              model: Courses,
+              include: [
+                {
+                  model: CommonAttributes,
+                  where: { IsDeleted: false },
+                  attributes: [],
+                },
+              ],
+              attributes: [],
+            },
+            {
+              model: CommonAttributes,
+              where: { IsDeleted: false },
+              attributes: [],
+            },
+          ],
+          attributes: [],
+        },
+        {
+          model: CommonAttributes,
+          where: { IsDeleted: false },
+          attributes: [],
+        },
+      ],
+      attributes: ["UserID", "UserName"],
     });
 
+    const enrollmentsResult = {};
+    users.forEach((user) => {
+      if (!enrollmentsResult[user.UserID]) {
+        enrollmentsResult[user.UserID] = [];
+      }
+      enrollmentsResult[user.UserID].push({
+        UserID: user.UserID,
+        UserName: user.UserName,
+      });
+    });
+
+    console.log("Usernames fetched successfully");
     res.json({ enrollments: enrollmentsResult });
   } catch (error) {
-    console.error("Unexpected error:", error);
-    res.status(500).json({ error: "Internal Server Error" });
+    console.error("Error fetching usernames by course ID:", error);
+    res.status(500).json({
+      error: "Usernames retrieval by course ID failed",
+      details: error.message,
+    });
   }
 };

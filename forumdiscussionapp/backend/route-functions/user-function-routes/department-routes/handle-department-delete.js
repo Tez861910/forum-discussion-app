@@ -1,13 +1,15 @@
-import { query } from "../../../db.js";
+import { Departments } from "../../../db.js";
 
 export const handleDepartmentDelete = async (req, res) => {
   const { departmentId } = req.params;
 
   try {
-    const sql = "DELETE FROM Departments WHERE DepartmentID = ?";
-    const [result] = await query(sql, [departmentId]);
+    // Delete the department
+    const result = await Departments.destroy({
+      where: { DepartmentID: departmentId },
+    });
 
-    if (result.affectedRows === 1) {
+    if (result === 1) {
       console.log("Department deleted successfully");
       res.json({ message: "Department deleted successfully" });
     } else {

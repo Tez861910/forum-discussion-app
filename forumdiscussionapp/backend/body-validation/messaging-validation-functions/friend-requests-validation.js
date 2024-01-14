@@ -22,11 +22,3 @@ export const validateRequestUpdate = validate(
     // Add more properties as needed
   })
 );
-
-// Validation middleware for getting friend request by request ID
-export const validateRequestGet = validate(
-  Joi.object({
-    // Define the schema for getting friend request by request ID
-    requestId: Joi.number().integer().min(1).required(),
-  })
-);

@@ -1,4 +1,4 @@
-import { query } from "../../../db.js";
+import { UserReports } from "../../../db.js";
 
 export const handleUserReportCreate = async (req, res) => {
   const { reporterId, reportedUserId, reportContent } = req.body;
@@ -6,28 +6,20 @@ export const handleUserReportCreate = async (req, res) => {
   try {
     if (!reporterId || !reportedUserId || !reportContent) {
       console.log("ReporterId, ReportedUserId, and ReportContent are required");
-      return res
-        .status(400)
-        .json({
-          error: "ReporterId, ReportedUserId, and ReportContent are required",
-        });
+      return res.status(400).json({
+        error: "ReporterId, ReportedUserId, and ReportContent are required",
+      });
     }
 
-    const sql =
-      "INSERT INTO UserReports (ReporterID, ReportedUserID, ReportContent) VALUES (?, ?, ?)";
-    const [result] = await query(sql, [
-      reporterId,
-      reportedUserId,
-      reportContent,
-    ]);
+    // Create a new UserReport
+    const userReport = await UserReports.create({
+      ReporterID: reporterId,
+      ReportedUserID: reportedUserId,
+      ReportContent: reportContent,
+    });
 
-    if (result.affectedRows === 1) {
-      console.log("User report created successfully");
-      res.json({ message: "User report created successfully" });
-    } else {
-      console.error("User report creation failed");
-      res.status(500).json({ error: "User report creation failed" });
-    }
+    console.log("User report created successfully");
+    res.json({ message: "User report created successfully" });
   } catch (error) {
     console.error("Error creating user report:", error);
     res

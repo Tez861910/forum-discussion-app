@@ -1,22 +1,28 @@
-import { query } from "../../../db.js";
+import { User, CommonAttributes } from "../../../db.js";
+import { Op } from "sequelize";
 
 export const handleUsersGetUserName = async (req, res) => {
   const { userIds } = req.body;
 
   try {
-    // Assuming CommonAttributes table has an IsDeleted column
-    const placeholders = userIds.map(() => "?").join(", ");
-    const sql = `
-      SELECT u.UserID, u.UserName
-      FROM users u
-      INNER JOIN CommonAttributes ca ON u.CommonAttributeID = ca.AttributeID
-      WHERE u.UserID IN (${placeholders}) AND ca.IsDeleted = FALSE
-    `;
-    const results = await query(sql, userIds);
+    // Fetch user data for the given user IDs
+    const users = await User.findAll({
+      where: {
+        UserID: { [Op.in]: userIds },
+        "$CommonAttributes.IsDeleted$": false,
+      },
+      include: [
+        {
+          model: CommonAttributes,
+          attributes: [],
+        },
+      ],
+      attributes: ["UserID", "UserName"],
+    });
 
     const usernames = {};
-    results.forEach((result) => {
-      usernames[result.UserID] = result.UserName;
+    users.forEach((user) => {
+      usernames[user.UserID] = user.UserName;
     });
 
     console.log("Usernames fetched successfully");

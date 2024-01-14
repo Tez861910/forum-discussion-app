@@ -1,4 +1,4 @@
-import { query } from "../../../db.js";
+import { Bans } from "../../../db.js";
 
 export const handleBanCreate = async (req, res) => {
   const { bannedUserId, bannedByUserId, banReason, banExpiresAt } = req.body;
@@ -6,29 +6,21 @@ export const handleBanCreate = async (req, res) => {
   try {
     if (!bannedUserId || !bannedByUserId || !banReason) {
       console.log("BannedUserId, BannedByUserId, and BanReason are required");
-      return res
-        .status(400)
-        .json({
-          error: "BannedUserId, BannedByUserId, and BanReason are required",
-        });
+      return res.status(400).json({
+        error: "BannedUserId, BannedByUserId, and BanReason are required",
+      });
     }
 
-    const sql =
-      "INSERT INTO Bans (BannedUserID, BannedByUserID, BanReason, BanExpiresAt) VALUES (?, ?, ?, ?)";
-    const [result] = await query(sql, [
-      bannedUserId,
-      bannedByUserId,
-      banReason,
-      banExpiresAt,
-    ]);
+    // Create a new Ban
+    const ban = await Bans.create({
+      BannedUserID: bannedUserId,
+      BannedByUserID: bannedByUserId,
+      BanReason: banReason,
+      BanExpiresAt: banExpiresAt,
+    });
 
-    if (result.affectedRows === 1) {
-      console.log("Ban created successfully");
-      res.json({ message: "Ban created successfully" });
-    } else {
-      console.error("Ban creation failed");
-      res.status(500).json({ error: "Ban creation failed" });
-    }
+    console.log("Ban created successfully");
+    res.json({ message: "Ban created successfully" });
   } catch (error) {
     console.error("Error creating ban:", error);
     res

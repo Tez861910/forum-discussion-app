@@ -1,12 +1,11 @@
-import { query } from "../../../db.js";
+import { Departments } from "../../../db.js";
 
 export const handleDepartmentGetAll = async (req, res) => {
   try {
-    const sql = "SELECT * FROM Departments";
-    const [result] = await query(sql);
+    const departments = await Departments.findAll();
 
     console.log("Departments retrieved successfully");
-    res.json({ departments: result });
+    res.json({ departments });
   } catch (error) {
     console.error("Error getting departments:", error);
     res

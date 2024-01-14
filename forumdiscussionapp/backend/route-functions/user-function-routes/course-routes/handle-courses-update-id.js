@@ -1,4 +1,4 @@
-import { query } from "../../../db.js";
+import { Courses, CommonAttributes } from "../../../db.js";
 
 export const handleCoursesUpdateId = async (req, res) => {
   const { id } = req.params;
@@ -15,40 +15,38 @@ export const handleCoursesUpdateId = async (req, res) => {
       });
     }
 
-    // Build the SET clause dynamically based on provided data
-    const setClause = [];
-    const values = [];
+    // Fetch the course with the provided ID
+    const course = await Courses.findOne({
+      where: { CourseID: id },
+      include: [
+        {
+          model: CommonAttributes,
+          as: "commonAttributes",
+          where: { IsDeleted: false },
+        },
+      ],
+    });
 
-    if (courseName) {
-      setClause.push("CourseName = ?");
-      values.push(courseName);
+    if (!course) {
+      console.error("Course not found");
+      return res.status(404).json({ error: "Course not found" });
     }
 
-    if (courseDescription) {
-      setClause.push("CourseDescription = ?");
-      values.push(courseDescription);
-    }
+    // Update the course
+    course.CourseName = courseName;
+    course.CourseDescription = courseDescription;
+    await course.save();
 
-    // Updated SQL query to consider IsDeleted from CommonAttributes table
-    const sql = `
-      UPDATE Courses AS C
-      INNER JOIN CommonAttributes AS CA ON C.CommonAttributeID = CA.AttributeID
-      SET ${setClause.join(
-        ", "
-      )}, CA.UpdatedAt = CURRENT_TIMESTAMP, CA.UpdatedByUserID = ?
-      WHERE C.CourseID = ? AND CA.IsDeleted = FALSE
-    `;
+    // Update the CommonAttributes
+    const commonAttributes = await CommonAttributes.findOne({
+      where: { AttributeID: course.CommonAttributeID },
+    });
+    commonAttributes.UpdatedAt = new Date();
+    commonAttributes.UpdatedByUserID = updatedByUserID;
+    await commonAttributes.save();
 
-    const updatedValues = [updatedByUserID, ...values, id];
-    const [result] = await query(sql, updatedValues);
-
-    if (result.affectedRows === 1) {
-      console.log("Course updated successfully");
-      res.json({ message: "Course updated successfully" });
-    } else {
-      console.error("Course update failed");
-      res.status(500).json({ error: "Course update failed" });
-    }
+    console.log("Course updated successfully");
+    res.json({ message: "Course updated successfully" });
   } catch (error) {
     console.error("Error updating course:", error);
     res

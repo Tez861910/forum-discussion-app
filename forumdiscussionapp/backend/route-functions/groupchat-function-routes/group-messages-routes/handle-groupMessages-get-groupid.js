@@ -1,11 +1,12 @@
-import { query } from "../../../db.js";
+import { GroupMessages } from "../../../db.js";
 
 export const handleGroupMessagesGetByGroupId = async (req, res) => {
   const { groupId } = req.params;
 
   try {
-    const sql = "SELECT * FROM GroupMessages WHERE GroupID = ?";
-    const [result] = await query(sql, [groupId]);
+    const result = await GroupMessages.findAll({
+      where: { GroupID: groupId },
+    });
 
     console.log("Group messages retrieved successfully");
     res.json(result);

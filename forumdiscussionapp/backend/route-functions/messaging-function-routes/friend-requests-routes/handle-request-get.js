@@ -1,11 +1,8 @@
-import { query } from "../../../db.js";
+import { FriendRequests } from "../../../db.js";
 
 export const handleRequestGet = async (req, res) => {
-  const { requestId } = req.params;
-
   try {
-    const sql = "SELECT * FROM FriendRequests WHERE RequestID = ?";
-    const [result] = await query(sql, [requestId]);
+    const result = await FriendRequests.findAll();
 
     if (result.length > 0) {
       console.log("Friend request retrieved successfully");

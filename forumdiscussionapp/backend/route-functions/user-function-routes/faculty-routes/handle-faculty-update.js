@@ -1,17 +1,28 @@
-import { query } from "../../../db.js";
+import { FacultyMembers } from "../../../db.js";
 
 export const handleFacultyUpdate = async (req, res) => {
   const { facultyId } = req.params;
   const { facultyName, departmentId } = req.body;
 
   try {
-    const sql =
-      "UPDATE FacultyMembers SET FacultyName = ?, DepartmentID = ? WHERE FacultyID = ?";
-    const [result] = await query(sql, [facultyName, departmentId, facultyId]);
+    // Update the faculty member
+    const [numberOfAffectedRows, affectedRows] = await FacultyMembers.update(
+      {
+        FacultyName: facultyName,
+        DepartmentID: departmentId,
+      },
+      {
+        where: { FacultyID: facultyId },
+        returning: true,
+      }
+    );
 
-    if (result.affectedRows === 1) {
+    if (numberOfAffectedRows === 1) {
       console.log("Faculty member updated successfully");
-      res.json({ message: "Faculty member updated successfully" });
+      res.json({
+        message: "Faculty member updated successfully",
+        faculty: affectedRows[0],
+      });
     } else {
       console.error("Faculty member update failed");
       res.status(500).json({ error: "Faculty member update failed" });

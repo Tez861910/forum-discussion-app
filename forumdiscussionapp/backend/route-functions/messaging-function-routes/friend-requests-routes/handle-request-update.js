@@ -1,15 +1,16 @@
-import { query } from "../../../db.js";
+import { FriendRequests } from "../../../db.js";
 
 export const handleRequestUpdate = async (req, res) => {
   const { requestId } = req.params;
   const { requestStatus } = req.body;
 
   try {
-    const sql =
-      "UPDATE FriendRequests SET RequestStatus = ? WHERE RequestID = ?";
-    const [result] = await query(sql, [requestStatus, requestId]);
+    const result = await FriendRequests.update(
+      { RequestStatus: requestStatus },
+      { where: { RequestID: requestId } }
+    );
 
-    if (result.affectedRows === 1) {
+    if (result[0] === 1) {
       console.log("Friend request updated successfully");
       res.json({ message: "Friend request updated successfully" });
     } else {

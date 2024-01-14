@@ -1,4 +1,4 @@
-import { query } from "../../../db.js";
+import { GroupMessages } from "../../../db.js";
 
 export const handleGroupMessagesCreate = async (req, res) => {
   const { groupId, senderId, messageContent } = req.body;
@@ -11,11 +11,13 @@ export const handleGroupMessagesCreate = async (req, res) => {
       });
     }
 
-    const sql =
-      "INSERT INTO GroupMessages (GroupID, SenderID, MessageContent) VALUES (?, ?, ?)";
-    const [result] = await query(sql, [groupId, senderId, messageContent]);
+    const result = await GroupMessages.create({
+      GroupID: groupId,
+      SenderID: senderId,
+      MessageContent: messageContent,
+    });
 
-    if (result.affectedRows === 1) {
+    if (result) {
       console.log("Group message sent successfully");
       res.json({ message: "Group message sent successfully" });
     } else {
