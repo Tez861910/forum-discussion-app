@@ -1,7 +1,10 @@
-import { Bans } from "../../../db.js";
+import { sequelize } from "../../../db.js";
 
 export const handleBanGetAll = async (req, res) => {
   try {
+    // Dynamically access the Bans model using sequelize.models
+    const Bans = sequelize.models.Bans;
+
     const result = await Bans.findAll();
 
     console.log("Bans retrieved successfully");

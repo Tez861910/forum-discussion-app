@@ -1,4 +1,4 @@
-import { GroupChat } from "../../../db.js";
+import { sequelize } from "../../../db.js";
 
 export const handleGroupChatUpdateById = async (req, res) => {
   const { groupId } = req.params;
@@ -14,7 +14,10 @@ export const handleGroupChatUpdateById = async (req, res) => {
   } = req.body;
 
   try {
-    const result = await GroupChat.update(
+    // Dynamically access the GroupChats model using sequelize.models
+    const GroupChats = sequelize.models.GroupChats;
+
+    const result = await GroupChats.update(
       {
         GroupName: groupName,
         Description: description,

@@ -1,4 +1,4 @@
-import { query } from "../../../db.js";
+import { sequelize } from "../../../db.js";
 
 export const handleUserPollVoteCreate = async (req, res) => {
   const { userId, pollOptionId } = req.body;
@@ -11,11 +11,14 @@ export const handleUserPollVoteCreate = async (req, res) => {
         .json({ error: "UserID and PollOptionID are required" });
     }
 
-    const sql =
-      "INSERT INTO UserPollVotes (UserID, PollOptionID) VALUES (?, ?)";
-    const [result] = await query(sql, [userId, pollOptionId]);
+    const UserPollVotes = sequelize.models.UserPollVotes;
 
-    if (result.affectedRows === 1) {
+    const result = await UserPollVotes.create({
+      UserID: userId,
+      PollOptionID: pollOptionId,
+    });
+
+    if (result) {
       console.log("User poll vote created successfully");
       res.json({ message: "User poll vote created successfully" });
     } else {
@@ -24,11 +27,9 @@ export const handleUserPollVoteCreate = async (req, res) => {
     }
   } catch (error) {
     console.error("Error creating user poll vote:", error);
-    res
-      .status(500)
-      .json({
-        error: "User poll vote creation failed",
-        details: error.message,
-      });
+    res.status(500).json({
+      error: "User poll vote creation failed",
+      details: error.message,
+    });
   }
 };

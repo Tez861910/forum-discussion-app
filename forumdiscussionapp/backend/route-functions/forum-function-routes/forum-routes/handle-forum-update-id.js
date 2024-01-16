@@ -1,10 +1,12 @@
-import { query } from "../../../db.js";
+import { sequelize } from "../../../db.js";
 
 export const handleForumUpdateById = async (req, res) => {
   const { forumId } = req.params;
   const { forumName, forumDescription } = req.body;
 
   try {
+    const Forums = sequelize.models.Forums;
+
     if (!forumName && !forumDescription) {
       console.log(
         "At least one field (forumName or forumDescription) is required for update"
@@ -15,11 +17,12 @@ export const handleForumUpdateById = async (req, res) => {
       });
     }
 
-    const sql =
-      "UPDATE Forums SET ForumName = ?, ForumDescription = ? WHERE ForumID = ?";
-    const results = await query(sql, [forumName, forumDescription, forumId]);
+    const result = await Forums.update(
+      { ForumName: forumName, ForumDescription: forumDescription },
+      { where: { ForumID: forumId } }
+    );
 
-    if (results.affectedRows === 1) {
+    if (result[0] === 1) {
       console.log("Forum updated successfully");
       res.json({ message: "Forum updated successfully" });
     } else {

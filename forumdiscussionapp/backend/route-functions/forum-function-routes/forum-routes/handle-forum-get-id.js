@@ -1,15 +1,18 @@
-import { query } from "../../../db.js";
+import { sequelize } from "../../../db.js";
 
 export const handleForumGetById = async (req, res) => {
   const { forumId } = req.params;
 
   try {
-    const sql = "SELECT * FROM Forums WHERE ForumID = ?";
-    const [result] = await query(sql, [forumId]);
+    const Forums = sequelize.models.Forums;
 
-    if (result.length === 1) {
+    const result = await Forums.findOne({
+      where: { ForumID: forumId },
+    });
+
+    if (result) {
       console.log("Forum retrieved successfully");
-      res.json(result[0]);
+      res.json(result);
     } else {
       console.error("Forum not found");
       res.status(404).json({ error: "Forum not found" });

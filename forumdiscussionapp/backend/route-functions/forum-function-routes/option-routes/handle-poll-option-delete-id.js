@@ -1,13 +1,16 @@
-import { query } from "../../../db.js";
+import { sequelize } from "../../../db.js";
 
 export const handlePollOptionDeleteById = async (req, res) => {
   const { pollOptionId } = req.params;
 
   try {
-    const sql = "DELETE FROM PollOptions WHERE PollOptionID = ?";
-    const [result] = await query(sql, [pollOptionId]);
+    const PollOptions = sequelize.models.PollOptions;
 
-    if (result.affectedRows === 1) {
+    const result = await PollOptions.destroy({
+      where: { PollOptionID: pollOptionId },
+    });
+
+    if (result === 1) {
       console.log("Poll option deleted successfully");
       res.json({ message: "Poll option deleted successfully" });
     } else {

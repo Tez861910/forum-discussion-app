@@ -1,10 +1,13 @@
-import { Friends } from "../../../db.js";
+import { sequelize } from "../../../db.js";
 import { Op } from "sequelize";
 
 export const handleFriendsGet = async (req, res) => {
   const { userId } = req.params;
 
   try {
+    // Dynamically access the Friends model using sequelize.models
+    const Friends = sequelize.models.Friends;
+
     const result = await Friends.findAll({
       where: {
         [Op.or]: [{ UserID1: userId }, { UserID2: userId }],

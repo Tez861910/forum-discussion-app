@@ -1,9 +1,12 @@
-import { FriendRequests } from "../../../db.js";
+import { sequelize } from "../../../db.js";
 
 export const handleRequestCreate = async (req, res) => {
   const { senderId, receiverId } = req.body;
 
   try {
+    // Dynamically access the FriendRequests model using sequelize.models
+    const FriendRequests = sequelize.models.FriendRequests;
+
     const result = await FriendRequests.create({
       SenderID: senderId,
       ReceiverID: receiverId,

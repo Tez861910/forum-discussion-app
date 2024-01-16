@@ -1,7 +1,8 @@
-import { query } from "../../../db.js";
+import { sequelize } from "../../../db.js";
 
 export const handleUserActivityLogCreate = async (req, res) => {
   const { userId, activityType, activityDetails, ipAddress } = req.body;
+  const UserActivityLogs = sequelize.models.UserActivityLogs;
 
   try {
     if (!userId || !activityType) {
@@ -11,16 +12,14 @@ export const handleUserActivityLogCreate = async (req, res) => {
         .json({ error: "UserId and ActivityType are required" });
     }
 
-    const sql =
-      "INSERT INTO UserActivityLog (UserID, ActivityType, ActivityDetails, IPAddress) VALUES (?, ?, ?, ?)";
-    const [result] = await query(sql, [
-      userId,
-      activityType,
-      activityDetails,
-      ipAddress,
-    ]);
+    const result = await UserActivityLogs.create({
+      UserID: userId,
+      ActivityType: activityType,
+      ActivityDetails: activityDetails,
+      IPAddress: ipAddress,
+    });
 
-    if (result.affectedRows === 1) {
+    if (result) {
       console.log("User activity log created successfully");
       res.json({ message: "User activity log created successfully" });
     } else {
@@ -29,11 +28,9 @@ export const handleUserActivityLogCreate = async (req, res) => {
     }
   } catch (error) {
     console.error("Error creating user activity log:", error);
-    res
-      .status(500)
-      .json({
-        error: "User activity log creation failed",
-        details: error.message,
-      });
+    res.status(500).json({
+      error: "User activity log creation failed",
+      details: error.message,
+    });
   }
 };

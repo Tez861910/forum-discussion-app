@@ -1,5 +1,5 @@
 import {
-  User,
+  Users,
   UserCourses,
   UserRoles,
   UserSettings,
@@ -11,7 +11,7 @@ export const handleUsersDeleteId = async (req, res) => {
 
   try {
     // Fetch the user's CommonAttributeID
-    const user = await User.findOne({ where: { UserID: id } });
+    const user = await Users.findOne({ where: { UserID: id } });
     const commonAttributeId = user.CommonAttributeID;
 
     // Update the IsDeleted status in the CommonAttributes table

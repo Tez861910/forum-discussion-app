@@ -1,9 +1,9 @@
-import { query } from "../../../db.js";
+import { sequelize } from "../../../db.js";
 
 export const handleMCQOptionsGetAll = async (req, res) => {
   try {
-    const sql = "SELECT * FROM MCQOptions";
-    const [result] = await query(sql);
+    const MCQOptions = sequelize.models.MCQOptions;
+    const result = await MCQOptions.findAll();
 
     console.log("MCQ options retrieved successfully");
     res.json(result);

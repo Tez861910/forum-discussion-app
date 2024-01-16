@@ -1,8 +1,8 @@
 import { DataTypes } from "sequelize";
 
 export default function (sequelize) {
-  return sequelize.define(
-    "Gender",
+  const Genders = sequelize.define(
+    "Genders",
     {
       GenderID: {
         type: DataTypes.INTEGER.UNSIGNED,
@@ -14,10 +14,25 @@ export default function (sequelize) {
         values: ["Male", "Female", "Other"],
         defaultValue: "Other",
       },
+      CommonAttributeID: {
+        type: DataTypes.INTEGER.UNSIGNED,
+        references: {
+          model: "CommonAttributes",
+          key: "AttributeID",
+        },
+      },
     },
     {
       tableName: "Gender",
+      indexes: [
+        {
+          name: "idx_common_attribute_id_gender",
+          fields: ["CommonAttributeID"],
+        },
+      ],
       engine: "InnoDB",
     }
   );
+
+  return Genders;
 }

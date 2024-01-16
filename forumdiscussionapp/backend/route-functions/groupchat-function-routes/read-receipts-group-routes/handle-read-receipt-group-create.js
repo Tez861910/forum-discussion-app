@@ -1,10 +1,13 @@
-import { ReadReceiptsGroup } from "../../../db.js";
+import { sequelize } from "../../../db.js";
 
 export const handleReadReceiptGroupCreate = async (req, res) => {
   const { groupMessageId, userId } = req.body;
 
   try {
-    const result = await ReadReceiptsGroup.create({
+    // Dynamically access the ReadReceiptsGroups model using sequelize.models
+    const ReadReceiptsGroups = sequelize.models.ReadReceiptsGroups;
+
+    const result = await ReadReceiptsGroups.create({
       GroupMessageID: groupMessageId,
       UserID: userId,
     });

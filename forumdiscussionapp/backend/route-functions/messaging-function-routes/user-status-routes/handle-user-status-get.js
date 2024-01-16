@@ -1,9 +1,12 @@
-import { UserStatus } from "../../../db.js";
+import { sequelize } from "../../../db.js";
 
 export const handleUserStatusGet = async (req, res) => {
   const { userId } = req.params;
 
   try {
+    // Dynamically access the UserStatus model using sequelize.models
+    const UserStatus = sequelize.models.UserStatus;
+
     const result = await UserStatus.findOne({
       where: { UserID: userId },
     });

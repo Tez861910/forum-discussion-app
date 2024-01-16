@@ -1,7 +1,7 @@
 import { DataTypes } from "sequelize";
 
 export default function (sequelize) {
-  return sequelize.define(
+  const CommonAttributes = sequelize.define(
     "CommonAttributes",
     {
       AttributeID: {
@@ -50,4 +50,6 @@ export default function (sequelize) {
       engine: "InnoDB",
     }
   );
+
+  return CommonAttributes;
 }

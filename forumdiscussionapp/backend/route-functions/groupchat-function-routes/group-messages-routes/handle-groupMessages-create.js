@@ -1,9 +1,12 @@
-import { GroupMessages } from "../../../db.js";
+import { sequelize } from "../../../db.js";
 
 export const handleGroupMessagesCreate = async (req, res) => {
   const { groupId, senderId, messageContent } = req.body;
 
   try {
+    // Dynamically access the GroupMessages model using sequelize.models
+    const GroupMessages = sequelize.models.GroupMessages;
+
     if (!groupId || !senderId || !messageContent) {
       console.log("GroupID, SenderID, and MessageContent are required");
       return res.status(400).json({

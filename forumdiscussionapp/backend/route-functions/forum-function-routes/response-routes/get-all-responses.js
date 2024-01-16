@@ -1,18 +1,14 @@
-import { query } from "../../../db.js";
+import { sequelize } from "../../../db.js";
 
 export const getAllResponses = async (req, res) => {
   const { commentId } = req.params;
 
   try {
-    const result = await query("SELECT * FROM responses WHERE CommentID = ?", [
-      commentId,
-    ]);
-    let responses = result;
+    const Responses = sequelize.models.Responses;
 
-    // Ensure responses is always an array
-    if (!Array.isArray(responses)) {
-      responses = [responses];
-    }
+    const responses = await Responses.findAll({
+      where: { CommentID: commentId },
+    });
 
     res.json({ responses });
   } catch (error) {

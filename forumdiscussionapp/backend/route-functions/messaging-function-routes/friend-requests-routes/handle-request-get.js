@@ -1,7 +1,10 @@
-import { FriendRequests } from "../../../db.js";
+import { sequelize } from "../../../db.js";
 
 export const handleRequestGet = async (req, res) => {
   try {
+    // Dynamically access the FriendRequests model using sequelize.models
+    const FriendRequests = sequelize.models.FriendRequests;
+
     const result = await FriendRequests.findAll();
 
     if (result.length > 0) {

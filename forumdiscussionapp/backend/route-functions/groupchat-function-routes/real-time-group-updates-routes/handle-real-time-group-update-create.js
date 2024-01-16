@@ -1,9 +1,12 @@
-import { RealTimeGroupUpdates } from "../../../db.js";
+import { sequelize } from "../../../db.js";
 
 export const handleRealTimeGroupUpdateCreate = async (req, res) => {
   const { groupId, userId, updateType, data } = req.body;
 
   try {
+    // Dynamically access the RealTimeGroupUpdates model using sequelize.models
+    const RealTimeGroupUpdates = sequelize.models.RealTimeGroupUpdates;
+
     const result = await RealTimeGroupUpdates.create({
       GroupID: groupId,
       UserID: userId,

@@ -1,9 +1,10 @@
-import { query } from "../../../db.js";
+import { sequelize } from "../../../db.js";
 
 export const handleNotificationGetAll = async (req, res) => {
+  const Notifications = sequelize.models.Notifications;
+
   try {
-    const sql = "SELECT * FROM Notifications";
-    const [result] = await query(sql);
+    const result = await Notifications.findAll();
 
     console.log("Notifications retrieved successfully");
     res.json({ notifications: result });

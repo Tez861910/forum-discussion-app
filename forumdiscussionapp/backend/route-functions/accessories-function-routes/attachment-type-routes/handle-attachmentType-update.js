@@ -1,8 +1,9 @@
-import { query } from "../../../db.js";
+import { sequelize } from "../../../db.js";
 
 export const handleAttachmentTypeUpdate = async (req, res) => {
   const { attachmentTypeId } = req.params;
   const { attachmentTypeName } = req.body;
+  const AttachmentTypes = sequelize.models.AttachmentTypes;
 
   try {
     if (!attachmentTypeName) {
@@ -12,11 +13,18 @@ export const handleAttachmentTypeUpdate = async (req, res) => {
       });
     }
 
-    const sql =
-      "UPDATE AttachmentType SET AttachmentTypeName = ? WHERE AttachmentTypeID = ?";
-    const [result] = await query(sql, [attachmentTypeName, attachmentTypeId]);
+    const result = await AttachmentTypes.update(
+      {
+        AttachmentTypeName: attachmentTypeName,
+      },
+      {
+        where: {
+          AttachmentTypeID: attachmentTypeId,
+        },
+      }
+    );
 
-    if (result.affectedRows === 1) {
+    if (result[0] === 1) {
       console.log("Attachment type updated successfully");
       res.json({ message: "Attachment type updated successfully" });
     } else {

@@ -1,13 +1,16 @@
-import { query } from "../../../db.js";
+import { sequelize } from "../../../db.js";
 
 export const handleForumModeratorDeleteById = async (req, res) => {
   const { forumModeratorId } = req.params;
 
   try {
-    const sql = "DELETE FROM ForumsModerators WHERE ForumModeratorID = ?";
-    const [result] = await query(sql, [forumModeratorId]);
+    const ForumModerators = sequelize.models.ForumModerators;
 
-    if (result.affectedRows === 1) {
+    const result = await ForumModerators.destroy({
+      where: { ForumModeratorID: forumModeratorId },
+    });
+
+    if (result === 1) {
       console.log("Forum moderator deleted successfully");
       res.json({ message: "Forum moderator deleted successfully" });
     } else {

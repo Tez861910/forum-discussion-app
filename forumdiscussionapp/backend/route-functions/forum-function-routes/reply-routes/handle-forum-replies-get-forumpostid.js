@@ -1,11 +1,14 @@
-import { query } from "../../../db.js";
+import { sequelize } from "../../../db.js";
 
 export const handleForumReplyGetForumPostId = async (req, res) => {
   const { forumPostId } = req.params;
 
   try {
-    const sql = "SELECT * FROM ForumsReplies WHERE ForumPostID = ?";
-    const result = await query(sql, [forumPostId]);
+    const ForumReplies = sequelize.models.ForumReplies;
+
+    const result = await ForumReplies.findAll({
+      where: { ForumPostID: forumPostId },
+    });
 
     console.log(
       "Forum replies retrieved successfully for forumPostId:",

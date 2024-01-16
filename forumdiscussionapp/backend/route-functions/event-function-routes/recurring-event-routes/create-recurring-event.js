@@ -1,14 +1,16 @@
-import { query } from "../../../db.js";
+import { sequelize } from "../../../db.js";
 
 export const createRecurringEvent = async (req, res) => {
   try {
     const { eventId } = req.params;
     const { RecurrenceType, RecurrenceInterval } = req.body;
 
-    await query(
-      "INSERT INTO RecurringEvents (EventID, RecurrenceType, RecurrenceInterval) VALUES (?, ?, ?)",
-      [eventId, RecurrenceType, RecurrenceInterval]
-    );
+    const RecurringEvents = sequelize.models.RecurringEvents;
+    await RecurringEvents.create({
+      EventID: eventId,
+      RecurrenceType,
+      RecurrenceInterval,
+    });
 
     res
       .status(201)

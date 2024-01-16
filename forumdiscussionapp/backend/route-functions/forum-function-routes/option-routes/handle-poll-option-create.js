@@ -1,4 +1,4 @@
-import { query } from "../../../db.js";
+import { sequelize } from "../../../db.js";
 
 export const handlePollOptionCreate = async (req, res) => {
   const { pollId, optionText } = req.body;
@@ -11,10 +11,14 @@ export const handlePollOptionCreate = async (req, res) => {
         .json({ error: "PollID and OptionText are required" });
     }
 
-    const sql = "INSERT INTO PollOptions (PollID, OptionText) VALUES (?, ?)";
-    const [result] = await query(sql, [pollId, optionText]);
+    const PollOptions = sequelize.models.PollOptions;
 
-    if (result.affectedRows === 1) {
+    const result = await PollOptions.create({
+      PollID: pollId,
+      OptionText: optionText,
+    });
+
+    if (result) {
       console.log("Poll option created successfully");
       res.json({ message: "Poll option created successfully" });
     } else {

@@ -1,13 +1,20 @@
 import { DataTypes } from "sequelize";
 
 export default function (sequelize) {
-  return sequelize.define(
-    "CourseMaterials",
+  const UserCourses = sequelize.define(
+    "UserCourses",
     {
-      MaterialID: {
+      UserCourseID: {
         type: DataTypes.INTEGER.UNSIGNED,
         autoIncrement: true,
         primaryKey: true,
+      },
+      UserID: {
+        type: DataTypes.INTEGER.UNSIGNED,
+        references: {
+          model: "Users",
+          key: "UserID",
+        },
       },
       CourseID: {
         type: DataTypes.INTEGER.UNSIGNED,
@@ -16,25 +23,8 @@ export default function (sequelize) {
           key: "CourseID",
         },
       },
-      MaterialName: {
-        type: DataTypes.STRING(255),
-        allowNull: false,
-      },
-      MaterialType: {
-        type: DataTypes.ENUM,
-        values: ["LectureNotes", "Slides", "AdditionalResources"],
-        allowNull: false,
-      },
-      FilePath: {
-        type: DataTypes.STRING(255),
-        allowNull: false,
-      },
-      UploadDate: {
+      EnrollmentDate: {
         type: DataTypes.DATE,
-        defaultValue: DataTypes.NOW,
-      },
-      Description: {
-        type: DataTypes.TEXT,
       },
       CommonAttributeID: {
         type: DataTypes.INTEGER.UNSIGNED,
@@ -45,18 +35,24 @@ export default function (sequelize) {
       },
     },
     {
-      tableName: "CourseMaterials",
+      tableName: "UserCourses",
       indexes: [
         {
-          name: "idx_course_id_coursematerials",
+          name: "idx_user_id_usercourses",
+          fields: ["UserID"],
+        },
+        {
+          name: "idx_course_id_usercourses",
           fields: ["CourseID"],
         },
         {
-          name: "idx_common_attribute_id_coursematerials",
+          name: "idx_common_attribute_id_usercourses",
           fields: ["CommonAttributeID"],
         },
       ],
       engine: "InnoDB",
     }
   );
+
+  return UserCourses;
 }

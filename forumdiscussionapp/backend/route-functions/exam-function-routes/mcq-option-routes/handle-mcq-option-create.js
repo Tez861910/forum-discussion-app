@@ -1,28 +1,18 @@
-import { query } from "../../../db.js";
+import { sequelize } from "../../../db.js";
 
 export const handleMCQOptionCreate = async (req, res) => {
   const { mcqQuestionId, mcqOptionText, isCorrect, createdByUserId } = req.body;
 
   try {
-    if (!mcqQuestionId || !mcqOptionText || !createdByUserId) {
-      console.log(
-        "MCQQuestionID, MCQOptionText, and CreatedByUserId are required"
-      );
-      return res.status(400).json({
-        error: "MCQQuestionID, MCQOptionText, and CreatedByUserId are required",
-      });
-    }
+    const MCQOptions = sequelize.models.MCQOptions;
+    const result = await MCQOptions.create({
+      MCQQuestionID: mcqQuestionId,
+      MCQOptionText: mcqOptionText,
+      IsCorrect: isCorrect,
+      CreatedByUserID: createdByUserId,
+    });
 
-    const sql =
-      "INSERT INTO MCQOptions (MCQQuestionID, MCQOptionText, IsCorrect, CreatedByUserID) VALUES (?, ?, ?, ?)";
-    const [result] = await query(sql, [
-      mcqQuestionId,
-      mcqOptionText,
-      isCorrect,
-      createdByUserId,
-    ]);
-
-    if (result.affectedRows === 1) {
+    if (result) {
       console.log("MCQ option created successfully");
       res.json({ message: "MCQ option created successfully" });
     } else {

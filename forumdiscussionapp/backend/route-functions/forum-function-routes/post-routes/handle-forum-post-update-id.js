@@ -1,4 +1,4 @@
-import { query } from "../../../db.js";
+import { sequelize } from "../../../db.js";
 
 export const handleForumPostUpdateById = async (req, res) => {
   const { forumPostId } = req.params;
@@ -12,10 +12,14 @@ export const handleForumPostUpdateById = async (req, res) => {
         .json({ error: "PostContent is required for update" });
     }
 
-    const sql = "UPDATE ForumsPosts SET PostContent = ? WHERE ForumPostID = ?";
-    const result = await query(sql, [postContent, forumPostId]);
+    const ForumPosts = sequelize.models.ForumPosts;
 
-    if (result.affectedRows === 1) {
+    const result = await ForumPosts.update(
+      { PostContent: postContent },
+      { where: { ForumPostID: forumPostId } }
+    );
+
+    if (result[0] === 1) {
       console.log("Forum post updated successfully");
       res.json({ message: "Forum post updated successfully" });
     } else {

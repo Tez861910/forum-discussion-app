@@ -1,13 +1,18 @@
-import { query } from "../../../db.js";
+import { sequelize } from "../../../db.js";
 
 export const handleCategoryDelete = async (req, res) => {
   const { categoryId } = req.params;
 
-  try {
-    const sql = "DELETE FROM ExamCategory WHERE CategoryID = ?";
-    const [result] = await query(sql, [categoryId]);
+  const ExamCategorys = sequelize.models.ExamCategorys;
 
-    if (result.affectedRows === 1) {
+  try {
+    const result = await ExamCategorys.destroy({
+      where: {
+        CategoryID: categoryId,
+      },
+    });
+
+    if (result === 1) {
       console.log("Exam category deleted successfully");
       res.json({ message: "Exam category deleted successfully" });
     } else {

@@ -1,8 +1,8 @@
-import { User, CommonAttributes } from "../../../db.js";
+import { Users, CommonAttributes } from "../../../db.js";
 
 export const handleUsersGet = async (req, res) => {
   try {
-    const users = await User.findAll({
+    const users = await Users.findAll({
       include: [
         {
           model: CommonAttributes,

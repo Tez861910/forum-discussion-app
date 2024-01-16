@@ -1,10 +1,13 @@
-import { FriendRequests } from "../../../db.js";
+import { sequelize } from "../../../db.js";
 
 export const handleRequestUpdate = async (req, res) => {
   const { requestId } = req.params;
   const { requestStatus } = req.body;
 
   try {
+    // Dynamically access the FriendRequests model using sequelize.models
+    const FriendRequests = sequelize.models.FriendRequests;
+
     const result = await FriendRequests.update(
       { RequestStatus: requestStatus },
       { where: { RequestID: requestId } }

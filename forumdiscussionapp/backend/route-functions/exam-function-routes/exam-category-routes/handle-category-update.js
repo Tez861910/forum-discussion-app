@@ -1,14 +1,24 @@
-import { query } from "../../../db.js";
+import { sequelize } from "../../../db.js";
 
 export const handleCategoryUpdate = async (req, res) => {
   const { categoryId } = req.params;
   const { categoryName } = req.body;
 
-  try {
-    const sql = "UPDATE ExamCategory SET CategoryName = ? WHERE CategoryID = ?";
-    const [result] = await query(sql, [categoryName, categoryId]);
+  const ExamCategorys = sequelize.models.ExamCategorys;
 
-    if (result.affectedRows === 1) {
+  try {
+    const result = await ExamCategorys.update(
+      {
+        CategoryName: categoryName,
+      },
+      {
+        where: {
+          CategoryID: categoryId,
+        },
+      }
+    );
+
+    if (result[0] === 1) {
       console.log("Exam category updated successfully");
       res.json({ message: "Exam category updated successfully" });
     } else {

@@ -1,19 +1,19 @@
 import { DataTypes } from "sequelize";
 
 export default function (sequelize) {
-  return sequelize.define(
-    "Departments",
+  const Roles = sequelize.define(
+    "Roles",
     {
-      DepartmentID: {
+      RoleID: {
         type: DataTypes.INTEGER.UNSIGNED,
         autoIncrement: true,
         primaryKey: true,
       },
-      DepartmentName: {
+      RoleName: {
         type: DataTypes.STRING(255),
         allowNull: false,
       },
-      DepartmentDescription: {
+      RoleDescription: {
         type: DataTypes.TEXT,
       },
       CommonAttributeID: {
@@ -25,18 +25,16 @@ export default function (sequelize) {
       },
     },
     {
-      tableName: "Departments",
+      tableName: "Roles",
       indexes: [
         {
-          name: "idx_department_id_departments",
-          fields: ["DepartmentID"],
-        },
-        {
-          name: "idx_common_attribute_id_departments",
+          name: "idx_common_attribute_id_roles",
           fields: ["CommonAttributeID"],
         },
       ],
       engine: "InnoDB",
     }
   );
+
+  return Roles;
 }

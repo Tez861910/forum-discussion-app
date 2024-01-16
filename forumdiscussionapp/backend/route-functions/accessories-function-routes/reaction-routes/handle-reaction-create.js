@@ -1,8 +1,9 @@
-import { query } from "../../../db.js";
+import { sequelize } from "../../../db.js";
 
 export const handleReactionCreate = async (req, res) => {
   const { userId, reactionTypeId, reactedToType, reactedToId, isPositive } =
     req.body;
+  const Reactions = sequelize.models.Reactions;
 
   try {
     if (
@@ -21,17 +22,15 @@ export const handleReactionCreate = async (req, res) => {
       });
     }
 
-    const sql =
-      "INSERT INTO Reactions (ReactionByUserID, ReactionTypeID, ReactedToType, ReactedToID, IsPositive) VALUES (?, ?, ?, ?, ?)";
-    const [result] = await query(sql, [
-      userId,
-      reactionTypeId,
-      reactedToType,
-      reactedToId,
-      isPositive,
-    ]);
+    const result = await Reactions.create({
+      ReactionByUserID: userId,
+      ReactionTypeID: reactionTypeId,
+      ReactedToType: reactedToType,
+      ReactedToID: reactedToId,
+      IsPositive: isPositive,
+    });
 
-    if (result.affectedRows === 1) {
+    if (result) {
       console.log("Reaction created successfully");
       res.json({ message: "Reaction created successfully" });
     } else {

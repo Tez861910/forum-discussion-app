@@ -1,12 +1,15 @@
-import { query } from "../../../db.js";
+import { sequelize } from "../../../db.js";
 
-export const handleThreadsGetCourseId = async (req, res) => {
+export const handleForumGetCourseId = async (req, res) => {
   const courseId = req.params.courseId;
   console.log("Received courseId:", courseId);
 
   try {
-    const sql = "SELECT * FROM Forums WHERE CourseID = ?";
-    const results = await query(sql, [courseId]);
+    const Forums = sequelize.models.Forums;
+
+    const results = await Forums.findAll({
+      where: { CourseID: courseId },
+    });
     console.log("Forums data:", results);
 
     res.json(results);

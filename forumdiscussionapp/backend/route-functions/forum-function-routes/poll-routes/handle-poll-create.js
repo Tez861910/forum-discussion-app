@@ -1,4 +1,4 @@
-import { query } from "../../../db.js";
+import { sequelize } from "../../../db.js";
 
 export const handlePollCreate = async (req, res) => {
   const { question, createdByUserId } = req.body;
@@ -11,11 +11,14 @@ export const handlePollCreate = async (req, res) => {
         .json({ error: "Question and createdByUserId are required" });
     }
 
-    const sql =
-      "INSERT INTO Polls (PollQuestion, CreatedByUserID) VALUES (?, ?)";
-    const [result] = await query(sql, [question, createdByUserId]);
+    const Polls = sequelize.models.Polls;
 
-    if (result.affectedRows === 1) {
+    const result = await Polls.create({
+      PollQuestion: question,
+      CreatedByUserID: createdByUserId,
+    });
+
+    if (result) {
       console.log("Poll created successfully");
       res.json({ message: "Poll created successfully" });
     } else {

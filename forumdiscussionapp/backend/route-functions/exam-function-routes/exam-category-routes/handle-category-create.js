@@ -1,13 +1,16 @@
-import { query } from "../../../db.js";
+import { sequelize } from "../../../db.js";
 
 export const handleCategoryCreate = async (req, res) => {
   const { categoryName } = req.body;
 
-  try {
-    const sql = "INSERT INTO ExamCategory (CategoryName) VALUES (?)";
-    const [result] = await query(sql, [categoryName]);
+  const ExamCategorys = sequelize.models.ExamCategorys;
 
-    if (result.affectedRows === 1) {
+  try {
+    const result = await ExamCategorys.create({
+      CategoryName: categoryName,
+    });
+
+    if (result) {
       console.log("Exam category created successfully");
       res.json({ message: "Exam category created successfully" });
     } else {

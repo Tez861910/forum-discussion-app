@@ -1,9 +1,12 @@
-import { Bans } from "../../../db.js";
+import { sequelize } from "../../../db.js";
 
 export const handleBanDelete = async (req, res) => {
   const { banId } = req.params;
 
   try {
+    // Dynamically access the Bans model using sequelize.models
+    const Bans = sequelize.models.Bans;
+
     // Delete the ban
     const result = await Bans.destroy({
       where: { BanID: banId },

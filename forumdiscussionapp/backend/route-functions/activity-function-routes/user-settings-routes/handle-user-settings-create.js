@@ -1,7 +1,8 @@
-import { query } from "../../../db.js";
+import { sequelize } from "../../../db.js";
 
 export const handleUserSettingsCreate = async (req, res) => {
   const { userId, theme, darkMode, language, emailNotifications } = req.body;
+  const UserSettings = sequelize.models.UserSettings;
 
   try {
     if (!userId) {
@@ -9,17 +10,15 @@ export const handleUserSettingsCreate = async (req, res) => {
       return res.status(400).json({ error: "UserId is required" });
     }
 
-    const sql =
-      "INSERT INTO UserSettings (UserID, Theme, DarkMode, Language, EmailNotifications) VALUES (?, ?, ?, ?, ?)";
-    const [result] = await query(sql, [
-      userId,
-      theme,
-      darkMode,
-      language,
-      emailNotifications,
-    ]);
+    const result = await UserSettings.create({
+      UserID: userId,
+      Theme: theme,
+      DarkMode: darkMode,
+      Language: language,
+      EmailNotifications: emailNotifications,
+    });
 
-    if (result.affectedRows === 1) {
+    if (result) {
       console.log("User settings created successfully");
       res.json({ message: "User settings created successfully" });
     } else {

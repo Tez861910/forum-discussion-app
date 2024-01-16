@@ -1,15 +1,21 @@
-import { query } from "../../../db.js";
+import { sequelize } from "../../../db.js";
 
 export const handleQuestionTypeUpdateById = async (req, res) => {
   const { questionTypeId } = req.params;
   const { questionTypeName } = req.body;
 
   try {
-    const sql =
-      "UPDATE QuestionType SET QuestionTypeName = ? WHERE QuestionTypeID = ?";
-    const [result] = await query(sql, [questionTypeName, questionTypeId]);
+    const QuestionTypes = sequelize.models.QuestionTypes;
+    const result = await QuestionTypes.update(
+      {
+        QuestionTypeName: questionTypeName,
+      },
+      {
+        where: { QuestionTypeID: questionTypeId },
+      }
+    );
 
-    if (result.affectedRows === 1) {
+    if (result[0] === 1) {
       console.log("Question type updated successfully");
       res.json({ message: "Question type updated successfully" });
     } else {

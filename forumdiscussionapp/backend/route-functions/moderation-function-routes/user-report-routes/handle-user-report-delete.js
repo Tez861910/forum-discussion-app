@@ -1,9 +1,12 @@
-import { UserReports } from "../../../db.js";
+import { sequelize } from "../../../db.js";
 
 export const handleUserReportDelete = async (req, res) => {
   const { reportId } = req.params;
 
   try {
+    // Dynamically access the UserReports model using sequelize.models
+    const UserReports = sequelize.models.UserReports;
+
     // Delete the user report
     const result = await UserReports.destroy({
       where: { ReportID: reportId },

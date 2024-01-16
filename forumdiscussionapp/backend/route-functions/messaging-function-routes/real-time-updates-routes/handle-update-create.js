@@ -1,9 +1,12 @@
-import { RealTimeUpdates } from "../../../db.js";
+import { sequelize } from "../../../db.js";
 
 export const handleUpdateCreate = async (req, res) => {
   const { userId, updateType, data } = req.body;
 
   try {
+    // Dynamically access the RealTimeUpdates model using sequelize.models
+    const RealTimeUpdates = sequelize.models.RealTimeUpdates;
+
     const result = await RealTimeUpdates.create({
       UserID: userId,
       UpdateType: updateType,
@@ -19,11 +22,9 @@ export const handleUpdateCreate = async (req, res) => {
     }
   } catch (error) {
     console.error("Error creating real-time update:", error);
-    res
-      .status(500)
-      .json({
-        error: "Real-time update creation failed",
-        details: error.message,
-      });
+    res.status(500).json({
+      error: "Real-time update creation failed",
+      details: error.message,
+    });
   }
 };

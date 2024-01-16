@@ -1,13 +1,15 @@
-import { query } from "../../../db.js";
+import { sequelize } from "../../../db.js";
 
 export const handleCommentDeleteId = async (req, res) => {
   const { commentId } = req.params;
 
   try {
-    const sql = "DELETE FROM comments WHERE CommentID = ?";
-    const result = await query(sql, [commentId]);
+    const Comments = sequelize.models.Comments;
+    const result = await Comments.destroy({
+      where: { CommentID: commentId },
+    });
 
-    if (result.affectedRows === 1) {
+    if (result === 1) {
       console.log("Comment deleted successfully");
       res.json({ message: "Comment deleted successfully" });
     } else {

@@ -1,20 +1,20 @@
-import { query } from "../../../db.js";
+import { sequelize } from "../../../db.js";
 
 export const handleAttemptCreate = async (req, res) => {
   const { userId, examId, startTime, endTime, status } = req.body;
 
-  try {
-    const sql =
-      "INSERT INTO ExamAttempt (UserID, ExamID, StartTime, EndTime, Status) VALUES (?, ?, ?, ?, ?)";
-    const [result] = await query(sql, [
-      userId,
-      examId,
-      startTime,
-      endTime,
-      status,
-    ]);
+  const ExamAttempts = sequelize.models.ExamAttempts;
 
-    if (result.affectedRows === 1) {
+  try {
+    const result = await ExamAttempts.create({
+      UserID: userId,
+      ExamID: examId,
+      StartTime: startTime,
+      EndTime: endTime,
+      Status: status,
+    });
+
+    if (result) {
       console.log("Exam attempt created successfully");
       res.json({ message: "Exam attempt created successfully" });
     } else {

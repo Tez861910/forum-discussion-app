@@ -1,16 +1,34 @@
-import { query } from "../../../db.js";
+import { sequelize } from "../../../db.js";
+import Sequelize from "sequelize";
 
 export const getAllEvents = async (req, res) => {
   try {
+    const CommonAttributes = sequelize.models.CommonAttributes;
+    const Events = sequelize.models.Events;
+
     // Selecting relevant fields from both Events and CommonAttributes tables
-    const events = await query(
-      `
-      SELECT E.*, CA.CreatedAt, CA.CreatedByUserID, CA.IsDeleted
-      FROM Events AS E
-      JOIN CommonAttributes AS CA ON E.CommonAttributeID = CA.AttributeID
-      WHERE CA.IsDeleted = false
-    `
-    );
+    const events = await Events.findAll({
+      attributes: {
+        include: [
+          [Sequelize.col("CommonAttributes.CreatedAt"), "CreatedAt"],
+          [
+            Sequelize.col("CommonAttributes.CreatedByUserID"),
+            "CreatedByUserID",
+          ],
+          [Sequelize.col("CommonAttributes.IsDeleted"), "IsDeleted"],
+        ],
+      },
+      include: [
+        {
+          model: CommonAttributes,
+          attributes: [],
+        },
+      ],
+      where: Sequelize.where(
+        Sequelize.col("CommonAttributes.IsDeleted"),
+        false
+      ),
+    });
 
     res.json({ success: true, events });
   } catch (error) {

@@ -1,15 +1,17 @@
-import { query } from "../../../db.js";
+import { sequelize } from "../../../db.js";
 
 export const handleImageUpdate = async (req, res) => {
   const { imageId } = req.params;
   const { eventId, imageUrl } = req.body;
+  const EventImages = sequelize.models.EventImages;
 
   try {
-    const sql =
-      "UPDATE EventImages SET EventID = ?, ImageURL = ? WHERE ImageID = ?";
-    const [result] = await query(sql, [eventId, imageUrl, imageId]);
+    const result = await EventImages.update(
+      { EventID: eventId, ImageURL: imageUrl },
+      { where: { ImageID: imageId } }
+    );
 
-    if (result.affectedRows === 1) {
+    if (result[0] === 1) {
       console.log("Event image updated successfully");
       res.json({ message: "Event image updated successfully" });
     } else {

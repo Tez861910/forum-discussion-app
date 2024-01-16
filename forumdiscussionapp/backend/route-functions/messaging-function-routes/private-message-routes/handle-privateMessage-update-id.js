@@ -1,10 +1,13 @@
-import { PrivateMessages } from "../../../db.js";
+import { sequelize } from "../../../db.js";
 
 export const handlePrivateMessageUpdateById = async (req, res) => {
   const { messageId } = req.params;
   const { senderId, receiverId, messageContent } = req.body;
 
   try {
+    // Dynamically access the PrivateMessages model using sequelize.models
+    const PrivateMessages = sequelize.models.PrivateMessages;
+
     const result = await PrivateMessages.update(
       {
         SenderID: senderId,

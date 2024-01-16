@@ -1,7 +1,8 @@
-import { query } from "../../../db.js";
+import { sequelize } from "../../../db.js";
 
 export const handleAnnouncementCreate = async (req, res) => {
   const { title, content, expiryDate, createdByUserId } = req.body;
+  const Announcements = sequelize.models.Announcements;
 
   try {
     if (!title || !content || !createdByUserId) {
@@ -11,16 +12,14 @@ export const handleAnnouncementCreate = async (req, res) => {
         .json({ error: "Title, content, and createdByUserId are required" });
     }
 
-    const sql =
-      "INSERT INTO Announcements (AnnouncementTitle, AnnouncementContent, ExpiryDate, CreatedByUserID) VALUES (?, ?, ?, ?)";
-    const [result] = await query(sql, [
-      title,
-      content,
-      expiryDate,
-      createdByUserId,
-    ]);
+    const result = await Announcements.create({
+      AnnouncementTitle: title,
+      AnnouncementContent: content,
+      ExpiryDate: expiryDate,
+      CreatedByUserID: createdByUserId,
+    });
 
-    if (result.affectedRows === 1) {
+    if (result) {
       console.log("Announcement created successfully");
       res.json({ message: "Announcement created successfully" });
     } else {

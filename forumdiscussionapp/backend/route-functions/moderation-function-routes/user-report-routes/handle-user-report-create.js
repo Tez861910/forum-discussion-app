@@ -1,4 +1,4 @@
-import { UserReports } from "../../../db.js";
+import { sequelize } from "../../../db.js";
 
 export const handleUserReportCreate = async (req, res) => {
   const { reporterId, reportedUserId, reportContent } = req.body;
@@ -10,6 +10,9 @@ export const handleUserReportCreate = async (req, res) => {
         error: "ReporterId, ReportedUserId, and ReportContent are required",
       });
     }
+
+    // Dynamically access the UserReports model using sequelize.models
+    const UserReports = sequelize.models.UserReports;
 
     // Create a new UserReport
     const userReport = await UserReports.create({

@@ -1,9 +1,8 @@
-import { query } from "../../../db.js";
+import { QuestionTypes } from "../../../db.js";
 
 export const handleQuestionTypeGetAll = async (req, res) => {
   try {
-    const sql = "SELECT * FROM QuestionType";
-    const [result] = await query(sql);
+    const result = await QuestionTypes.findAll();
 
     console.log("Question types retrieved successfully");
     res.json(result);

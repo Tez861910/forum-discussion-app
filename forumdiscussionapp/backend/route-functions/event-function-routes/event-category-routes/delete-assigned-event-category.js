@@ -1,17 +1,22 @@
-import { query } from "../../../db.js";
+import { sequelize } from "../../../db.js";
 
 export const softDeleteAssignedEventCategory = async (req, res) => {
   try {
     const { eventId, categoryId } = req.params;
     const UserID = req.user.userId;
+    const CommonAttributes = sequelize.models.CommonAttributes;
+    const EventCategoryMappings = sequelize.models.EventCategoryMappings;
 
     // Check if the assigned event category is already deleted
-    const isAssignedCategoryDeleted = await query(
-      "SELECT IsDeleted FROM CommonAttributes WHERE AttributeID = (SELECT CommonAttributeID FROM EventCategoryMapping WHERE EventID = ? AND CategoryID = ?)",
-      [eventId, categoryId]
-    );
+    const isAssignedCategoryDeleted = await CommonAttributes.findOne({
+      where: {
+        AttributeID: EventCategoryMappings.findOne({
+          where: { EventID: eventId, CategoryID: categoryId },
+        }).CommonAttributeID,
+      },
+    });
 
-    if (isAssignedCategoryDeleted[0].IsDeleted) {
+    if (isAssignedCategoryDeleted.IsDeleted) {
       // If the assigned event category is already marked as deleted, return success (no need to delete again)
       return res.json({
         success: true,
@@ -20,9 +25,15 @@ export const softDeleteAssignedEventCategory = async (req, res) => {
     }
 
     // Update the IsDeleted field in the CommonAttributes table
-    await query(
-      "UPDATE CommonAttributes SET IsDeleted = true, UpdatedByUserID = ? WHERE AttributeID = (SELECT CommonAttributeID FROM EventCategoryMapping WHERE EventID = ? AND CategoryID = ?)",
-      [UserID, eventId, categoryId]
+    await CommonAttributes.update(
+      { IsDeleted: true, UpdatedByUserID: UserID },
+      {
+        where: {
+          AttributeID: EventCategoryMappings.findOne({
+            where: { EventID: eventId, CategoryID: categoryId },
+          }).CommonAttributeID,
+        },
+      }
     );
 
     res.json({
@@ -31,11 +42,9 @@ export const softDeleteAssignedEventCategory = async (req, res) => {
     });
   } catch (error) {
     console.error("Error soft deleting assigned event category:", error);
-    res
-      .status(500)
-      .json({
-        success: false,
-        error: "Error soft deleting assigned event category",
-      });
+    res.status(500).json({
+      success: false,
+      error: "Error soft deleting assigned event category",
+    });
   }
 };

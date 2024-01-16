@@ -1,9 +1,10 @@
-import { query } from "../../../db.js";
+import { sequelize } from "../../../db.js";
 
 export const handleForumReplyGet = async (req, res) => {
   try {
-    const sql = "SELECT * FROM ForumsReplies";
-    const [result] = await query(sql);
+    const ForumReplies = sequelize.models.ForumReplies;
+
+    const result = await ForumReplies.findAll();
 
     console.log("Forum replies retrieved successfully");
     res.json(result);

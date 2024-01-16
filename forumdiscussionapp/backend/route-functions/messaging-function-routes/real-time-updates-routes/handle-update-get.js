@@ -1,9 +1,12 @@
-import { RealTimeUpdates } from "../../../db.js";
+import { sequelize } from "../../../db.js";
 
 export const handleUpdateGet = async (req, res) => {
   const { updateId } = req.params;
 
   try {
+    // Dynamically access the RealTimeUpdates model using sequelize.models
+    const RealTimeUpdates = sequelize.models.RealTimeUpdates;
+
     const result = await RealTimeUpdates.findOne({
       where: { RTUpdateID: updateId },
     });
@@ -17,11 +20,9 @@ export const handleUpdateGet = async (req, res) => {
     }
   } catch (error) {
     console.error("Error getting real-time update:", error);
-    res
-      .status(500)
-      .json({
-        error: "Error getting real-time update",
-        details: error.message,
-      });
+    res.status(500).json({
+      error: "Error getting real-time update",
+      details: error.message,
+    });
   }
 };

@@ -1,4 +1,4 @@
-import { query } from "../../../db.js";
+import { sequelize } from "../../../db.js";
 
 export const createEvent = async (req, res) => {
   try {
@@ -9,63 +9,48 @@ export const createEvent = async (req, res) => {
     const UserID = req.user.userId;
     const CourseID = req.user.courseId;
 
-    let commonAttributesResult;
+    const CommonAttributes = sequelize.models.CommonAttributes;
+    const Events = sequelize.models.Events;
 
     // Insert into CommonAttributes table to get AttributeID
-    const commonAttributesQuery =
-      "INSERT INTO CommonAttributes (CreatedByUserID) VALUES (?)";
-    const commonAttributesValues = [UserID];
-
-    commonAttributesResult = await query(
-      commonAttributesQuery,
-      commonAttributesValues
-    );
+    const commonAttributesResult = await CommonAttributes.create({
+      CreatedByUserID: UserID,
+    });
 
     // Extract AttributeID from the result
-    const commonAttributeID = commonAttributesResult.insertId;
-
-    let eventsResult;
+    const commonAttributeID = commonAttributesResult.get("AttributeID");
 
     // Check if CourseID is provided (if the event is associated with a course)
+    let eventsResult;
     if (CourseID) {
       // Insert into Events table using CommonAttributeID
-      const eventsQuery =
-        "INSERT INTO Events (EventTitle, EventDescription, EventDate, Location, UserID, CourseID, CommonAttributeID) VALUES (?, ?, ?, ?, ?, ?, ?)";
-      const eventsValues = [
+      eventsResult = await Events.create({
         EventTitle,
         EventDescription,
         EventDate,
         Location,
         UserID,
         CourseID,
-        commonAttributeID,
-      ];
-
-      eventsResult = await query(eventsQuery, eventsValues);
+        CommonAttributeID: commonAttributeID,
+      });
     } else {
       // If no CourseID provided, insert the event without linking it to a course
       // Insert into Events table using CommonAttributeID
-      const eventsQuery =
-        "INSERT INTO Events (EventTitle, EventDescription, EventDate, Location, UserID, CommonAttributeID) VALUES (?, ?, ?, ?, ?, ?)";
-      const eventsValues = [
+      eventsResult = await Events.create({
         EventTitle,
         EventDescription,
         EventDate,
         Location,
         UserID,
-        commonAttributeID,
-      ];
-
-      eventsResult = await query(eventsQuery, eventsValues);
+        CommonAttributeID: commonAttributeID,
+      });
     }
 
     // Assuming you want to send a response back to the client
-    res
-      .status(201)
-      .json({
-        message: "Event created successfully",
-        eventId: eventsResult.insertId,
-      });
+    res.status(201).json({
+      message: "Event created successfully",
+      eventId: eventsResult.get("EventID"),
+    });
   } catch (error) {
     // Handle errors gracefully
     console.error("Error creating event:", error);

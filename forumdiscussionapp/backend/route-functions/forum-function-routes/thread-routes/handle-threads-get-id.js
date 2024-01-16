@@ -1,16 +1,17 @@
-import { query } from "../../../db.js";
+import { sequelize } from "../../../db.js";
 
 export const handleThreadsGetByThreadId = async (req, res) => {
   const { threadId } = req.params;
 
   try {
-    const sql = "SELECT * FROM Threads WHERE ThreadID = ?";
-    const results = await query(sql, [threadId]);
+    const Threads = sequelize.models.Threads;
 
-    console.log("Thread by ID data:", results);
+    const thread = await Threads.findOne({ where: { ThreadID: threadId } });
 
-    if (results && results.length > 0) {
-      res.json({ thread: results[0] });
+    console.log("Thread by ID data:", thread);
+
+    if (thread) {
+      res.json({ thread });
     } else {
       res.status(404).json({ error: "Thread not found" });
     }

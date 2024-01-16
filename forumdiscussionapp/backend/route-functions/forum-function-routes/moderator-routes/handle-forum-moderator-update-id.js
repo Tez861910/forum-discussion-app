@@ -1,4 +1,4 @@
-import { query } from "../../../db.js";
+import { sequelize } from "../../../db.js";
 
 export const handleForumModeratorUpdateById = async (req, res) => {
   const { forumModeratorId } = req.params;
@@ -12,16 +12,14 @@ export const handleForumModeratorUpdateById = async (req, res) => {
       });
     }
 
-    const sql =
-      "UPDATE ForumsModerators SET UserID = ?, ForumID = ?, PromotedAt = ? WHERE ForumModeratorID = ?";
-    const [result] = await query(sql, [
-      userId,
-      forumId,
-      promotedAt,
-      forumModeratorId,
-    ]);
+    const ForumModerators = sequelize.models.ForumModerators;
 
-    if (result.affectedRows === 1) {
+    const result = await ForumModerators.update(
+      { UserID: userId, ForumID: forumId, PromotedAt: promotedAt },
+      { where: { ForumModeratorID: forumModeratorId } }
+    );
+
+    if (result[0] === 1) {
       console.log("Forum moderator updated successfully");
       res.json({ message: "Forum moderator updated successfully" });
     } else {

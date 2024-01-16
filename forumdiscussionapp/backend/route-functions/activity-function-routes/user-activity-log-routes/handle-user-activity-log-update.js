@@ -1,8 +1,9 @@
-import { query } from "../../../db.js";
+import { sequelize } from "../../../db.js";
 
 export const handleUserActivityLogUpdate = async (req, res) => {
   const { logId } = req.params;
   const { userId, activityType, activityDetails, ipAddress } = req.body;
+  const UserActivityLogs = sequelize.models.UserActivityLogs;
 
   try {
     if (!userId || !activityType) {
@@ -12,17 +13,21 @@ export const handleUserActivityLogUpdate = async (req, res) => {
         .json({ error: "UserId and ActivityType are required" });
     }
 
-    const sql =
-      "UPDATE UserActivityLog SET UserID = ?, ActivityType = ?, ActivityDetails = ?, IPAddress = ? WHERE LogID = ?";
-    const [result] = await query(sql, [
-      userId,
-      activityType,
-      activityDetails,
-      ipAddress,
-      logId,
-    ]);
+    const result = await UserActivityLogs.update(
+      {
+        UserID: userId,
+        ActivityType: activityType,
+        ActivityDetails: activityDetails,
+        IPAddress: ipAddress,
+      },
+      {
+        where: {
+          LogID: logId,
+        },
+      }
+    );
 
-    if (result.affectedRows === 1) {
+    if (result[0] === 1) {
       console.log("User activity log updated successfully");
       res.json({ message: "User activity log updated successfully" });
     } else {
@@ -31,11 +36,9 @@ export const handleUserActivityLogUpdate = async (req, res) => {
     }
   } catch (error) {
     console.error("Error updating user activity log:", error);
-    res
-      .status(500)
-      .json({
-        error: "User activity log update failed",
-        details: error.message,
-      });
+    res.status(500).json({
+      error: "User activity log update failed",
+      details: error.message,
+    });
   }
 };

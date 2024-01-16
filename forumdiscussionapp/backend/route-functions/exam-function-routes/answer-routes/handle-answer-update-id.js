@@ -1,20 +1,26 @@
-import { query } from "../../../db.js";
+import { sequelize } from "../../../db.js";
 
 export const handleAnswerUpdateById = async (req, res) => {
   const { answerId } = req.params;
   const { questionId, answerText, createdByUserId } = req.body;
 
-  try {
-    const sql =
-      "UPDATE Answer SET QuestionID = ?, AnswerText = ?, CreatedByUserID = ? WHERE AnswerID = ?";
-    const [result] = await query(sql, [
-      questionId,
-      answerText,
-      createdByUserId,
-      answerId,
-    ]);
+  const Answers = sequelize.models.Answers;
 
-    if (result.affectedRows === 1) {
+  try {
+    const result = await Answers.update(
+      {
+        QuestionID: questionId,
+        AnswerText: answerText,
+        CreatedByUserID: createdByUserId,
+      },
+      {
+        where: {
+          AnswerID: answerId,
+        },
+      }
+    );
+
+    if (result[0] === 1) {
       console.log("Answer updated successfully");
       res.json({ message: "Answer updated successfully" });
     } else {

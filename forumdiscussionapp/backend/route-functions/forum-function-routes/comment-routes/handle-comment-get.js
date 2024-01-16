@@ -1,11 +1,13 @@
-import { query } from "../../../db.js";
+import { sequelize } from "../../../db.js";
 
 export const handleCommentGet = async (req, res) => {
   const { threadId } = req.params;
 
   try {
-    const sql = "SELECT * FROM comments";
-    const [results] = await query(sql, [threadId]);
+    const Comments = sequelize.models.Comments;
+    const results = await Comments.findAll({
+      where: { ThreadID: threadId },
+    });
 
     console.log("Comments fetched successfully");
     res.json({ comments: results });

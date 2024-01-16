@@ -1,16 +1,24 @@
-import { query } from "../../../db.js";
+import { sequelize } from "../../../db.js";
 
 export const updateResponse = async (req, res) => {
   const { responseId } = req.params;
   const { content } = req.body;
 
   try {
-    await query(
-      "UPDATE responses SET ResponseContent = ? WHERE ResponseID = ?",
-      [content, responseId]
+    const Responses = sequelize.models.Responses;
+
+    const result = await Responses.update(
+      { ResponseContent: content },
+      { where: { ResponseID: responseId } }
     );
 
-    res.json({ message: "Response updated successfully" });
+    if (result[0] === 1) {
+      console.log("Response updated successfully");
+      res.json({ message: "Response updated successfully" });
+    } else {
+      console.error("Response update failed");
+      res.status(500).json({ error: "Response update failed" });
+    }
   } catch (error) {
     console.error("Error updating response:", error);
     res.status(500).json({ error: "Internal Server Error" });

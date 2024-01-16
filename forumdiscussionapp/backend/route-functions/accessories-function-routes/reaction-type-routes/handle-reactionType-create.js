@@ -1,7 +1,8 @@
-import { query } from "../../../db.js";
+import { sequelize } from "../../../db.js";
 
 export const handleReactionTypeCreate = async (req, res) => {
   const { reactionTypeName } = req.body;
+  const ReactionTypes = sequelize.models.ReactionTypes;
 
   try {
     if (!reactionTypeName) {
@@ -9,10 +10,11 @@ export const handleReactionTypeCreate = async (req, res) => {
       return res.status(400).json({ error: "ReactionTypeName is required" });
     }
 
-    const sql = "INSERT INTO ReactionType (ReactionTypeName) VALUES (?)";
-    const [result] = await query(sql, [reactionTypeName]);
+    const result = await ReactionTypes.create({
+      ReactionTypeName: reactionTypeName,
+    });
 
-    if (result.affectedRows === 1) {
+    if (result) {
       console.log("ReactionType created successfully");
       res.json({ message: "ReactionType created successfully" });
     } else {

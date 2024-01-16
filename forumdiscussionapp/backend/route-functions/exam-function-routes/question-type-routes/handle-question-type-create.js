@@ -1,4 +1,4 @@
-import { query } from "../../../db.js";
+import { sequelize } from "../../../db.js";
 
 export const handleQuestionTypeCreate = async (req, res) => {
   const { questionTypeName } = req.body;
@@ -9,10 +9,12 @@ export const handleQuestionTypeCreate = async (req, res) => {
       return res.status(400).json({ error: "QuestionTypeName is required" });
     }
 
-    const sql = "INSERT INTO QuestionType (QuestionTypeName) VALUES (?)";
-    const [result] = await query(sql, [questionTypeName]);
+    const QuestionTypes = sequelize.models.QuestionTypes;
+    const newQuestionType = await QuestionTypes.create({
+      QuestionTypeName: questionTypeName,
+    });
 
-    if (result.affectedRows === 1) {
+    if (newQuestionType) {
       console.log("Question type created successfully");
       res.json({ message: "Question type created successfully" });
     } else {

@@ -1,22 +1,28 @@
-import { query } from "../../../db.js";
+import { sequelize } from "../../../db.js";
 
 export const handleAttemptUpdate = async (req, res) => {
   const { attemptId } = req.params;
   const { userId, examId, startTime, endTime, status } = req.body;
 
-  try {
-    const sql =
-      "UPDATE ExamAttempt SET UserID = ?, ExamID = ?, StartTime = ?, EndTime = ?, Status = ? WHERE AttemptID = ?";
-    const [result] = await query(sql, [
-      userId,
-      examId,
-      startTime,
-      endTime,
-      status,
-      attemptId,
-    ]);
+  const ExamAttempts = sequelize.models.ExamAttempts;
 
-    if (result.affectedRows === 1) {
+  try {
+    const result = await ExamAttempts.update(
+      {
+        UserID: userId,
+        ExamID: examId,
+        StartTime: startTime,
+        EndTime: endTime,
+        Status: status,
+      },
+      {
+        where: {
+          AttemptID: attemptId,
+        },
+      }
+    );
+
+    if (result[0] === 1) {
       console.log("Exam attempt updated successfully");
       res.json({ message: "Exam attempt updated successfully" });
     } else {

@@ -1,9 +1,12 @@
-import { GroupMessages } from "../../../db.js";
+import { sequelize } from "../../../db.js";
 
 export const handleGroupMessagesDelete = async (req, res) => {
   const { messageId } = req.params;
 
   try {
+    // Dynamically access the GroupMessages model using sequelize.models
+    const GroupMessages = sequelize.models.GroupMessages;
+
     const result = await GroupMessages.destroy({
       where: { MessageID: messageId },
     });

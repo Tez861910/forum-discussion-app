@@ -1,4 +1,5 @@
-import { query } from "../../../db.js";
+import { sequelize } from "../../../db.js";
+import Sequelize from "sequelize";
 
 export const editEvent = async (req, res) => {
   try {
@@ -6,14 +7,22 @@ export const editEvent = async (req, res) => {
     const { EventTitle, EventDescription, EventDate } = req.body;
     const CourseID = req.user.courseId;
     const UserID = req.user.userId;
+    const CommonAttributes = sequelize.models.CommonAttributes;
+    const Events = sequelize.models.Events;
 
     // Check if the event is marked as deleted in CommonAttributes
-    const isEventDeleted = await query(
-      "SELECT IsDeleted FROM CommonAttributes WHERE AttributeID = (SELECT CommonAttributeID FROM Events WHERE EventID = ?)",
-      [eventId]
-    );
+    const commonAttributesInstance = await CommonAttributes.findOne({
+      where: { AttributeID: Sequelize.col("Events.CommonAttributeID") },
+      include: [
+        {
+          model: Events,
+          where: { EventID: eventId },
+          attributes: [],
+        },
+      ],
+    });
 
-    if (isEventDeleted[0].IsDeleted) {
+    if (commonAttributesInstance.get("IsDeleted")) {
       // If the event is marked as deleted, return an error
       return res
         .status(400)
@@ -21,15 +30,15 @@ export const editEvent = async (req, res) => {
     }
 
     // Update the event details in the Events table
-    await query(
-      "UPDATE Events SET EventTitle = ?, EventDescription = ?, EventDate = ?, CourseID = ? WHERE EventID = ?",
-      [EventTitle, EventDescription, EventDate, CourseID, eventId]
+    await Events.update(
+      { EventTitle, EventDescription, EventDate, CourseID },
+      { where: { EventID: eventId } }
     );
 
     // Update the CommonAttributes table with the updated information
-    await query(
-      "UPDATE CommonAttributes SET UpdatedByUserID = ? WHERE AttributeID = (SELECT CommonAttributeID FROM Events WHERE EventID = ?)",
-      [UserID, eventId]
+    await CommonAttributes.update(
+      { UpdatedByUserID: UserID },
+      { where: { AttributeID: commonAttributesInstance.get("AttributeID") } }
     );
 
     res.json({ success: true, message: "Event updated successfully" });

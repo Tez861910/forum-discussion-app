@@ -1,11 +1,16 @@
-import { query } from "../../../db.js";
+import { sequelize } from "../../../db.js";
 
 export const handleExamGetByCourseId = async (req, res) => {
   const { courseId } = req.params;
 
+  const Exams = sequelize.models.Exams;
+
   try {
-    const sql = "SELECT * FROM Exam WHERE CourseID = ?";
-    const [result] = await query(sql, [courseId]);
+    const result = await Exams.findAll({
+      where: {
+        CourseID: courseId,
+      },
+    });
 
     console.log("Exams retrieved successfully for CourseID:", courseId);
     res.json(result);

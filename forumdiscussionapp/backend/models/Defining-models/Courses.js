@@ -1,7 +1,7 @@
 import { DataTypes } from "sequelize";
 
 export default function (sequelize) {
-  return sequelize.define(
+  const Courses = sequelize.define(
     "Courses",
     {
       CourseID: {
@@ -35,4 +35,6 @@ export default function (sequelize) {
       engine: "InnoDB",
     }
   );
+
+  return Courses;
 }

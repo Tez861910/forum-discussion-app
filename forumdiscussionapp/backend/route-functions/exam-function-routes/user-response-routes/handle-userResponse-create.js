@@ -1,4 +1,4 @@
-import { query } from "../../../db.js";
+import { sequelize } from "../../../db.js";
 
 export const handleUserResponseCreate = async (req, res) => {
   const { userId, questionId, answerId } = req.body;
@@ -11,11 +11,14 @@ export const handleUserResponseCreate = async (req, res) => {
       });
     }
 
-    const sql =
-      "INSERT INTO UserResponses (UserID, QuestionID, AnswerID) VALUES (?, ?, ?)";
-    const [result] = await query(sql, [userId, questionId, answerId]);
+    const UserResponses = sequelize.models.UserResponses;
+    const newUserResponse = await UserResponses.create({
+      UserID: userId,
+      QuestionID: questionId,
+      AnswerID: answerId,
+    });
 
-    if (result.affectedRows === 1) {
+    if (newUserResponse) {
       console.log("User response created successfully");
       res.json({ message: "User response created successfully" });
     } else {

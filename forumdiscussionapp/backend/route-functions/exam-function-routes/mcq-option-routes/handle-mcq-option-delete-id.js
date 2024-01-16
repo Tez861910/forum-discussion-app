@@ -1,13 +1,17 @@
-import { query } from "../../../db.js";
+import { sequelize } from "../../../db.js";
 
 export const handleMCQOptionDeleteById = async (req, res) => {
   const { mcqOptionId } = req.params;
 
   try {
-    const sql = "DELETE FROM MCQOptions WHERE MCQOptionID = ?";
-    const [result] = await query(sql, [mcqOptionId]);
+    const MCQOptions = sequelize.models.MCQOptions;
+    const result = await MCQOptions.destroy({
+      where: {
+        MCQOptionID: mcqOptionId,
+      },
+    });
 
-    if (result.affectedRows === 1) {
+    if (result === 1) {
       console.log("MCQ option deleted successfully");
       res.json({ message: "MCQ option deleted successfully" });
     } else {
@@ -18,6 +22,6 @@ export const handleMCQOptionDeleteById = async (req, res) => {
     console.error("Error deleting MCQ option:", error);
     res
       .status(500)
-      .json({ error: "Error deleting MCQ option", details: error.message });
+      .json({ error: "MCQ option deletion failed", details: error.message });
   }
 };

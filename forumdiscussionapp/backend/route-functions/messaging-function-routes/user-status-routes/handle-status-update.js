@@ -1,10 +1,13 @@
-import { UserStatus } from "../../../db.js";
+import { sequelize } from "../../../db.js";
 
 export const handleStatusUpdate = async (req, res) => {
   const { userId } = req.params;
   const { isOnline } = req.body;
 
   try {
+    // Dynamically access the UserStatus model using sequelize.models
+    const UserStatus = sequelize.models.UserStatus;
+
     const result = await UserStatus.upsert({
       UserID: userId,
       IsOnline: isOnline,

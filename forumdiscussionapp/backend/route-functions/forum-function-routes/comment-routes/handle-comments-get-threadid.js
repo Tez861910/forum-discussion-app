@@ -1,11 +1,15 @@
-import { query } from "../../../db.js";
+import { sequelize } from "../../../db.js";
 
 export const handleCommentGetThreadId = async (req, res) => {
   const { threadId } = req.params;
-  const sql = "SELECT * FROM Comments WHERE ThreadID = ?";
 
   try {
-    const results = await query(sql, [threadId]);
+    const Comments = sequelize.models.Comments;
+
+    const results = await Comments.findAll({
+      where: { ThreadID: threadId },
+    });
+
     res.status(200).json({ comments: results });
   } catch (error) {
     console.error("Failed to retrieve comments:", error);

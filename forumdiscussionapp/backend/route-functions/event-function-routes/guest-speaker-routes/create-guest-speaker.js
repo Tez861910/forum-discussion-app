@@ -1,14 +1,16 @@
-import { query } from "../../../db.js";
+import { sequelize } from "../../../db.js";
 
 export const createGuestSpeaker = async (req, res) => {
   try {
     const { eventId } = req.params;
     const { SpeakerName, ContributionDescription } = req.body;
+    const GuestSpeakers = sequelize.models.GuestSpeakers;
 
-    await query(
-      "INSERT INTO GuestSpeakers (EventID, SpeakerName, ContributionDescription) VALUES (?, ?, ?)",
-      [eventId, SpeakerName, ContributionDescription]
-    );
+    await GuestSpeakers.create({
+      EventID: eventId,
+      SpeakerName,
+      ContributionDescription,
+    });
 
     res
       .status(201)

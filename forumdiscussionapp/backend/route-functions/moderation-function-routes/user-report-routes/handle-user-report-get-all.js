@@ -1,7 +1,10 @@
-import { UserReports } from "../../../db.js";
+import { sequelize } from "../../../db.js";
 
 export const handleUserReportGetAll = async (req, res) => {
   try {
+    // Dynamically access the UserReports model using sequelize.models
+    const UserReports = sequelize.models.UserReports;
+
     const userReports = await UserReports.findAll();
 
     console.log("User reports retrieved successfully");

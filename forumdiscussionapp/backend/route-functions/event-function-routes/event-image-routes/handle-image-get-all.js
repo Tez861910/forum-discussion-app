@@ -1,9 +1,10 @@
-import { query } from "../../../db.js";
+import { sequelize } from "../../../db.js";
 
 export const handleImageGetAll = async (req, res) => {
+  const EventImages = sequelize.models.EventImages;
+
   try {
-    const sql = "SELECT * FROM EventImages";
-    const [result] = await query(sql);
+    const result = await EventImages.findAll();
 
     console.log("Event images retrieved successfully");
     res.json({ eventImages: result });

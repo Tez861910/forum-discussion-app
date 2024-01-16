@@ -1,11 +1,14 @@
-import { query } from "../../../db.js";
+import { sequelize } from "../../../db.js";
 
 export const getReminders = async (req, res) => {
   try {
     const { eventId } = req.params;
-    const reminders = await query("SELECT * FROM Reminders WHERE EventID = ?", [
-      eventId,
-    ]);
+
+    const Reminders = sequelize.models.Reminders;
+    const reminders = await Reminders.findAll({
+      where: { EventID: eventId },
+    });
+
     res.json({ success: true, reminders });
   } catch (error) {
     console.error("Error fetching reminders:", error);

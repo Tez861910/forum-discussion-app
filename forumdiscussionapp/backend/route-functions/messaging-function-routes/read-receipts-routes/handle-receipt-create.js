@@ -1,9 +1,12 @@
-import { ReadReceipts } from "../../../db.js";
+import { sequelize } from "../../../db.js";
 
 export const handleReceiptCreate = async (req, res) => {
   const { messageId, userId } = req.body;
 
   try {
+    // Dynamically access the ReadReceipts model using sequelize.models
+    const ReadReceipts = sequelize.models.ReadReceipts;
+
     const result = await ReadReceipts.create({
       MessageID: messageId,
       UserID: userId,

@@ -1,7 +1,8 @@
-import { query } from "../../../db.js";
+import { sequelize } from "../../../db.js";
 
 export const handleAttachmentTypeCreate = async (req, res) => {
   const { attachmentTypeName } = req.body;
+  const AttachmentTypes = sequelize.models.AttachmentTypes;
 
   try {
     if (!attachmentTypeName) {
@@ -11,10 +12,11 @@ export const handleAttachmentTypeCreate = async (req, res) => {
       });
     }
 
-    const sql = "INSERT INTO AttachmentType (AttachmentTypeName) VALUES (?)";
-    const [result] = await query(sql, [attachmentTypeName]);
+    const result = await AttachmentTypes.create({
+      AttachmentTypeName: attachmentTypeName,
+    });
 
-    if (result.affectedRows === 1) {
+    if (result) {
       console.log("Attachment type created successfully");
       res.json({ message: "Attachment type created successfully" });
     } else {
@@ -23,11 +25,9 @@ export const handleAttachmentTypeCreate = async (req, res) => {
     }
   } catch (error) {
     console.error("Error creating attachment type:", error);
-    res
-      .status(500)
-      .json({
-        error: "Attachment type creation failed",
-        details: error.message,
-      });
+    res.status(500).json({
+      error: "Attachment type creation failed",
+      details: error.message,
+    });
   }
 };

@@ -24,7 +24,7 @@ export const validateForumUpdate = validate(
 );
 
 // Validation middleware for getting forums by courseId
-export const validateThreadGetCourseId = validate(
+export const validateForumGetCourseId = validate(
   Joi.object({
     // For example:
     courseId: Joi.number().integer().min(1).required(),

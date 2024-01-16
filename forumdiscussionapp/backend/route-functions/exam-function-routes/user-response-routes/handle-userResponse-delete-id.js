@@ -1,13 +1,15 @@
-import { query } from "../../../db.js";
+import { sequelize } from "../../../db.js";
 
 export const handleUserResponseDeleteById = async (req, res) => {
   const { userResponseId } = req.params;
 
   try {
-    const sql = "DELETE FROM UserResponses WHERE UserResponseID = ?";
-    const [result] = await query(sql, [userResponseId]);
+    const UserResponses = sequelize.models.UserResponses;
+    const result = await UserResponses.destroy({
+      where: { UserResponseID: userResponseId },
+    });
 
-    if (result.affectedRows === 1) {
+    if (result === 1) {
       console.log("User response deleted successfully");
       res.json({ message: "User response deleted successfully" });
     } else {

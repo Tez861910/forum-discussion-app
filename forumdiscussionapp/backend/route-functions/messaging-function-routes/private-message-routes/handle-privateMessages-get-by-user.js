@@ -1,10 +1,13 @@
-import { PrivateMessages } from "../../../db.js";
+import { sequelize } from "../../../db.js";
 import { Op } from "sequelize";
 
 export const handlePrivateMessagesGetByUser = async (req, res) => {
   const { userId } = req.params;
 
   try {
+    // Dynamically access the PrivateMessages model using sequelize.models
+    const PrivateMessages = sequelize.models.PrivateMessages;
+
     const result = await PrivateMessages.findAll({
       where: {
         [Op.or]: [{ SenderID: userId }, { ReceiverID: userId }],
@@ -15,11 +18,9 @@ export const handlePrivateMessagesGetByUser = async (req, res) => {
     res.json(result);
   } catch (error) {
     console.error("Error getting private messages:", error);
-    res
-      .status(500)
-      .json({
-        error: "Error getting private messages",
-        details: error.message,
-      });
+    res.status(500).json({
+      error: "Error getting private messages",
+      details: error.message,
+    });
   }
 };

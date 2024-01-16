@@ -1,4 +1,5 @@
-import { query } from "../../../db.js";
+import { sequelize } from "../../../db.js";
+import Sequelize from "sequelize";
 
 export const editReminder = async (req, res) => {
   try {
@@ -6,16 +7,30 @@ export const editReminder = async (req, res) => {
     const { UpdatedReminderTime } = req.body;
     const UserID = req.user.userId;
 
+    const CommonAttributes = sequelize.models.CommonAttributes;
+    const Reminders = sequelize.models.Reminders;
+
     // Update the ReminderTime in the Reminders table
-    await query(
-      "UPDATE Reminders SET ReminderTime = ? WHERE EventID = ? AND ReminderID = ?",
-      [UpdatedReminderTime, eventId, reminderId]
+    await Reminders.update(
+      { ReminderTime: UpdatedReminderTime },
+      { where: { EventID: eventId, ReminderID: reminderId } }
     );
 
     // Update the CommonAttributes table with the updated information
-    await query(
-      "UPDATE CommonAttributes SET UpdatedByUserID = ? WHERE AttributeID = (SELECT CommonAttributeID FROM Reminders WHERE EventID = ? AND ReminderID = ?)",
-      [UserID, eventId, reminderId]
+    const commonAttributesInstance = await CommonAttributes.findOne({
+      where: { AttributeID: Sequelize.col("Reminders.CommonAttributeID") },
+      include: [
+        {
+          model: Reminders,
+          where: { EventID: eventId, ReminderID: reminderId },
+          attributes: [],
+        },
+      ],
+    });
+
+    await CommonAttributes.update(
+      { UpdatedByUserID: UserID },
+      { where: { AttributeID: commonAttributesInstance.get("AttributeID") } }
     );
 
     res.json({ success: true, message: "Reminder updated successfully" });

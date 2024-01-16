@@ -1,9 +1,10 @@
-import { query } from "../../../db.js";
+import { sequelize } from "../../../db.js";
 
 export const handleReactionUpdate = async (req, res) => {
   const { reactionId } = req.params;
   const { userId, reactionTypeId, reactedToType, reactedToId, isPositive } =
     req.body;
+  const Reactions = sequelize.models.Reactions;
 
   try {
     if (
@@ -22,18 +23,22 @@ export const handleReactionUpdate = async (req, res) => {
       });
     }
 
-    const sql =
-      "UPDATE Reactions SET ReactionByUserID = ?, ReactionTypeID = ?, ReactedToType = ?, ReactedToID = ?, IsPositive = ? WHERE ReactionID = ?";
-    const [result] = await query(sql, [
-      userId,
-      reactionTypeId,
-      reactedToType,
-      reactedToId,
-      isPositive,
-      reactionId,
-    ]);
+    const result = await Reactions.update(
+      {
+        ReactionByUserID: userId,
+        ReactionTypeID: reactionTypeId,
+        ReactedToType: reactedToType,
+        ReactedToID: reactedToId,
+        IsPositive: isPositive,
+      },
+      {
+        where: {
+          ReactionID: reactionId,
+        },
+      }
+    );
 
-    if (result.affectedRows === 1) {
+    if (result[0] === 1) {
       console.log("Reaction updated successfully");
       res.json({ message: "Reaction updated successfully" });
     } else {

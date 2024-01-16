@@ -1,4 +1,4 @@
-import { query } from "../../../db.js";
+import { sequelize } from "../../../db.js";
 
 export const handleCommentCreate = async (req, res) => {
   const { threadId } = req.params;
@@ -10,11 +10,14 @@ export const handleCommentCreate = async (req, res) => {
       return res.status(400).json({ error: "Comment content is required" });
     }
 
-    const sql =
-      "INSERT INTO comments (CommentContent, UserID, ThreadID) VALUES (?, ?, ?)";
-    const result = await query(sql, [content, userId, threadId]);
+    const Comments = sequelize.models.Comments;
+    const result = await Comments.create({
+      CommentContent: content,
+      UserID: userId,
+      ThreadID: threadId,
+    });
 
-    if (result.affectedRows === 1) {
+    if (result) {
       console.log("Comment created successfully");
       res.json({ message: "Comment created successfully" });
     } else {

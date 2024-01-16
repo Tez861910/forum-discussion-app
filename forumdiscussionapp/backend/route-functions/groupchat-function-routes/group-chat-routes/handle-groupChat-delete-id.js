@@ -1,10 +1,13 @@
-import { GroupChat } from "../../../db.js";
+import { sequelize } from "../../../db.js";
 
 export const handleGroupChatDeleteById = async (req, res) => {
   const { groupId } = req.params;
 
   try {
-    const result = await GroupChat.destroy({
+    // Dynamically access the GroupChats model using sequelize.models
+    const GroupChats = sequelize.models.GroupChats;
+
+    const result = await GroupChats.destroy({
       where: { GroupID: groupId },
     });
 

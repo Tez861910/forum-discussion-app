@@ -1,23 +1,26 @@
 import { DataTypes } from "sequelize";
 
 export default function (sequelize) {
-  return sequelize.define(
-    "FacultyMembers",
+  const UserRoles = sequelize.define(
+    "UserRoles",
     {
-      FacultyID: {
+      UserRolesID: {
         type: DataTypes.INTEGER.UNSIGNED,
         autoIncrement: true,
         primaryKey: true,
       },
-      FacultyName: {
-        type: DataTypes.STRING(255),
-        allowNull: false,
-      },
-      DepartmentID: {
+      UserID: {
         type: DataTypes.INTEGER.UNSIGNED,
         references: {
-          model: "Departments",
-          key: "DepartmentID",
+          model: "Users",
+          key: "UserID",
+        },
+      },
+      RoleID: {
+        type: DataTypes.INTEGER.UNSIGNED,
+        references: {
+          model: "Roles",
+          key: "RoleID",
         },
       },
       CommonAttributeID: {
@@ -29,22 +32,24 @@ export default function (sequelize) {
       },
     },
     {
-      tableName: "FacultyMembers",
+      tableName: "UserRoles",
       indexes: [
         {
-          name: "idx_faculty_id_facultymembers",
-          fields: ["FacultyID"],
+          name: "idx_user_id_userroles",
+          fields: ["UserID"],
         },
         {
-          name: "idx_department_id_facultymembers",
-          fields: ["DepartmentID"],
+          name: "idx_role_id_userroles",
+          fields: ["RoleID"],
         },
         {
-          name: "idx_common_attribute_id_facultymembers",
+          name: "idx_common_attribute_id_userroles",
           fields: ["CommonAttributeID"],
         },
       ],
       engine: "InnoDB",
     }
   );
+
+  return UserRoles;
 }

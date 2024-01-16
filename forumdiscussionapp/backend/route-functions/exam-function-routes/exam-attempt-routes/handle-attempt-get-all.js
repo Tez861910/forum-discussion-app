@@ -1,9 +1,9 @@
-import { query } from "../../../db.js";
+import { sequelize } from "../../../db.js";
 
 export const handleAttemptGetAll = async (req, res) => {
   try {
-    const sql = "SELECT * FROM ExamAttempt";
-    const [result] = await query(sql);
+    const ExamAttempts = sequelize.models.ExamAttempts;
+    const result = await ExamAttempts.findAll();
 
     console.log("Exam attempts retrieved successfully");
     res.json({ examAttempts: result });

@@ -1,7 +1,7 @@
 import { DataTypes } from "sequelize";
 
 export default function (sequelize) {
-  return sequelize.define(
+  const Users = sequelize.define(
     "Users",
     {
       UserID: {
@@ -64,4 +64,6 @@ export default function (sequelize) {
       engine: "InnoDB",
     }
   );
+
+  return Users;
 }

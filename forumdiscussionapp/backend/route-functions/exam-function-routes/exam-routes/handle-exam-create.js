@@ -1,4 +1,4 @@
-import { query } from "../../../db.js";
+import { sequelize } from "../../../db.js";
 
 export const handleExamCreate = async (req, res) => {
   const {
@@ -10,28 +10,19 @@ export const handleExamCreate = async (req, res) => {
     createdByUserId,
   } = req.body;
 
+  const Exams = sequelize.models.Exams;
+
   try {
-    if (!examName || !courseId || !createdByUserId) {
-      console.log("ExamName, CourseID, and CreatedByUserID are required");
-      return res
-        .status(400)
-        .json({
-          error: "ExamName, CourseID, and CreatedByUserID are required",
-        });
-    }
+    const result = await Exams.create({
+      ExamName: examName,
+      ExamStatus: examStatus,
+      ExamDuration: examDuration,
+      Instructions: instructions,
+      CourseID: courseId,
+      CreatedByUserID: createdByUserId,
+    });
 
-    const sql =
-      "INSERT INTO Exam (ExamName, ExamStatus, ExamDuration, Instructions, CourseID, CreatedByUserID) VALUES (?, ?, ?, ?, ?, ?)";
-    const [result] = await query(sql, [
-      examName,
-      examStatus,
-      examDuration,
-      instructions,
-      courseId,
-      createdByUserId,
-    ]);
-
-    if (result.affectedRows === 1) {
+    if (result) {
       console.log("Exam created successfully");
       res.json({ message: "Exam created successfully" });
     } else {

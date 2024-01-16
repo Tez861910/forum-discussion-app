@@ -1,10 +1,13 @@
-import { GroupManager } from "../../../db.js";
+import { sequelize } from "../../../db.js";
 
 export const handleManagerCreate = async (req, res) => {
   const { groupId, managerUserId } = req.body;
 
   try {
-    const result = await GroupManager.create({
+    // Dynamically access the GroupManagers model using sequelize.models
+    const GroupManagers = sequelize.models.GroupManagers;
+
+    const result = await GroupManagers.create({
       GroupID: groupId,
       ManagerUserID: managerUserId,
     });

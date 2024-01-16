@@ -1,6 +1,7 @@
-import { query } from "../../../db.js";
+import { sequelize } from "../../../db.js";
 
 export const handleAttachmentUpdate = async (req, res) => {
+  const Attachments = sequelize.models.Attachments;
   const { attachmentId } = req.params;
   const {
     filePath,
@@ -28,19 +29,23 @@ export const handleAttachmentUpdate = async (req, res) => {
       });
     }
 
-    const sql =
-      "UPDATE Attachments SET FilePath = ?, AttachedByUserID = ?, AttachmentTypeID = ?, AttachedToType = ?, AttachedToID = ?, Description = ? WHERE AttachmentID = ?";
-    const [result] = await query(sql, [
-      filePath,
-      attachedByUserId,
-      attachmentTypeId,
-      attachedToType,
-      attachedToId,
-      description,
-      attachmentId,
-    ]);
+    const result = await Attachments.update(
+      {
+        FilePath: filePath,
+        AttachedByUserID: attachedByUserId,
+        AttachmentTypeID: attachmentTypeId,
+        AttachedToType: attachedToType,
+        AttachedToID: attachedToId,
+        Description: description,
+      },
+      {
+        where: {
+          AttachmentID: attachmentId,
+        },
+      }
+    );
 
-    if (result.affectedRows === 1) {
+    if (result[0] === 1) {
       console.log("Attachment updated successfully");
       res.json({ message: "Attachment updated successfully" });
     } else {

@@ -1,4 +1,4 @@
-import { query } from "../../../db.js";
+import { sequelize } from "../../../db.js";
 
 export const handlePollOptionUpdateById = async (req, res) => {
   const { pollOptionId } = req.params;
@@ -12,10 +12,14 @@ export const handlePollOptionUpdateById = async (req, res) => {
         .json({ error: "OptionText is required for update" });
     }
 
-    const sql = "UPDATE PollOptions SET OptionText = ? WHERE PollOptionID = ?";
-    const [result] = await query(sql, [optionText, pollOptionId]);
+    const PollOptions = sequelize.models.PollOptions;
 
-    if (result.affectedRows === 1) {
+    const result = await PollOptions.update(
+      { OptionText: optionText },
+      { where: { PollOptionID: pollOptionId } }
+    );
+
+    if (result[0] === 1) {
       console.log("Poll option updated successfully");
       res.json({ message: "Poll option updated successfully" });
     } else {

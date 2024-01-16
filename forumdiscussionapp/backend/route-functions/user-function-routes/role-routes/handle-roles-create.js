@@ -1,3 +1,5 @@
+import { Roles, CommonAttributes } from "../../../db.js";
+
 export const handleRolesCreate = async (req, res) => {
   const { roleName, description, createdByUserID } = req.body;
 

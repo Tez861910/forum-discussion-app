@@ -1,9 +1,10 @@
-import { query } from "../../../db.js";
+import { sequelize } from "../../../db.js";
 
 export const handleForumModeratorGet = async (req, res) => {
   try {
-    const sql = "SELECT * FROM ForumsModerators";
-    const [result] = await query(sql);
+    const ForumModerators = sequelize.models.ForumModerators;
+
+    const result = await ForumModerators.findAll();
 
     console.log("Forum moderators retrieved successfully");
     res.json(result);

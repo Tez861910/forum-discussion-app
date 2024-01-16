@@ -1,11 +1,11 @@
-import { User, UserCourses, Courses, CommonAttributes } from "../../../db.js";
+import { Users, UserCourses, Courses, CommonAttributes } from "../../../db.js";
 
 export const handleCoursesEnrollmentsId = async (req, res) => {
   const { courseId } = req.params;
 
   try {
     // Fetch user data for a given course ID
-    const users = await User.findAll({
+    const users = await Users.findAll({
       where: {
         "$UserCourses.CourseID$": courseId,
         "$UserCourses.CommonAttributes.IsDeleted$": false,

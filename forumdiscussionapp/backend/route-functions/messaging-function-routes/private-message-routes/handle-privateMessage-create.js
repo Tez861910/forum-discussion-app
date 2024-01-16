@@ -1,9 +1,12 @@
-import { PrivateMessages } from "../../../db.js";
+import { sequelize } from "../../../db.js";
 
 export const handlePrivateMessageCreate = async (req, res) => {
   const { senderId, receiverId, messageContent } = req.body;
 
   try {
+    // Dynamically access the PrivateMessages model using sequelize.models
+    const PrivateMessages = sequelize.models.PrivateMessages;
+
     if (!senderId || !receiverId || !messageContent) {
       console.log("SenderID, ReceiverID, and MessageContent are required");
       return res.status(400).json({

@@ -1,9 +1,9 @@
-import { query } from "../../../db.js";
+import { sequelize } from "../../../db.js";
 
 export const handleAttachmentGetAll = async (req, res) => {
+  const Attachments = sequelize.models.Attachments;
   try {
-    const sql = "SELECT * FROM Attachments";
-    const [result] = await query(sql);
+    const result = await Attachments.findAll();
 
     console.log("Attachments retrieved successfully");
     res.json({ attachments: result });

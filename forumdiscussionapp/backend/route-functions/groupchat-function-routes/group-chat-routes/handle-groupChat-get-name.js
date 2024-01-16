@@ -1,10 +1,13 @@
-import { GroupChat } from "../../../db.js";
+import { sequelize } from "../../../db.js";
 
 export const handleGroupChatGetByName = async (req, res) => {
   const { groupName } = req.params;
 
   try {
-    const result = await GroupChat.findOne({
+    // Dynamically access the GroupChats model using sequelize.models
+    const GroupChats = sequelize.models.GroupChats;
+
+    const result = await GroupChats.findOne({
       where: { GroupName: groupName },
     });
 

@@ -1,11 +1,11 @@
-import { User, UserRoles, UserSettings } from "../../../db.js";
+import { Users, UserRoles, UserSettings } from "../../../db.js";
 
 export const handleUsersGetId = async (req, res) => {
   const { id: userId } = req.params;
 
   try {
     // Fetch user data including the role ID and user settings
-    const user = await User.findOne({
+    const user = await Users.findOne({
       where: { UserID: userId },
       include: [
         {

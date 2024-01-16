@@ -1,19 +1,19 @@
-import { query } from "../../../db.js";
+import { sequelize } from "../../../db.js";
 
 export const handleScheduleCreate = async (req, res) => {
   const { examId, startTime, endTime, createdByUserId } = req.body;
 
-  try {
-    const sql =
-      "INSERT INTO ExamSchedule (ExamID, StartTime, EndTime, CreatedByUserID) VALUES (?, ?, ?, ?)";
-    const [result] = await query(sql, [
-      examId,
-      startTime,
-      endTime,
-      createdByUserId,
-    ]);
+  const ExamSchedules = sequelize.models.ExamSchedules;
 
-    if (result.affectedRows === 1) {
+  try {
+    const result = await ExamSchedules.create({
+      ExamID: examId,
+      StartTime: startTime,
+      EndTime: endTime,
+      CreatedByUserID: createdByUserId,
+    });
+
+    if (result) {
       console.log("Exam schedule created successfully");
       res.json({ message: "Exam schedule created successfully" });
     } else {

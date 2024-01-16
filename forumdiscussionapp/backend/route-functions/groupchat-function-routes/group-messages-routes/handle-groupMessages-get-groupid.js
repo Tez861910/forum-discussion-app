@@ -1,9 +1,12 @@
-import { GroupMessages } from "../../../db.js";
+import { sequelize } from "../../../db.js";
 
 export const handleGroupMessagesGetByGroupId = async (req, res) => {
   const { groupId } = req.params;
 
   try {
+    // Dynamically access the GroupMessages model using sequelize.models
+    const GroupMessages = sequelize.models.GroupMessages;
+
     const result = await GroupMessages.findAll({
       where: { GroupID: groupId },
     });

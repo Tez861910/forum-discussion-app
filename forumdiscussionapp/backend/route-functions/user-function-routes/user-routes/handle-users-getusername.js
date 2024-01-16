@@ -1,4 +1,4 @@
-import { User, CommonAttributes } from "../../../db.js";
+import { Users, CommonAttributes } from "../../../db.js";
 import { Op } from "sequelize";
 
 export const handleUsersGetUserName = async (req, res) => {
@@ -6,7 +6,7 @@ export const handleUsersGetUserName = async (req, res) => {
 
   try {
     // Fetch user data for the given user IDs
-    const users = await User.findAll({
+    const users = await Users.findAll({
       where: {
         UserID: { [Op.in]: userIds },
         "$CommonAttributes.IsDeleted$": false,

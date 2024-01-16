@@ -1,39 +1,41 @@
 import express from "express";
-import { query } from "../../db.js";
+import { sequelize } from "../../db.js";
+import { validateLogin } from "../../body-validation/auth-validation-functions/login-validation.js";
 import {
   createAccessTokenAndSetCookies,
   verifyPassword,
   createRefreshTokenAndSetCookies,
 } from "../../authvalid.js";
-import { validateLogin } from "../../body-validation/auth-validation-functions/login-validation.js";
 
 const router = express.Router();
 
 // Handle user login
 router.post("/login", validateLogin, async (req, res) => {
   const { email, password } = req.body || {};
+  const Users = sequelize.models.Users;
+  const UserRoles = sequelize.models.UserRoles;
+  const CommonAttributes = sequelize.models.CommonAttributes;
 
   try {
-    // Fetch user data from the database
-    const sql = `
-      SELECT users.*, userroles.RoleID
-      FROM users
-      LEFT JOIN userroles ON users.UserID = userroles.UserID
-      LEFT JOIN commonattributes ON users.CommonAttributeID = commonattributes.AttributeID
-      WHERE users.UserEmail = ? AND commonattributes.IsDeleted = FALSE
-    `;
-
-    const queryResult = await query(sql, [email]);
-
-    if (!Array.isArray(queryResult) || queryResult.length === 0) {
-      console.log("No active user found with this email: " + email);
-      return res.status(401).json({ error: "Invalid email or password" });
-    }
-
-    const userData = queryResult[0];
+    // Fetch user data from the database with associations
+    const userData = await Users.findOne({
+      where: { UserEmail: email },
+      include: [
+        {
+          model: UserRoles,
+          required: true,
+          attributes: ["RoleId"],
+        },
+        {
+          model: CommonAttributes,
+          required: true,
+          where: { IsDeleted: false },
+        },
+      ],
+    });
 
     if (!userData || !userData.UserPassword) {
-      console.log("User data is incomplete.");
+      console.log("No active user found with this email: " + email);
       return res.status(401).json({ error: "Invalid email or password" });
     }
 
@@ -50,13 +52,13 @@ router.post("/login", validateLogin, async (req, res) => {
     const token = createAccessTokenAndSetCookies(
       userData.UserID,
       userData.UserEmail,
-      userData.RoleID,
+      userData.UserRoles[0]?.RoleId,
       res
     );
     const refreshToken = createRefreshTokenAndSetCookies(
       userData.UserID,
       userData.UserEmail,
-      userData.RoleID,
+      userData.UserRoles[0]?.RoleId,
       res
     );
 
@@ -67,7 +69,7 @@ router.post("/login", validateLogin, async (req, res) => {
       success: true,
       message: "Login successful",
       userId: userData.UserID,
-      roleId: userData.RoleID,
+      roleId: userData.UserRoles[0]?.RoleId,
       token: token,
       refreshToken: refreshToken,
     });

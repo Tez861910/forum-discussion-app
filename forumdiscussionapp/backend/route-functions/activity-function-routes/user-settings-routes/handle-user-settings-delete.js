@@ -1,13 +1,17 @@
-import { query } from "../../../db.js";
+import { sequelize } from "../../../db.js";
 
 export const handleUserSettingsDelete = async (req, res) => {
   const { settingId } = req.params;
+  const UserSettings = sequelize.models.UserSettings;
 
   try {
-    const sql = "DELETE FROM UserSettings WHERE SettingID = ?";
-    const [result] = await query(sql, [settingId]);
+    const result = await UserSettings.destroy({
+      where: {
+        SettingID: settingId,
+      },
+    });
 
-    if (result.affectedRows === 1) {
+    if (result === 1) {
       console.log("User settings deleted successfully");
       res.json({ message: "User settings deleted successfully" });
     } else {

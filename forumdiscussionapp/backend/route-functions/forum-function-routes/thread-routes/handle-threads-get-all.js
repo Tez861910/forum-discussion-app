@@ -1,9 +1,10 @@
-import { query } from "../../../db.js";
+import { sequelize } from "../../../db.js";
 
 export const handleThreadsGetAll = async (req, res) => {
   try {
-    const sql = "SELECT * FROM Threads";
-    const results = await query(sql);
+    const Threads = sequelize.models.Threads;
+
+    const results = await Threads.findAll();
     console.log("All Threads data:", results);
 
     if (results && results.length > 0) {

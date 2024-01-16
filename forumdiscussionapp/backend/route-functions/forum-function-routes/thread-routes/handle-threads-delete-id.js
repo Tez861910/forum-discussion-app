@@ -1,11 +1,14 @@
-import { query } from "../../../db.js";
+import { sequelize } from "../../../db.js";
 
 export const handleThreadsDeleteId = async (req, res) => {
   const { threadId } = req.params;
+
   try {
-    const sql = "DELETE FROM Threads WHERE ThreadID = ?";
-    const result = await query(sql, [threadId]);
-    if (result.affectedRows === 1) {
+    const Threads = sequelize.models.Threads;
+
+    const result = await Threads.destroy({ where: { ThreadID: threadId } });
+
+    if (result === 1) {
       console.log("Thread deleted successfully");
       res.json({ message: "Thread deleted successfully" });
     } else {

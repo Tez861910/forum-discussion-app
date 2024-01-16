@@ -1,10 +1,10 @@
 import express from "express";
+import { sequelize } from "../../db.js";
 import {
   createAccessTokenAndSetCookies,
   createRefreshTokenAndSetCookies,
   hashPassword,
 } from "../../authvalid.js";
-import { query } from "../../db.js";
 import { validateSignup } from "../../body-validation/auth-validation-functions/signup-validation.js";
 
 const router = express.Router();
@@ -12,6 +12,9 @@ const router = express.Router();
 router.post("/signup", async (req, res) => {
   const { name, email, password, address, phoneNumber, dateOfBirth, genderID } =
     req.body;
+  const Users = sequelize.models.Users;
+  const UserRoles = sequelize.models.UserRoles;
+  const Genders = sequelize.models.Genders;
 
   try {
     // Validate request body
@@ -31,10 +34,9 @@ router.post("/signup", async (req, res) => {
     }
 
     // Check if the provided gender is valid
-    const checkGenderSql = "SELECT * FROM Gender WHERE GenderID = ?";
-    const [genderResult] = await query(checkGenderSql, [genderID]);
+    const genderResult = await Genders.findByPk(genderID);
 
-    if (!Array.isArray(genderResult) || genderResult.length === 0) {
+    if (!genderResult) {
       console.log("Invalid gender ID");
       return res.status(400).json({ error: "Invalid gender ID" });
     }
@@ -55,21 +57,18 @@ router.post("/signup", async (req, res) => {
         .json({ error: validationResult.error.details[0].message });
     }
 
-    const insertUserSql = "INSERT INTO Users SET ?";
-    const [userResult] = await query(insertUserSql, [userData]);
+    const userResult = await Users.create(userData);
 
-    if (userResult.affectedRows === 1) {
-      const userId = userResult.insertId;
+    if (userResult) {
+      const userId = userResult.UserID;
 
       const studentRoleId = 3;
-      const insertUserRoleSql =
-        "INSERT INTO UserRoles (UserID, RoleID) VALUES (?, ?)";
-      const [userRolesResult] = await query(insertUserRoleSql, [
-        userId,
-        studentRoleId,
-      ]);
+      const userRolesResult = await UserRoles.create({
+        UserID: userId,
+        RoleID: studentRoleId,
+      });
 
-      if (userRolesResult.affectedRows === 1) {
+      if (userRolesResult) {
         const payload = {
           email,
           roleId: studentRoleId,

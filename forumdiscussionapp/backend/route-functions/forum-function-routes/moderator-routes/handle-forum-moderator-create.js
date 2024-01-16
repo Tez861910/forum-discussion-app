@@ -1,9 +1,11 @@
-import { query } from "../../../db.js";
+import { sequelize } from "../../../db.js";
 
 export const handleForumModeratorCreate = async (req, res) => {
   const { userId, forumId, promotedAt } = req.body;
 
   try {
+    const ForumModerators = sequelize.models.ForumModerators;
+
     if (!userId || !forumId || !promotedAt) {
       console.log("UserID, ForumID, and PromotedAt are required");
       return res
@@ -11,11 +13,13 @@ export const handleForumModeratorCreate = async (req, res) => {
         .json({ error: "UserID, ForumID, and PromotedAt are required" });
     }
 
-    const sql =
-      "INSERT INTO ForumsModerators (UserID, ForumID, PromotedAt) VALUES (?, ?, ?)";
-    const [result] = await query(sql, [userId, forumId, promotedAt]);
+    const result = await ForumModerators.create({
+      UserID: userId,
+      ForumID: forumId,
+      PromotedAt: promotedAt,
+    });
 
-    if (result.affectedRows === 1) {
+    if (result) {
       console.log("Forum moderator created successfully");
       res.json({ message: "Forum moderator created successfully" });
     } else {

@@ -1,7 +1,7 @@
 import express from "express";
 import multer from "multer";
 import path from "path";
-import { query } from "../../db.js";
+import { Users } from "../../db.js";
 import { validateAvatarUpload } from "../../body-validation/auth-validation-functions/home-validation.js";
 import { verifyRefreshToken } from "../../authvalid.js";
 
@@ -43,12 +43,19 @@ router.post(
     const filePath = req.file.path;
 
     try {
-      const [rows, fields] = await query(
-        "UPDATE Users SET AvatarPath = ? WHERE UserID = ?",
-        [filePath, req.body.userId]
+      const result = await Users.update(
+        { AvatarPath: filePath },
+        { where: { UserID: req.body.userId } }
       );
 
-      res.json({ message: "Avatar uploaded successfully!" });
+      if (result[0] === 1) {
+        res.json({ message: "Avatar uploaded successfully!" });
+      } else {
+        console.error("An error occurred while uploading the avatar.");
+        res
+          .status(500)
+          .json({ error: "An error occurred while uploading the avatar." });
+      }
     } catch (error) {
       console.error(error);
       res

@@ -1,4 +1,4 @@
-import { User, UserRoles, CommonAttributes } from "../../../db.js";
+import { Users, UserRoles, CommonAttributes } from "../../../db.js";
 import { hashPassword } from "../../../authvalid.js";
 
 export const handleUsersUpdateId = async (req, res) => {
@@ -16,7 +16,7 @@ export const handleUsersUpdateId = async (req, res) => {
     }
 
     // Fetch the user's CommonAttributeID
-    const user = await User.findOne({ where: { UserID: id } });
+    const user = await Users.findOne({ where: { UserID: id } });
     const commonAttributeId = user.CommonAttributeID;
 
     // Hash the password if provided
@@ -25,7 +25,7 @@ export const handleUsersUpdateId = async (req, res) => {
     }
 
     // Update the user and associated records only if not soft deleted
-    const updateUserResult = await User.update(userData, {
+    const updateUserResult = await Users.update(userData, {
       where: { UserID: id, CommonAttributeID: commonAttributeId },
     });
 

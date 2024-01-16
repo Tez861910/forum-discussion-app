@@ -1,9 +1,9 @@
-import { query } from "../../../db.js";
+import { sequelize } from "../../../db.js";
 
 export const handleUserSettingsGetAll = async (req, res) => {
+  const UserSettings = sequelize.models.UserSettings;
   try {
-    const sql = "SELECT * FROM UserSettings";
-    const [result] = await query(sql);
+    const result = await UserSettings.findAll();
 
     console.log("User settings retrieved successfully");
     res.json({ userSettings: result });

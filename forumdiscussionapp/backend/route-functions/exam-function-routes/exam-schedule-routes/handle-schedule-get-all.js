@@ -1,9 +1,9 @@
-import { query } from "../../../db.js";
+import { sequelize } from "../../../db.js";
 
 export const handleScheduleGetAll = async (req, res) => {
   try {
-    const sql = "SELECT * FROM ExamSchedule";
-    const [result] = await query(sql);
+    const ExamSchedules = sequelize.models.ExamSchedules;
+    const result = await ExamSchedules.findAll();
 
     console.log("Exam schedules retrieved successfully");
     res.json({ examSchedules: result });

@@ -1,14 +1,17 @@
-import { query } from "../../../db.js";
+import { sequelize } from "../../../db.js";
 
 export const createResponse = async (req, res) => {
   const { commentId } = req.params;
   const { content, userId } = req.body;
 
   try {
-    await query(
-      "INSERT INTO responses (ResponseContent, UserID, CommentID) VALUES (?, ?, ?)",
-      [content, userId, commentId]
-    );
+    const Responses = sequelize.models.Responses;
+
+    await Responses.create({
+      ResponseContent: content,
+      UserID: userId,
+      CommentID: commentId,
+    });
 
     res.json({ message: "Response added successfully" });
   } catch (error) {

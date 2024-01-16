@@ -1,6 +1,7 @@
-import { query } from "../../../db.js";
+import { sequelize } from "../../../db.js";
 
 export const handleAttachmentCreate = async (req, res) => {
+  const Attachments = sequelize.models.Attachments;
   const {
     filePath,
     attachedByUserId,
@@ -27,18 +28,16 @@ export const handleAttachmentCreate = async (req, res) => {
       });
     }
 
-    const sql =
-      "INSERT INTO Attachments (FilePath, AttachedByUserID, AttachmentTypeID, AttachedToType, AttachedToID, Description) VALUES (?, ?, ?, ?, ?, ?)";
-    const [result] = await query(sql, [
-      filePath,
-      attachedByUserId,
-      attachmentTypeId,
-      attachedToType,
-      attachedToId,
-      description,
-    ]);
+    const result = await Attachments.create({
+      FilePath: filePath,
+      AttachedByUserID: attachedByUserId,
+      AttachmentTypeID: attachmentTypeId,
+      AttachedToType: attachedToType,
+      AttachedToID: attachedToId,
+      Description: description,
+    });
 
-    if (result.affectedRows === 1) {
+    if (result) {
       console.log("Attachment created successfully");
       res.json({ message: "Attachment created successfully" });
     } else {

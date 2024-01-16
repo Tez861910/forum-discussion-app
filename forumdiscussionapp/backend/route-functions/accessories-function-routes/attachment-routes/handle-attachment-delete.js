@@ -1,13 +1,17 @@
-import { query } from "../../../db.js";
+import { sequelize } from "../../../db.js";
 
 export const handleAttachmentDelete = async (req, res) => {
   const { attachmentId } = req.params;
+  const Attachments = sequelize.models.Attachments;
 
   try {
-    const sql = "DELETE FROM Attachments WHERE AttachmentID = ?";
-    const [result] = await query(sql, [attachmentId]);
+    const result = await Attachments.destroy({
+      where: {
+        AttachmentID: attachmentId,
+      },
+    });
 
-    if (result.affectedRows === 1) {
+    if (result === 1) {
       console.log("Attachment deleted successfully");
       res.json({ message: "Attachment deleted successfully" });
     } else {

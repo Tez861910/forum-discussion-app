@@ -1,4 +1,4 @@
-import { query } from "../../../db.js";
+import { sequelize } from "../../../db.js";
 
 export const handleForumPostCreate = async (req, res) => {
   const { forumId } = req.params;
@@ -12,11 +12,15 @@ export const handleForumPostCreate = async (req, res) => {
         .json({ error: "UserID and PostContent are required" });
     }
 
-    const sql =
-      "INSERT INTO ForumsPosts (ForumID, UserID, PostContent) VALUES (?, ?, ?)";
-    const result = await query(sql, [forumId, userId, postContent]);
+    const ForumPosts = sequelize.models.ForumPosts;
 
-    if (result.affectedRows === 1) {
+    const result = await ForumPosts.create({
+      ForumID: forumId,
+      UserID: userId,
+      PostContent: postContent,
+    });
+
+    if (result) {
       console.log("Forum post created successfully");
       res.json({ message: "Forum post created successfully" });
     } else {

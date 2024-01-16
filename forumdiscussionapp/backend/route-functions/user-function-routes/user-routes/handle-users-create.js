@@ -1,6 +1,6 @@
 import {
   CommonAttributes,
-  User,
+  Users,
   UserRoles,
   UserSettings,
 } from "../../../db.js";
@@ -53,7 +53,7 @@ export const handleUsersCreate = async (req, res) => {
     });
 
     // Insert user data with CommonAttributeID
-    const user = await User.create({
+    const user = await Users.create({
       UserName: name,
       UserEmail: email,
       UserPassword: hashedPassword,

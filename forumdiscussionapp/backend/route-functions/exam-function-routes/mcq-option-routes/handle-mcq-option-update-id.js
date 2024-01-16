@@ -1,21 +1,26 @@
-import { query } from "../../../db.js";
+import { sequelize } from "../../../db.js";
 
 export const handleMCQOptionUpdateById = async (req, res) => {
   const { mcqOptionId } = req.params;
   const { mcqQuestionId, mcqOptionText, isCorrect, createdByUserId } = req.body;
 
   try {
-    const sql =
-      "UPDATE MCQOptions SET MCQQuestionID = ?, MCQOptionText = ?, IsCorrect = ?, CreatedByUserID = ? WHERE MCQOptionID = ?";
-    const [result] = await query(sql, [
-      mcqQuestionId,
-      mcqOptionText,
-      isCorrect,
-      createdByUserId,
-      mcqOptionId,
-    ]);
+    const MCQOptions = sequelize.models.MCQOptions;
+    const result = await MCQOptions.update(
+      {
+        MCQQuestionID: mcqQuestionId,
+        MCQOptionText: mcqOptionText,
+        IsCorrect: isCorrect,
+        CreatedByUserID: createdByUserId,
+      },
+      {
+        where: {
+          MCQOptionID: mcqOptionId,
+        },
+      }
+    );
 
-    if (result.affectedRows === 1) {
+    if (result[0] === 1) {
       console.log("MCQ option updated successfully");
       res.json({ message: "MCQ option updated successfully" });
     } else {

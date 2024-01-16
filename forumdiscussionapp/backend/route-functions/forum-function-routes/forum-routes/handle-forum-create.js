@@ -1,9 +1,11 @@
-import { query } from "../../../db.js";
+import { sequelize } from "../../../db.js";
 
 export const handleForumCreate = async (req, res) => {
   const { courseId, forumName, forumDescription, createdByUserId } = req.body;
 
   try {
+    const Forums = sequelize.models.Forums;
+
     if (!courseId || !forumName || !forumDescription || !createdByUserId) {
       console.log(
         "ForumName, ForumDescription, and CreatedByUserId are required"
@@ -13,17 +15,14 @@ export const handleForumCreate = async (req, res) => {
       });
     }
 
-    const sql =
-      "INSERT INTO Forums (ForumName, ForumDescription, CreatedByUserID, CourseID) VALUES (?, ?, ?, ?)";
+    const result = await Forums.create({
+      ForumName: forumName,
+      ForumDescription: forumDescription,
+      CreatedByUserID: createdByUserId,
+      CourseID: courseId,
+    });
 
-    const result = await query(sql, [
-      forumName,
-      forumDescription,
-      createdByUserId,
-      courseId,
-    ]);
-
-    if (result !== undefined && result.affectedRows === 1) {
+    if (result) {
       console.log("Forum created successfully");
       res.json({ message: "Forum created successfully" });
     } else {

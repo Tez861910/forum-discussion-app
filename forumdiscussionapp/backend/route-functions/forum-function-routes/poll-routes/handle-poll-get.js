@@ -1,9 +1,10 @@
-import { query } from "../../../db.js";
+import { sequelize } from "../../../db.js";
 
 export const handlePollGet = async (req, res) => {
   try {
-    const sql = "SELECT * FROM Polls";
-    const [result] = await query(sql);
+    const Polls = sequelize.models.Polls;
+
+    const result = await Polls.findAll();
 
     console.log("Polls retrieved successfully");
     res.json(result);

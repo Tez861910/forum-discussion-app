@@ -1,13 +1,16 @@
-import { query } from "../../../db.js";
+import { sequelize } from "../../../db.js";
 
 export const handleImageCreate = async (req, res) => {
   const { eventId, imageUrl } = req.body;
+  const EventImages = sequelize.models.EventImages;
 
   try {
-    const sql = "INSERT INTO EventImages (EventID, ImageURL) VALUES (?, ?)";
-    const [result] = await query(sql, [eventId, imageUrl]);
+    const result = await EventImages.create({
+      EventID: eventId,
+      ImageURL: imageUrl,
+    });
 
-    if (result.affectedRows === 1) {
+    if (result) {
       console.log("Event image created successfully");
       res.json({ message: "Event image created successfully" });
     } else {

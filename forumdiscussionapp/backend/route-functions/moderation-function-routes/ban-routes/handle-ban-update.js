@@ -1,4 +1,4 @@
-import { Bans } from "../../../db.js";
+import { sequelize } from "../../../db.js";
 
 export const handleBanUpdate = async (req, res) => {
   const { banId } = req.params;
@@ -11,6 +11,9 @@ export const handleBanUpdate = async (req, res) => {
         error: "BannedUserId, BannedByUserId, and BanReason are required",
       });
     }
+
+    // Dynamically access the Bans model using sequelize.models
+    const Bans = sequelize.models.Bans;
 
     const result = await Bans.update(
       {

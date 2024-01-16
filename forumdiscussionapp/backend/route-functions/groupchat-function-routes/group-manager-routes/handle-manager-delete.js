@@ -1,10 +1,13 @@
-import { GroupManager } from "../../../db.js";
+import { sequelize } from "../../../db.js";
 
 export const handleManagerDelete = async (req, res) => {
   const { managerId } = req.params;
 
   try {
-    const result = await GroupManager.destroy({
+    // Dynamically access the GroupManagers model using sequelize.models
+    const GroupManagers = sequelize.models.GroupManagers;
+
+    const result = await GroupManagers.destroy({
       where: { ManagerID: managerId },
     });
 

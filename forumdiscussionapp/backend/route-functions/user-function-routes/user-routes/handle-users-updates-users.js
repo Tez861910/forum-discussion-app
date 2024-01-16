@@ -1,4 +1,4 @@
-import { User, CommonAttributes } from "../../../db.js";
+import { Users, CommonAttributes } from "../../../db.js";
 import { hashPassword } from "../../../authvalid.js";
 
 export const handleUsersUpdateUsers = async (req, res) => {
@@ -26,7 +26,7 @@ export const handleUsersUpdateUsers = async (req, res) => {
     }
 
     // Fetch the user's CommonAttributeID
-    const user = await User.findOne({ where: { UserID: id } });
+    const user = await Users.findOne({ where: { UserID: id } });
     const commonAttributeId = user.CommonAttributeID;
 
     // Check IsDeleted in common attributes table
@@ -39,7 +39,7 @@ export const handleUsersUpdateUsers = async (req, res) => {
     }
 
     // Update the user and associated records only if not soft deleted
-    const updateUserResult = await User.update(updatedUserData, {
+    const updateUserResult = await Users.update(updatedUserData, {
       where: { UserID: id, CommonAttributeID: commonAttributeId },
     });
 

@@ -1,17 +1,29 @@
-import { query } from "../../../db.js";
+import { sequelize } from "../../../db.js";
+import Sequelize from "sequelize";
 
 export const softDeleteRecurringEvent = async (req, res) => {
   try {
     const { eventId, recurringEventId } = req.params;
     const UserID = req.user.userId;
 
-    // Check if the recurring event is already deleted
-    const isRecurringEventDeleted = await query(
-      "SELECT IsDeleted FROM CommonAttributes WHERE AttributeID = (SELECT CommonAttributeID FROM RecurringEvents WHERE EventID = ? AND RecurringEventID = ?)",
-      [eventId, recurringEventId]
-    );
+    const CommonAttributes = sequelize.models.CommonAttributes;
+    const RecurringEvents = sequelize.models.RecurringEvents;
 
-    if (isRecurringEventDeleted[0].IsDeleted) {
+    // Check if the recurring event is already deleted
+    const commonAttributesInstance = await CommonAttributes.findOne({
+      where: {
+        AttributeID: Sequelize.col("RecurringEvents.CommonAttributeID"),
+      },
+      include: [
+        {
+          model: RecurringEvents,
+          where: { EventID: eventId, RecurringEventID: recurringEventId },
+          attributes: [],
+        },
+      ],
+    });
+
+    if (commonAttributesInstance.get("IsDeleted")) {
       // If the recurring event is already marked as deleted, return success (no need to delete again)
       return res.json({
         success: true,
@@ -20,9 +32,9 @@ export const softDeleteRecurringEvent = async (req, res) => {
     }
 
     // Update the IsDeleted field in the CommonAttributes table
-    await query(
-      "UPDATE CommonAttributes SET IsDeleted = true, UpdatedByUserID = ? WHERE AttributeID = (SELECT CommonAttributeID FROM RecurringEvents WHERE EventID = ? AND RecurringEventID = ?)",
-      [UserID, eventId, recurringEventId]
+    await CommonAttributes.update(
+      { IsDeleted: true, UpdatedByUserID: UserID },
+      { where: { AttributeID: commonAttributesInstance.get("AttributeID") } }
     );
 
     res.json({

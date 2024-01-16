@@ -1,13 +1,15 @@
-import { query } from "../../../db.js";
+import { sequelize } from "../../../db.js";
 
 export const handleImageDelete = async (req, res) => {
   const { imageId } = req.params;
+  const EventImages = sequelize.models.EventImages;
 
   try {
-    const sql = "DELETE FROM EventImages WHERE ImageID = ?";
-    const [result] = await query(sql, [imageId]);
+    const result = await EventImages.destroy({
+      where: { ImageID: imageId },
+    });
 
-    if (result.affectedRows === 1) {
+    if (result === 1) {
       console.log("Event image deleted successfully");
       res.json({ message: "Event image deleted successfully" });
     } else {

@@ -1,29 +1,26 @@
-import { query } from "../../../db.js";
+import { sequelize } from "../../../db.js";
 
 export const assignEventCategory = async (req, res) => {
   try {
     const { eventId, categoryId } = req.params;
     const UserID = req.user.userId;
+    const CommonAttributes = sequelize.models.CommonAttributes;
+    const EventCategoryMappings = sequelize.models.EventCategoryMappings;
 
     // Insert into CommonAttributes table to get AttributeID
-    const commonAttributesQuery =
-      "INSERT INTO CommonAttributes (CreatedByUserID) VALUES (?)";
-    const commonAttributesValues = [UserID];
-
-    const commonAttributesResult = await query(
-      commonAttributesQuery,
-      commonAttributesValues
-    );
+    const commonAttributesResult = await CommonAttributes.create({
+      CreatedByUserID: UserID,
+    });
 
     // Extract AttributeID from the result
-    const commonAttributeID = commonAttributesResult.insertId;
+    const commonAttributeID = commonAttributesResult.id;
 
     // Insert into EventCategoryMapping table using CommonAttributeID
-    const eventCategoryMappingQuery =
-      "INSERT INTO EventCategoryMapping (EventID, CategoryID, CommonAttributeID) VALUES (?, ?, ?)";
-    const eventCategoryMappingValues = [eventId, categoryId, commonAttributeID];
-
-    await query(eventCategoryMappingQuery, eventCategoryMappingValues);
+    await EventCategoryMappings.create({
+      EventID: eventId,
+      CategoryID: categoryId,
+      CommonAttributeID: commonAttributeID,
+    });
 
     res.json({
       success: true,

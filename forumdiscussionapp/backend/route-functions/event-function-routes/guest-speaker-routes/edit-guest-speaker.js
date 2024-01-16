@@ -1,26 +1,38 @@
-import { query } from "../../../db.js";
+import { sequelize } from "../../../db.js";
+import Sequelize from "sequelize";
 
 export const editGuestSpeaker = async (req, res) => {
   try {
     const { eventId, guestSpeakerId } = req.params;
     const { UpdatedSpeakerName, UpdatedContributionDescription } = req.body;
     const UserID = req.user.userId;
+    const CommonAttributes = sequelize.models.CommonAttributes;
+    const GuestSpeakers = sequelize.models.GuestSpeakers;
 
     // Update the SpeakerName and ContributionDescription in the GuestSpeakers table
-    await query(
-      "UPDATE GuestSpeakers SET SpeakerName = ?, ContributionDescription = ? WHERE EventID = ? AND SpeakerID = ?",
-      [
-        UpdatedSpeakerName,
-        UpdatedContributionDescription,
-        eventId,
-        guestSpeakerId,
-      ]
+    await GuestSpeakers.update(
+      {
+        SpeakerName: UpdatedSpeakerName,
+        ContributionDescription: UpdatedContributionDescription,
+      },
+      { where: { EventID: eventId, SpeakerID: guestSpeakerId } }
     );
 
     // Update the CommonAttributes table with the updated information
-    await query(
-      "UPDATE CommonAttributes SET UpdatedByUserID = ? WHERE AttributeID = (SELECT CommonAttributeID FROM GuestSpeakers WHERE EventID = ? AND SpeakerID = ?)",
-      [UserID, eventId, guestSpeakerId]
+    const commonAttributesInstance = await CommonAttributes.findOne({
+      where: { AttributeID: Sequelize.col("GuestSpeakers.CommonAttributeID") },
+      include: [
+        {
+          model: GuestSpeakers,
+          where: { EventID: eventId, SpeakerID: guestSpeakerId },
+          attributes: [],
+        },
+      ],
+    });
+
+    await CommonAttributes.update(
+      { UpdatedByUserID: UserID },
+      { where: { AttributeID: commonAttributesInstance.get("AttributeID") } }
     );
 
     res.json({ success: true, message: "Guest speaker updated successfully" });

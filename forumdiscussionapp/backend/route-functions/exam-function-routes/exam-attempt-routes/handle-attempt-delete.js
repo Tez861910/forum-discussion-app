@@ -1,13 +1,18 @@
-import { query } from "../../../db.js";
+import { sequelize } from "../../../db.js";
 
 export const handleAttemptDelete = async (req, res) => {
   const { attemptId } = req.params;
 
-  try {
-    const sql = "DELETE FROM ExamAttempt WHERE AttemptID = ?";
-    const [result] = await query(sql, [attemptId]);
+  const ExamAttempts = sequelize.models.ExamAttempts;
 
-    if (result.affectedRows === 1) {
+  try {
+    const result = await ExamAttempts.destroy({
+      where: {
+        AttemptID: attemptId,
+      },
+    });
+
+    if (result === 1) {
       console.log("Exam attempt deleted successfully");
       res.json({ message: "Exam attempt deleted successfully" });
     } else {

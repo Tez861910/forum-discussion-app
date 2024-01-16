@@ -1,4 +1,4 @@
-import { GroupMembers } from "../../../db.js";
+import { sequelize } from "../../../db.js";
 
 export const handleGroupMembersCreate = async (req, res) => {
   const { groupId, userId } = req.body;
@@ -10,6 +10,9 @@ export const handleGroupMembersCreate = async (req, res) => {
         error: "GroupID and UserID are required",
       });
     }
+
+    // Dynamically access the GroupMembers model using sequelize.models
+    const GroupMembers = sequelize.models.GroupMembers;
 
     const result = await GroupMembers.create({
       GroupID: groupId,

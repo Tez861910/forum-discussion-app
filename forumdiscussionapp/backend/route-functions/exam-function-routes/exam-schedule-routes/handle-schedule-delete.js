@@ -1,13 +1,18 @@
-import { query } from "../../../db.js";
+import { sequelize } from "../../../db.js";
 
 export const handleScheduleDelete = async (req, res) => {
   const { scheduleId } = req.params;
 
-  try {
-    const sql = "DELETE FROM ExamSchedule WHERE ScheduleID = ?";
-    const [result] = await query(sql, [scheduleId]);
+  const ExamSchedules = sequelize.models.ExamSchedules;
 
-    if (result.affectedRows === 1) {
+  try {
+    const result = await ExamSchedules.destroy({
+      where: {
+        ScheduleID: scheduleId,
+      },
+    });
+
+    if (result === 1) {
       console.log("Exam schedule deleted successfully");
       res.json({ message: "Exam schedule deleted successfully" });
     } else {

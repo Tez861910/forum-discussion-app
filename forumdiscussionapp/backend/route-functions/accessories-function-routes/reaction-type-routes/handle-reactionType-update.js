@@ -1,8 +1,9 @@
-import { query } from "../../../db.js";
+import { sequelize } from "../../../db.js";
 
 export const handleReactionTypeUpdate = async (req, res) => {
   const { reactionTypeId } = req.params;
   const { reactionTypeName } = req.body;
+  const ReactionTypes = sequelize.models.ReactionTypes;
 
   try {
     if (!reactionTypeName) {
@@ -10,11 +11,18 @@ export const handleReactionTypeUpdate = async (req, res) => {
       return res.status(400).json({ error: "ReactionTypeName is required" });
     }
 
-    const sql =
-      "UPDATE ReactionType SET ReactionTypeName = ? WHERE ReactionTypeID = ?";
-    const [result] = await query(sql, [reactionTypeName, reactionTypeId]);
+    const result = await ReactionTypes.update(
+      {
+        ReactionTypeName: reactionTypeName,
+      },
+      {
+        where: {
+          ReactionTypeID: reactionTypeId,
+        },
+      }
+    );
 
-    if (result.affectedRows === 1) {
+    if (result[0] === 1) {
       console.log("ReactionType updated successfully");
       res.json({ message: "ReactionType updated successfully" });
     } else {
