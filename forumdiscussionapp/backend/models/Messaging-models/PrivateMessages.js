@@ -53,6 +53,7 @@ export default function (sequelize) {
     },
     {
       tableName: "PrivateMessages",
+      timestamps: false,
       indexes: [
         {
           name: "idx_sender_id_privatemessages",

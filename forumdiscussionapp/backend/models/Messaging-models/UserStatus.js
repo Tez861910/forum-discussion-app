@@ -33,6 +33,7 @@ export default function (sequelize) {
     },
     {
       tableName: "UserStatus",
+      timestamps: false,
       indexes: [
         {
           name: "idx_user_id_userstatus",

@@ -57,6 +57,7 @@ export default function (sequelize) {
     },
     {
       tableName: "GroupChat",
+      timestamps: false,
       indexes: [
         {
           name: "idx_creator_user_id_groupchat",

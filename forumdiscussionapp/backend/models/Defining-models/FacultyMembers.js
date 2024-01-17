@@ -30,6 +30,7 @@ export default function (sequelize) {
     },
     {
       tableName: "FacultyMembers",
+      timestamps: false,
       indexes: [
         {
           name: "idx_faculty_id_facultymembers",

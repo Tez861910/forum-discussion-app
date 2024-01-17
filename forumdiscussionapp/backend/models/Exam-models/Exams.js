@@ -53,6 +53,7 @@ export default function (sequelize) {
     },
     {
       tableName: "Exam",
+      timestamps: false,
       indexes: [
         {
           name: "idx_created_by_user_id_exam",

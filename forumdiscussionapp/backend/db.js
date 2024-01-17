@@ -6,16 +6,17 @@ import * as models from "./models.js";
 // Create Sequelize instance
 export const sequelize = new Sequelize({
   dialect: "mysql",
+  logging: console.log,
   host: config.DB_HOST,
   port: config.DB_PORT,
   username: config.DB_USER,
   password: config.DB_PASSWORD,
   database: config.DB_NAME,
   pool: {
-    max: 5, // maximum number of connections in pool
-    min: 0, // minimum number of connections in pool
-    acquire: 30000, // maximum time, in milliseconds, that pool will try to get connection before throwing error
-    idle: 10000, // maximum time, in milliseconds, that a connection can be idle before being released
+    max: 5,
+    min: 0,
+    acquire: 30000,
+    idle: 10000,
   },
 });
 
@@ -25,7 +26,7 @@ export const initializedModels = Object.fromEntries(
 );
 
 // Call setAssociations function to define model associations
-setAssociations();
+setAssociations(initializedModels);
 
 // Authenticate and log database connection status
 const maxRetries = 5;

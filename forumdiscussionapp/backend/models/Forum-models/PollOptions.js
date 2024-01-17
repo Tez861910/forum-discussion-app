@@ -30,6 +30,7 @@ export default function (sequelize) {
     },
     {
       tableName: "PollOptions",
+      timestamps: false,
       indexes: [
         {
           name: "idx_poll_id_polloptions",

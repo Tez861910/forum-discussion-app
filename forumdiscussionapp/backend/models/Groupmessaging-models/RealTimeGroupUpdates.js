@@ -38,6 +38,7 @@ export default function (sequelize) {
     },
     {
       tableName: "RealTimeGroupUpdates",
+      timestamps: false,
       indexes: [
         {
           name: "idx_group_id_realtimegroupupdates",

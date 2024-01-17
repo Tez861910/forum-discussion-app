@@ -33,6 +33,7 @@ export default function (sequelize) {
     },
     {
       tableName: "RecurringEvents",
+      timestamps: false,
       indexes: [
         {
           name: "idx_event_id_recurringevents",

@@ -3,6 +3,7 @@ import { sequelize } from "../../../db.js";
 export const handleAnnouncementCreate = async (req, res) => {
   const { title, content, expiryDate, createdByUserId } = req.body;
   const Announcements = sequelize.models.Announcements;
+  const CommonAttributes = sequelize.models.CommonAttributes;
 
   try {
     if (!title || !content || !createdByUserId) {
@@ -12,14 +13,31 @@ export const handleAnnouncementCreate = async (req, res) => {
         .json({ error: "Title, content, and createdByUserId are required" });
     }
 
-    const result = await Announcements.create({
+    // Step 1: Create CommonAttributes entry
+    const commonAttributesResult = await CommonAttributes.create({
+      CreatedByUserID: createdByUserId,
+    });
+
+    if (!commonAttributesResult) {
+      console.error("CommonAttributes creation failed");
+      return res
+        .status(500)
+        .json({ error: "CommonAttributes creation failed" });
+    }
+
+    // Step 2: Retrieve AttributeID
+    const commonAttributeId = commonAttributesResult.AttributeID;
+
+    // Step 3: Create Announcement with CommonAttributeID
+    const announcementResult = await Announcements.create({
       AnnouncementTitle: title,
       AnnouncementContent: content,
       ExpiryDate: expiryDate,
       CreatedByUserID: createdByUserId,
+      CommonAttributeID: commonAttributeId,
     });
 
-    if (result) {
+    if (announcementResult) {
       console.log("Announcement created successfully");
       res.json({ message: "Announcement created successfully" });
     } else {

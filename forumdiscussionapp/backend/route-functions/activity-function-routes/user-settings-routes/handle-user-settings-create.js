@@ -3,6 +3,7 @@ import { sequelize } from "../../../db.js";
 export const handleUserSettingsCreate = async (req, res) => {
   const { userId, theme, darkMode, language, emailNotifications } = req.body;
   const UserSettings = sequelize.models.UserSettings;
+  const CommonAttributes = sequelize.models.CommonAttributes;
 
   try {
     if (!userId) {
@@ -10,15 +11,31 @@ export const handleUserSettingsCreate = async (req, res) => {
       return res.status(400).json({ error: "UserId is required" });
     }
 
-    const result = await UserSettings.create({
+    // Create a CommonAttributes entry
+    const commonAttributesResult = await CommonAttributes.create({
+      CreatedByUserID: userId,
+    });
+
+    if (!commonAttributesResult) {
+      console.error("CommonAttributes creation failed");
+      return res
+        .status(500)
+        .json({ error: "CommonAttributes creation failed" });
+    }
+
+    const commonAttributeId = commonAttributesResult.AttributeID;
+
+    // Create UserSettings with CommonAttributeID
+    const userSettingsResult = await UserSettings.create({
       UserID: userId,
       Theme: theme,
       DarkMode: darkMode,
       Language: language,
       EmailNotifications: emailNotifications,
+      CommonAttributeID: commonAttributeId,
     });
 
-    if (result) {
+    if (userSettingsResult) {
       console.log("User settings created successfully");
       res.json({ message: "User settings created successfully" });
     } else {

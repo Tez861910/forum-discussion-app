@@ -36,6 +36,7 @@ export default function (sequelize) {
     },
     {
       tableName: "ForumsModerators",
+      timestamps: false,
       indexes: [
         {
           name: "idx_user_id_forummoderators",

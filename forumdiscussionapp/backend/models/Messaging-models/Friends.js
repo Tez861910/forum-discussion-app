@@ -37,6 +37,7 @@ export default function (sequelize) {
     },
     {
       tableName: "Friends",
+      timestamps: false,
       indexes: [
         {
           name: "idx_user_id1_friends",

@@ -31,6 +31,7 @@ export default function (sequelize) {
     },
     {
       tableName: "RealTimeUpdates",
+      timestamps: false,
       indexes: [
         {
           name: "idx_user_id_realtimeupdates",

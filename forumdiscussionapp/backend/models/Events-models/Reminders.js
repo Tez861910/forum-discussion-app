@@ -29,6 +29,7 @@ export default function (sequelize) {
     },
     {
       tableName: "Reminders",
+      timestamps: false,
       indexes: [
         {
           name: "idx_event_id_reminders",

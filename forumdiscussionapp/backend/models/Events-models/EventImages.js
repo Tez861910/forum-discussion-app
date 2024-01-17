@@ -30,6 +30,7 @@ export default function (sequelize) {
     },
     {
       tableName: "EventImages",
+      timestamps: false,
       indexes: [
         {
           name: "idx_event_id_eventimages",

@@ -22,6 +22,7 @@ export default function (sequelize) {
     },
     {
       tableName: "QuestionType",
+      timestamps: false,
       indexes: [
         {
           name: "idx_common_attribute_id_questiontype",

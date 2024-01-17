@@ -2,9 +2,22 @@ import { sequelize } from "../../../db.js";
 
 export const handleNotificationGetAll = async (req, res) => {
   const Notifications = sequelize.models.Notifications;
+  const CommonAttributes = sequelize.models.CommonAttributes;
 
   try {
-    const result = await Notifications.findAll();
+    // Find all Notifications where IsDeleted is false
+    const result = await Notifications.findAll({
+      include: [
+        {
+          model: CommonAttributes,
+          where: {
+            AttributeID: sequelize.col("Notifications.CommonAttributeID"),
+            IsDeleted: false,
+          },
+          required: true,
+        },
+      ],
+    });
 
     console.log("Notifications retrieved successfully");
     res.json({ notifications: result });

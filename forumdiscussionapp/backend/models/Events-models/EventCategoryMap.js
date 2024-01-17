@@ -30,6 +30,7 @@ export default function (sequelize) {
     },
     {
       tableName: "EventCategoryMapping",
+      timestamps: false,
       indexes: [
         {
           name: "idx_event_id_eventcategorymapping",

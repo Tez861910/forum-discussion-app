@@ -42,6 +42,7 @@ export default function (sequelize) {
     },
     {
       tableName: "FriendRequests",
+      timestamps: false,
       indexes: [
         {
           name: "idx_sender_id_friendrequests",

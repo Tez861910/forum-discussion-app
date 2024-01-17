@@ -4,6 +4,7 @@ export const handleReactionCreate = async (req, res) => {
   const { userId, reactionTypeId, reactedToType, reactedToId, isPositive } =
     req.body;
   const Reactions = sequelize.models.Reactions;
+  const CommonAttributes = sequelize.models.CommonAttributes;
 
   try {
     if (
@@ -22,12 +23,31 @@ export const handleReactionCreate = async (req, res) => {
       });
     }
 
+    // Create CommonAttributes entry
+    const commonAttributeResult = await CommonAttributes.create({
+      CreatedByUserID: userId,
+      UpdatedByUserID: userId,
+    });
+
+    // Check if CommonAttributes entry was created successfully
+    if (!commonAttributeResult) {
+      console.error("CommonAttributes creation failed");
+      return res
+        .status(500)
+        .json({ error: "CommonAttributes creation failed" });
+    }
+
+    // Retrieve AttributeID from the created CommonAttributes entry
+    const commonAttributeId = commonAttributeResult.AttributeID;
+
+    // Create Reactions entry with CommonAttributeID
     const result = await Reactions.create({
       ReactionByUserID: userId,
       ReactionTypeID: reactionTypeId,
       ReactedToType: reactedToType,
       ReactedToID: reactedToId,
       IsPositive: isPositive,
+      CommonAttributeID: commonAttributeId,
     });
 
     if (result) {

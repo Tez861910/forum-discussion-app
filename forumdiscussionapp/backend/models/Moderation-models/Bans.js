@@ -40,6 +40,7 @@ export default function (sequelize) {
     },
     {
       tableName: "Bans",
+      timestamps: false,
       indexes: [
         {
           name: "idx_banned_user_id_ban",

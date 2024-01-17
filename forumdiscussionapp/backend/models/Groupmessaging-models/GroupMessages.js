@@ -49,6 +49,7 @@ export default function (sequelize) {
     },
     {
       tableName: "GroupMessages",
+      timestamps: false,
       indexes: [
         {
           name: "idx_group_id_groupmessages",

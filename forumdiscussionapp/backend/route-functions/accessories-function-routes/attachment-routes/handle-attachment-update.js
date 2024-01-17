@@ -2,6 +2,7 @@ import { sequelize } from "../../../db.js";
 
 export const handleAttachmentUpdate = async (req, res) => {
   const Attachments = sequelize.models.Attachments;
+  const CommonAttributes = sequelize.models.CommonAttributes;
   const { attachmentId } = req.params;
   const {
     filePath,
@@ -29,6 +30,35 @@ export const handleAttachmentUpdate = async (req, res) => {
       });
     }
 
+    // Find the Attachment by ID
+    const attachment = await Attachments.findOne({
+      where: {
+        AttachmentID: attachmentId,
+      },
+    });
+
+    // Check if the attachment exists
+    if (!attachment) {
+      console.error("Attachment not found");
+      return res.status(404).json({ error: "Attachment not found" });
+    }
+
+    // Retrieve CommonAttributeID from the Attachment
+    const commonAttributeId = attachment.CommonAttributeID;
+
+    // Update CommonAttributes entry's UpdatedByUserID
+    await CommonAttributes.update(
+      {
+        UpdatedByUserID: attachedByUserId,
+      },
+      {
+        where: {
+          AttributeID: commonAttributeId,
+        },
+      }
+    );
+
+    // Update Attachments entry
     const result = await Attachments.update(
       {
         FilePath: filePath,

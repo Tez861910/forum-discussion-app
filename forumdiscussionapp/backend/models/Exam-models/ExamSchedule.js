@@ -42,6 +42,7 @@ export default function (sequelize) {
     },
     {
       tableName: "ExamSchedule",
+      timestamps: false,
       indexes: [
         {
           name: "idx_exam_id_exam_schedule",

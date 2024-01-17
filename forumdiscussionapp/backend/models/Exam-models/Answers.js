@@ -38,6 +38,7 @@ export default function (sequelize) {
     },
     {
       tableName: "Answer",
+      timestamps: false,
       indexes: [
         {
           name: "idx_question_id_answers",

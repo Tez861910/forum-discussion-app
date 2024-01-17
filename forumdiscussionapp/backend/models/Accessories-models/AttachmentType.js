@@ -17,6 +17,7 @@ export default function (sequelize) {
     },
     {
       tableName: "AttachmentType",
+      timestamps: false,
       indexes: [
         {
           name: "idx_attachment_type_name_attachmenttype",

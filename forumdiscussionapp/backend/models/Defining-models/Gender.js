@@ -24,6 +24,7 @@ export default function (sequelize) {
     },
     {
       tableName: "Gender",
+      timestamps: false,
       indexes: [
         {
           name: "idx_common_attribute_id_gender",

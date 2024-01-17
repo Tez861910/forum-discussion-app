@@ -42,6 +42,7 @@ export default function (sequelize) {
     },
     {
       tableName: "MCQOptions",
+      timestamps: false,
       indexes: [
         {
           name: "idx_mcq_question_id_mcqoptions",

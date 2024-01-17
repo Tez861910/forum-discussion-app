@@ -47,6 +47,7 @@ export default function (sequelize) {
     },
     {
       tableName: "Events",
+      timestamps: false,
       indexes: [
         {
           name: "idx_user_id_events",

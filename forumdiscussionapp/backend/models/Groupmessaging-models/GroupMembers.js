@@ -30,6 +30,7 @@ export default function (sequelize) {
     },
     {
       tableName: "GroupMembers",
+      timestamps: false,
       indexes: [
         {
           name: "idx_group_id_groupmembers",

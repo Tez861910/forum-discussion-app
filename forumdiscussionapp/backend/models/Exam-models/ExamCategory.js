@@ -16,6 +16,7 @@ export default function (sequelize) {
     },
     {
       tableName: "ExamCategory",
+      timestamps: false,
       engine: "InnoDB",
     }
   );

@@ -37,6 +37,7 @@ export default function (sequelize) {
     },
     {
       tableName: "Comments",
+      timestamps: false,
       indexes: [
         {
           name: "idx_user_id_comments",

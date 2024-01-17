@@ -24,7 +24,7 @@ router.post("/login", validateLogin, async (req, res) => {
         {
           model: UserRoles,
           required: true,
-          attributes: ["RoleId"],
+          attributes: ["RoleID"],
         },
         {
           model: CommonAttributes,
@@ -33,6 +33,9 @@ router.post("/login", validateLogin, async (req, res) => {
         },
       ],
     });
+
+    // Log the userData object
+    console.log(JSON.stringify(userData, null, 2));
 
     if (!userData || !userData.UserPassword) {
       console.log("No active user found with this email: " + email);
@@ -69,7 +72,7 @@ router.post("/login", validateLogin, async (req, res) => {
       success: true,
       message: "Login successful",
       userId: userData.UserID,
-      roleId: userData.UserRoles[0]?.RoleId,
+      roleId: userData.UserRoles[0]?.RoleID,
       token: token,
       refreshToken: refreshToken,
     });

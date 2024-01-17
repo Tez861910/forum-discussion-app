@@ -26,6 +26,7 @@ export default function (sequelize) {
     },
     {
       tableName: "Polls",
+      timestamps: false,
       indexes: [
         {
           name: "idx_created_by_user_id_polls",

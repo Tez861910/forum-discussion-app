@@ -33,6 +33,7 @@ export default function (sequelize) {
     },
     {
       tableName: "UserPollVotes",
+      timestamps: false,
       indexes: [
         {
           name: "idx_user_id_userpollvotes",

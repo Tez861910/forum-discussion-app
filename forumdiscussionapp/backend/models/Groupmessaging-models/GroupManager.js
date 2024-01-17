@@ -33,6 +33,7 @@ export default function (sequelize) {
     },
     {
       tableName: "GroupManager",
+      timestamps: false,
       indexes: [
         {
           name: "idx_group_id_groupmanager",

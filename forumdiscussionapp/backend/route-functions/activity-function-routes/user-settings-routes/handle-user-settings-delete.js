@@ -2,18 +2,42 @@ import { sequelize } from "../../../db.js";
 
 export const handleUserSettingsDelete = async (req, res) => {
   const { settingId } = req.params;
+  const { deletedByUserId } = req.body;
   const UserSettings = sequelize.models.UserSettings;
+  const CommonAttributes = sequelize.models.CommonAttributes;
 
   try {
-    const result = await UserSettings.destroy({
+    // Find the UserSettings by ID
+    const userSettings = await UserSettings.findOne({
       where: {
         SettingID: settingId,
       },
     });
 
-    if (result === 1) {
-      console.log("User settings deleted successfully");
-      res.json({ message: "User settings deleted successfully" });
+    // Check if the user settings exist
+    if (!userSettings) {
+      console.error("User settings not found");
+      return res.status(404).json({ error: "User settings not found" });
+    }
+
+    // Retrieve CommonAttributeID from the UserSettings
+    const commonAttributeId = userSettings.CommonAttributeID;
+
+    // Update IsDeleted status and DeletedByUserID in CommonAttributes table
+    const commonAttributeUpdateResult = await CommonAttributes.update(
+      { IsDeleted: true, DeletedByUserID: deletedByUserId },
+      {
+        where: {
+          AttributeID: commonAttributeId,
+          IsDeleted: false,
+        },
+      }
+    );
+
+    // Check if the update was successful
+    if (commonAttributeUpdateResult[0] === 1) {
+      console.log("User settings marked as deleted successfully");
+      res.json({ message: "User settings marked as deleted successfully" });
     } else {
       console.error("User settings deletion failed");
       res.status(500).json({ error: "User settings deletion failed" });

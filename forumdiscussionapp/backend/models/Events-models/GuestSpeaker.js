@@ -33,6 +33,7 @@ export default function (sequelize) {
     },
     {
       tableName: "GuestSpeakers",
+      timestamps: false,
       indexes: [
         {
           name: "idx_event_id_guestspeakers",

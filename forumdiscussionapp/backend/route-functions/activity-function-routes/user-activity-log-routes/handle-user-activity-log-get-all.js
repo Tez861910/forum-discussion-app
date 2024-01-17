@@ -2,8 +2,22 @@ import { sequelize } from "../../../db.js";
 
 export const handleUserActivityLogGetAll = async (req, res) => {
   const UserActivityLogs = sequelize.models.UserActivityLogs;
+  const CommonAttributes = sequelize.models.CommonAttributes;
+
   try {
-    const result = await UserActivityLogs.findAll();
+    // Find all UserActivityLogs where IsDeleted is false
+    const result = await UserActivityLogs.findAll({
+      include: [
+        {
+          model: CommonAttributes,
+          attributes: [],
+          where: {
+            AttributeID: sequelize.col("UserActivityLogs.CommonAttributeID"),
+            IsDeleted: false,
+          },
+        },
+      ],
+    });
 
     console.log("User activity logs retrieved successfully");
     res.json({ userActivityLogs: result });

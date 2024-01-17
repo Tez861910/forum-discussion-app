@@ -26,6 +26,7 @@ export default function (sequelize) {
     },
     {
       tableName: "Departments",
+      timestamps: false,
       indexes: [
         {
           name: "idx_department_id_departments",

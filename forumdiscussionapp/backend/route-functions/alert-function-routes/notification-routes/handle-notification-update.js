@@ -5,6 +5,7 @@ export const handleNotificationUpdate = async (req, res) => {
   const { userId, notificationContent, actionType, actionLink, isRead } =
     req.body;
   const Notifications = sequelize.models.Notifications;
+  const CommonAttributes = sequelize.models.CommonAttributes;
 
   try {
     if (!userId || !notificationContent || !actionType) {
@@ -14,6 +15,18 @@ export const handleNotificationUpdate = async (req, res) => {
       });
     }
 
+    // Find the Notification by ID
+    const notification = await Notifications.findOne({
+      where: { NotificationID: notificationId },
+    });
+
+    // Check if the notification exists
+    if (!notification) {
+      console.error("Notification not found");
+      return res.status(404).json({ error: "Notification not found" });
+    }
+
+    // Update the Notification
     const result = await Notifications.update(
       {
         UserID: userId,
@@ -25,7 +38,17 @@ export const handleNotificationUpdate = async (req, res) => {
       { where: { NotificationID: notificationId } }
     );
 
-    if (result[0] === 1) {
+    // Update UpdatedByUserID in CommonAttributes table
+    const commonAttributeUpdateResult = await CommonAttributes.update(
+      { UpdatedByUserID: userId },
+      {
+        where: {
+          AttributeID: notification.CommonAttributeID,
+        },
+      }
+    );
+
+    if (result[0] === 1 && commonAttributeUpdateResult[0] === 1) {
       console.log("Notification updated successfully");
       res.json({ message: "Notification updated successfully" });
     } else {

@@ -17,6 +17,7 @@ export default function (sequelize) {
     },
     {
       tableName: "ReactionType",
+      timestamps: false,
       indexes: [
         {
           name: "idx_reaction_type_name_reactiontype",

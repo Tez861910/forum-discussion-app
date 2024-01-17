@@ -2,6 +2,7 @@ import { sequelize } from "../../../db.js";
 
 export const handleAttachmentCreate = async (req, res) => {
   const Attachments = sequelize.models.Attachments;
+  const CommonAttributes = sequelize.models.CommonAttributes;
   const {
     filePath,
     attachedByUserId,
@@ -28,6 +29,23 @@ export const handleAttachmentCreate = async (req, res) => {
       });
     }
 
+    // Create CommonAttributes entry
+    const commonAttributeResult = await CommonAttributes.create({
+      CreatedByUserID: attachedByUserId,
+    });
+
+    // Check if CommonAttributes entry was created successfully
+    if (!commonAttributeResult) {
+      console.error("CommonAttributes creation failed");
+      return res
+        .status(500)
+        .json({ error: "CommonAttributes creation failed" });
+    }
+
+    // Retrieve AttributeID from the created CommonAttributes entry
+    const commonAttributeId = commonAttributeResult.AttributeID;
+
+    // Create Attachments entry with CommonAttributeID
     const result = await Attachments.create({
       FilePath: filePath,
       AttachedByUserID: attachedByUserId,
@@ -35,6 +53,7 @@ export const handleAttachmentCreate = async (req, res) => {
       AttachedToType: attachedToType,
       AttachedToID: attachedToId,
       Description: description,
+      CommonAttributeID: commonAttributeId,
     });
 
     if (result) {

@@ -30,6 +30,7 @@ export default function (sequelize) {
     },
     {
       tableName: "ReadReceipts",
+      timestamps: false,
       indexes: [
         {
           name: "idx_message_id_readreceipts",

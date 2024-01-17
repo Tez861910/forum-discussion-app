@@ -23,6 +23,7 @@ export default function (sequelize) {
     },
     {
       tableName: "EventCategories",
+      timestamps: false,
       indexes: [
         {
           name: "idx_common_attribute_id_eventcategories",

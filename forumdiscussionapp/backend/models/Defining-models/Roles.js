@@ -26,6 +26,7 @@ export default function (sequelize) {
     },
     {
       tableName: "Roles",
+      timestamps: false,
       indexes: [
         {
           name: "idx_common_attribute_id_roles",

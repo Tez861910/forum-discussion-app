@@ -4,6 +4,7 @@ export const handleAnnouncementUpdate = async (req, res) => {
   const { announcementId } = req.params;
   const { title, content, expiryDate, createdByUserId } = req.body;
   const Announcements = sequelize.models.Announcements;
+  const CommonAttributes = sequelize.models.CommonAttributes;
 
   try {
     if (!title || !content || !createdByUserId) {
@@ -13,6 +14,17 @@ export const handleAnnouncementUpdate = async (req, res) => {
         .json({ error: "Title, content, and createdByUserId are required" });
     }
 
+    // Find the existing announcement
+    const existingAnnouncement = await Announcements.findOne({
+      where: { AnnouncementID: announcementId },
+    });
+
+    if (!existingAnnouncement) {
+      console.error("Announcement not found");
+      return res.status(404).json({ error: "Announcement not found" });
+    }
+
+    // Update the announcement
     const result = await Announcements.update(
       {
         AnnouncementTitle: title,
@@ -23,7 +35,18 @@ export const handleAnnouncementUpdate = async (req, res) => {
       { where: { AnnouncementID: announcementId } }
     );
 
-    if (result[0] === 1) {
+    // Update the CommonAttributes table with updatedByUserId
+    const commonAttributeUpdateResult = await CommonAttributes.update(
+      { UpdatedByUserID: createdByUserId },
+      {
+        where: {
+          AttributeID: existingAnnouncement.CommonAttributeID,
+          IsDeleted: false,
+        },
+      }
+    );
+
+    if (result[0] === 1 && commonAttributeUpdateResult[0] === 1) {
       console.log("Announcement updated successfully");
       res.json({ message: "Announcement updated successfully" });
     } else {
