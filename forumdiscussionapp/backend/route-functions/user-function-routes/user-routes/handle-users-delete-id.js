@@ -1,15 +1,13 @@
-import {
-  Users,
-  UserCourses,
-  UserRoles,
-  UserSettings,
-  CommonAttributes,
-} from "../../../db.js";
+import { sequelize } from "../../../db.js";
 
 export const handleUsersDeleteId = async (req, res) => {
   const { id } = req.params;
 
   try {
+    // Dynamically access the models using sequelize.models
+    const { Users, UserCourses, UserRoles, UserSettings, CommonAttributes } =
+      sequelize.models;
+
     // Fetch the user's CommonAttributeID
     const user = await Users.findOne({ where: { UserID: id } });
     const commonAttributeId = user.CommonAttributeID;

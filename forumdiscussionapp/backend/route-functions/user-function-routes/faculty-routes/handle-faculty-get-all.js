@@ -1,7 +1,10 @@
-import { FacultyMembers } from "../../../db.js";
+import { sequelize } from "../../../db.js";
 
 export const handleFacultyGetAll = async (req, res) => {
   try {
+    // Dynamically access the FacultyMembers model using sequelize.models
+    const FacultyMembers = sequelize.models.FacultyMembers;
+
     const facultyMembers = await FacultyMembers.findAll();
 
     console.log("Faculty members retrieved successfully");

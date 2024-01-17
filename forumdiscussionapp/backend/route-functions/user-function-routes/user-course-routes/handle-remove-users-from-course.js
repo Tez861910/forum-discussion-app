@@ -1,4 +1,4 @@
-import { UserCourses, CommonAttributes } from "../../../db.js";
+import { sequelize } from "../../../db.js";
 import { Op } from "sequelize";
 
 export const handleRemoveUsersFromCourse = async (req, res) => {
@@ -6,6 +6,10 @@ export const handleRemoveUsersFromCourse = async (req, res) => {
   const { deletedByUserID } = req.body;
 
   try {
+    // Dynamically access the models using sequelize.models
+    const UserCourses = sequelize.models.UserCourses;
+    const CommonAttributes = sequelize.models.CommonAttributes;
+
     // Fetch the user course for the given user IDs and course ID
     const userCourses = await UserCourses.findAll({
       where: {

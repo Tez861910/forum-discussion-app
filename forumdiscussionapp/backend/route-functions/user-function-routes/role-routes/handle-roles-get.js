@@ -1,7 +1,11 @@
-import { Roles, CommonAttributes } from "../../../db.js";
+import { sequelize } from "../../../db.js";
 
 export const handleRolesGet = async (req, res) => {
   try {
+    // Dynamically access the Roles and CommonAttributes models using sequelize.models
+    const Roles = sequelize.models.Roles;
+    const CommonAttributes = sequelize.models.CommonAttributes;
+
     const roles = await Roles.findAll({
       include: [
         {

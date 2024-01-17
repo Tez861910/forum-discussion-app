@@ -1,10 +1,13 @@
-import { CourseMaterials } from "../../../db.js";
+import { sequelize } from "../../../db.js";
 
 export const handleCourseMaterialUpdate = async (req, res) => {
   const { materialId } = req.params;
   const { materialName, materialType, filePath, description } = req.body;
 
   try {
+    // Dynamically access the CourseMaterials model using sequelize.models
+    const CourseMaterials = sequelize.models.CourseMaterials;
+
     // Update the course material
     const [numberOfAffectedRows, affectedRows] = await CourseMaterials.update(
       {

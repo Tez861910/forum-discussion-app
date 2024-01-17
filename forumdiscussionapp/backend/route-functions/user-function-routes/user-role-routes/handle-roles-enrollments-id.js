@@ -1,9 +1,14 @@
-import { Users, UserRoles, CommonAttributes } from "../../../db.js";
+import { sequelize } from "../../../db.js";
 
 export const handleRolesEnrollmentsId = async (req, res) => {
   const { roleId } = req.params;
 
   try {
+    // Dynamically access the models using sequelize.models
+    const Users = sequelize.models.Users;
+    const UserRoles = sequelize.models.UserRoles;
+    const CommonAttributes = sequelize.models.CommonAttributes;
+
     // Fetch user data for a given role ID
     const users = await Users.findAll({
       where: {

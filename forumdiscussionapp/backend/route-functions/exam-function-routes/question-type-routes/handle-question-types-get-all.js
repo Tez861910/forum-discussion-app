@@ -1,7 +1,10 @@
-import { QuestionTypes } from "../../../db.js";
+import { sequelize } from "../../../db.js";
 
 export const handleQuestionTypeGetAll = async (req, res) => {
   try {
+    // Dynamically access the QuestionTypes model using sequelize.models
+    const { QuestionTypes } = sequelize.models;
+
     const result = await QuestionTypes.findAll();
 
     console.log("Question types retrieved successfully");

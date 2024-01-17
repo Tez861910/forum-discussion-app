@@ -1,10 +1,14 @@
-import { UserCourses, CommonAttributes } from "../../../db.js";
+import { sequelize } from "../../../db.js";
 import { Op } from "sequelize";
 
 export const handleCoursesIdEnroll = async (req, res) => {
   const { userIds, courseId } = req.body;
 
   try {
+    // Dynamically access the models using sequelize.models
+    const UserCourses = sequelize.models.UserCourses;
+    const CommonAttributes = sequelize.models.CommonAttributes;
+
     // Check if any user is already enrolled in the selected course
     const existingEnrollments = await UserCourses.findAll({
       where: {

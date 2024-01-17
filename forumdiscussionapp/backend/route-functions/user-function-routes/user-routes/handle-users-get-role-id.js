@@ -1,9 +1,12 @@
-import { Users, UserRoles, CommonAttributes } from "../../../db.js";
+import { sequelize } from "../../../db.js";
 
 export const handleUsersGetRoleId = async (req, res) => {
   const { roleId } = req.params;
 
   try {
+    // Dynamically access the models using sequelize.models
+    const { Users, UserRoles, CommonAttributes } = sequelize.models;
+
     // Fetch user data for a given role ID
     const users = await Users.findAll({
       where: { "$CommonAttributes.IsDeleted$": false },

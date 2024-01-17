@@ -1,4 +1,4 @@
-import { Users, UserRoles, CommonAttributes } from "../../../db.js";
+import { sequelize } from "../../../db.js";
 import { hashPassword } from "../../../authvalid.js";
 
 export const handleUsersUpdateId = async (req, res) => {
@@ -14,6 +14,9 @@ export const handleUsersUpdateId = async (req, res) => {
         .status(400)
         .json({ error: "User Data and UpdatedByUserId are required" });
     }
+
+    // Dynamically access the Users, UserRoles, and CommonAttributes models using sequelize.models
+    const { Users, UserRoles, CommonAttributes } = sequelize.models;
 
     // Fetch the user's CommonAttributeID
     const user = await Users.findOne({ where: { UserID: id } });

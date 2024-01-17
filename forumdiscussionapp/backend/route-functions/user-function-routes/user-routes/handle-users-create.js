@@ -1,9 +1,4 @@
-import {
-  CommonAttributes,
-  Users,
-  UserRoles,
-  UserSettings,
-} from "../../../db.js";
+import { sequelize } from "../../../db.js";
 import {
   hashPassword,
   createAccessTokenAndSetCookies,
@@ -44,6 +39,10 @@ export const handleUsersCreate = async (req, res) => {
     }
 
     const hashedPassword = await hashPassword(password);
+
+    // Dynamically access the models using sequelize.models
+    const { Users, CommonAttributes, UserRoles, UserSettings } =
+      sequelize.models;
 
     // Create a record in the CommonAttributes table
     const commonAttributes = await CommonAttributes.create({

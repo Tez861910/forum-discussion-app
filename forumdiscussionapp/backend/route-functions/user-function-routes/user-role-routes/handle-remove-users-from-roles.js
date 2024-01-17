@@ -1,4 +1,4 @@
-import { UserRoles, CommonAttributes } from "../../../db.js";
+import { sequelize } from "../../../db.js";
 import { Op } from "sequelize";
 
 export const handleRemoveUsersFromRole = async (req, res) => {
@@ -11,6 +11,10 @@ export const handleRemoveUsersFromRole = async (req, res) => {
         .status(400)
         .json({ error: "Invalid or empty user IDs provided" });
     }
+
+    // Dynamically access the models using sequelize.models
+    const UserRoles = sequelize.models.UserRoles;
+    const CommonAttributes = sequelize.models.CommonAttributes;
 
     // Fetch the user roles for the given user IDs and role ID
     const userRoles = await UserRoles.findAll({

@@ -1,9 +1,12 @@
-import { CourseMaterials } from "../../../db.js";
+import { sequelize } from "../../../db.js";
 
 export const handleCourseMaterialGet = async (req, res) => {
   const { materialId } = req.params;
 
   try {
+    // Dynamically access the CourseMaterials model using sequelize.models
+    const CourseMaterials = sequelize.models.CourseMaterials;
+
     const courseMaterial = await CourseMaterials.findOne({
       where: { MaterialID: materialId },
     });

@@ -1,9 +1,13 @@
-import { Roles, CommonAttributes } from "../../../db.js";
+import { sequelize } from "../../../db.js";
 
 export const handleRolesCreate = async (req, res) => {
   const { roleName, description, createdByUserID } = req.body;
 
   try {
+    // Dynamically access the Roles and CommonAttributes models using sequelize.models
+    const Roles = sequelize.models.Roles;
+    const CommonAttributes = sequelize.models.CommonAttributes;
+
     // Validate inputs
     if (!roleName || !createdByUserID) {
       console.log("Role name and createdByUserID are required");

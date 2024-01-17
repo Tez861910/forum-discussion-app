@@ -1,10 +1,16 @@
-import { Courses, CommonAttributes } from "../../../db.js";
+import { sequelize } from "../../../db.js";
 
 export const handleCoursesPatchId = async (req, res) => {
   const deletedByUserID = req.user.id;
   const { id } = req.params;
 
   try {
+    // Dynamically access the Courses model using sequelize.models
+    const Courses = sequelize.models.Courses;
+
+    // Dynamically access the CommonAttributes model using sequelize.models
+    const CommonAttributes = sequelize.models.CommonAttributes;
+
     // Fetch the course with the provided ID
     const course = await Courses.findOne({
       where: { CourseID: id },

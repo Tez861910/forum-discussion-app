@@ -1,9 +1,12 @@
-import { CourseMaterials } from "../../../db.js";
+import { sequelize } from "../../../db.js";
 
 export const handleCourseMaterialDelete = async (req, res) => {
   const { materialId } = req.params;
 
   try {
+    // Dynamically access the CourseMaterials model using sequelize.models
+    const CourseMaterials = sequelize.models.CourseMaterials;
+
     // Delete the course material
     const result = await CourseMaterials.destroy({
       where: { MaterialID: materialId },
@@ -18,11 +21,9 @@ export const handleCourseMaterialDelete = async (req, res) => {
     }
   } catch (error) {
     console.error("Error deleting course material:", error);
-    res
-      .status(500)
-      .json({
-        error: "Course material deletion failed",
-        details: error.message,
-      });
+    res.status(500).json({
+      error: "Course material deletion failed",
+      details: error.message,
+    });
   }
 };

@@ -1,10 +1,13 @@
-import { CourseMaterials } from "../../../db.js";
+import { sequelize } from "../../../db.js";
 
 export const handleCourseMaterialCreate = async (req, res) => {
   const { courseId, materialName, materialType, filePath, description } =
     req.body;
 
   try {
+    // Dynamically access the CourseMaterials model using sequelize.models
+    const CourseMaterials = sequelize.models.CourseMaterials;
+
     // Create a new CourseMaterial
     const courseMaterial = await CourseMaterials.create({
       CourseID: courseId,
@@ -18,11 +21,9 @@ export const handleCourseMaterialCreate = async (req, res) => {
     res.json({ message: "Course material created successfully" });
   } catch (error) {
     console.error("Error creating course material:", error);
-    res
-      .status(500)
-      .json({
-        error: "Course material creation failed",
-        details: error.message,
-      });
+    res.status(500).json({
+      error: "Course material creation failed",
+      details: error.message,
+    });
   }
 };

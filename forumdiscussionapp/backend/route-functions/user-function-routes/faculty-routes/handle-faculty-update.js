@@ -1,10 +1,13 @@
-import { FacultyMembers } from "../../../db.js";
+import { sequelize } from "../../../db.js";
 
 export const handleFacultyUpdate = async (req, res) => {
   const { facultyId } = req.params;
   const { facultyName, departmentId } = req.body;
 
   try {
+    // Dynamically access the FacultyMembers model using sequelize.models
+    const FacultyMembers = sequelize.models.FacultyMembers;
+
     // Update the faculty member
     const [numberOfAffectedRows, affectedRows] = await FacultyMembers.update(
       {

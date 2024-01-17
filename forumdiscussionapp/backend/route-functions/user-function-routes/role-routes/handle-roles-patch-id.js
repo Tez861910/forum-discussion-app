@@ -1,9 +1,13 @@
-import { Roles, CommonAttributes } from "../../../db.js";
+import { sequelize } from "../../../db.js";
 
 export const handleRolesPatchId = async (req, res) => {
   const { id } = req.params;
 
   try {
+    // Dynamically access the Roles and CommonAttributes models using sequelize.models
+    const Roles = sequelize.models.Roles;
+    const CommonAttributes = sequelize.models.CommonAttributes;
+
     // Check if the role with the provided ID exists
     const role = await Roles.findOne({
       where: { RoleID: id },

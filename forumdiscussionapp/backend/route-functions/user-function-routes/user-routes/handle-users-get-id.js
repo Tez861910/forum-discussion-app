@@ -1,9 +1,12 @@
-import { Users, UserRoles, UserSettings } from "../../../db.js";
+import { sequelize } from "../../../db.js";
 
 export const handleUsersGetId = async (req, res) => {
   const { id: userId } = req.params;
 
   try {
+    // Dynamically access the models using sequelize.models
+    const { Users, UserRoles, UserSettings } = sequelize.models;
+
     // Fetch user data including the role ID and user settings
     const user = await Users.findOne({
       where: { UserID: userId },

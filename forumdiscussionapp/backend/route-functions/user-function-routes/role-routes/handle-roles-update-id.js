@@ -1,10 +1,14 @@
-import { Roles, CommonAttributes } from "../../../db.js";
+import { sequelize } from "../../../db.js";
 
 export const handleRolesUpdateId = async (req, res) => {
   const { id } = req.params;
   const { roleName, roleDescription } = req.body;
 
   try {
+    // Dynamically access the Roles and CommonAttributes models using sequelize.models
+    const Roles = sequelize.models.Roles;
+    const CommonAttributes = sequelize.models.CommonAttributes;
+
     if (!roleName) {
       console.log("Role name is required");
       return res.status(400).json({ error: "Role name is required" });

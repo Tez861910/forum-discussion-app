@@ -1,9 +1,12 @@
-import { Departments } from "../../../db.js";
+import { sequelize } from "../../../db.js";
 
 export const handleDepartmentCreate = async (req, res) => {
   const { departmentName, departmentDescription } = req.body;
 
   try {
+    // Dynamically access the Departments model using sequelize.models
+    const Departments = sequelize.models.Departments;
+
     // Create a new Department
     const department = await Departments.create({
       DepartmentName: departmentName,

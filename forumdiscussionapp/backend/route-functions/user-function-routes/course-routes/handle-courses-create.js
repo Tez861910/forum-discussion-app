@@ -1,4 +1,4 @@
-import { Courses, CommonAttributes } from "../../../db.js";
+import { sequelize } from "../../../db.js";
 
 export const handleCoursesCreate = async (req, res) => {
   const { courseName, courseDescription, createdByUserID } = req.body;
@@ -12,10 +12,16 @@ export const handleCoursesCreate = async (req, res) => {
         .json({ error: "Course name and createdByUserID are required" });
     }
 
+    // Dynamically access the CommonAttributes model using sequelize.models
+    const CommonAttributes = sequelize.models.CommonAttributes;
+
     // Step 1: Create a Common Attribute entry
     const commonAttributes = await CommonAttributes.create({
       CreatedByUserID: createdByUserID,
     });
+
+    // Dynamically access the Courses model using sequelize.models
+    const Courses = sequelize.models.Courses;
 
     // Step 2: Insert the course with the generated CommonAttributeID
     const course = await Courses.create({

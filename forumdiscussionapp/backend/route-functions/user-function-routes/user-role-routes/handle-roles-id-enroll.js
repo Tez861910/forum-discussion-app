@@ -1,4 +1,4 @@
-import { UserRoles, CommonAttributes } from "../../../db.js";
+import { sequelize } from "../../../db.js";
 import { Op } from "sequelize";
 
 export const handleRolesIdEnroll = async (req, res) => {
@@ -7,6 +7,10 @@ export const handleRolesIdEnroll = async (req, res) => {
   const { createdByUserId } = req.body;
 
   try {
+    // Dynamically access the models using sequelize.models
+    const UserRoles = sequelize.models.UserRoles;
+    const CommonAttributes = sequelize.models.CommonAttributes;
+
     // Create a CommonAttributes entry
     const commonAttributes = await CommonAttributes.create({
       CreatedByUserID: createdByUserId,

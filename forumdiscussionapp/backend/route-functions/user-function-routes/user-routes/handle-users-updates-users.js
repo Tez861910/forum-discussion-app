@@ -1,4 +1,4 @@
-import { Users, CommonAttributes } from "../../../db.js";
+import { sequelize } from "../../../db.js";
 import { hashPassword } from "../../../authvalid.js";
 
 export const handleUsersUpdateUsers = async (req, res) => {
@@ -24,6 +24,9 @@ export const handleUsersUpdateUsers = async (req, res) => {
         updatedUserData.UserPassword
       );
     }
+
+    // Dynamically access the Users and CommonAttributes models using sequelize.models
+    const { Users, CommonAttributes } = sequelize.models;
 
     // Fetch the user's CommonAttributeID
     const user = await Users.findOne({ where: { UserID: id } });

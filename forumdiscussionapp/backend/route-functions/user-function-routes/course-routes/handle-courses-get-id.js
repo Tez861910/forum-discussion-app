@@ -1,9 +1,15 @@
-import { Courses, CommonAttributes } from "../../../db.js";
+import { sequelize } from "../../../db.js";
 
 export const handleCoursesGetId = async (req, res) => {
   const { id } = req.params;
 
   try {
+    // Dynamically access the Courses model using sequelize.models
+    const Courses = sequelize.models.Courses;
+
+    // Dynamically access the CommonAttributes model using sequelize.models
+    const CommonAttributes = sequelize.models.CommonAttributes;
+
     const course = await Courses.findOne({
       where: { CourseID: id },
       include: [

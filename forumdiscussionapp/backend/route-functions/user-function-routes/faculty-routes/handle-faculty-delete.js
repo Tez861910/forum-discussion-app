@@ -1,9 +1,12 @@
-import { FacultyMembers } from "../../../db.js";
+import { sequelize } from "../../../db.js";
 
 export const handleFacultyDelete = async (req, res) => {
   const { facultyId } = req.params;
 
   try {
+    // Dynamically access the FacultyMembers model using sequelize.models
+    const FacultyMembers = sequelize.models.FacultyMembers;
+
     // Delete the faculty member
     const result = await FacultyMembers.destroy({
       where: { FacultyID: facultyId },
@@ -18,11 +21,9 @@ export const handleFacultyDelete = async (req, res) => {
     }
   } catch (error) {
     console.error("Error deleting faculty member:", error);
-    res
-      .status(500)
-      .json({
-        error: "Faculty member deletion failed",
-        details: error.message,
-      });
+    res.status(500).json({
+      error: "Faculty member deletion failed",
+      details: error.message,
+    });
   }
 };

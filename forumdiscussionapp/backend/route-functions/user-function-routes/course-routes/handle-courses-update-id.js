@@ -1,4 +1,4 @@
-import { Courses, CommonAttributes } from "../../../db.js";
+import { sequelize } from "../../../db.js";
 
 export const handleCoursesUpdateId = async (req, res) => {
   const { id } = req.params;
@@ -6,6 +6,12 @@ export const handleCoursesUpdateId = async (req, res) => {
   const updatedByUserID = req.user.id;
 
   try {
+    // Dynamically access the Courses model using sequelize.models
+    const Courses = sequelize.models.Courses;
+
+    // Dynamically access the CommonAttributes model using sequelize.models
+    const CommonAttributes = sequelize.models.CommonAttributes;
+
     if (!courseName && !courseDescription) {
       console.log(
         "At least one of CourseName or CourseDescription is required"

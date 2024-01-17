@@ -1,10 +1,13 @@
-import { UserPollVotes } from "../../../db.js";
+import { sequelize } from "../../../db.js";
 
 export const handleUserPollVoteGetByUserId = async (req, res) => {
   // Extracting the userId from the request parameters
   const { userId } = req.params;
 
   try {
+    // Dynamically access the UserPollVotes model using sequelize.models
+    const { UserPollVotes } = sequelize.models;
+
     // Using Sequelize's findAll method to retrieve user poll votes
     const result = await UserPollVotes.findAll({
       // Specifying the condition for the query: where UserID matches the provided userId

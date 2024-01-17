@@ -1,9 +1,12 @@
-import { Departments } from "../../../db.js";
+import { sequelize } from "../../../db.js";
 
 export const handleDepartmentDelete = async (req, res) => {
   const { departmentId } = req.params;
 
   try {
+    // Dynamically access the Departments model using sequelize.models
+    const Departments = sequelize.models.Departments;
+
     // Delete the department
     const result = await Departments.destroy({
       where: { DepartmentID: departmentId },

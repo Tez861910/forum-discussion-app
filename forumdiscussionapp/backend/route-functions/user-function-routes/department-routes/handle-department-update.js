@@ -1,10 +1,13 @@
-import { Departments } from "../../../db.js";
+import { sequelize } from "../../../db.js";
 
 export const handleDepartmentUpdate = async (req, res) => {
   const { departmentId } = req.params;
   const { departmentName, departmentDescription } = req.body;
 
   try {
+    // Dynamically access the Departments model using sequelize.models
+    const Departments = sequelize.models.Departments;
+
     // Update the department
     const [numberOfAffectedRows, affectedRows] = await Departments.update(
       {

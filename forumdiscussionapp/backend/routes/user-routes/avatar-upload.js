@@ -1,7 +1,7 @@
 import express from "express";
 import multer from "multer";
 import path from "path";
-import { Users } from "../../db.js";
+import { sequelize } from "../../db.js";
 import { validateAvatarUpload } from "../../body-validation/auth-validation-functions/home-validation.js";
 import { verifyRefreshToken } from "../../authvalid.js";
 
@@ -43,6 +43,9 @@ router.post(
     const filePath = req.file.path;
 
     try {
+      // Dynamically access the Users model using sequelize.models
+      const { Users } = sequelize.models;
+
       const result = await Users.update(
         { AvatarPath: filePath },
         { where: { UserID: req.body.userId } }
