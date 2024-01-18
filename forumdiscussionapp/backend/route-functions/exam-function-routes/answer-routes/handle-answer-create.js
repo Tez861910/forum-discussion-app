@@ -12,10 +12,21 @@ export const handleAnswerCreate = async (req, res) => {
     }
 
     const Answers = sequelize.models.Answers;
+
+    // Insert into CommonAttributes table to get AttributeID
+    const commonAttributesResult =
+      await sequelize.models.CommonAttributes.create({
+        CreatedByUserID: createdByUserId,
+      });
+
+    // Extract AttributeID from the result
+    const commonAttributeID = commonAttributesResult.get("AttributeID");
+
     const result = await Answers.create({
       QuestionID: questionId,
       AnswerText: answerText,
       CreatedByUserID: createdByUserId,
+      CommonAttributeID: commonAttributeID,
     });
 
     if (result) {

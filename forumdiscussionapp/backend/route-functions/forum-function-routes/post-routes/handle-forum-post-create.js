@@ -12,12 +12,27 @@ export const handleForumPostCreate = async (req, res) => {
         .json({ error: "UserID and PostContent are required" });
     }
 
+    const CommonAttributes = sequelize.models.CommonAttributes;
     const ForumPosts = sequelize.models.ForumPosts;
 
+    // Step 1: Create a CommonAttributes entry
+    const commonAttributesResult = await CommonAttributes.create({
+      CreatedByUserID: userId,
+    });
+
+    if (!commonAttributesResult) {
+      console.error("CommonAttributes creation failed");
+      return res
+        .status(500)
+        .json({ error: "CommonAttributes creation failed" });
+    }
+
+    // Step 2: Create a ForumPost entry with CommonAttributeID
     const result = await ForumPosts.create({
       ForumID: forumId,
       UserID: userId,
       PostContent: postContent,
+      CommonAttributeID: commonAttributesResult.AttributeID,
     });
 
     if (result) {

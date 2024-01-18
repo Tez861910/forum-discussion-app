@@ -4,9 +4,20 @@ export const handlePollGetCreatedByUserId = async (req, res) => {
   const { userId } = req.params;
 
   try {
+    const CommonAttributes = sequelize.models.CommonAttributes;
     const Polls = sequelize.models.Polls;
 
-    const result = await Polls.findAll({ where: { CreatedByUserID: userId } });
+    // Find all Polls associated with the given CreatedByUserID
+    const result = await Polls.findAll({
+      where: { CreatedByUserID: userId },
+      include: [
+        {
+          model: CommonAttributes,
+          where: { IsDeleted: false },
+          required: true,
+        },
+      ],
+    });
 
     console.log("Polls retrieved successfully for createdByUserId:", userId);
     res.json(result);

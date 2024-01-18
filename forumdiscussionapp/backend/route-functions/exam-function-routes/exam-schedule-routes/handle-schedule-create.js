@@ -4,13 +4,31 @@ export const handleScheduleCreate = async (req, res) => {
   const { examId, startTime, endTime, createdByUserId } = req.body;
 
   const ExamSchedules = sequelize.models.ExamSchedules;
+  const CommonAttributes = sequelize.models.CommonAttributes;
 
   try {
-    const result = await ExamSchedules.create({
-      ExamID: examId,
-      StartTime: startTime,
-      EndTime: endTime,
-      CreatedByUserID: createdByUserId,
+    // Create a transaction to ensure atomicity
+    const result = await sequelize.transaction(async (t) => {
+      // Create a CommonAttributes entry with CreatedByUserID
+      const commonAttributesResult = await CommonAttributes.create(
+        {
+          CreatedByUserID: createdByUserId,
+        },
+        { transaction: t }
+      );
+
+      // Use the newly created AttributeID as CommonAttributeID in ExamSchedules
+      const examScheduleResult = await ExamSchedules.create(
+        {
+          ExamID: examId,
+          StartTime: startTime,
+          EndTime: endTime,
+          CommonAttributeID: commonAttributesResult.AttributeID,
+        },
+        { transaction: t }
+      );
+
+      return examScheduleResult;
     });
 
     if (result) {

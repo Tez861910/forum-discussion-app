@@ -13,7 +13,7 @@ export const createEventCategory = async (req, res) => {
     });
 
     // Extract AttributeID from the result
-    const commonAttributeID = commonAttributesResult.id;
+    const commonAttributeID = commonAttributesResult.AttributeID;
 
     // Insert into EventCategories table using CommonAttributeID
     const result = await EventCategories.create({
@@ -24,7 +24,7 @@ export const createEventCategory = async (req, res) => {
     res.status(201).json({
       success: true,
       message: "Event category created successfully",
-      categoryId: result.id,
+      categoryId: result.CategoryID,
     });
   } catch (error) {
     console.error("Error creating event category:", error);

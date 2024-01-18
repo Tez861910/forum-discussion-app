@@ -30,7 +30,7 @@ export const softDeleteGuestSpeaker = async (req, res) => {
 
     // Update the IsDeleted field in the CommonAttributes table
     await CommonAttributes.update(
-      { IsDeleted: true, UpdatedByUserID: UserID },
+      { IsDeleted: true, DeletedByUserID: UserID },
       { where: { AttributeID: commonAttributesInstance.get("AttributeID") } }
     );
 

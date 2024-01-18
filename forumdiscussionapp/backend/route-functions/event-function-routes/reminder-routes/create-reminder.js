@@ -6,9 +6,21 @@ export const createReminder = async (req, res) => {
     const { ReminderTime } = req.body;
 
     const Reminders = sequelize.models.Reminders;
+    const CommonAttributes = sequelize.models.CommonAttributes;
+
+    // Insert into CommonAttributes table to get AttributeID
+    const commonAttributesResult = await CommonAttributes.create({
+      CreatedByUserID: req.user.userId,
+    });
+
+    // Extract AttributeID from the result
+    const commonAttributeID = commonAttributesResult.get("AttributeID");
+
+    // Insert into Reminders table using CommonAttributeID
     await Reminders.create({
       EventID: eventId,
       ReminderTime,
+      CommonAttributeID: commonAttributeID,
     });
 
     res

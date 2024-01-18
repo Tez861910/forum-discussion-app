@@ -1,17 +1,28 @@
 import { sequelize } from "../../../db.js";
 
 export const handleQuestionTypeCreate = async (req, res) => {
-  const { questionTypeName } = req.body;
+  const { questionTypeName, createdByUserId } = req.body;
 
   try {
-    if (!questionTypeName) {
-      console.log("QuestionTypeName is required");
-      return res.status(400).json({ error: "QuestionTypeName is required" });
+    if (!questionTypeName || !createdByUserId) {
+      console.log("QuestionTypeName and CreatedByUserId are required");
+      return res.status(400).json({
+        error: "QuestionTypeName and CreatedByUserId are required",
+      });
     }
 
     const QuestionTypes = sequelize.models.QuestionTypes;
+    const CommonAttributes = sequelize.models.CommonAttributes;
+
+    // Create a new CommonAttribute entry
+    const commonAttribute = await CommonAttributes.create({
+      CreatedByUserID: createdByUserId,
+    });
+
+    // Create a new QuestionType with associated CommonAttribute
     const newQuestionType = await QuestionTypes.create({
       QuestionTypeName: questionTypeName,
+      CommonAttributeID: commonAttribute.AttributeID,
     });
 
     if (newQuestionType) {

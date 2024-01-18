@@ -22,12 +22,9 @@ export const getAllEvents = async (req, res) => {
         {
           model: CommonAttributes,
           attributes: [],
+          where: { IsDeleted: false },
         },
       ],
-      where: Sequelize.where(
-        Sequelize.col("CommonAttributes.IsDeleted"),
-        false
-      ),
     });
 
     res.json({ success: true, events });

@@ -5,9 +5,20 @@ export const handleForumModeratorGetForumId = async (req, res) => {
 
   try {
     const ForumModerators = sequelize.models.ForumModerators;
+    const CommonAttributes = sequelize.models.CommonAttributes;
 
+    // Fetch forum moderators for the specified forumId with a join on CommonAttributes to check for IsDeleted
     const result = await ForumModerators.findAll({
       where: { ForumID: forumId },
+      include: [
+        {
+          model: CommonAttributes,
+          attributes: [],
+          where: {
+            IsDeleted: false,
+          },
+        },
+      ],
     });
 
     console.log(

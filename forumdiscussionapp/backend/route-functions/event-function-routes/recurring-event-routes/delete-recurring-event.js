@@ -31,9 +31,12 @@ export const softDeleteRecurringEvent = async (req, res) => {
       });
     }
 
-    // Update the IsDeleted field in the CommonAttributes table
+    // Update the IsDeleted field and DeletedByUserID in the CommonAttributes table
     await CommonAttributes.update(
-      { IsDeleted: true, UpdatedByUserID: UserID },
+      {
+        IsDeleted: true,
+        DeletedByUserID: UserID,
+      },
       { where: { AttributeID: commonAttributesInstance.get("AttributeID") } }
     );
 

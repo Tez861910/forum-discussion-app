@@ -4,35 +4,64 @@ export const handleForumCreate = async (req, res) => {
   const { courseId, forumName, forumDescription, createdByUserId } = req.body;
 
   try {
-    const Forums = sequelize.models.Forums;
+    // Start a transaction to ensure atomicity
+    const transaction = await sequelize.transaction();
 
-    if (!courseId || !forumName || !forumDescription || !createdByUserId) {
-      console.log(
-        "ForumName, ForumDescription, and CreatedByUserId are required"
+    try {
+      if (!courseId || !forumName || !forumDescription || !createdByUserId) {
+        console.log(
+          "ForumName, ForumDescription, and CreatedByUserId are required"
+        );
+        return res.status(400).json({
+          error:
+            "ForumName, ForumDescription, and CreatedByUserId are required",
+        });
+      }
+
+      // Get the Forums and CommonAttributes models
+      const Forums = sequelize.models.Forums;
+      const CommonAttributes = sequelize.models.CommonAttributes;
+
+      // Create a new entry in CommonAttributes with CreatedByUserID
+      const commonAttributesResult = await CommonAttributes.create(
+        {
+          CreatedByUserID: createdByUserId,
+        },
+        { transaction }
       );
-      return res.status(400).json({
-        error: "ForumName, ForumDescription, and CreatedByUserId are required",
-      });
-    }
 
-    const result = await Forums.create({
-      ForumName: forumName,
-      ForumDescription: forumDescription,
-      CreatedByUserID: createdByUserId,
-      CourseID: courseId,
-    });
+      // Extract the AttributeID from the created entry
+      const commonAttributeId = commonAttributesResult.AttributeID;
 
-    if (result) {
+      // Create a new forum with CommonAttributeID
+      const result = await Forums.create(
+        {
+          ForumName: forumName,
+          ForumDescription: forumDescription,
+          CommonAttributeID: commonAttributeId,
+          CourseID: courseId,
+        },
+        { transaction }
+      );
+
+      // Commit the transaction if everything is successful
+      await transaction.commit();
+
       console.log("Forum created successfully");
       res.json({ message: "Forum created successfully" });
-    } else {
-      console.error("Forum creation failed");
-      res.status(500).json({ error: "Forum creation failed" });
+    } catch (error) {
+      // Rollback the transaction in case of any errors
+      await transaction.rollback();
+
+      console.error("Error creating forum:", error);
+      res
+        .status(500)
+        .json({ error: "Forum creation failed", details: error.message });
     }
   } catch (error) {
-    console.error("Error creating forum:", error);
+    console.error("Transaction error:", error);
     res
       .status(500)
-      .json({ error: "Forum creation failed", details: error.message });
+      .json({ error: "Transaction failed", details: error.message });
   }
 };

@@ -4,10 +4,27 @@ export const handleForumGetById = async (req, res) => {
   const { forumId } = req.params;
 
   try {
+    // Get the Forums and CommonAttributes models
     const Forums = sequelize.models.Forums;
+    const CommonAttributes = sequelize.models.CommonAttributes;
 
+    // Define the association between Forums and CommonAttributes
+    Forums.belongsTo(CommonAttributes, {
+      foreignKey: "CommonAttributeID",
+      targetKey: "AttributeID",
+    });
+
+    // Fetch a specific forum by ID and include related CommonAttributes with IsDeleted condition
     const result = await Forums.findOne({
       where: { ForumID: forumId },
+      include: [
+        {
+          model: CommonAttributes,
+          where: {
+            IsDeleted: false,
+          },
+        },
+      ],
     });
 
     if (result) {

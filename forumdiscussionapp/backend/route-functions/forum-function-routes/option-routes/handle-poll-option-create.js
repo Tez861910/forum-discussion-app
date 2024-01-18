@@ -1,7 +1,7 @@
 import { sequelize } from "../../../db.js";
 
 export const handlePollOptionCreate = async (req, res) => {
-  const { pollId, optionText } = req.body;
+  const { pollId, optionText, userId } = req.body;
 
   try {
     if (!pollId || !optionText) {
@@ -12,10 +12,18 @@ export const handlePollOptionCreate = async (req, res) => {
     }
 
     const PollOptions = sequelize.models.PollOptions;
+    const CommonAttributes = sequelize.models.CommonAttributes;
 
+    // Insert a record into CommonAttributes table to get AttributeID
+    const commonAttribute = await CommonAttributes.create({
+      CreatedByUserID: userId,
+    });
+
+    // Use the AttributeID obtained from CommonAttributes for PollOptions creation
     const result = await PollOptions.create({
       PollID: pollId,
       OptionText: optionText,
+      CommonAttributeID: commonAttribute.AttributeID,
     });
 
     if (result) {

@@ -3,8 +3,20 @@ import { sequelize } from "../../../db.js";
 export const handleForumModeratorGet = async (req, res) => {
   try {
     const ForumModerators = sequelize.models.ForumModerators;
+    const CommonAttributes = sequelize.models.CommonAttributes;
 
-    const result = await ForumModerators.findAll();
+    // Fetch forum moderators with a join on CommonAttributes to check for IsDeleted
+    const result = await ForumModerators.findAll({
+      include: [
+        {
+          model: CommonAttributes,
+          attributes: [],
+          where: {
+            IsDeleted: false,
+          },
+        },
+      ],
+    });
 
     console.log("Forum moderators retrieved successfully");
     res.json(result);

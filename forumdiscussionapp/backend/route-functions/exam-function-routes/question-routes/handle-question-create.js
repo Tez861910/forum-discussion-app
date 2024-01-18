@@ -21,26 +21,40 @@ export const handleQuestionCreate = async (req, res) => {
       });
     }
 
+    const CommonAttributes = sequelize.models.CommonAttributes;
     const Questions = sequelize.models.Questions;
+
+    // Insert into CommonAttributes table with CreatedByUserID
+    const commonAttributesInstance = await CommonAttributes.create({
+      CreatedByUserID: createdByUserId,
+    });
+
+    // Insert into Questions table with CommonAttributeID and other data
     const newQuestion = await Questions.create({
       QuestionText: questionText,
       QuestionTypeID: questionTypeId,
       ExamID: examId,
       CourseID: courseId,
-      CreatedByUserID: createdByUserId,
+      CommonAttributeID: commonAttributesInstance.get("AttributeID"),
     });
 
     if (newQuestion) {
       console.log("Question created successfully");
-      res.json({ message: "Question created successfully" });
+      res.json({ success: true, message: "Question created successfully" });
     } else {
       console.error("Question creation failed");
-      res.status(500).json({ error: "Question creation failed" });
+      res
+        .status(500)
+        .json({ success: false, error: "Question creation failed" });
     }
   } catch (error) {
     console.error("Error creating question:", error);
     res
       .status(500)
-      .json({ error: "Question creation failed", details: error.message });
+      .json({
+        success: false,
+        error: "Question creation failed",
+        details: error.message,
+      });
   }
 };

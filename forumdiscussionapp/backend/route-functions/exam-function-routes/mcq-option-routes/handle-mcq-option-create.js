@@ -4,8 +4,17 @@ export const handleMCQOptionCreate = async (req, res) => {
   const { mcqQuestionId, mcqOptionText, isCorrect, createdByUserId } = req.body;
 
   try {
+    const CommonAttributes = sequelize.models.CommonAttributes;
     const MCQOptions = sequelize.models.MCQOptions;
+
+    // Insert CreatedByUserID into CommonAttributes table
+    const commonAttributesInstance = await CommonAttributes.create({
+      CreatedByUserID: createdByUserId,
+    });
+
+    // Use CommonAttributeID from CommonAttributes table as CommonAttributeID in MCQOptions table
     const result = await MCQOptions.create({
+      CommonAttributeID: commonAttributesInstance.get("AttributeID"),
       MCQQuestionID: mcqQuestionId,
       MCQOptionText: mcqOptionText,
       IsCorrect: isCorrect,

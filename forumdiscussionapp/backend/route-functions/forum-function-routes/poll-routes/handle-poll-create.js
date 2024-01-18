@@ -2,6 +2,7 @@ import { sequelize } from "../../../db.js";
 
 export const handlePollCreate = async (req, res) => {
   const { question, createdByUserId } = req.body;
+  const CommonAttributes = sequelize.models.CommonAttributes;
 
   try {
     if (!question || !createdByUserId) {
@@ -11,11 +12,18 @@ export const handlePollCreate = async (req, res) => {
         .json({ error: "Question and createdByUserId are required" });
     }
 
+    // Insert CreatedByUserID into CommonAttributes table
+    const commonAttribute = await CommonAttributes.create({
+      CreatedByUserID: createdByUserId,
+    });
+
     const Polls = sequelize.models.Polls;
 
+    // Insert Poll data with CommonAttributeID from the created CommonAttributes record
     const result = await Polls.create({
       PollQuestion: question,
       CreatedByUserID: createdByUserId,
+      CommonAttributeID: commonAttribute.AttributeID,
     });
 
     if (result) {

@@ -2,24 +2,37 @@ import { sequelize } from "../../../db.js";
 
 export const handleQuestionDeleteById = async (req, res) => {
   const { questionId } = req.params;
+  const CommonAttributes = sequelize.models.CommonAttributes;
+  const Questions = sequelize.models.Questions;
 
   try {
-    const Questions = sequelize.models.Questions;
-    const result = await Questions.destroy({
+    // Find the CommonAttributeID associated with the Question
+    const questionInstance = await Questions.findOne({
       where: { QuestionID: questionId },
     });
 
-    if (result === 1) {
-      console.log("Question deleted successfully");
-      res.json({ message: "Question deleted successfully" });
-    } else {
-      console.error("Question deletion failed");
-      res.status(500).json({ error: "Question deletion failed" });
+    if (!questionInstance) {
+      console.error("Question not found");
+      return res.status(404).json({ error: "Question not found" });
     }
+
+    const commonAttributeId = questionInstance.get("CommonAttributeID");
+
+    // Update the CommonAttributes table for soft deletion
+    await CommonAttributes.update(
+      {
+        IsDeleted: true,
+        DeletedByUserID: req.user.userId,
+      },
+      { where: { AttributeID: commonAttributeId } }
+    );
+
+    console.log("Question soft deleted successfully");
+    res.json({ message: "Question soft deleted successfully" });
   } catch (error) {
-    console.error("Error deleting question:", error);
+    console.error("Error soft deleting question:", error);
     res
       .status(500)
-      .json({ error: "Error deleting question", details: error.message });
+      .json({ error: "Error soft deleting question", details: error.message });
   }
 };

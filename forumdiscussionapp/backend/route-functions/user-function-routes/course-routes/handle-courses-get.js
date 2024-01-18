@@ -12,7 +12,6 @@ export const handleCoursesGet = async (req, res) => {
       include: [
         {
           model: CommonAttributes,
-          as: "commonAttributes",
           where: { IsDeleted: false },
         },
       ],

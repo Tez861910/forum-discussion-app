@@ -10,7 +10,6 @@ export const handleRolesGet = async (req, res) => {
       include: [
         {
           model: CommonAttributes,
-          as: "commonAttributes",
           where: { IsDeleted: false },
         },
       ],

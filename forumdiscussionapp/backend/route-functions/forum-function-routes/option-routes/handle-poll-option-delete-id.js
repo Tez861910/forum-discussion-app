@@ -1,16 +1,35 @@
 import { sequelize } from "../../../db.js";
 
 export const handlePollOptionDeleteById = async (req, res) => {
-  const { pollOptionId } = req.params;
+  const { pollOptionId, userId } = req.params;
 
   try {
     const PollOptions = sequelize.models.PollOptions;
+    const CommonAttributes = sequelize.models.CommonAttributes;
 
-    const result = await PollOptions.destroy({
+    // Find the PollOption with CommonAttributeID
+    const pollOption = await PollOptions.findOne({
       where: { PollOptionID: pollOptionId },
     });
 
-    if (result === 1) {
+    if (!pollOption) {
+      console.error("Poll option not found");
+      return res.status(404).json({ error: "Poll option not found" });
+    }
+
+    // Update IsDeleted to true and insert DeletedByUserID in CommonAttributes
+    const commonAttributeUpdateResult = await CommonAttributes.update(
+      {
+        IsDeleted: true,
+        DeletedByUserID: userId,
+      },
+      {
+        where: { AttributeID: pollOption.CommonAttributeID },
+      }
+    );
+
+    // Check if the update in CommonAttributes was successful
+    if (commonAttributeUpdateResult[0] === 1) {
       console.log("Poll option deleted successfully");
       res.json({ message: "Poll option deleted successfully" });
     } else {

@@ -5,8 +5,31 @@ export const handleQuestionUpdateById = async (req, res) => {
   const { questionText, questionTypeId, examId, courseId, createdByUserId } =
     req.body;
 
+  const CommonAttributes = sequelize.models.CommonAttributes;
+  const Questions = sequelize.models.Questions;
+
   try {
-    const Questions = sequelize.models.Questions;
+    // Find the CommonAttributeID associated with the Question
+    const questionInstance = await Questions.findOne({
+      where: { QuestionID: questionId },
+    });
+
+    if (!questionInstance) {
+      console.error("Question not found");
+      return res.status(404).json({ error: "Question not found" });
+    }
+
+    const commonAttributeId = questionInstance.get("CommonAttributeID");
+
+    // Update the CommonAttributes table with the updated information
+    await CommonAttributes.update(
+      {
+        UpdatedByUserID: createdByUserId,
+      },
+      { where: { AttributeID: commonAttributeId } }
+    );
+
+    // Update the Questions table
     const result = await Questions.update(
       {
         QuestionText: questionText,

@@ -11,15 +11,22 @@ export const handleExamCreate = async (req, res) => {
   } = req.body;
 
   const Exams = sequelize.models.Exams;
+  const CommonAttributes = sequelize.models.CommonAttributes;
 
   try {
+    // Create an entry in the CommonAttributes table
+    const commonAttributesResult = await CommonAttributes.create({
+      CreatedByUserID: createdByUserId,
+    });
+
+    // Use the newly created AttributeID in the Exams table
     const result = await Exams.create({
       ExamName: examName,
       ExamStatus: examStatus,
       ExamDuration: examDuration,
       Instructions: instructions,
       CourseID: courseId,
-      CreatedByUserID: createdByUserId,
+      CommonAttributeID: commonAttributesResult.get("AttributeID"),
     });
 
     if (result) {

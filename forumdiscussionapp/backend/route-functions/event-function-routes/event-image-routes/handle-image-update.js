@@ -2,8 +2,9 @@ import { sequelize } from "../../../db.js";
 
 export const handleImageUpdate = async (req, res) => {
   const { imageId } = req.params;
-  const { eventId, imageUrl } = req.body;
+  const { eventId, imageUrl, userId } = req.body;
   const EventImages = sequelize.models.EventImages;
+  const CommonAttributes = sequelize.models.CommonAttributes;
 
   try {
     const result = await EventImages.update(
@@ -12,6 +13,19 @@ export const handleImageUpdate = async (req, res) => {
     );
 
     if (result[0] === 1) {
+      // Get CommonAttributeID from the updated EventImages data
+      const commonAttributeId = (
+        await EventImages.findOne({
+          where: { ImageID: imageId },
+        })
+      ).CommonAttributeID;
+
+      // Update UpdatedByUserID in CommonAttributes table
+      await CommonAttributes.update(
+        { UpdatedByUserID: userId },
+        { where: { AttributeID: commonAttributeId } }
+      );
+
       console.log("Event image updated successfully");
       res.json({ message: "Event image updated successfully" });
     } else {

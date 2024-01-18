@@ -46,7 +46,6 @@ export const createEvent = async (req, res) => {
       });
     }
 
-    // Assuming you want to send a response back to the client
     res.status(201).json({
       message: "Event created successfully",
       eventId: eventsResult.get("EventID"),

@@ -2,7 +2,8 @@ import { sequelize } from "../../../db.js";
 
 export const handlePollOptionUpdateById = async (req, res) => {
   const { pollOptionId } = req.params;
-  const { optionText } = req.body;
+  const { optionText, UpdatedByUserID } = req.body;
+  const CommonAttributes = sequelize.models.CommonAttributes;
 
   try {
     if (!optionText) {
@@ -14,12 +15,34 @@ export const handlePollOptionUpdateById = async (req, res) => {
 
     const PollOptions = sequelize.models.PollOptions;
 
-    const result = await PollOptions.update(
-      { OptionText: optionText },
-      { where: { PollOptionID: pollOptionId } }
-    );
+    // Update PollOption and insert UpdatedByUserID into corresponding CommonAttributes table
+    const result = await sequelize.transaction(async (t) => {
+      const [updatedRows] = await PollOptions.update(
+        { OptionText: optionText },
+        { where: { PollOptionID: pollOptionId }, transaction: t }
+      );
 
-    if (result[0] === 1) {
+      if (updatedRows === 1) {
+        const updatedPollOption = await PollOptions.findOne({
+          where: { PollOptionID: pollOptionId },
+          transaction: t,
+        });
+
+        if (updatedPollOption) {
+          await CommonAttributes.update(
+            { UpdatedByUserID: UpdatedByUserID },
+            {
+              where: { AttributeID: updatedPollOption.CommonAttributeID },
+              transaction: t,
+            }
+          );
+        }
+      }
+
+      return updatedRows;
+    });
+
+    if (result === 1) {
       console.log("Poll option updated successfully");
       res.json({ message: "Poll option updated successfully" });
     } else {

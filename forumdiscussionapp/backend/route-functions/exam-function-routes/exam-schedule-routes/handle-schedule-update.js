@@ -1,4 +1,5 @@
 import { sequelize } from "../../../db.js";
+import Sequelize from "sequelize";
 
 export const handleScheduleUpdate = async (req, res) => {
   const { scheduleId } = req.params;
@@ -6,6 +7,9 @@ export const handleScheduleUpdate = async (req, res) => {
 
   try {
     const ExamSchedules = sequelize.models.ExamSchedules;
+    const CommonAttributes = sequelize.models.CommonAttributes;
+
+    // Update the exam schedule
     const result = await ExamSchedules.update(
       {
         ExamID: examId,
@@ -18,6 +22,25 @@ export const handleScheduleUpdate = async (req, res) => {
           ScheduleID: scheduleId,
         },
       }
+    );
+
+    // Update the CommonAttributes table with the updated information
+    const commonAttributesInstance = await CommonAttributes.findOne({
+      where: {
+        AttributeID: Sequelize.col("ExamSchedules.CommonAttributeID"),
+      },
+      include: [
+        {
+          model: ExamSchedules,
+          where: { ScheduleID: scheduleId },
+          attributes: [],
+        },
+      ],
+    });
+
+    await CommonAttributes.update(
+      { UpdatedByUserID: createdByUserId },
+      { where: { AttributeID: commonAttributesInstance.get("AttributeID") } }
     );
 
     if (result[0] === 1) {

@@ -7,31 +7,29 @@ export const softDeleteEventCategory = async (req, res) => {
     const CommonAttributes = sequelize.models.CommonAttributes;
     const EventCategories = sequelize.models.EventCategories;
 
-    // Check if the event category is already deleted
-    const isCategoryDeleted = await CommonAttributes.findOne({
-      where: {
-        AttributeID: EventCategories.findOne({
-          where: { CategoryID: categoryId },
-        }).CommonAttributeID,
-      },
+    // Find the Event Category by ID
+    const eventCategory = await EventCategories.findOne({
+      where: { CategoryID: categoryId },
     });
 
-    if (isCategoryDeleted.IsDeleted) {
-      // If the event category is already marked as deleted, return success (no need to delete again)
-      return res.json({
-        success: true,
-        message: "Event category already deleted",
-      });
+    // Check if the event category exists
+    if (!eventCategory) {
+      console.error("Event category not found");
+      return res
+        .status(404)
+        .json({ success: false, error: "Event category not found" });
     }
 
-    // Update the IsDeleted field in the CommonAttributes table
+    // Retrieve CommonAttributeID from the Event Category
+    const commonAttributeId = eventCategory.CommonAttributeID;
+
+    // Update IsDeleted status in CommonAttributes table
     await CommonAttributes.update(
-      { IsDeleted: true, UpdatedByUserID: UserID },
+      { IsDeleted: true, DeletedByUserID: UserID },
       {
         where: {
-          AttributeID: EventCategories.findOne({
-            where: { CategoryID: categoryId },
-          }).CommonAttributeID,
+          AttributeID: commonAttributeId,
+          IsDeleted: false,
         },
       }
     );
