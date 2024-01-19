@@ -6,8 +6,19 @@ export const handleThreadsGetForumId = async (req, res) => {
 
   try {
     const Threads = sequelize.models.Threads;
+    const CommonAttributes = sequelize.models.CommonAttributes;
 
-    const results = await Threads.findAll({ where: { ForumID: forumId } });
+    const results = await Threads.findAll({
+      where: { ForumID: forumId },
+      include: [
+        {
+          model: CommonAttributes,
+          attributes: [],
+          where: { IsDeleted: false },
+        },
+      ],
+    });
+
     console.log("Threads data:", results);
 
     res.json(results);

@@ -5,14 +5,22 @@ export const handleUserPollVoteDeleteById = async (req, res) => {
 
   try {
     const UserPollVotes = sequelize.models.UserPollVotes;
+    const CommonAttributes = sequelize.models.CommonAttributes;
 
-    const result = await UserPollVotes.destroy({
-      where: {
-        UserPollVoteID: userPollVoteId,
+    // Step 1: Find CommonAttributeID associated with UserPollVoteID
+    const userPollVote = await UserPollVotes.findByPk(userPollVoteId);
+    const commonAttributeId = userPollVote.CommonAttributeID;
+
+    // Step 2: Update CommonAttributes for isdeleted and deletedbyuserid
+    const commonAttributesResult = await CommonAttributes.update(
+      {
+        IsDeleted: true,
+        DeletedByUserID: userPollVote.UserID,
       },
-    });
+      { where: { AttributeID: commonAttributeId } }
+    );
 
-    if (result === 1) {
+    if (commonAttributesResult[0] === 1) {
       console.log("User poll vote deleted successfully");
       res.json({ message: "User poll vote deleted successfully" });
     } else {

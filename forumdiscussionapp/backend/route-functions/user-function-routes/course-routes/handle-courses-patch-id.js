@@ -5,10 +5,8 @@ export const handleCoursesPatchId = async (req, res) => {
   const { id } = req.params;
 
   try {
-    // Dynamically access the Courses model using sequelize.models
+    // Dynamically access the models using sequelize.models
     const Courses = sequelize.models.Courses;
-
-    // Dynamically access the CommonAttributes model using sequelize.models
     const CommonAttributes = sequelize.models.CommonAttributes;
 
     // Fetch the course with the provided ID
@@ -27,21 +25,25 @@ export const handleCoursesPatchId = async (req, res) => {
       return res.status(404).json({ error: "Course not found" });
     }
 
-    // Soft-delete the course
+    // Soft-delete the course by updating associated CommonAttributes entry
     const commonAttributes = await CommonAttributes.findOne({
       where: { AttributeID: course.CommonAttributeID },
     });
+
     commonAttributes.IsDeleted = true;
     commonAttributes.DeletedAt = new Date();
     commonAttributes.DeletedByUserID = deletedByUserID;
+
+    // Save the changes
     await commonAttributes.save();
 
     console.log("Course soft-deleted successfully");
     res.json({ message: "Course soft-deleted successfully" });
   } catch (error) {
     console.error("Error soft-deleting course:", error);
-    res
-      .status(500)
-      .json({ error: "Course soft-deletion failed", details: error.message });
+    res.status(500).json({
+      error: "Course soft-deletion failed",
+      details: error.message,
+    });
   }
 };

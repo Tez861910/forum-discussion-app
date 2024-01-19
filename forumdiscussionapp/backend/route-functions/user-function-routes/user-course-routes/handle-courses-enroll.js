@@ -14,11 +14,11 @@ export const handleCoursesEnroll = async (req, res) => {
       where: {
         UserID: userId,
         CourseID: { [Op.in]: courseIds },
-        "$CommonAttributes.IsDeleted$": false,
       },
       include: [
         {
           model: CommonAttributes,
+          where: { IsDeleted: false },
           attributes: [],
         },
       ],
@@ -30,24 +30,27 @@ export const handleCoursesEnroll = async (req, res) => {
       });
     }
 
-    // Get the UserCoursesAttributeID for the new enrollments
-    const commonAttributes = await CommonAttributes.findOne({
-      where: { IsDeleted: false },
-    });
+    // Enroll the user in all selected courses using new UserCoursesAttributeID for each
+    const enrollments = [];
+    const enrollmentDate = new Date();
 
-    if (!commonAttributes) {
-      return res
-        .status(500)
-        .json({ error: "Failed to retrieve UserCoursesAttributeID" });
+    for (const courseId of courseIds) {
+      // Create a new CommonAttributes entry for each enrollment
+      const commonAttributes = await CommonAttributes.create({
+        CreatedByUserID: userId,
+      });
+
+      // Enroll the user in the course using the new CommonAttributeID
+      enrollments.push({
+        UserID: userId,
+        CourseID: courseId,
+        EnrollmentDate: enrollmentDate,
+        CommonAttributeID: commonAttributes.AttributeID,
+      });
     }
 
-    // Enroll the user in all selected courses using the new UserCoursesAttributeID
-    const enrollValues = courseIds.map((courseId) => ({
-      UserID: userId,
-      CourseID: courseId,
-      CommonAttributeID: commonAttributes.AttributeID,
-    }));
-    await UserCourses.bulkCreate(enrollValues);
+    // Bulk create the enrollments
+    await UserCourses.bulkCreate(enrollments);
 
     console.log("User enrolled in the selected courses successfully");
     res.json({ message: "User enrolled in the selected courses successfully" });

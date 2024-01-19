@@ -5,9 +5,17 @@ export const handleForumReplyGetForumPostId = async (req, res) => {
 
   try {
     const ForumReplies = sequelize.models.ForumReplies;
+    const CommonAttributes = sequelize.models.CommonAttributes;
 
     const result = await ForumReplies.findAll({
       where: { ForumPostID: forumPostId },
+      include: [
+        {
+          model: CommonAttributes,
+          attributes: [],
+          where: { IsDeleted: false },
+        },
+      ],
     });
 
     console.log(

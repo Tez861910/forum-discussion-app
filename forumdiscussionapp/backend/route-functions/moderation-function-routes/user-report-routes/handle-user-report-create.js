@@ -11,14 +11,21 @@ export const handleUserReportCreate = async (req, res) => {
       });
     }
 
-    // Dynamically access the UserReports model using sequelize.models
-    const UserReports = sequelize.models.UserReports;
+    // Dynamically access the UserReports and CommonAttributes models using sequelize.models
+    const { UserReports, CommonAttributes } = sequelize.models;
 
-    // Create a new UserReport
+    // Create a new CommonAttribute entry
+    const commonAttribute = await CommonAttributes.create({
+      CreatedByUserID: reporterId,
+      UpdatedByUserID: null,
+    });
+
+    // Create a new UserReport with the CommonAttributeID
     const userReport = await UserReports.create({
       ReporterID: reporterId,
       ReportedUserID: reportedUserId,
       ReportContent: reportContent,
+      CommonAttributeID: commonAttribute.AttributeID,
     });
 
     console.log("User report created successfully");

@@ -62,8 +62,10 @@ export const setAssociations = (models) => {
   } = models;
 
   // CommonAttributes model associations
+  // CommonAttributes.belongsTo(Users, { foreignKey: "CreatedByUserID" });
+  //CommonAttributes.belongsTo(Users, { foreignKey: "UpdatedByUserID" });
+  //CommonAttributes.belongsTo(Users, { foreignKey: "DeletedByUserID" });
   CommonAttributes.hasMany(Users, { foreignKey: "CommonAttributeID" });
-  CommonAttributes.hasMany(Genders, { foreignKey: "CommonAttributeID" });
   CommonAttributes.hasMany(Courses, { foreignKey: "CommonAttributeID" });
   CommonAttributes.hasMany(Roles, { foreignKey: "CommonAttributeID" });
   CommonAttributes.hasMany(UserRoles, { foreignKey: "CommonAttributeID" });
@@ -152,9 +154,11 @@ export const setAssociations = (models) => {
   Users.hasMany(UserRoles, { foreignKey: "UserID" });
   Users.hasMany(UserCourses, { foreignKey: "UserID" });
   Users.hasMany(Forums, { foreignKey: "CreatedByUserID" });
-  Users.hasMany(Threads, { foreignKey: "CreatedByUserID" });
+  Users.hasMany(Threads, { foreignKey: "UserID" });
   Users.hasMany(Comments, { foreignKey: "CreatedByUserID" });
   Users.hasMany(Responses, { foreignKey: "CreatedByUserID" });
+  Users.hasMany(ForumPosts, { foreignKey: "UserID" });
+  Users.hasMany(ForumReplies, { foreignKey: "UserID" });
   Users.hasMany(UserStatus, { foreignKey: "UserID" });
   Users.hasMany(FriendRequests, { foreignKey: "SenderID" });
   Users.hasMany(Friends, { foreignKey: "UserID1" });
@@ -178,14 +182,15 @@ export const setAssociations = (models) => {
   Users.hasMany(UserReports, { foreignKey: "ReportedUserID" });
   Users.hasMany(UserActivityLogs, { foreignKey: "UserID" });
   Users.hasOne(UserSettings, { foreignKey: "UserID" });
+  //Users.hasMany(CommonAttributes, { foreignKey: "CreatedByUserID" });
+  //Users.hasMany(CommonAttributes, { foreignKey: "UpdatedByUserID" });
+  //Users.hasMany(CommonAttributes, { foreignKey: "DeletedByUserID" });
   Users.belongsTo(CommonAttributes, { foreignKey: "CommonAttributeID" });
 
   // Genders model associations
   Genders.hasMany(Users, { foreignKey: "GenderID" });
-  Genders.belongsTo(CommonAttributes, { foreignKey: "CommonAttributeID" });
 
   // Courses model associations
-  Courses.belongsTo(Departments, { foreignKey: "DepartmentID" });
   Courses.hasMany(UserCourses, { foreignKey: "CourseID" });
   Courses.hasMany(Exams, { foreignKey: "CourseID" });
   Courses.hasMany(Forums, { foreignKey: "CourseID" });
@@ -230,7 +235,7 @@ export const setAssociations = (models) => {
   Forums.hasMany(ForumModerators, { foreignKey: "ForumID" });
 
   // Thread model associations
-  Threads.belongsTo(Users, { foreignKey: "CreatedByUserID" });
+  Threads.belongsTo(Users, { foreignKey: "UserID" });
   Threads.belongsTo(Forums, { foreignKey: "ForumID" });
   Threads.hasMany(Comments, { foreignKey: "ThreadID" });
   Threads.hasMany(Reactions, { foreignKey: "ReactedToID", constraints: false });

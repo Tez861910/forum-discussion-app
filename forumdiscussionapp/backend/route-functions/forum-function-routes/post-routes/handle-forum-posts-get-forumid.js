@@ -2,11 +2,20 @@ import { sequelize } from "../../../db.js";
 
 export const handleForumPostGetForumId = async (req, res) => {
   const { forumId } = req.params;
-
   try {
     const ForumPosts = sequelize.models.ForumPosts;
+    const CommonAttributes = sequelize.models.CommonAttributes;
 
-    const result = await ForumPosts.findAll({ where: { ForumID: forumId } });
+    const result = await ForumPosts.findAll({
+      where: { ForumID: forumId },
+      include: [
+        {
+          model: CommonAttributes,
+          attributes: [],
+          where: { IsDeleted: false },
+        },
+      ],
+    });
 
     console.log("Forum posts retrieved successfully for forumId:", forumId);
     res.json(result);

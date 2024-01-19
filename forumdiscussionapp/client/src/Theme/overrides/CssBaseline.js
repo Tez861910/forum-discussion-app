@@ -1,8 +1,14 @@
 import { palette } from "../palette";
 import logobg from "../logobg.jpg";
 
+// Define colors
 const primaryColor = palette.palette.default.primary.main;
 const textColorPrimary = palette.palette.default.text.primary;
+
+// Define common styles
+const commonStyles = {
+  boxSizing: "border-box",
+};
 
 export const cssBaselineStyles = {
   body: {
@@ -42,13 +48,13 @@ export const cssBaselineStyles = {
       },
     },
     "*": {
-      boxSizing: "border-box",
+      ...commonStyles,
     },
     "*::before": {
-      boxSizing: "border-box",
+      ...commonStyles,
     },
     "*::after": {
-      boxSizing: "border-box",
+      ...commonStyles,
     },
   },
 };

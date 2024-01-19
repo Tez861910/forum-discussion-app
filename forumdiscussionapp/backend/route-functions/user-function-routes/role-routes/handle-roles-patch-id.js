@@ -4,7 +4,7 @@ export const handleRolesPatchId = async (req, res) => {
   const { id } = req.params;
 
   try {
-    // Dynamically access the Roles and CommonAttributes models using sequelize.models
+    // Dynamically access the models using sequelize.models
     const Roles = sequelize.models.Roles;
     const CommonAttributes = sequelize.models.CommonAttributes;
 
@@ -24,19 +24,23 @@ export const handleRolesPatchId = async (req, res) => {
       return res.status(404).json({ error: "Role not found" });
     }
 
-    // Soft-delete the role
+    // Soft-delete the role by updating associated CommonAttributes entry
     const commonAttributes = await CommonAttributes.findOne({
       where: { AttributeID: role.CommonAttributeID },
     });
+
     commonAttributes.IsDeleted = true;
+
+    // Save the changes
     await commonAttributes.save();
 
     console.log("Role soft-deleted successfully");
     res.json({ message: "Role soft-deleted successfully" });
   } catch (error) {
     console.error("Error soft-deleting role:", error);
-    res
-      .status(500)
-      .json({ error: "Role soft-deletion failed", details: error.message });
+    res.status(500).json({
+      error: "Role soft-deletion failed",
+      details: error.message,
+    });
   }
 };

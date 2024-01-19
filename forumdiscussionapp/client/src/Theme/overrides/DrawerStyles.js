@@ -1,6 +1,7 @@
 import { alpha } from "@mui/material/styles";
 import { palette } from "../palette";
 
+// Define colors with alpha
 const primaryColor = alpha(palette.palette.default.primary.main, 0.3);
 const secondaryColor = alpha(palette.palette.default.secondary.main, 0.3);
 const contrastTextColorPrimary = alpha(
@@ -12,13 +13,18 @@ const contrastTextColorSecondary = alpha(
   0.3
 );
 
+// Define common styles
+const commonStyles = {
+  width: "240px",
+  backgroundColor: primaryColor,
+  color: contrastTextColorPrimary,
+  transition: "0.3s",
+  boxShadow: "0px 2px 4px -1px rgba(0, 0, 0, 0.2)",
+};
+
 export const drawerStyles = {
   paper: {
-    width: "240px",
-    backgroundColor: primaryColor,
-    color: contrastTextColorPrimary,
-    transition: "0.3s",
-    boxShadow: "0px 2px 4px -1px rgba(0, 0, 0, 0.2)",
+    ...commonStyles,
     "&:hover": {
       backgroundColor: secondaryColor,
       color: contrastTextColorSecondary,
@@ -28,10 +34,8 @@ export const drawerStyles = {
     MuiList: {
       styleOverrides: {
         root: {
-          width: "100%",
+          ...commonStyles,
           maxWidth: "360px",
-          backgroundColor: primaryColor,
-          color: contrastTextColorPrimary,
         },
       },
     },

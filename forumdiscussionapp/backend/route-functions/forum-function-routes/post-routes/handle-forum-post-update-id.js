@@ -2,7 +2,7 @@ import { sequelize } from "../../../db.js";
 
 export const handleForumPostUpdateById = async (req, res) => {
   const { forumPostId } = req.params;
-  const { postContent } = req.body;
+  const { postContent, userId } = req.body;
 
   try {
     if (!postContent) {
@@ -13,18 +13,36 @@ export const handleForumPostUpdateById = async (req, res) => {
     }
 
     const ForumPosts = sequelize.models.ForumPosts;
+    const CommonAttributes = sequelize.models.CommonAttributes;
 
-    const result = await ForumPosts.update(
+    // Step 1: Update ForumPosts
+    const forumPostResult = await ForumPosts.update(
       { PostContent: postContent },
       { where: { ForumPostID: forumPostId } }
     );
 
-    if (result[0] === 1) {
-      console.log("Forum post updated successfully");
-      res.json({ message: "Forum post updated successfully" });
-    } else {
+    if (forumPostResult[0] !== 1) {
       console.error("Forum post update failed");
-      res.status(500).json({ error: "Forum post update failed" });
+      return res.status(500).json({ error: "Forum post update failed" });
+    }
+
+    // Step 2: Update CommonAttributes for updated by user
+    const forumPost = await ForumPosts.findByPk(forumPostId);
+    const commonAttributeId = forumPost.CommonAttributeID;
+
+    const commonAttributesResult = await CommonAttributes.update(
+      { UpdatedByUserID: userId },
+      { where: { AttributeID: commonAttributeId } }
+    );
+
+    if (commonAttributesResult[0] === 1) {
+      console.log("Forum post and CommonAttributes updated successfully");
+      res.json({
+        message: "Forum post and CommonAttributes updated successfully",
+      });
+    } else {
+      console.error("CommonAttributes update failed");
+      res.status(500).json({ error: "CommonAttributes update failed" });
     }
   } catch (error) {
     console.error("Error updating forum post:", error);

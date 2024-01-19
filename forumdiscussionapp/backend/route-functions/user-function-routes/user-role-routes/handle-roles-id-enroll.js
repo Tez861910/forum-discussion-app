@@ -21,11 +21,11 @@ export const handleRolesIdEnroll = async (req, res) => {
       where: {
         RoleID: roleId,
         UserID: { [Op.in]: userIds },
-        "$CommonAttributes.IsDeleted$": false,
       },
       include: [
         {
           model: CommonAttributes,
+          where: { IsDeleted: false },
           attributes: [],
         },
       ],

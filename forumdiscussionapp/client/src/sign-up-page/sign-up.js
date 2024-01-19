@@ -1,6 +1,4 @@
 import * as React from "react";
-import { useApi } from "../home-page/Api";
-import { Link as RouterLink, useNavigate } from "react-router-dom";
 import {
   Container,
   Grid,
@@ -17,8 +15,10 @@ import {
   InputLabel,
 } from "@mui/material";
 import { useTheme } from "@mui/material/styles";
-import logo from "../start/logo.png";
+import { Link as RouterLink, useNavigate } from "react-router-dom";
+import { useApi } from "../home-page/Api";
 import { SignUpValidation } from "./sign-up-validation";
+import logo from "../start/logo.png";
 
 export const Signup = () => {
   const { api } = useApi();
@@ -34,7 +34,30 @@ export const Signup = () => {
   const navigate = useNavigate();
   const [errors, setErrors] = React.useState({});
   const [successMessage, setSuccessMessage] = React.useState([]);
+  const [genders, setGenders] = React.useState([]);
   const theme = useTheme();
+
+  React.useEffect(() => {
+    const fetchGenders = async () => {
+      try {
+        const response = await api.get("/users/genders/get/all");
+        if (response.status === 200) {
+          const genderEnum = response.data;
+          const genderArray = Object.keys(genderEnum).map((key) => ({
+            id: key,
+            name: genderEnum[key],
+          }));
+          setGenders(genderArray);
+        } else {
+          console.error("Failed to fetch genders. Status:", response.status);
+        }
+      } catch (error) {
+        console.error("Error fetching genders:", error);
+      }
+    };
+
+    fetchGenders();
+  }, [api]);
 
   const handleSubmit = async (event) => {
     event.preventDefault();
@@ -47,7 +70,7 @@ export const Signup = () => {
     if (Object.keys(validationErrors).length === 0) {
       try {
         console.log("Sending request");
-        const response = await api.post("/signup/signup", formData);
+        const response = await api.post("/auth/signup/signup", formData);
         console.log("Response:", response);
 
         if (response.status === 200) {
@@ -187,9 +210,11 @@ export const Signup = () => {
                   setFormData({ ...formData, gender: e.target.value })
                 }
               >
-                <MenuItem value="Male">Male</MenuItem>
-                <MenuItem value="Female">Female</MenuItem>
-                <MenuItem value="Other">Other</MenuItem>
+                {genders.map((gender) => (
+                  <MenuItem key={gender.GenderID} value={gender.GenderID}>
+                    {gender.GenderName}
+                  </MenuItem>
+                ))}
               </Select>
             </FormControl>
 

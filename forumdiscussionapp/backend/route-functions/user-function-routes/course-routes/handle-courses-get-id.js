@@ -4,12 +4,11 @@ export const handleCoursesGetId = async (req, res) => {
   const { id } = req.params;
 
   try {
-    // Dynamically access the Courses model using sequelize.models
+    // Dynamically access the models using sequelize.models
     const Courses = sequelize.models.Courses;
-
-    // Dynamically access the CommonAttributes model using sequelize.models
     const CommonAttributes = sequelize.models.CommonAttributes;
 
+    // Find the course with associated CommonAttributes
     const course = await Courses.findOne({
       where: { CourseID: id },
       include: [
@@ -29,8 +28,9 @@ export const handleCoursesGetId = async (req, res) => {
     }
   } catch (error) {
     console.error("Error fetching course:", error);
-    res
-      .status(500)
-      .json({ error: "Course retrieval failed", details: error.message });
+    res.status(500).json({
+      error: "Course retrieval failed",
+      details: error.message,
+    });
   }
 };

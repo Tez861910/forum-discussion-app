@@ -1,21 +1,27 @@
 import { palette } from "../palette";
 
+// Define colors
 const primaryColor = palette.palette.default.primary.main;
-const secondaryColor = palette.palette.default.secondary.main;
+const tertiaryColor = palette.palette.default.tertiary.main;
 const contrastTextColorPrimary = palette.palette.default.primary.contrastText;
 const contrastTextColorSecondary =
   palette.palette.default.secondary.contrastText;
 
+// Define common styles
+const commonStyles = {
+  padding: "1rem",
+  borderRadius: "0.5rem",
+  transition: "0.3s",
+  boxShadow: "0px 2px 4px -1px rgba(0, 0, 0, 0.2)",
+};
+
 export const dialogStyles = {
   paper: {
-    padding: "1rem",
-    borderRadius: "0.5rem",
+    ...commonStyles,
     backgroundColor: primaryColor,
     color: contrastTextColorPrimary,
-    transition: "0.3s",
-    boxShadow: "0px 2px 4px -1px rgba(0, 0, 0, 0.2)",
     "&:hover": {
-      backgroundColor: secondaryColor,
+      backgroundColor: tertiaryColor,
       color: contrastTextColorSecondary,
     },
   },
@@ -23,9 +29,9 @@ export const dialogStyles = {
     MuiDialogTitle: {
       styleOverrides: {
         root: {
+          ...commonStyles,
           backgroundColor: primaryColor,
           color: contrastTextColorPrimary,
-          padding: "1rem",
           fontSize: "1.5rem",
           fontWeight: "bold",
         },
@@ -34,18 +40,18 @@ export const dialogStyles = {
     MuiDialogContent: {
       styleOverrides: {
         root: {
-          backgroundColor: secondaryColor,
+          ...commonStyles,
+          backgroundColor: tertiaryColor,
           color: contrastTextColorSecondary,
-          padding: "1rem",
         },
       },
     },
     MuiDialogActions: {
       styleOverrides: {
         root: {
+          ...commonStyles,
           backgroundColor: primaryColor,
           color: contrastTextColorPrimary,
-          padding: "1rem",
           justifyContent: "center",
         },
       },

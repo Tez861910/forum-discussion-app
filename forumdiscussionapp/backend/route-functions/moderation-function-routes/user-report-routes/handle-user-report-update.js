@@ -12,8 +12,8 @@ export const handleUserReportUpdate = async (req, res) => {
       });
     }
 
-    // Dynamically access the UserReports model using sequelize.models
-    const UserReports = sequelize.models.UserReports;
+    // Dynamically access the UserReports and CommonAttributes models using sequelize.models
+    const { UserReports, CommonAttributes } = sequelize.models;
 
     // Update the user report
     const [numberOfAffectedRows, affectedRows] = await UserReports.update(
@@ -30,6 +30,17 @@ export const handleUserReportUpdate = async (req, res) => {
     );
 
     if (numberOfAffectedRows === 1) {
+      // Get the associated CommonAttributeID
+      const commonAttributeId = affectedRows[0].CommonAttributeID;
+
+      // Update the CommonAttributes table with updatedByUserID
+      await CommonAttributes.update(
+        {
+          updatedByUserID: reportedUserId,
+        },
+        { where: { AttributeID: commonAttributeId } }
+      );
+
       console.log("User report updated successfully");
       res.json({
         message: "User report updated successfully",

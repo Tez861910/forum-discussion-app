@@ -13,11 +13,11 @@ export const handleUserCoursesGet = async (req, res) => {
     const userCourses = await UserCourses.findAll({
       where: {
         UserID: { [Op.in]: userIds },
-        "$CommonAttributes.IsDeleted$": false,
       },
       include: [
         {
           model: CommonAttributes,
+          IsDeleted: false,
           attributes: [],
         },
       ],

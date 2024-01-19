@@ -3,9 +3,10 @@ import { sequelize } from "../../../db.js";
 export const handleRolesUpdateId = async (req, res) => {
   const { id } = req.params;
   const { roleName, roleDescription } = req.body;
+  const updatedByUserID = req.user.id;
 
   try {
-    // Dynamically access the Roles and CommonAttributes models using sequelize.models
+    // Dynamically access the models using sequelize.models
     const Roles = sequelize.models.Roles;
     const CommonAttributes = sequelize.models.CommonAttributes;
 
@@ -34,6 +35,18 @@ export const handleRolesUpdateId = async (req, res) => {
     role.RoleName = roleName;
     role.RoleDescription = roleDescription;
     await role.save();
+
+    // Update the CommonAttributes
+    const commonAttributes = await CommonAttributes.findOne({
+      where: { AttributeID: role.CommonAttributeID },
+    });
+
+    commonAttributes.UpdatedAt = new Date();
+    commonAttributes.UpdatedByUserID = updatedByUserID;
+
+    // Save the changes in both tables
+    await role.save();
+    await commonAttributes.save();
 
     console.log("Role updated successfully");
     res.json({ message: "Role updated successfully" });

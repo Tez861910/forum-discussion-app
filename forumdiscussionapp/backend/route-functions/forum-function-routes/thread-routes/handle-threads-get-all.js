@@ -3,8 +3,18 @@ import { sequelize } from "../../../db.js";
 export const handleThreadsGetAll = async (req, res) => {
   try {
     const Threads = sequelize.models.Threads;
+    const CommonAttributes = sequelize.models.CommonAttributes;
 
-    const results = await Threads.findAll();
+    const results = await Threads.findAll({
+      include: [
+        {
+          model: CommonAttributes,
+          attributes: [],
+          where: { IsDeleted: false },
+        },
+      ],
+    });
+
     console.log("All Threads data:", results);
 
     if (results && results.length > 0) {

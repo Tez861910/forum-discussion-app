@@ -2,10 +2,18 @@ import { sequelize } from "../../../db.js";
 
 export const handleBanGetAll = async (req, res) => {
   try {
-    // Dynamically access the Bans model using sequelize.models
-    const Bans = sequelize.models.Bans;
+    // Dynamically access the Bans and CommonAttributes models using sequelize.models
+    const { Bans, CommonAttributes } = sequelize.models;
 
-    const result = await Bans.findAll();
+    const result = await Bans.findAll({
+      include: [
+        {
+          model: CommonAttributes,
+          where: { IsDeleted: false },
+          attributes: [],
+        },
+      ],
+    });
 
     console.log("Bans retrieved successfully");
     res.json({ bans: result });

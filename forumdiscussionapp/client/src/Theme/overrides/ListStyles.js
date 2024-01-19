@@ -1,18 +1,24 @@
 import { palette } from "../palette";
 
+// Define colors
 const primaryColor = palette.palette.default.primary.main;
 const secondaryColor = palette.palette.default.secondary.main;
 const backgroundColor = palette.palette.default.background.default;
 const paperColor = palette.palette.default.background.paper;
 const textColor = palette.palette.default.text.primary;
 
+// Define common styles
+const commonStyles = {
+  width: "100%",
+  backgroundColor: paperColor,
+  color: textColor,
+  transition: "0.3s",
+  boxShadow: "0px 2px 4px -1px rgba(0, 0, 0, 0.2)",
+};
+
 export const listStyles = {
   root: {
-    width: "100%",
-    backgroundColor: paperColor,
-    color: textColor,
-    transition: "0.3s",
-    boxShadow: "0px 2px 4px -1px rgba(0, 0, 0, 0.2)",
+    ...commonStyles,
   },
   defaultProps: {
     MuiListItem: {

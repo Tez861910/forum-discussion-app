@@ -11,16 +11,14 @@ export const handleRolesEnrollmentsId = async (req, res) => {
 
     // Fetch user data for a given role ID
     const users = await Users.findAll({
-      where: {
-        "$UserRoles.RoleID$": roleId,
-        "$UserRoles.CommonAttributes.IsDeleted$": false,
-      },
       include: [
         {
           model: UserRoles,
+          where: { RoleID: roleId },
           include: [
             {
               model: CommonAttributes,
+              where: { IsDeleted: false },
               attributes: [],
             },
           ],

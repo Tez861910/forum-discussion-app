@@ -11,15 +11,24 @@ export const handleBanCreate = async (req, res) => {
       });
     }
 
-    // Dynamically access the Bans model using sequelize.models
-    const Bans = sequelize.models.Bans;
+    // Dynamically access the Bans and CommonAttributes models using sequelize.models
+    const { Bans, CommonAttributes } = sequelize.models;
 
-    // Create a new Ban
+    // Create a new CommonAttribute entry using CreatedByUserID
+    const commonAttribute = await CommonAttributes.create({
+      CreatedByUserID: bannedByUserId,
+    });
+
+    // Take the AttributeID of CommonAttributes table
+    const commonAttributeId = commonAttribute.AttributeID;
+
+    // Create a new Ban with CommonAttributeID
     const ban = await Bans.create({
       BannedUserID: bannedUserId,
       BannedByUserID: bannedByUserId,
       BanReason: banReason,
       BanExpiresAt: banExpiresAt,
+      CommonAttributeID: commonAttributeId,
     });
 
     console.log("Ban created successfully");

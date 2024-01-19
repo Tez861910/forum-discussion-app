@@ -12,16 +12,14 @@ export const handleCoursesCreate = async (req, res) => {
         .json({ error: "Course name and createdByUserID are required" });
     }
 
-    // Dynamically access the CommonAttributes model using sequelize.models
+    // Dynamically access the models using sequelize.models
     const CommonAttributes = sequelize.models.CommonAttributes;
+    const Courses = sequelize.models.Courses;
 
     // Step 1: Create a Common Attribute entry
     const commonAttributes = await CommonAttributes.create({
       CreatedByUserID: createdByUserID,
     });
-
-    // Dynamically access the Courses model using sequelize.models
-    const Courses = sequelize.models.Courses;
 
     // Step 2: Insert the course with the generated CommonAttributeID
     const course = await Courses.create({

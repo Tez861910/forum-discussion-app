@@ -78,7 +78,7 @@ export function CourseUserModal({ onClose, selectedCourseId, open }) {
   const fetchCourseEnrollments = useCallback(async () => {
     try {
       const response = await api.get(
-        `/users/courses/enrollments/${selectedCourseId}`
+        `/users/usercourses/enrollments/${selectedCourseId}`
       );
       if (response.status === 404) {
         console.error(
@@ -119,7 +119,7 @@ export function CourseUserModal({ onClose, selectedCourseId, open }) {
         return;
       }
       const response = await api.post(
-        `/courses/courses/${selectedCourseId}/enroll`,
+        `/users/usercourses/${selectedCourseId}/enroll`,
         {
           courseId: selectedCourseId,
           userIds: selectedAutocompleteUserIds,
@@ -146,7 +146,7 @@ export function CourseUserModal({ onClose, selectedCourseId, open }) {
     }
     try {
       const response = await api.patch(
-        `/users/courses/${selectedCourseId}/enrollments`,
+        `/users/usercourses/${selectedCourseId}/enrollments`,
         {
           userIds: selectedEnrolledUserIds,
         }
@@ -175,7 +175,7 @@ export function CourseUserModal({ onClose, selectedCourseId, open }) {
       }
       const userId = removeConfirmation.user.UserID;
       const response = await api.patch(
-        `/users/courses/${selectedCourseId}/enrollments/${userId}`
+        `/users/usercourses/${selectedCourseId}/enrollments/${userId}`
       );
       console.log("API response:", response);
       fetchCourseEnrollments();

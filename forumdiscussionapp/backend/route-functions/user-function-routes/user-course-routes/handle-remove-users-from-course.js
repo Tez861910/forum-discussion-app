@@ -15,11 +15,11 @@ export const handleRemoveUsersFromCourse = async (req, res) => {
       where: {
         UserID: { [Op.in]: userIds },
         CourseID: courseId,
-        "$CommonAttributes.IsDeleted$": false,
       },
       include: [
         {
           model: CommonAttributes,
+          IsDeleted: false,
           attributes: [],
         },
       ],

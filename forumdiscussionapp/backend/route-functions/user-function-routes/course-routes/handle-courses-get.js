@@ -2,12 +2,11 @@ import { sequelize } from "../../../db.js";
 
 export const handleCoursesGet = async (req, res) => {
   try {
-    // Dynamically access the Courses model using sequelize.models
+    // Dynamically access the models using sequelize.models
     const Courses = sequelize.models.Courses;
-
-    // Dynamically access the CommonAttributes model using sequelize.models
     const CommonAttributes = sequelize.models.CommonAttributes;
 
+    // Find all courses with associated CommonAttributes
     const courses = await Courses.findAll({
       include: [
         {
@@ -26,8 +25,9 @@ export const handleCoursesGet = async (req, res) => {
     res.status(200).json({ courses });
   } catch (error) {
     console.error("Error getting courses:", error);
-    res
-      .status(500)
-      .json({ error: "Error getting courses", details: error.message });
+    res.status(500).json({
+      error: "Error getting courses",
+      details: error.message,
+    });
   }
 };

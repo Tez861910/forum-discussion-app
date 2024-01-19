@@ -12,9 +12,10 @@ export const handleBanUpdate = async (req, res) => {
       });
     }
 
-    // Dynamically access the Bans model using sequelize.models
-    const Bans = sequelize.models.Bans;
+    // Dynamically access the Bans and CommonAttributes models using sequelize.models
+    const { Bans, CommonAttributes } = sequelize.models;
 
+    // Update the Ban data
     const result = await Bans.update(
       {
         BannedUserID: bannedUserId,
@@ -23,6 +24,16 @@ export const handleBanUpdate = async (req, res) => {
         BanExpiresAt: banExpiresAt,
       },
       { where: { BanID: banId } }
+    );
+
+    // Get the CommonAttributeId associated with the Ban
+    const banData = await Bans.findOne({ where: { BanID: banId } });
+    const commonAttributeId = banData.CommonAttributeID;
+
+    // Update the UpdatedByUserID in the CommonAttributes table
+    await CommonAttributes.update(
+      { UpdatedByUserID: bannedByUserId },
+      { where: { AttributeID: commonAttributeId } }
     );
 
     if (result[0] === 1) {

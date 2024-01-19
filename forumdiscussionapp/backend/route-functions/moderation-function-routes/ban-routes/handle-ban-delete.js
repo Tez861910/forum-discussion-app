@@ -1,28 +1,38 @@
 import { sequelize } from "../../../db.js";
 
 export const handleBanDelete = async (req, res) => {
-  const { banId } = req.params;
+  const { banId, userId } = req.params;
 
   try {
-    // Dynamically access the Bans model using sequelize.models
-    const Bans = sequelize.models.Bans;
+    // Dynamically access the Bans and CommonAttributes models using sequelize.models
+    const { Bans, CommonAttributes } = sequelize.models;
 
-    // Delete the ban
-    const result = await Bans.destroy({
+    // Find the Ban to get the CommonAttributeID
+    const ban = await Bans.findOne({
       where: { BanID: banId },
+      attributes: ["CommonAttributeID"],
     });
 
-    if (result === 1) {
-      console.log("Ban deleted successfully");
-      res.json({ message: "Ban deleted successfully" });
-    } else {
-      console.error("Ban deletion failed");
-      res.status(500).json({ error: "Ban deletion failed" });
+    if (!ban) {
+      console.error("Ban not found");
+      return res.status(404).json({ error: "Ban not found" });
     }
+
+    const commonAttributeId = ban.CommonAttributeID;
+
+    // Update the IsDeleted record and insert DeletedByUserID in CommonAttributes table
+    await CommonAttributes.update(
+      { IsDeleted: true, DeletedByUserID: userId },
+      { where: { AttributeID: commonAttributeId } }
+    );
+
+    console.log("Ban marked as deleted in CommonAttributes");
+    res.json({ message: "Ban marked as deleted in CommonAttributes" });
   } catch (error) {
-    console.error("Error deleting ban:", error);
-    res
-      .status(500)
-      .json({ error: "Ban deletion failed", details: error.message });
+    console.error("Error marking ban as deleted:", error);
+    res.status(500).json({
+      error: "Error marking ban as deleted",
+      details: error.message,
+    });
   }
 };

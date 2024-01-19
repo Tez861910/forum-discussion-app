@@ -5,7 +5,7 @@ import { validate } from "../../authvalid.js";
 export const validateCourseEnroll = validate(
   Joi.object({
     // Define the schema for enrolling users in a course
-    userId: Joi.number().integer().min(1).required(),
+    userIds: Joi.array().items(Joi.number().integer().min(1)).required(),
     courseId: Joi.number().integer().min(1).required(),
   })
 );

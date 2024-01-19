@@ -4,7 +4,7 @@ export const handleRolesCreate = async (req, res) => {
   const { roleName, description, createdByUserID } = req.body;
 
   try {
-    // Dynamically access the Roles and CommonAttributes models using sequelize.models
+    // Dynamically access the models using sequelize.models
     const Roles = sequelize.models.Roles;
     const CommonAttributes = sequelize.models.CommonAttributes;
 
@@ -16,12 +16,12 @@ export const handleRolesCreate = async (req, res) => {
         .json({ error: "Role name and createdByUserID are required" });
     }
 
-    // Create a new CommonAttributes entry
+    // Step 1: Create a CommonAttributes entry
     const commonAttributes = await CommonAttributes.create({
       CreatedByUserID: createdByUserID,
     });
 
-    // Create a new Role
+    // Step 2: Insert the role with the generated CommonAttributeID
     const role = await Roles.create({
       RoleName: roleName,
       RoleDescription: description,

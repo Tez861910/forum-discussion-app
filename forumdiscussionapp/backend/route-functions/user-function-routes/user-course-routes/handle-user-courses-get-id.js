@@ -10,10 +10,11 @@ export const handleUserCoursesGetId = async (req, res) => {
 
     // Fetch user courses for the given user ID
     const userCourses = await UserCourses.findAll({
-      where: { UserID: userId, "$CommonAttributes.IsDeleted$": false },
+      where: { UserID: userId },
       include: [
         {
           model: CommonAttributes,
+          IsDeleted: false,
           attributes: [],
         },
       ],

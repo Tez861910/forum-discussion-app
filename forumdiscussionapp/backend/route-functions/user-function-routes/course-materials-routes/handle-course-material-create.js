@@ -1,15 +1,28 @@
 import { sequelize } from "../../../db.js";
 
 export const handleCourseMaterialCreate = async (req, res) => {
-  const { courseId, materialName, materialType, filePath, description } =
-    req.body;
+  const {
+    userId,
+    courseId,
+    materialName,
+    materialType,
+    filePath,
+    description,
+  } = req.body;
 
   try {
-    // Dynamically access the CourseMaterials model using sequelize.models
+    // Dynamically access the models using sequelize.models
+    const CommonAttributes = sequelize.models.CommonAttributes;
     const CourseMaterials = sequelize.models.CourseMaterials;
 
-    // Create a new CourseMaterial
+    // Create a new CommonAttributes entry
+    const commonAttribute = await CommonAttributes.create({
+      CreatedByUserID: userId,
+    });
+
+    // Use the obtained AttributeID in CourseMaterials creation
     const courseMaterial = await CourseMaterials.create({
+      CommonAttributeID: commonAttribute.AttributeID,
       CourseID: courseId,
       MaterialName: materialName,
       MaterialType: materialType,

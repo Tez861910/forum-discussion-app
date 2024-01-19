@@ -16,10 +16,6 @@ export const handleUsersCreate = async (req, res) => {
     avatarPath,
     dateOfBirth,
     createdByUserId,
-    theme,
-    darkMode,
-    language,
-    emailNotifications,
   } = req.body;
 
   try {
@@ -30,9 +26,7 @@ export const handleUsersCreate = async (req, res) => {
       !roleId ||
       !genderId ||
       !createdByUserId ||
-      !avatarPath ||
-      !theme ||
-      !language
+      !avatarPath
     ) {
       console.log("Missing user data");
       return res.status(400).json({ error: "Missing user data" });
@@ -78,34 +72,18 @@ export const handleUsersCreate = async (req, res) => {
       CommonAttributeID: commonAttributesUserRoles.id,
     });
 
-    // Create a new CommonAttributes record for UserSettings
-    const commonAttributesUserSettings = await CommonAttributes.create({
-      CreatedAt: new Date(),
-      CreatedByUserID: createdByUserId,
-      IsDeleted: false,
-    });
-
-    // Insert a record into usersettings to associate the user with the settings
-    const userSettings = await UserSettings.create({
-      UserID: user.id,
-      Theme: theme,
-      DarkMode: darkMode,
-      Language: language,
-      EmailNotifications: emailNotifications,
-      CommonAttributeID: commonAttributesUserSettings.id,
-    });
-
-    if (user && userRoles && userSettings) {
+    if (user && userRoles) {
       const payload = {
         email,
         roleId,
       };
       // Create and set cookies for the token
       const token = createAccessTokenAndSetCookies(payload, res);
-      console.log("User registered successfully for email: " + email);
+      console.log(`User registered successfully for email: ${email}`);
+
       res.json({ message: "User registered successfully", token });
     } else {
-      console.log("User registration failed for email: " + email);
+      console.log(`User registration failed for email: ${email}`);
       res.status(500).json({ error: "User registration failed" });
     }
   } catch (error) {

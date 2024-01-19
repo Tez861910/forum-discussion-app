@@ -1,6 +1,7 @@
 import express from "express";
 
 import usersRoutes from "../routes/user-routes/users.js";
+import genderRoutes from "../routes/user-routes/Gender.js";
 import coursesRoutes from "../routes/user-routes/courses.js";
 import usercoursesRoutes from "../routes/user-routes/user-courses.js";
 import rolesRoutes from "../routes/user-routes/roles.js";
@@ -13,6 +14,7 @@ import avataruploadsRouters from "../routes/user-routes/avatar-upload.js";
 const router = express.Router();
 
 router.use("/users", usersRoutes);
+router.use("/genders", genderRoutes);
 router.use("/courses", coursesRoutes);
 router.use("/usercourses", usercoursesRoutes);
 router.use("/roles", rolesRoutes);

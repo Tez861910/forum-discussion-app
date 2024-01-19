@@ -1,25 +1,30 @@
 import { palette } from "../palette";
 
-const primaryMainColor = palette.palette.default.primary.main;
+// Define colors
+const tertiaryMainColor = palette.palette.default.tertiary.main;
 const textPrimaryColor = palette.palette.default.text.primary;
-const transition = "0.3s";
+
+// Define common styles
+const commonStyles = {
+  padding: "16px",
+  transition: "0.3s",
+  display: "flex",
+  alignItems: "center",
+  justifyContent: "space-between",
+};
 
 export const stackStyles = {
   root: {
-    display: "flex",
-    alignItems: "center",
-    justifyContent: "space-between",
-    transition: transition,
+    ...commonStyles,
   },
 
   defaultProps: {
     MuiBox: {
       styleOverrides: {
         root: {
-          padding: "16px",
+          ...commonStyles,
           borderRadius: "8px",
           boxShadow: "0px 4px 12px rgba(0, 0, 0, 0.1)",
-          transition: transition,
         },
       },
     },
@@ -27,10 +32,9 @@ export const stackStyles = {
     MuiContainer: {
       styleOverrides: {
         root: {
-          padding: "16px",
-          backgroundColor: primaryMainColor,
+          ...commonStyles,
+          backgroundColor: tertiaryMainColor,
           color: textPrimaryColor,
-          transition: transition,
         },
       },
     },
@@ -38,10 +42,7 @@ export const stackStyles = {
     MuiGrid: {
       styleOverrides: {
         root: {
-          display: "flex",
-          alignItems: "center",
-          justifyContent: "space-between",
-          transition: transition,
+          ...commonStyles,
         },
       },
     },

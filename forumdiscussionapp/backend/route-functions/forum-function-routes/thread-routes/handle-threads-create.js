@@ -4,20 +4,28 @@ export const handleThreadsCreate = async (req, res) => {
   const { title, content, forumId, userId } = req.body;
 
   try {
-    if (!title || !content || !forumId || !userId) {
-      console.log("Title, content, forumId, and userId are required");
-      return res
-        .status(400)
-        .json({ error: "Title, content, forumId, and userId are required" });
-    }
-
+    const CommonAttributes = sequelize.models.CommonAttributes;
     const Threads = sequelize.models.Threads;
 
+    // Step 1: Create a CommonAttributes entry
+    const commonAttributesResult = await CommonAttributes.create({
+      CreatedByUserID: userId,
+    });
+
+    if (!commonAttributesResult) {
+      console.error("CommonAttributes creation failed");
+      return res
+        .status(500)
+        .json({ error: "CommonAttributes creation failed" });
+    }
+
+    // Step 2: Create a Threads entry with CommonAttributeID
     const result = await Threads.create({
       ThreadTitle: title,
       ThreadContent: content,
       ForumID: forumId,
       UserID: userId,
+      CommonAttributeID: commonAttributesResult.AttributeID,
     });
 
     if (result) {

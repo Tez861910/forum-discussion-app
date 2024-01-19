@@ -3,8 +3,17 @@ import { sequelize } from "../../../db.js";
 export const handleForumReplyGet = async (req, res) => {
   try {
     const ForumReplies = sequelize.models.ForumReplies;
+    const CommonAttributes = sequelize.models.CommonAttributes;
 
-    const result = await ForumReplies.findAll();
+    const result = await ForumReplies.findAll({
+      include: [
+        {
+          model: CommonAttributes,
+          attributes: [],
+          where: { IsDeleted: false },
+        },
+      ],
+    });
 
     console.log("Forum replies retrieved successfully");
     res.json(result);

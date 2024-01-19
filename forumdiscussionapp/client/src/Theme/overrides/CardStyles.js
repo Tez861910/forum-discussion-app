@@ -1,8 +1,9 @@
 import { alpha } from "@mui/material/styles";
 import { palette } from "../palette";
 
+// Define colors with alpha
 const primaryColor = alpha(palette.palette.default.primary.main, 0.5);
-const secondaryColor = alpha(palette.palette.default.secondary.main, 0.5);
+const tertiaryColor = alpha(palette.palette.default.tertiary.main, 0.5);
 const contrastTextColorPrimary = alpha(
   palette.palette.default.primary.contrastText,
   0.5
@@ -12,16 +13,21 @@ const contrastTextColorSecondary = alpha(
   0.5
 );
 
+// Define common styles
+const commonStyles = {
+  padding: "1rem",
+  borderRadius: "0.5rem",
+  boxShadow: "0px 4px 12px rgba(0, 0, 0, 0.1)",
+  transition: "0.3s",
+};
+
 export const cardStyles = {
   root: {
-    padding: "1rem",
-    borderRadius: "0.5rem",
+    ...commonStyles,
     backgroundColor: primaryColor,
     color: contrastTextColorPrimary,
-    boxShadow: "0px 4px 12px rgba(0, 0, 0, 0.1)",
-    transition: "0.3s",
     "&:hover": {
-      backgroundColor: secondaryColor,
+      backgroundColor: tertiaryColor,
       color: contrastTextColorSecondary,
       transform: "scale(1.05)",
     },
@@ -30,9 +36,9 @@ export const cardStyles = {
     MuiCardHeader: {
       styleOverrides: {
         root: {
+          ...commonStyles,
           backgroundColor: primaryColor,
           color: contrastTextColorPrimary,
-          padding: "1rem",
           fontSize: "1.5rem",
           fontWeight: "bold",
         },
@@ -41,9 +47,9 @@ export const cardStyles = {
     MuiCardContent: {
       styleOverrides: {
         root: {
-          backgroundColor: secondaryColor,
+          ...commonStyles,
+          backgroundColor: tertiaryColor,
           color: contrastTextColorSecondary,
-          padding: "1rem",
           "&:last-child": {
             paddingBottom: "1rem",
           },
@@ -53,9 +59,9 @@ export const cardStyles = {
     MuiCardActions: {
       styleOverrides: {
         root: {
+          ...commonStyles,
           backgroundColor: primaryColor,
           color: contrastTextColorPrimary,
-          padding: "1rem",
           justifyContent: "center",
         },
       },

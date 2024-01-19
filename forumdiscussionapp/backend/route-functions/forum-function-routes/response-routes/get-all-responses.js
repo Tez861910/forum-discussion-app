@@ -5,9 +5,17 @@ export const getAllResponses = async (req, res) => {
 
   try {
     const Responses = sequelize.models.Responses;
+    const CommonAttributes = sequelize.models.CommonAttributes;
 
     const responses = await Responses.findAll({
       where: { CommentID: commentId },
+      include: [
+        {
+          model: CommonAttributes,
+          attributes: [],
+          where: { IsDeleted: false },
+        },
+      ],
     });
 
     res.json({ responses });

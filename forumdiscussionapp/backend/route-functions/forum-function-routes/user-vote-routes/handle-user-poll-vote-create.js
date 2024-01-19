@@ -11,11 +11,19 @@ export const handleUserPollVoteCreate = async (req, res) => {
         .json({ error: "UserID and PollOptionID are required" });
     }
 
+    const CommonAttributes = sequelize.models.CommonAttributes;
     const UserPollVotes = sequelize.models.UserPollVotes;
 
+    // Step 1: Create CommonAttribute entry
+    const commonAttribute = await CommonAttributes.create({
+      CreatedByUserID: userId,
+    });
+
+    // Step 2: Create UserPollVotes with CommonAttributeID
     const result = await UserPollVotes.create({
       UserID: userId,
       PollOptionID: pollOptionId,
+      CommonAttributeID: commonAttribute.AttributeID,
     });
 
     if (result) {

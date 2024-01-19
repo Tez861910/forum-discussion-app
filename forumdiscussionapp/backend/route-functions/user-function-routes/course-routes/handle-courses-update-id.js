@@ -6,10 +6,8 @@ export const handleCoursesUpdateId = async (req, res) => {
   const updatedByUserID = req.user.id;
 
   try {
-    // Dynamically access the Courses model using sequelize.models
+    // Dynamically access the models using sequelize.models
     const Courses = sequelize.models.Courses;
-
-    // Dynamically access the CommonAttributes model using sequelize.models
     const CommonAttributes = sequelize.models.CommonAttributes;
 
     if (!courseName && !courseDescription) {
@@ -42,20 +40,24 @@ export const handleCoursesUpdateId = async (req, res) => {
     course.CourseDescription = courseDescription;
     await course.save();
 
-    // Update the CommonAttributes
+    // Update the associated CommonAttributes entry with UpdatedByUserID
     const commonAttributes = await CommonAttributes.findOne({
       where: { AttributeID: course.CommonAttributeID },
     });
+
     commonAttributes.UpdatedAt = new Date();
     commonAttributes.UpdatedByUserID = updatedByUserID;
+
+    // Save the changes
     await commonAttributes.save();
 
     console.log("Course updated successfully");
     res.json({ message: "Course updated successfully" });
   } catch (error) {
     console.error("Error updating course:", error);
-    res
-      .status(500)
-      .json({ error: "Course update failed", details: error.message });
+    res.status(500).json({
+      error: "Course update failed",
+      details: error.message,
+    });
   }
 };

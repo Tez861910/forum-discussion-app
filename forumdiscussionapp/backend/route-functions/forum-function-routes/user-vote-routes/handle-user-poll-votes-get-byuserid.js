@@ -6,14 +6,24 @@ export const handleUserPollVoteGetByUserId = async (req, res) => {
 
   try {
     // Dynamically access the UserPollVotes model using sequelize.models
-    const { UserPollVotes } = sequelize.models;
+    const { UserPollVotes, CommonAttributes } = sequelize.models;
 
-    // Using Sequelize's findAll method to retrieve user poll votes
+    // Using Sequelize's findAll method to retrieve user poll votes with association
     const result = await UserPollVotes.findAll({
       // Specifying the condition for the query: where UserID matches the provided userId
       where: {
         UserID: userId,
       },
+      // Including the association with CommonAttributes table
+      include: [
+        {
+          model: CommonAttributes,
+          // Specifying the condition for the association: where IsDeleted is false
+          where: {
+            IsDeleted: false,
+          },
+        },
+      ],
     });
 
     // Logging a success message and sending the retrieved data in the response

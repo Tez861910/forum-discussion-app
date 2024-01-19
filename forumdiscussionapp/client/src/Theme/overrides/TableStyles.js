@@ -1,8 +1,13 @@
 import { palette } from "../palette";
 
+// Define colors
 const primaryMainColor = palette.palette.default.primary.main;
 const textPrimaryColor = palette.palette.default.text.primary;
-const transition = "0.3s";
+
+// Define common styles
+const commonStyles = {
+  transition: "0.3s",
+};
 
 export const tableStyles = {
   defaultProps: {
@@ -10,7 +15,7 @@ export const tableStyles = {
       styleOverrides: {
         root: {
           backgroundColor: primaryMainColor,
-          transition: transition,
+          ...commonStyles,
         },
       },
     },
@@ -19,7 +24,7 @@ export const tableStyles = {
       styleOverrides: {
         root: {
           color: textPrimaryColor,
-          transition: transition,
+          ...commonStyles,
         },
       },
     },
@@ -28,7 +33,7 @@ export const tableStyles = {
       styleOverrides: {
         root: {
           backgroundColor: primaryMainColor,
-          transition: transition,
+          ...commonStyles,
         },
       },
     },
@@ -38,7 +43,7 @@ export const tableStyles = {
         root: {
           "&:nth-of-type(odd)": {
             backgroundColor: primaryMainColor,
-            transition: transition,
+            ...commonStyles,
           },
         },
       },

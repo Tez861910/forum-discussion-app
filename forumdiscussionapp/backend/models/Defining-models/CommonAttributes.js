@@ -48,6 +48,7 @@ export default function (sequelize) {
         },
       ],
       engine: "InnoDB",
+      timestamps: false,
     }
   );
 

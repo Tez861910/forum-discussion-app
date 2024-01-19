@@ -5,8 +5,18 @@ export const handleThreadsGetByThreadId = async (req, res) => {
 
   try {
     const Threads = sequelize.models.Threads;
+    const CommonAttributes = sequelize.models.CommonAttributes;
 
-    const thread = await Threads.findOne({ where: { ThreadID: threadId } });
+    const thread = await Threads.findOne({
+      where: { ThreadID: threadId },
+      include: [
+        {
+          model: CommonAttributes,
+          attributes: [],
+          where: { IsDeleted: false },
+        },
+      ],
+    });
 
     console.log("Thread by ID data:", thread);
 

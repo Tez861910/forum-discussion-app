@@ -14,23 +14,10 @@ export default function (sequelize) {
         values: ["Male", "Female", "Other"],
         defaultValue: "Other",
       },
-      CommonAttributeID: {
-        type: DataTypes.INTEGER.UNSIGNED,
-        references: {
-          model: "CommonAttributes",
-          key: "AttributeID",
-        },
-      },
     },
     {
       tableName: "Gender",
       timestamps: false,
-      indexes: [
-        {
-          name: "idx_common_attribute_id_gender",
-          fields: ["CommonAttributeID"],
-        },
-      ],
       engine: "InnoDB",
     }
   );
