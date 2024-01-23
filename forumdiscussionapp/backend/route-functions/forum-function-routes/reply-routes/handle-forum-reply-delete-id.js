@@ -6,10 +6,10 @@ export const handleForumReplyDeleteById = async (req, res) => {
 
   try {
     const CommonAttributes = sequelize.models.CommonAttributes;
-    const ForumReplies = sequelize.models.ForumReplies;
+    const ForumsReplies = sequelize.models.ForumsReplies;
 
     // Step 1: Find the ForumReply and associated CommonAttributeID
-    const forumReply = await ForumReplies.findByPk(forumReplyId);
+    const forumReply = await ForumsReplies.findByPk(forumReplyId);
 
     if (!forumReply) {
       console.error("Forum reply not found");

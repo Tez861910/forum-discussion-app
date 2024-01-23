@@ -165,8 +165,6 @@ export const CommentSection = ({ threadId }) => {
     <Box
       sx={{
         p: 2,
-        backgroundColor: "warning.main",
-        color: "warning.contrastText",
       }}
     >
       <Typography variant="h2" sx={{ fontWeight: "bold" }}>

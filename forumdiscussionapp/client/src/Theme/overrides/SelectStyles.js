@@ -1,6 +1,5 @@
-import { palette } from "../palette";
-
-const primaryMainColor = palette.palette.default.primary.main;
+// Define colors
+const primaryMainColor = "inherit";
 const transition = "color 0.3s ease-in-out";
 const height = "60px";
 const width = "100%";

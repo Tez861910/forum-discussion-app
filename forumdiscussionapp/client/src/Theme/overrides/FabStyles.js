@@ -1,8 +1,7 @@
-import { palette } from "../palette";
-
-const primaryColor = palette.palette.default.primary.main;
-const secondaryColor = palette.palette.default.secondary.main;
-const contrastTextColor = palette.palette.default.primary.contrastText;
+// Define colors
+const primaryColor = "inherit";
+const secondaryColor = "inherit";
+const contrastTextColor = "inherit";
 
 export const fabStyles = {
   defaultProps: {

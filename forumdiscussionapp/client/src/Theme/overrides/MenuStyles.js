@@ -1,8 +1,7 @@
-import { palette } from "../palette";
-
-const primaryColor = palette.palette.default.tertiary.main;
-const backgroundColor = palette.palette.default.background.default;
-const paperColor = palette.palette.default.background.paper;
+// Define colors
+const primaryColor = "inherit";
+const backgroundColor = "inherit";
+const paperColor = "inherit";
 
 export const menuStyles = {
   defaultProps: {

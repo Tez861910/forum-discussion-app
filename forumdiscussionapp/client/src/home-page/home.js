@@ -11,10 +11,11 @@ import { AdminRoles } from "../admin/Roles/AdminRoles";
 import { MCQForm } from "../Examination/mcq-form";
 import { MCQAnswerForm } from "../Examination/mcq-answer-form";
 import { ForumDiscussion } from "../threads/Forumdiscussion";
-import { Scheduler } from "./scheduler";
+import { Scheduler } from "../Event-Management/scheduler";
 import { UserProfile } from "./user-profile";
 import { CourseEnrollmentModal } from "./course-enrollment-modal";
 import { ChatApplication } from "../chats/chat-application";
+import { palette } from "../Theme/palette";
 
 export const Home = () => {
   const theme = useTheme();
@@ -183,6 +184,7 @@ export const Home = () => {
           userName={userName}
           roleId={roleId}
           isCoursesEnrolled={isCoursesEnrolled}
+          palette={palette}
         />
       </Box>
 

@@ -101,8 +101,6 @@ export function ThreadModal({
           <DialogTitle
             sx={{
               fontWeight: "bold",
-              backgroundColor: "primary.main",
-              color: "primary.contrastText",
             }}
           >
             {editedTitle}
@@ -116,9 +114,7 @@ export function ThreadModal({
             </IconButton>
           </DialogTitle>
           <DialogContent dividers>
-            <Card
-              sx={{ backgroundColor: "secondary.light", color: "text.primary" }}
-            >
+            <Card>
               <CardHeader title="Thread Details" />
               <CardContent>
                 <TextField

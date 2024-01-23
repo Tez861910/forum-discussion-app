@@ -1,6 +1,7 @@
 import express from "express";
 import {
-  validateCourseEnroll,
+  validateUserCoursesEnroll,
+  validateCourseUsersEnroll,
   validateRemoveUsersFromCourse,
 } from "../../body-validation/user-validation-functions/user-course-validation.js";
 
@@ -24,10 +25,14 @@ router.get("/get/id", handleUserCoursesGetId);
 router.get("/enrollments/:courseId", handleCoursesEnrollmentsId);
 
 // Enroll courses in a user
-router.post("/enroll", validateCourseEnroll, handleCoursesEnroll);
+router.post("/enroll", validateUserCoursesEnroll, handleCoursesEnroll);
 
 // Enroll users in a course
-router.post("/:courseId/enroll", validateCourseEnroll, handleCoursesIdEnroll);
+router.post(
+  "/:courseId/enroll",
+  validateCourseUsersEnroll,
+  handleCoursesIdEnroll
+);
 
 // Patch (soft delete) removing users from a course
 router.patch(

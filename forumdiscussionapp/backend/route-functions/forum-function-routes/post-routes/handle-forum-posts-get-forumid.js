@@ -3,10 +3,10 @@ import { sequelize } from "../../../db.js";
 export const handleForumPostGetForumId = async (req, res) => {
   const { forumId } = req.params;
   try {
-    const ForumPosts = sequelize.models.ForumPosts;
+    const ForumsPosts = sequelize.models.ForumsPosts;
     const CommonAttributes = sequelize.models.CommonAttributes;
 
-    const result = await ForumPosts.findAll({
+    const result = await ForumsPosts.findAll({
       where: { ForumID: forumId },
       include: [
         {

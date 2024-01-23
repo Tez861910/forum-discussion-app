@@ -1,8 +1,8 @@
 import { sequelize } from "../../../db.js";
 
 export const handleCoursesPatchId = async (req, res) => {
-  const deletedByUserID = req.user.id;
-  const { id } = req.params;
+  const { courseId } = req.params;
+  const deletedByUserID = req.body;
 
   try {
     // Dynamically access the models using sequelize.models
@@ -11,7 +11,7 @@ export const handleCoursesPatchId = async (req, res) => {
 
     // Fetch the course with the provided ID
     const course = await Courses.findOne({
-      where: { CourseID: id },
+      where: { CourseID: courseId },
       include: [
         {
           model: CommonAttributes,

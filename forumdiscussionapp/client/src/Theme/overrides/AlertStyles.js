@@ -1,13 +1,3 @@
-import { palette } from "../palette";
-
-const primaryTextColor = palette.palette.default.text.primary;
-const backgroundColorDefault = palette.palette.default.background.default;
-
-const successColor = palette.palette.default.success.main;
-const infoColor = palette.palette.default.info.main;
-const warningColor = palette.palette.default.warning.main;
-const errorColor = palette.palette.default.error.main;
-
 export const alertStyles = {
   root: {
     width: "100%",
@@ -27,51 +17,51 @@ export const alertStyles = {
     padding: "0.4375rem 0",
   },
   filledSuccess: {
-    color: primaryTextColor,
-    backgroundColor: successColor,
+    color: "inherit",
+    backgroundColor: "inherit",
   },
   filledInfo: {
-    color: primaryTextColor,
-    backgroundColor: infoColor,
+    color: "inherit",
+    backgroundColor: "inherit",
   },
   filledWarning: {
-    color: primaryTextColor,
-    backgroundColor: warningColor,
+    color: "inherit",
+    backgroundColor: "inherit",
   },
   filledError: {
-    color: primaryTextColor,
-    backgroundColor: errorColor,
+    color: "inherit",
+    backgroundColor: "inherit",
   },
   outlinedSuccess: {
-    color: successColor,
-    borderColor: successColor,
+    color: "inherit",
+    borderColor: "inherit",
   },
   outlinedInfo: {
-    color: infoColor,
-    borderColor: infoColor,
+    color: "inherit",
+    borderColor: "inherit",
   },
   outlinedWarning: {
-    color: warningColor,
-    borderColor: warningColor,
+    color: "inherit",
+    borderColor: "inherit",
   },
   outlinedError: {
-    color: errorColor,
-    borderColor: errorColor,
+    color: "inherit",
+    borderColor: "inherit",
   },
   standardSuccess: {
-    color: successColor,
-    backgroundColor: backgroundColorDefault,
+    color: "inherit",
+    backgroundColor: "inherit",
   },
   standardInfo: {
-    color: infoColor,
-    backgroundColor: backgroundColorDefault,
+    color: "inherit",
+    backgroundColor: "inherit",
   },
   standardWarning: {
-    color: warningColor,
-    backgroundColor: backgroundColorDefault,
+    color: "inherit",
+    backgroundColor: "inherit",
   },
   standardError: {
-    color: errorColor,
-    backgroundColor: backgroundColorDefault,
+    color: "inherit",
+    backgroundColor: "inherit",
   },
 };

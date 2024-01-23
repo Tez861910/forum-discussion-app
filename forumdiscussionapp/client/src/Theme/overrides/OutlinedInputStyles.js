@@ -1,43 +1,36 @@
-import { palette } from "../palette";
-
-const primaryColor = palette.palette.default.primary.main;
-const secondaryColor = palette.palette.default.secondary.main;
-const paddingValue = "12px";
-const multilinePadding = "10px";
-const densePadding = "10.5px";
-
 export const outlinedInputStyles = {
   root: {
     "& fieldset": {
-      borderColor: secondaryColor,
+      borderColor: "inherit",
       transition: "0.3s",
       boxShadow: "0px 2px 4px -1px rgba(0, 0, 0, 0.2)",
     },
     "&:hover fieldset": {
-      borderColor: primaryColor,
+      borderColor: "inherit",
     },
     "&.Mui-focused fieldset": {
-      borderColor: primaryColor,
+      borderColor: "inherit",
+      boxShadow: "0px 4px 8px -2px rgba(0, 0, 0, 0.3)",
     },
   },
   input: {
-    padding: paddingValue,
+    padding: "12px",
   },
   multiline: {
-    padding: multilinePadding,
+    padding: "10px",
   },
   adornedStart: {
-    paddingLeft: paddingValue,
+    paddingLeft: "12px",
   },
   adornedEnd: {
-    paddingRight: paddingValue,
+    paddingRight: "12px",
   },
   notchedOutline: {
-    borderColor: primaryColor,
+    borderColor: "inherit",
   },
   inputMarginDense: {
-    paddingTop: densePadding,
-    paddingBottom: densePadding,
+    paddingTop: "10.5px",
+    paddingBottom: "10.5px",
   },
   inputMultiline: {
     padding: "0",

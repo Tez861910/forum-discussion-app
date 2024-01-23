@@ -13,7 +13,7 @@ export const handleForumPostCreate = async (req, res) => {
     }
 
     const CommonAttributes = sequelize.models.CommonAttributes;
-    const ForumPosts = sequelize.models.ForumPosts;
+    const ForumsPosts = sequelize.models.ForumsPosts;
 
     // Step 1: Create a CommonAttributes entry
     const commonAttributesResult = await CommonAttributes.create({
@@ -28,7 +28,7 @@ export const handleForumPostCreate = async (req, res) => {
     }
 
     // Step 2: Create a ForumPost entry with CommonAttributeID
-    const result = await ForumPosts.create({
+    const result = await ForumsPosts.create({
       ForumID: forumId,
       UserID: userId,
       PostContent: postContent,

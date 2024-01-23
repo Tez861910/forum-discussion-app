@@ -1,6 +1,4 @@
-import { palette } from "../palette";
-
-const greyColor = palette.palette.default.grey[400];
+const greyColor = "inherit";
 const transition = "0.3s";
 
 export const textareaAutosizeStyles = {

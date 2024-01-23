@@ -19,10 +19,10 @@ export function CourseListItem({
 }) {
   const [openEditDialog, setOpenEditDialog] = React.useState(false);
   const [updatedCourseName, setUpdatedCourseName] = React.useState(
-    String(course.CourseName)
+    course.CourseName
   );
   const [updatedCourseDescription, setUpdatedCourseDescription] =
-    React.useState(String(course.CourseDescription));
+    React.useState(course.CourseDescription);
 
   const handleOpenEditDialog = () => setOpenEditDialog(true);
   const handleCloseEditDialog = () => setOpenEditDialog(false);
@@ -35,11 +35,7 @@ export function CourseListItem({
         "Description:",
         updatedCourseDescription
       );
-      handleEditCourse(
-        course.CourseID,
-        String(updatedCourseName),
-        String(updatedCourseDescription)
-      );
+      handleEditCourse(updatedCourseName, updatedCourseDescription);
       handleCloseEditDialog();
     } catch (error) {
       console.error("Error saving edit:", error);
@@ -93,16 +89,10 @@ export function CourseListItem({
       <EditCourseDialog
         open={openEditDialog}
         handleClose={handleCloseEditDialog}
-        handleSaveEdit={(updatedName, updatedDescription) =>
-          handleSaveEdit(
-            course.CourseID,
-            String(updatedName),
-            String(updatedDescription)
-          )
-        }
-        updatedCourseName={String(updatedCourseName)}
+        handleSaveEdit={handleSaveEdit}
+        updatedCourseName={updatedCourseName}
         setUpdatedCourseName={setUpdatedCourseName}
-        updatedCourseDescription={String(updatedCourseDescription)}
+        updatedCourseDescription={updatedCourseDescription}
         setUpdatedCourseDescription={setUpdatedCourseDescription}
       />
     </>

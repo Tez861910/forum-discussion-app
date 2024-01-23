@@ -1,7 +1,5 @@
-import { palette } from "../palette";
-
-const backgroundColorDefault = palette.palette.default.background.default;
-const textColorPrimary = palette.palette.default.text.primary;
+const backgroundColorDefault = "inherit";
+const textColorPrimary = "inherit";
 
 export const imageListStyles = {
   defaultProps: {

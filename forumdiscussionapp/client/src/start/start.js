@@ -22,37 +22,7 @@ import {
 import MenuIcon from "@mui/icons-material/Menu";
 import { useTheme } from "@mui/system";
 import logo from "./logo.png";
-
-const departments = [
-  {
-    DepartmentID: 1,
-    DepartmentName: "Computer Science",
-    DepartmentDescription: "Description 1",
-  },
-  {
-    DepartmentID: 2,
-    DepartmentName: "Physics",
-    DepartmentDescription: "Description 2",
-  },
-];
-
-const facultyMembers = [
-  { FacultyID: 1, FacultyName: "John Doe", DepartmentID: 1 },
-  { FacultyID: 2, FacultyName: "Jane Smith", DepartmentID: 2 },
-];
-
-const courses = [
-  {
-    CourseID: 1,
-    CourseName: "Web Development",
-    CourseDescription: "Description 1",
-  },
-  {
-    CourseID: 2,
-    CourseName: "Physics 101",
-    CourseDescription: "Description 2",
-  },
-];
+import { useApi } from "../home-page/Api";
 
 const NavigationButton = ({ to, color, children }) => (
   <Button
@@ -73,13 +43,64 @@ const NavigationButton = ({ to, color, children }) => (
   </Button>
 );
 
+const fetchDepartments = async (api) => {
+  try {
+    const response = await api.get("/users/departments/get/all");
+    const data = await response.json();
+    return data;
+  } catch (error) {
+    console.error("Error fetching departments:", error);
+    return [];
+  }
+};
+
+const fetchFacultyMembers = async (api) => {
+  try {
+    const response = await api.get("/users/facultymembers/get/all");
+    const data = await response.json();
+    return data;
+  } catch (error) {
+    console.error("Error fetching faculty members:", error);
+    return [];
+  }
+};
+
+const fetchCourses = async (api) => {
+  try {
+    const response = await api.get("/users/courses/get");
+    const data = await response.json();
+    return data;
+  } catch (error) {
+    console.error("Error fetching courses:", error);
+    return [];
+  }
+};
+
 export const Start = () => {
+  const { api } = useApi();
   const theme = useTheme();
+  const [departmentsData, setDepartmentsData] = React.useState([]);
+  const [facultyMembersData, setFacultyMembersData] = React.useState([]);
+  const [coursesData, setCoursesData] = React.useState([]);
   const [drawerOpen, setDrawerOpen] = React.useState(false);
 
   const handleDrawerToggle = () => {
     setDrawerOpen(!drawerOpen);
   };
+
+  React.useEffect(() => {
+    const fetchData = async () => {
+      const departments = await fetchDepartments(api);
+      const facultyMembers = await fetchFacultyMembers(api);
+      const courses = await fetchCourses(api);
+
+      setDepartmentsData(departments);
+      setFacultyMembersData(facultyMembers);
+      setCoursesData(courses);
+    };
+
+    fetchData();
+  }, [api]);
 
   return (
     <React.Suspense fallback={<div>Loading...</div>}>
@@ -156,7 +177,7 @@ export const Start = () => {
                 <CardContent>
                   <Typography variant="h2">Departments:</Typography>
                   <List>
-                    {departments.map((department) => (
+                    {departmentsData.map((department) => (
                       <ListItem key={department.DepartmentID}>
                         <ListItemText
                           primary={department.DepartmentName}
@@ -175,7 +196,7 @@ export const Start = () => {
                 <CardContent>
                   <Typography variant="h2">Faculty Members:</Typography>
                   <List>
-                    {facultyMembers.map((faculty) => (
+                    {facultyMembersData.map((faculty) => (
                       <ListItem key={faculty.FacultyID}>
                         <ListItemText
                           primary={faculty.FacultyName}
@@ -194,7 +215,7 @@ export const Start = () => {
                 <CardContent>
                   <Typography variant="h2">Courses:</Typography>
                   <List>
-                    {courses.map((course) => (
+                    {coursesData.map((course) => (
                       <ListItem key={course.CourseID}>
                         <ListItemText
                           primary={course.CourseName}

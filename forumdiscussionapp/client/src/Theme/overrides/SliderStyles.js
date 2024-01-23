@@ -1,6 +1,5 @@
-import { palette } from "../palette";
-
-const primaryMainColor = palette.palette.default.primary.main;
+// Define colors
+const primaryMainColor = "inherit";
 const transition = "0.3s";
 
 export const sliderStyles = {

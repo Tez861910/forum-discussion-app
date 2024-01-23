@@ -1,8 +1,6 @@
-import { palette } from "../palette";
-
-const primaryMainColor = palette.palette.default.primary.main;
-const textPrimaryColor = palette.palette.default.text.primary;
-const infoMainColor = palette.palette.default.info.main;
+const primaryMainColor = "inherit";
+const textPrimaryColor = "inherit";
+const infoMainColor = "inherit";
 const transition = "0.3s";
 
 export const speedDialStyles = {

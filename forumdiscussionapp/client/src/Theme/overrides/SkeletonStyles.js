@@ -1,6 +1,4 @@
-import { palette } from "../palette";
-
-const greyColor = palette.palette.default.grey[200];
+const greyColor = "inherit";
 const pulseAnimation = "$pulse 1.5s ease-in-out 0.5s infinite";
 const waveAnimation = "$wave 1.6s linear 0.5s infinite";
 const transition = "0.3s";

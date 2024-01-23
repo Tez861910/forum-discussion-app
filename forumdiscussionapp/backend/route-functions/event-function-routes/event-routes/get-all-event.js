@@ -1,23 +1,27 @@
 import { sequelize } from "../../../db.js";
-import Sequelize from "sequelize";
 
 export const getAllEvents = async (req, res) => {
   try {
+    const { courseId } = req.body;
+
+    if (!courseId) {
+      return res
+        .status(400)
+        .json({ success: false, error: "CourseID is undefined" });
+    }
+
     const CommonAttributes = sequelize.models.CommonAttributes;
     const Events = sequelize.models.Events;
 
-    // Selecting relevant fields from both Events and CommonAttributes tables
+    // Selecting relevant fields from the Events table
     const events = await Events.findAll({
-      attributes: {
-        include: [
-          [Sequelize.col("CommonAttributes.CreatedAt"), "CreatedAt"],
-          [
-            Sequelize.col("CommonAttributes.CreatedByUserID"),
-            "CreatedByUserID",
-          ],
-          [Sequelize.col("CommonAttributes.IsDeleted"), "IsDeleted"],
-        ],
-      },
+      attributes: [
+        "EventID",
+        "EventTitle",
+        "EventDescription",
+        "EventDate",
+        "Location",
+      ],
       include: [
         {
           model: CommonAttributes,
@@ -25,6 +29,7 @@ export const getAllEvents = async (req, res) => {
           where: { IsDeleted: false },
         },
       ],
+      where: { CourseID: courseId },
     });
 
     res.json({ success: true, events });

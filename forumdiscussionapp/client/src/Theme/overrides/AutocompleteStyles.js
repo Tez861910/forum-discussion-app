@@ -1,15 +1,8 @@
-import { palette } from "../palette";
-
-const primaryColor = palette.palette.default.primary.main;
-const secondaryColor = palette.palette.default.secondary.main;
-const contrastTextColor = palette.palette.default.primary.contrastText;
-const backgroundColorPaper = palette.palette.default.background.paper;
-
 export const autocompleteStyles = {
   root: {
     "& .MuiOutlinedInput-root": {
       "&.Mui-focused fieldset": {
-        borderColor: primaryColor,
+        borderColor: "inherit",
       },
     },
     transition: "0.3s",
@@ -18,38 +11,38 @@ export const autocompleteStyles = {
   inputRoot: {
     "&.MuiOutlinedInput-root": {
       "& fieldset": {
-        borderColor: secondaryColor,
+        borderColor: "inherit",
       },
       "&:hover fieldset": {
-        borderColor: primaryColor,
+        borderColor: "inherit",
       },
       "&.Mui-focused fieldset": {
-        borderColor: primaryColor,
+        borderColor: "inherit",
       },
     },
   },
   listbox: {
-    backgroundColor: backgroundColorPaper,
-    color: contrastTextColor,
+    backgroundColor: "inherit",
+    color: "inherit",
   },
   option: {
     '&[data-focus="true"]': {
-      backgroundColor: primaryColor,
-      color: contrastTextColor,
+      backgroundColor: "inherit",
+      color: "inherit",
     },
     '&[aria-selected="true"]': {
-      backgroundColor: secondaryColor,
-      color: contrastTextColor,
+      backgroundColor: "inherit",
+      color: "inherit",
     },
   },
   groupLabel: {
-    backgroundColor: backgroundColorPaper,
-    color: contrastTextColor,
+    backgroundColor: "inherit",
+    color: "inherit",
   },
   popupIndicator: {
-    color: primaryColor,
+    color: "inherit",
   },
   clearIndicator: {
-    color: secondaryColor,
+    color: "inherit",
   },
 };

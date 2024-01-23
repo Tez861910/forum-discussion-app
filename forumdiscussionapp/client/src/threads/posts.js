@@ -49,9 +49,9 @@ export const PostSection = ({ forumId }) => {
     try {
       const response = await api.get(`/forums/posts/get/${forumId}`);
       const responseData = response.data;
-  
+
       console.log("Response Data:", responseData);
-  
+
       if (responseData !== null) {
         const posts = Array.isArray(responseData)
           ? responseData
@@ -68,7 +68,6 @@ export const PostSection = ({ forumId }) => {
       setFetchError("Error loading posts");
     }
   }, [api, forumId]);
-  
 
   const fetchUsernames = useCallback(
     async (postsToFetchUsernames) => {
@@ -197,11 +196,9 @@ export const PostSection = ({ forumId }) => {
     <Box
       sx={{
         p: 2,
-        backgroundColor: "warning.main",
-        color: "warning.contrastText",
       }}
     >
-      <Typography variant="h2" sx={{ fontWeight: "bold" }}>
+      <Typography variant="h2" sx={{ fontWeight: "bold", color: "black" }}>
         Post Section
       </Typography>
 

@@ -110,8 +110,6 @@ export const ThreadList = ({ forumId }) => {
       sx={{
         padding: 2,
         mt: 2,
-        backgroundColor: "secondary.main",
-        color: "secondary.contrastText",
       }}
     >
       <Typography

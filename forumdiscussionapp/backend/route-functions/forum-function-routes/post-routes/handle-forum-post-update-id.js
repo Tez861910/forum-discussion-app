@@ -12,11 +12,11 @@ export const handleForumPostUpdateById = async (req, res) => {
         .json({ error: "PostContent is required for update" });
     }
 
-    const ForumPosts = sequelize.models.ForumPosts;
+    const ForumsPosts = sequelize.models.ForumsPosts;
     const CommonAttributes = sequelize.models.CommonAttributes;
 
     // Step 1: Update ForumPosts
-    const forumPostResult = await ForumPosts.update(
+    const forumPostResult = await ForumsPosts.update(
       { PostContent: postContent },
       { where: { ForumPostID: forumPostId } }
     );
@@ -27,7 +27,7 @@ export const handleForumPostUpdateById = async (req, res) => {
     }
 
     // Step 2: Update CommonAttributes for updated by user
-    const forumPost = await ForumPosts.findByPk(forumPostId);
+    const forumPost = await ForumsPosts.findByPk(forumPostId);
     const commonAttributeId = forumPost.CommonAttributeID;
 
     const commonAttributesResult = await CommonAttributes.update(

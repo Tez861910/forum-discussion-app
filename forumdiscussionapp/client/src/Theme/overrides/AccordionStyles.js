@@ -1,11 +1,3 @@
-import { palette } from "../palette";
-
-const primaryColor = palette.palette.default.primary.main;
-const secondaryColor = palette.palette.default.secondary.main;
-const contrastTextColor = palette.palette.default.primary.contrastText;
-const backgroundColor = palette.palette.default.background.default;
-const textColor = palette.palette.default.text.primary;
-
 export const accordionStyles = {
   root: {
     margin: "1rem 0",
@@ -14,6 +6,9 @@ export const accordionStyles = {
     },
     transition: "0.3s",
     boxShadow: "0px 2px 4px -1px rgba(0, 0, 0, 0.2)",
+    "&:hover": {
+      boxShadow: "0px 4px 8px -2px rgba(0, 0, 0, 0.3)",
+    },
   },
   rounded: {
     borderRadius: "0.25rem",
@@ -25,10 +20,11 @@ export const accordionStyles = {
     MuiAccordionSummary: {
       styleOverrides: {
         root: {
-          backgroundColor: primaryColor,
-          color: contrastTextColor,
+          backgroundColor: "inherit",
+          color: "inherit",
           "&:hover": {
-            backgroundColor: secondaryColor,
+            backgroundColor: "inherit",
+            color: "inherit",
           },
         },
       },
@@ -36,8 +32,8 @@ export const accordionStyles = {
     MuiAccordionDetails: {
       styleOverrides: {
         root: {
-          backgroundColor: backgroundColor,
-          color: textColor,
+          backgroundColor: "inherit",
+          color: "inherit",
         },
       },
     },

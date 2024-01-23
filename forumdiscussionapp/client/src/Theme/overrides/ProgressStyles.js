@@ -1,7 +1,6 @@
-import { palette } from "../palette";
-
-const primaryColor = palette.palette.default.primary.main;
-const textColor = palette.palette.default.text.primary;
+// Define colors
+const primaryColor = "inherit";
+const textColor = "inherit";
 const transition = "0.3s";
 
 export const progressStyles = {

@@ -1,8 +1,6 @@
-import { palette } from "../palette";
-
-const primaryColor = palette.palette.default.primary.main;
-const textColor = palette.palette.default.text.primary;
-const infoColor = palette.palette.default.info.main;
+const primaryColor = "inherit";
+const textColor = "inherit";
+const infoColor = "inherit";
 
 export const paginationStyles = {
   root: {

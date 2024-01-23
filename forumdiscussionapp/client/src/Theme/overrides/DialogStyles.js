@@ -1,12 +1,3 @@
-import { palette } from "../palette";
-
-// Define colors
-const primaryColor = palette.palette.default.primary.main;
-const tertiaryColor = palette.palette.default.tertiary.main;
-const contrastTextColorPrimary = palette.palette.default.primary.contrastText;
-const contrastTextColorSecondary =
-  palette.palette.default.secondary.contrastText;
-
 // Define common styles
 const commonStyles = {
   padding: "1rem",
@@ -18,11 +9,11 @@ const commonStyles = {
 export const dialogStyles = {
   paper: {
     ...commonStyles,
-    backgroundColor: primaryColor,
-    color: contrastTextColorPrimary,
+    backgroundColor: "inherit",
+    color: "inherit",
     "&:hover": {
-      backgroundColor: tertiaryColor,
-      color: contrastTextColorSecondary,
+      backgroundColor: "inherit",
+      color: "inherit",
     },
   },
   defaultProps: {
@@ -30,8 +21,8 @@ export const dialogStyles = {
       styleOverrides: {
         root: {
           ...commonStyles,
-          backgroundColor: primaryColor,
-          color: contrastTextColorPrimary,
+          backgroundColor: "inherit",
+          color: "inherit",
           fontSize: "1.5rem",
           fontWeight: "bold",
         },
@@ -41,8 +32,8 @@ export const dialogStyles = {
       styleOverrides: {
         root: {
           ...commonStyles,
-          backgroundColor: tertiaryColor,
-          color: contrastTextColorSecondary,
+          backgroundColor: "inherit",
+          color: "inherit",
         },
       },
     },
@@ -50,8 +41,8 @@ export const dialogStyles = {
       styleOverrides: {
         root: {
           ...commonStyles,
-          backgroundColor: primaryColor,
-          color: contrastTextColorPrimary,
+          backgroundColor: "inherit",
+          color: "inherit",
           justifyContent: "center",
         },
       },

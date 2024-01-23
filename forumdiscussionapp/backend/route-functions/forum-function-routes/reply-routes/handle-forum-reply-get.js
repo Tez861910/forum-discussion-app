@@ -2,10 +2,10 @@ import { sequelize } from "../../../db.js";
 
 export const handleForumReplyGet = async (req, res) => {
   try {
-    const ForumReplies = sequelize.models.ForumReplies;
+    const ForumsReplies = sequelize.models.ForumsReplies;
     const CommonAttributes = sequelize.models.CommonAttributes;
 
-    const result = await ForumReplies.findAll({
+    const result = await ForumsReplies.findAll({
       include: [
         {
           model: CommonAttributes,

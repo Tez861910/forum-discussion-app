@@ -12,11 +12,11 @@ export const handleUsersGetUserName = async (req, res) => {
     const users = await Users.findAll({
       where: {
         UserID: { [Op.in]: userIds },
-        "$CommonAttributes.IsDeleted$": false,
       },
       include: [
         {
           model: CommonAttributes,
+          IsDeleted: false,
           attributes: [],
         },
       ],

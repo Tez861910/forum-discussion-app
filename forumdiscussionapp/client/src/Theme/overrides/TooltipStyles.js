@@ -1,7 +1,6 @@
-import { palette } from "../palette";
-
-const primaryMainColor = palette.palette.default.primary.main;
-const textPrimaryColor = palette.palette.default.text.primary;
+// Define colors
+const primaryMainColor = "inherit";
+const textPrimaryColor = "inherit";
 const transition = "0.3s";
 
 export const tooltipStyles = {

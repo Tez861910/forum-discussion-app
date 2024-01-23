@@ -1,8 +1,6 @@
-import { palette } from "../palette";
-
 // Define colors
-const primaryMainColor = palette.palette.default.primary.main;
-const textPrimaryColor = palette.palette.default.text.primary;
+const primaryMainColor = "inherit";
+const textPrimaryColor = "inherit";
 
 // Define common styles
 const commonStyles = {

@@ -1,7 +1,6 @@
-import { palette } from "../palette";
-
-const primaryMainColor = palette.palette.default.primary.main;
-const infoMainColor = palette.palette.default.info.main;
+// Define colors
+const primaryMainColor = "inherit";
+const infoMainColor = "inherit";
 const transition = "0.3s";
 
 export const ratingStyles = {

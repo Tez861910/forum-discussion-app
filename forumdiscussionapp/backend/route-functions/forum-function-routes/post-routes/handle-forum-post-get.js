@@ -2,15 +2,15 @@ import { sequelize } from "../../../db.js";
 
 export const handleForumPostGet = async (req, res) => {
   try {
-    const ForumPosts = sequelize.models.ForumPosts;
+    const ForumsPosts = sequelize.models.ForumsPosts;
     const CommonAttributes = sequelize.models.CommonAttributes;
 
-    const result = await ForumPosts.findAll({
+    const result = await ForumsPosts.findAll({
       include: [
         {
           model: CommonAttributes,
-          attributes: [],
           where: { IsDeleted: false },
+          attributes: [],
         },
       ],
     });

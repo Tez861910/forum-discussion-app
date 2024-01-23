@@ -21,12 +21,12 @@ router.post("/create", validateCourseCreate, handleCoursesCreate);
 router.get("/get", handleCoursesGet);
 
 // Get a course by ID
-router.get("/get/:id", validateCourseGetId, handleCoursesGetId);
+router.get("/get/:courseId", validateCourseGetId, handleCoursesGetId);
 
 // Update a course by ID
-router.put("/update/:id", validateCourseUpdate, handleCoursesUpdateId);
+router.put("/update/:courseId", validateCourseUpdate, handleCoursesUpdateId);
 
 // Patch (soft delete) a course by ID
-router.patch("/delete/:id", validateCourseDelete, handleCoursesPatchId);
+router.patch("/patch/:courseId", validateCourseDelete, handleCoursesPatchId);
 
 export default router;

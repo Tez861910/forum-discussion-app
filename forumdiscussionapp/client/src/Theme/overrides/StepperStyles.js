@@ -1,9 +1,7 @@
-import { palette } from "../palette";
-
-const primaryMainColor = palette.palette.default.primary.main;
-const infoMainColor = palette.palette.default.info.main;
-const greyColor = palette.palette.default.grey[400];
-const paperColor = palette.palette.default.background.paper;
+const primaryMainColor = "inherit";
+const infoMainColor = "inherit";
+const greyColor = "inherit";
+const paperColor = "inherit";
 const transition = "0.3s";
 
 export const stepperStyles = {

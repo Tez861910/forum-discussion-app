@@ -1,6 +1,4 @@
-import { palette } from "../palette";
-
-const primaryColor = palette.palette.default.primary.main;
+const primaryColor = "inherit";
 
 export const breadcrumbsStyles = {
   root: {

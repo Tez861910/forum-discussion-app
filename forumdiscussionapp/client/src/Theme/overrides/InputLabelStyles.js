@@ -1,10 +1,8 @@
-import { palette } from "../palette";
-
 export const inputLabelStyles = {
   root: {
-    color: palette.palette.default.secondary.main,
+    color: "inherit",
     "&.Mui-focused": {
-      color: palette.palette.default.primary.main,
+      color: "inherit",
       transition: "color 0.3s ease-in-out",
     },
     display: "flex",
@@ -12,7 +10,7 @@ export const inputLabelStyles = {
     alignItems: "center",
     padding: "0 10px",
     "&:hover": {
-      color: palette.palette.default.primary.main,
+      color: "inherit",
     },
   },
 
@@ -24,6 +22,8 @@ export const inputLabelStyles = {
     padding: "0px",
     paddingRight: "10px",
     paddingBottom: "10px",
+    border: "1px solid #ddd",
+    borderRadius: "4px",
   },
 
   // Margin dense styles

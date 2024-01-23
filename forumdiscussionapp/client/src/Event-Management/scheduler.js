@@ -17,9 +17,10 @@ import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 import Calendar from "react-calendar";
 import "react-calendar/dist/Calendar.css";
-import { useApi } from "./Api";
+import { useApi } from "../home-page/Api";
 
 export const Scheduler = ({ selectedCourse: courseId }) => {
+  console.log("Received courseId:", courseId);
   const userId = localStorage.getItem("userId");
   const roleId = localStorage.getItem("roleId");
   const [events, setEvents] = useState([]);
@@ -29,19 +30,29 @@ export const Scheduler = ({ selectedCourse: courseId }) => {
     EventTitle: "",
     EventDescription: "",
     EventDate: "",
+    Location: "",
   });
   const [selectedEventId, setSelectedEventId] = useState(null);
-  //const [isLoading, setIsLoading] = useState(true);
   const { api } = useApi();
 
   const fetchEvents = useCallback(async () => {
     try {
-      const response = await api.get("/events/events/get");
+      if (!courseId) {
+        console.error("Error fetching events: courseId is undefined");
+        return;
+      }
+
+      const response = await api.get("/events/events/get", {
+        params: {
+          courseId: parseInt(courseId),
+        },
+      });
+
       setEvents(response.data.events);
     } catch (error) {
       console.error("Error fetching events:", error);
     }
-  }, [api]);
+  }, [api, courseId]);
 
   const createEvent = useCallback(async () => {
     try {
@@ -49,6 +60,7 @@ export const Scheduler = ({ selectedCourse: courseId }) => {
         EventTitle: newEvent.EventTitle,
         EventDescription: newEvent.EventDescription,
         EventDate: selectedDate.toISOString(),
+        Location: newEvent.Location,
         courseId: parseInt(courseId),
         userId: parseInt(userId),
       });
@@ -59,6 +71,9 @@ export const Scheduler = ({ selectedCourse: courseId }) => {
           EventTitle: "",
           EventDescription: "",
           EventDate: "",
+          Location: "",
+          userId: parseInt(userId),
+          courseId: parseInt(courseId),
         });
         handleClose();
       } else {
@@ -75,8 +90,8 @@ export const Scheduler = ({ selectedCourse: courseId }) => {
         EventTitle: newEvent.EventTitle,
         EventDescription: newEvent.EventDescription,
         EventDate: selectedDate.toISOString(),
-        courseId: parseInt(courseId),
-        userd: parseInt(userId),
+        Location: newEvent.Location,
+        userId: parseInt(userId),
       });
 
       if (response.data.success) {
@@ -89,6 +104,7 @@ export const Scheduler = ({ selectedCourse: courseId }) => {
           EventTitle: "",
           EventDescription: "",
           EventDate: "",
+          Location: "",
         });
         handleClose();
       } else {
@@ -121,6 +137,7 @@ export const Scheduler = ({ selectedCourse: courseId }) => {
       EventTitle: selectedEvent.EventTitle,
       EventDescription: selectedEvent.EventDescription,
       EventDate: selectedEvent.EventDate,
+      Location: selectedEvent.Location,
     });
     setSelectedDate(new Date(selectedEvent.EventDate));
     handleClickOpen();
@@ -186,6 +203,9 @@ export const Scheduler = ({ selectedCourse: courseId }) => {
                 <Typography variant="body2">
                   {new Date(event.EventDate).toLocaleDateString()}
                 </Typography>
+                <Typography variant="body2">
+                  Location: {event.Location}
+                </Typography>
                 <Box>
                   {(roleId === "1" ||
                     (roleId === "2" && userId === event.UserID)) && (
@@ -218,7 +238,7 @@ export const Scheduler = ({ selectedCourse: courseId }) => {
         <DialogContent>
           <DialogContentText>
             To create a new event, please enter the event title, description,
-            and date here.
+            date, and location here.
           </DialogContentText>
           <Grid container spacing={2}>
             <Grid item xs={12} sm={6}>
@@ -245,6 +265,19 @@ export const Scheduler = ({ selectedCourse: courseId }) => {
                 value={newEvent.EventDescription}
                 onChange={(e) =>
                   setNewEvent({ ...newEvent, EventDescription: e.target.value })
+                }
+              />
+            </Grid>
+            <Grid item xs={12} sm={6}>
+              <TextField
+                margin="dense"
+                id="location"
+                label="Location"
+                type="text"
+                fullWidth
+                value={newEvent.Location}
+                onChange={(e) =>
+                  setNewEvent({ ...newEvent, Location: e.target.value })
                 }
               />
             </Grid>

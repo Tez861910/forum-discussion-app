@@ -1,7 +1,5 @@
-import { palette } from "../palette";
-
-const primaryMainColor = palette.palette.default.primary.main;
-const greyColor = palette.palette.default.grey[400];
+const primaryMainColor = "inherit";
+const greyColor = "inherit";
 const transition = "0.3s";
 
 export const radioStyles = {

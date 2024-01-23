@@ -6,12 +6,6 @@ export const handleForumGetAll = async (req, res) => {
     const Forums = sequelize.models.Forums;
     const CommonAttributes = sequelize.models.CommonAttributes;
 
-    // Define the association between Forums and CommonAttributes
-    Forums.belongsTo(CommonAttributes, {
-      foreignKey: "CommonAttributeID",
-      targetKey: "AttributeID",
-    });
-
     // Fetch forums and include related CommonAttributes with IsDeleted condition
     const result = await Forums.findAll({
       include: [

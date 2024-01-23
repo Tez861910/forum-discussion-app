@@ -1,24 +1,23 @@
-import { palette } from "../palette";
-
-const greyColor = palette.palette.default.grey[200];
-const primaryMainColor = palette.palette.default.primary.main;
-const warningMainColor = palette.palette.default.warning.main;
-const transition = "0.3s";
-
 export const textFieldStyles = {
   root: {
     margin: "8px 0",
-    transition: transition,
+    transition: "0.3s",
+    "&:hover": {
+      boxShadow: "0px 2px 4px -1px rgba(0, 0, 0, 0.2)",
+    },
   },
 
   defaultProps: {
     MuiInput: {
       styleOverrides: {
         root: {
-          backgroundColor: greyColor,
+          backgroundColor: "inherit",
           borderRadius: "4px",
           padding: "10px",
-          transition: transition,
+          transition: "0.3s",
+          "&:hover": {
+            backgroundColor: "inherit",
+          },
         },
       },
     },
@@ -26,10 +25,13 @@ export const textFieldStyles = {
     MuiInputLabel: {
       styleOverrides: {
         root: {
-          color: primaryMainColor,
+          color: "inherit",
           fontWeight: "bold",
           textAlign: "center",
-          transition: transition,
+          transition: "0.3s",
+          "&:hover": {
+            color: "inherit",
+          },
         },
       },
     },
@@ -37,8 +39,11 @@ export const textFieldStyles = {
     MuiInputAdornment: {
       styleOverrides: {
         root: {
-          color: primaryMainColor,
-          transition: transition,
+          color: "inherit",
+          transition: "0.3s",
+          "&:hover": {
+            color: "inherit",
+          },
         },
       },
     },
@@ -46,8 +51,11 @@ export const textFieldStyles = {
     MuiFormHelperText: {
       styleOverrides: {
         root: {
-          color: warningMainColor,
-          transition: transition,
+          color: "inherit",
+          transition: "0.3s",
+          "&:hover": {
+            color: "inherit",
+          },
         },
       },
     },

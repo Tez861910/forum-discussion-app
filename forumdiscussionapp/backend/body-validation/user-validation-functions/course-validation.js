@@ -13,7 +13,7 @@ export const validateCourseCreate = validate(
 // Validation middleware for updating a course
 export const validateCourseUpdate = validate(
   Joi.object({
-    id: Joi.number().integer().min(1).required(),
+    courseId: Joi.number().integer().min(1).required(),
     courseName: Joi.string().min(1).required(),
     updatedByUserID: Joi.number().integer().min(1).required(),
     courseDescription: Joi.string().min(1).required(),
@@ -23,7 +23,7 @@ export const validateCourseUpdate = validate(
 // Validation middleware for getting a course by ID
 export const validateCourseGetId = validate(
   Joi.object({
-    id: Joi.number().integer().min(1).required(),
+    courseId: Joi.number().integer().min(1).required(),
   })
 );
 
@@ -31,6 +31,7 @@ export const validateCourseGetId = validate(
 export const validateCourseDelete = validate(
   Joi.object({
     // Define the schema for deleting a course by ID
-    id: Joi.number().integer().min(1).required(),
+    courseId: Joi.number().integer().min(1).required(),
+    deletedByUserID: Joi.number().integer().min(1).required(),
   })
 );

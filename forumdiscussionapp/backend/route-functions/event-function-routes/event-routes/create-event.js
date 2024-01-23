@@ -3,11 +3,18 @@ import { sequelize } from "../../../db.js";
 export const createEvent = async (req, res) => {
   try {
     // Destructure relevant information from the request body
-    const { EventTitle, EventDescription, EventDate, Location } = req.body;
+    const {
+      EventTitle,
+      EventDescription,
+      EventDate,
+      Location,
+      courseId,
+      userId,
+    } = req.body;
 
     // Extract user information from the request (assuming it comes from authentication middleware)
-    const UserID = req.user.userId;
-    const CourseID = req.user.courseId;
+    const UserID = userId;
+    const CourseID = courseId;
 
     const CommonAttributes = sequelize.models.CommonAttributes;
     const Events = sequelize.models.Events;

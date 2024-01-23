@@ -184,11 +184,9 @@ export const ReplySection = ({ postId }) => {
     <Box
       sx={{
         p: 2,
-        backgroundColor: "warning.main",
-        color: "warning.contrastText",
       }}
     >
-      <Typography variant="h2" sx={{ fontWeight: "bold" }}>
+      <Typography variant="h2" sx={{ fontWeight: "bold", color: "black" }}>
         Reply Section
       </Typography>
 

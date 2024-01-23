@@ -31,6 +31,7 @@ export const Sidebar = ({
   setUserProfileOpen,
   userName,
   roleId,
+  palette,
 }) => {
   const theme = useTheme();
   const [themeMode, setThemeMode] = React.useState("default");
@@ -39,13 +40,11 @@ export const Sidebar = ({
   const [isAvatarModalOpen, setAvatarModalOpen] = React.useState(false);
 
   const handleThemeChange = () => {
-    if (themeMode === "default") {
-      setThemeMode("light");
-    } else if (themeMode === "light") {
-      setThemeMode("dark");
-    } else {
-      setThemeMode("default");
-    }
+    const themeModes = ["default", "light", "dark"];
+    const currentThemeIndex = themeModes.indexOf(themeMode);
+    const nextThemeIndex = (currentThemeIndex + 1) % themeModes.length;
+    const nextThemeMode = themeModes[nextThemeIndex];
+    setThemeMode(nextThemeMode);
   };
 
   const handleUserProfileClick = () => {
@@ -193,4 +192,5 @@ Sidebar.propTypes = {
   isUserProfileOpen: PropTypes.bool.isRequired,
   setUserProfileOpen: PropTypes.func.isRequired,
   roleId: PropTypes.string.isRequired,
+  palette: PropTypes.object.isRequired,
 };

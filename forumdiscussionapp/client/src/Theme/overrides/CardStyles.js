@@ -1,17 +1,8 @@
-import { alpha } from "@mui/material/styles";
-import { palette } from "../palette";
-
-// Define colors with alpha
-const primaryColor = alpha(palette.palette.default.primary.main, 0.5);
-const tertiaryColor = alpha(palette.palette.default.tertiary.main, 0.5);
-const contrastTextColorPrimary = alpha(
-  palette.palette.default.primary.contrastText,
-  0.5
-);
-const contrastTextColorSecondary = alpha(
-  palette.palette.default.secondary.contrastText,
-  0.5
-);
+// Define colors
+const primaryColor = "inherit";
+const tertiaryColor = "inherit";
+const contrastTextColorPrimary = "inherit";
+const contrastTextColorSecondary = "inherit";
 
 // Define common styles
 const commonStyles = {

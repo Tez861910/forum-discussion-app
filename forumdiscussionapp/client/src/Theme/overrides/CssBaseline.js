@@ -1,22 +1,12 @@
-import { palette } from "../palette";
 import logobg from "../logobg.jpg";
-
-// Define colors
-const primaryColor = palette.palette.default.primary.main;
-const textColorPrimary = palette.palette.default.text.primary;
-
-// Define common styles
-const commonStyles = {
-  boxSizing: "border-box",
-};
 
 export const cssBaselineStyles = {
   body: {
     backgroundImage: `url(${logobg})`,
     backgroundSize: "cover",
     backgroundRepeat: "no-repeat",
-    backgroundColor: primaryColor,
-    color: textColorPrimary,
+    backgroundColor: "inherit",
+    color: "inherit",
     transition: "0.3s",
   },
   "@global": {
@@ -35,26 +25,26 @@ export const cssBaselineStyles = {
     },
     input: {
       "&::-webkit-input-placeholder": {
-        color: primaryColor,
+        color: "inherit",
       },
       "&::-moz-placeholder": {
-        color: primaryColor,
+        color: "inherit",
       },
       "&:-ms-input-placeholder": {
-        color: primaryColor,
+        color: "inherit",
       },
       "&::placeholder": {
-        color: primaryColor,
+        color: "inherit",
       },
     },
     "*": {
-      ...commonStyles,
+      boxSizing: "border-box",
     },
     "*::before": {
-      ...commonStyles,
+      boxSizing: "border-box",
     },
     "*::after": {
-      ...commonStyles,
+      boxSizing: "border-box",
     },
   },
 };

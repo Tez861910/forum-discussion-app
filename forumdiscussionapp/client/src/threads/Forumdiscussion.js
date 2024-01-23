@@ -346,8 +346,6 @@ export const ForumDiscussion = ({ selectedCourse: courseId }) => {
     <Box
       sx={{
         padding: 3,
-        backgroundColor: "primary.main",
-        color: "primary.contrastText",
       }}
     >
       {selectedForum === null ? renderForumList() : renderForumPage()}

@@ -12,12 +12,11 @@ import { Home } from "./home-page/home";
 import { AdminCourses } from "./admin/Courses/AdminCourses";
 import { AdminRoles } from "./admin/Roles/AdminRoles";
 import { AdminUsers } from "./admin/Users/AdminUsers";
-import { Scheduler } from "./home-page/scheduler";
+import { Scheduler } from "./Event-Management/scheduler";
 import { UserProfile } from "./home-page/user-profile";
 import { CourseEnrollmentModal } from "./home-page/course-enrollment-modal";
 import { ForumDiscussion } from "./threads/Forumdiscussion";
-import { CommentSection } from "./threads/comment-section";
-import { MCQForm } from "./Examination/mcq-form";
+import { ExamForm } from "./Examination/exam-form";
 import { MCQAnswerForm } from "./Examination/mcq-answer-form";
 
 function ErrorFallback({ error, resetErrorBoundary }) {
@@ -56,7 +55,7 @@ export const App = () => {
                   element={<CourseEnrollmentModal />}
                 />
                 <Route path="forum-discussion" element={<ForumDiscussion />} />
-                <Route path="mcq-form" element={<MCQForm />} />
+                <Route path="exam-form" element={<ExamForm />} />
                 <Route path="mcq-answer-form" element={<MCQAnswerForm />} />
               </Routes>
             </React.Suspense>

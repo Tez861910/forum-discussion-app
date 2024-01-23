@@ -30,8 +30,10 @@ export const Navbar = ({
   const [activePage, setActivePage] = useState("scheduler");
 
   useEffect(() => {
-    onButtonClick("/home/scheduler", userId, roleId, selectedCourse);
-  }, []);
+    // Check if selectedCourse is defined before passing it
+    const courseToPass = selectedCourse || ""; // Pass an empty string if it's undefined
+    onButtonClick("/home/scheduler", userId, roleId, courseToPass);
+  }, [selectedCourse]);
 
   const getRoleHeaderText = (roleId) => {
     const roleTitles = {

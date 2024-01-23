@@ -76,34 +76,22 @@ export function AdminCourses() {
 
   const handleEditCourse = async (
     courseId,
-    updatedName,
-    updatedDescription
+    updatedCourseName,
+    updatedCourseDescription
   ) => {
     try {
       console.log(
-        "Edit Course - ID:",
+        "Edit Course - CourseID:",
         courseId,
         "Name:",
-        updatedName,
+        updatedCourseName,
         "Description:",
-        updatedDescription
+        updatedCourseDescription
       );
-      const trimmedUpdatedName = (String(updatedName) || "").replace(
-        /^\s+|\s+$/g,
-        ""
-      );
-
-      if (!trimmedUpdatedName) {
-        console.error("Course name cannot be empty.");
-        setError(
-          "Course name cannot be empty. Please enter a valid course name."
-        );
-        return;
-      }
 
       const response = await api.put(`/users/courses/update/${courseId}`, {
-        courseName: trimmedUpdatedName,
-        courseDescription: String(updatedDescription),
+        courseName: updatedCourseName,
+        courseDescription: updatedCourseDescription,
         updatedByUserID: userId,
       });
 
@@ -123,7 +111,10 @@ export function AdminCourses() {
 
   const handleConfirmDelete = async () => {
     try {
-      await api.delete(`/users/courses/delete/${deleteConfirmation.courseId}`);
+      await api.delete(`/users/courses/patch/${deleteConfirmation.courseId}`, {
+        deletedByUserID: userId,
+      });
+
       console.log("Course deleted successfully");
       fetchCourses();
     } catch (error) {

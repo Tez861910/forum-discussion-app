@@ -1,7 +1,5 @@
-import { palette } from "../palette";
-
 // Define colors
-const backgroundColor = palette.palette.default.background.default;
+const backgroundColor = "inherit";
 
 // Define common styles
 const commonStyles = {

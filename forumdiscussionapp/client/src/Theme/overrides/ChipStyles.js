@@ -1,9 +1,8 @@
-import { palette } from "../palette";
-
-const primaryColor = palette.palette.default.primary.main;
-const secondaryColor = palette.palette.default.secondary.main;
-const textColorPrimary = palette.palette.default.text.primary;
-const textColorSecondary = palette.palette.default.text.secondary;
+// Define colors
+const primaryColor = "inherit";
+const secondaryColor = "inherit";
+const textColorPrimary = "inherit";
+const textColorSecondary = "inherit";
 
 export const chipStyles = {
   root: {

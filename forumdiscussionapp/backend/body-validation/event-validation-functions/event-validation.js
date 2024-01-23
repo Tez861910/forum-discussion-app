@@ -6,8 +6,12 @@ export const validateEventCreate = validate(
   Joi.object({
     // Define the required properties for event creation
     // For example:
-    title: Joi.string().min(1).required(),
-    date: Joi.date().required(),
+    userId: Joi.number().integer().min(1).required(),
+    courseId: Joi.number().integer().min(1).required(),
+    EventTitle: Joi.string().min(1).required(),
+    EventDescription: Joi.string().min(1).required(),
+    EventDate: Joi.date().required(),
+    Location: Joi.string().min(1).required(),
     // Add more properties as needed
   })
 );
@@ -17,9 +21,11 @@ export const validateEventEdit = validate(
   Joi.object({
     // Define the required properties for editing an event
     // For example:
+    userId: Joi.number().integer().min(1).required(),
     eventId: Joi.number().integer().min(1).required(),
-    title: Joi.string().min(1).required(),
-    date: Joi.date().required(),
+    EventTitle: Joi.string().min(1).required(),
+    EventDescription: Joi.string().min(1).required(),
+    EventDate: Joi.date().required(),
     // Add more properties as needed
   })
 );

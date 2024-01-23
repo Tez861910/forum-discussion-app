@@ -1,7 +1,6 @@
-import { palette } from "../palette";
-
-const primaryColor = palette.palette.default.primary.main;
-const secondaryColor = palette.palette.default.secondary.main;
+// Define colors
+const primaryColor = "inherit";
+const secondaryColor = "inherit";
 
 export const linkStyles = {
   root: {

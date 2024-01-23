@@ -1,11 +1,9 @@
-import { palette } from "../palette";
-
-const {
-  primary: { main: primaryMainColor },
-  secondary: { main: secondaryMainColor },
-  action: { active: actionActiveColor, disabled: actionDisabledColor },
-  error: { main: errorMainColor },
-} = palette.palette.default;
+// Define colors
+const primaryMainColor = "inherit";
+const secondaryMainColor = "inherit";
+const actionActiveColor = "inherit";
+const actionDisabledColor = "inherit";
+const errorMainColor = "inherit";
 
 const transition = "0.3s";
 

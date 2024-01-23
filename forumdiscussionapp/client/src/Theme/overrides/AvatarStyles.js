@@ -1,9 +1,3 @@
-import { palette } from "../palette";
-
-const primaryColor = palette.palette.default.primary.main;
-const contrastTextColor = palette.palette.default.primary.contrastText;
-const fontFamily = "Roboto, Helvetica, Arial, sans-serif";
-
 export const avatarStyles = {
   root: {
     width: "3rem",
@@ -14,8 +8,8 @@ export const avatarStyles = {
     },
   },
   colorDefault: {
-    backgroundColor: primaryColor,
-    color: contrastTextColor,
+    backgroundColor: "inherit",
+    color: "inherit",
   },
   img: {
     width: "100%",
@@ -26,13 +20,13 @@ export const avatarStyles = {
   },
   fallback: {
     fontSize: "1rem",
-    fontFamily: fontFamily,
+    fontFamily: "Roboto, Helvetica, Arial, sans-serif",
   },
   avatarGroup: {
     avatar: {
       width: 48,
       height: 48,
-      border: `2px solid ${primaryColor}`,
+      border: `2px solid "inherit"`,
     },
   },
 };

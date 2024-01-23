@@ -4,10 +4,10 @@ export const handleForumReplyGetForumPostId = async (req, res) => {
   const { forumPostId } = req.params;
 
   try {
-    const ForumReplies = sequelize.models.ForumReplies;
+    const ForumsReplies = sequelize.models.ForumsReplies;
     const CommonAttributes = sequelize.models.CommonAttributes;
 
-    const result = await ForumReplies.findAll({
+    const result = await ForumsReplies.findAll({
       where: { ForumPostID: forumPostId },
       include: [
         {

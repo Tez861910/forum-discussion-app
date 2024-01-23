@@ -1,9 +1,7 @@
-import { palette } from "../palette";
-
-const primaryColor = palette.palette.default.primary.main;
-const secondaryColor = palette.palette.default.secondary.main;
-const errorColor = palette.palette.default.error.main;
-const textColorPrimary = palette.palette.default.text.primary;
+const primaryColor = "inherit";
+const secondaryColor = "inherit";
+const errorColor = "inherit";
+const textColorPrimary = "inherit";
 
 export const badgeStyles = {
   root: {

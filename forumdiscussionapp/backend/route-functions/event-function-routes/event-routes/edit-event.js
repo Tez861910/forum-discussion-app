@@ -4,9 +4,9 @@ import Sequelize from "sequelize";
 export const editEvent = async (req, res) => {
   try {
     const { eventId } = req.params;
-    const { EventTitle, EventDescription, EventDate } = req.body;
-    const CourseID = req.user.courseId;
-    const UserID = req.user.userId;
+    const { EventTitle, EventDescription, EventDate, courseId, userId } =
+      req.body;
+    const UserID = userId;
     const CommonAttributes = sequelize.models.CommonAttributes;
     const Events = sequelize.models.Events;
 
@@ -31,7 +31,7 @@ export const editEvent = async (req, res) => {
 
     // Update the event details in the Events table
     await Events.update(
-      { EventTitle, EventDescription, EventDate, CourseID },
+      { EventTitle, EventDescription, EventDate },
       { where: { EventID: eventId } }
     );
 

@@ -80,6 +80,7 @@ export function CourseUserModal({ onClose, selectedCourseId, open }) {
       const response = await api.get(
         `/users/usercourses/enrollments/${selectedCourseId}`
       );
+
       if (response.status === 404) {
         console.error(
           "No enrollments found for the course:",
@@ -88,15 +89,14 @@ export function CourseUserModal({ onClose, selectedCourseId, open }) {
         setEnrolledUsers([]);
         return;
       }
-      if (response.data && typeof response.data.enrollments === "object") {
+
+      if (response.data && Array.isArray(response.data.enrollments)) {
         const enrollmentsData = response.data.enrollments;
-        const enrolledUsersArray = Object.values(enrollmentsData).flatMap(
-          (enrollments) =>
-            enrollments.map((user) => ({
-              UserID: user.UserID,
-              UserName: user.UserName,
-            }))
-        );
+        const enrolledUsersArray = enrollmentsData.map((user) => ({
+          UserID: user.UserID,
+          UserName: user.UserName,
+        }));
+
         setEnrolledUsers(enrolledUsersArray);
         setNoEnrollmentsFound(false);
       } else {

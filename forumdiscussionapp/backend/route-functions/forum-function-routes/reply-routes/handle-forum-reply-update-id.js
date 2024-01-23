@@ -12,11 +12,11 @@ export const handleForumReplyUpdateById = async (req, res) => {
         .json({ error: "ReplyContent is required for update" });
     }
 
-    const ForumReplies = sequelize.models.ForumReplies;
+    const ForumsReplies = sequelize.models.ForumsReplies;
     const CommonAttributes = sequelize.models.CommonAttributes;
 
     // Step 1: Update ForumReplies
-    const forumReplyResult = await ForumReplies.update(
+    const forumReplyResult = await ForumsReplies.update(
       { ReplyContent: replyContent },
       { where: { ForumReplyID: forumReplyId } }
     );

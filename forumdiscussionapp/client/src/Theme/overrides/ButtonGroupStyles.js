@@ -1,16 +1,14 @@
-import { palette } from "../palette";
-
-const backgroundColorDefault = palette.palette.default.background.default;
-
 export const buttonGroupStyles = {
   root: {
     display: "inline-flex",
     borderRadius: "0.5rem",
-    backgroundColor: backgroundColorDefault,
     opacity: 0.8,
     alignItems: "center",
     transition: "0.3s",
     boxShadow: "0px 2px 4px -1px rgba(0, 0, 0, 0.2)",
+    "&:hover": {
+      opacity: 1,
+    },
   },
   grouped: {
     "&:not(:first-of-type)": {
