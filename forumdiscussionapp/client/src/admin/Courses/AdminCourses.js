@@ -111,7 +111,7 @@ export function AdminCourses() {
 
   const handleConfirmDelete = async () => {
     try {
-      await api.delete(`/users/courses/patch/${deleteConfirmation.courseId}`, {
+      await api.patch(`/users/courses/patch/${deleteConfirmation.courseId}`, {
         deletedByUserID: userId,
       });
 

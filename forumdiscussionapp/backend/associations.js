@@ -186,6 +186,7 @@ export const setAssociations = (models) => {
   //Users.hasMany(CommonAttributes, { foreignKey: "UpdatedByUserID" });
   //Users.hasMany(CommonAttributes, { foreignKey: "DeletedByUserID" });
   Users.belongsTo(CommonAttributes, { foreignKey: "CommonAttributeID" });
+  Users.belongsTo(Genders, { foreignKey: "GenderID" });
 
   // Genders model associations
   Genders.hasMany(Users, { foreignKey: "GenderID" });

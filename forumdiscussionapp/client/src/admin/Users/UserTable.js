@@ -80,7 +80,7 @@ export function UserTable({ users, handleEditUser, handleDeleteUser }) {
                 <TableCell>{user.Address}</TableCell>
                 <TableCell>{user.PhoneNumber}</TableCell>
                 <TableCell>{user.DateOfBirth}</TableCell>
-                <TableCell>{user.Gender}</TableCell>
+                <TableCell>{user.Gender && user.Gender.GenderName}</TableCell>
                 <TableCell>
                   <IconButton
                     color="primary"

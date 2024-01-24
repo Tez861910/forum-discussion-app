@@ -10,13 +10,12 @@ export default function (sequelize) {
         primaryKey: true,
       },
       GenderName: {
-        type: DataTypes.ENUM,
-        values: ["Male", "Female", "Other"],
+        type: DataTypes.STRING(10),
         defaultValue: "Other",
       },
     },
     {
-      tableName: "Gender",
+      tableName: "Genders",
       timestamps: false,
       engine: "InnoDB",
     }

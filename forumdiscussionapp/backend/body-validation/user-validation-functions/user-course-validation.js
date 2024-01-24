@@ -20,10 +20,21 @@ export const validateUserCoursesEnroll = validate(
 );
 
 // Validation middleware for removing users from a course
+export const validateRemoveUserFromCourse = validate(
+  Joi.object({
+    // Define the schema for removing users from a course
+    userId: Joi.number().integer().min(1).required(),
+    courseId: Joi.number().integer().min(1).required(),
+    deletedByUserID: Joi.number().integer().min(1).required(),
+  })
+);
+
+// Validation middleware for removing users from a course
 export const validateRemoveUsersFromCourse = validate(
   Joi.object({
     // Define the schema for removing users from a course
     userIds: Joi.array().items(Joi.number().integer().min(1)).required(),
     courseId: Joi.number().integer().min(1).required(),
+    deletedByUserID: Joi.number().integer().min(1).required(),
   })
 );

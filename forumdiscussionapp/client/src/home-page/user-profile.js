@@ -30,6 +30,7 @@ export const UserProfile = ({ isOpen, onClose, setUserName }) => {
     Gender: "N/A",
     UserID: "N/A",
     RoleID: "N/A",
+    AvatarPath: "/avatars/default.jpg",
   });
 
   const { api } = useApi();
@@ -46,15 +47,16 @@ export const UserProfile = ({ isOpen, onClose, setUserName }) => {
           setUserData({
             UserName: user.UserName || "N/A",
             UserEmail: user.UserEmail || "N/A",
-            RoleName: user.RoleName || "N/A",
+            RoleName: user.UserRoles?.[0]?.Role?.RoleName || "N/A",
             Address: user.Address || "N/A",
             PhoneNumber: user.PhoneNumber || "N/A",
             DateOfBirth: user.DateOfBirth
               ? new Date(user.DateOfBirth).toLocaleDateString()
               : "N/A",
-            Gender: user.Gender || "N/A",
+            Gender: user.Gender?.GenderName || "N/A",
             UserID: user.UserID || "N/A",
-            RoleID: user.RoleID || "N/A",
+            RoleID: user.UserRoles?.[0]?.Role?.RoleID || "N/A",
+            AvatarPath: user.AvatarPath || "/avatars/default.jpg", // Update with the correct property
           });
 
           setNewName(user.UserName || "");
@@ -78,28 +80,34 @@ export const UserProfile = ({ isOpen, onClose, setUserName }) => {
 
     try {
       const updatedUserData = {
-        name: newName,
-        email: newEmail,
-        password: newPassword,
-        address: userData.Address,
-        phoneNumber: userData.PhoneNumber,
-        dateOfBirth: userData.DateOfBirth,
-        gender: userData.Gender,
+        UserName: newName,
+        UserEmail: newEmail,
+        UserPassword: newPassword,
+        Address: userData.Address,
+        PhoneNumber: userData.PhoneNumber,
+        DateOfBirth: userData.DateOfBirth,
+        Gender: userData.Gender || "N/A",
       };
 
-      await api.put(`/users/users/update/users/${userId}`, updatedUserData);
+      const response = await api.put(`/users/users/update/users/${userId}`, {
+        user: updatedUserData,
+      });
+
+      const updatedUser = response.data.user || {};
 
       setUserData((prevData) => ({
         ...prevData,
-        UserName: newName,
-        UserEmail: newEmail,
-        Address: updatedUserData.address,
-        PhoneNumber: updatedUserData.phoneNumber,
-        DateOfBirth: updatedUserData.dateOfBirth,
-        Gender: updatedUserData.gender,
+        UserName: updatedUser.UserName || "N/A",
+        UserEmail: updatedUser.UserEmail || "N/A",
+        Address: updatedUser.Address || "N/A",
+        PhoneNumber: updatedUser.PhoneNumber || "N/A",
+        DateOfBirth: updatedUser.DateOfBirth
+          ? new Date(updatedUser.DateOfBirth).toLocaleDateString()
+          : "N/A",
+        Gender: updatedUser.Gender?.GenderName || "N/A",
       }));
 
-      setUserName(newName);
+      setUserName(updatedUser.UserName || "");
 
       setEditing(false);
     } catch (error) {
@@ -115,17 +123,24 @@ export const UserProfile = ({ isOpen, onClose, setUserName }) => {
     onClose();
   };
 
-  const getUserIDLabel = (roleId, userId) => {
-    switch (roleId) {
-      case 1: // Admin
-        return `AID: ${userId}`;
-      case 2: // Teacher
-        return `TID: ${userId}`;
-      case 3: // Student
-        return `SID: ${userId}`;
-      default:
-        return `ID: ${userId}`;
+  const getUserIDLabel = (userRoles, userId) => {
+    if (Array.isArray(userRoles) && userRoles.length > 0) {
+      const role = userRoles[0].Role;
+      const roleName = role ? role.RoleName : "N/A";
+
+      switch (role.RoleID) {
+        case 1:
+          return `AID: ${userId}`;
+        case 2:
+          return `TID: ${userId}`;
+        case 3:
+          return `SID: ${userId}`;
+        default:
+          return `${roleName} ID: ${userId}`;
+      }
     }
+
+    return `ID: ${userId}`;
   };
 
   return (
@@ -245,7 +260,7 @@ export const UserProfile = ({ isOpen, onClose, setUserName }) => {
               <TextField
                 fullWidth
                 label="Gender"
-                value={userData.Gender}
+                value={userData.Gender || "N/A"}
                 onChange={(e) =>
                   setUserData((prevData) => ({
                     ...prevData,
@@ -268,7 +283,7 @@ export const UserProfile = ({ isOpen, onClose, setUserName }) => {
                 Email: {userData.UserEmail}
               </Typography>
               <Typography variant="h6" sx={{ fontWeight: "medium", mb: 2 }}>
-                Role: {userData.RoleName}
+                RoleName: {userData.RoleName}
               </Typography>
               <Typography variant="h6" sx={{ fontWeight: "medium", mb: 2 }}>
                 Address: {userData.Address}
@@ -280,7 +295,7 @@ export const UserProfile = ({ isOpen, onClose, setUserName }) => {
                 Date of Birth: {userData.DateOfBirth}
               </Typography>
               <Typography variant="h6" sx={{ fontWeight: "medium", mb: 2 }}>
-                Gender: {userData.Gender}
+                Gender: {userData.Gender || "N/A"}
               </Typography>
               <Box sx={{ display: "flex", justifyContent: "flex-end", mt: 2 }}>
                 <IconButton color="primary" onClick={handleEdit}>

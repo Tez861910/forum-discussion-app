@@ -42,11 +42,11 @@ export const Signup = () => {
       try {
         const response = await api.get("/users/genders/get/all");
         if (response.status === 200) {
-          const genderEnum = response.data;
-          const genderArray = Object.keys(genderEnum).map((key) => ({
-            id: key,
-            name: genderEnum[key],
+          const genderArray = response.data.data.map((gender) => ({
+            GenderID: gender.GenderID,
+            GenderName: gender.GenderName,
           }));
+
           setGenders(genderArray);
         } else {
           console.error("Failed to fetch genders. Status:", response.status);

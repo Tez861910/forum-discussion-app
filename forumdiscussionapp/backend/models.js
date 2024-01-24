@@ -2,7 +2,7 @@ export { default as CommonAttributesModel } from "./models/Defining-models/Commo
 export { default as RolesModel } from "./models/Defining-models/Roles.js";
 export { default as CoursesModel } from "./models/Defining-models/Courses.js";
 export { default as UsersModel } from "./models/Defining-models/User.js";
-export { default as GendersModel } from "./models/Defining-models/Gender.js";
+export { default as GendersModel } from "./models/Defining-models/Genders.js";
 export { default as UserRolesModel } from "./models/Defining-models/UserRoles.js";
 export { default as UserCoursesModel } from "./models/Defining-models/UserCourses.js";
 export { default as DepartmentsModel } from "./models/Defining-models/Departments.js";

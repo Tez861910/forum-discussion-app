@@ -5,19 +5,31 @@ export const handleUsersGetId = async (req, res) => {
 
   try {
     // Dynamically access the models using sequelize.models
-    const { Users, UserRoles, UserSettings } = sequelize.models;
+    const { Users, Genders, UserRoles, Roles, CommonAttributes } =
+      sequelize.models;
 
-    // Fetch user data including the role ID and user settings
+    // Fetch user data including the gender name and role name
     const user = await Users.findOne({
       where: { UserID: userId },
       include: [
         {
-          model: UserRoles,
-          attributes: ["RoleID"],
+          model: Genders,
+          attributes: ["GenderName"],
         },
         {
-          model: UserSettings,
-          attributes: ["Theme", "DarkMode", "Language", "EmailNotifications"],
+          model: UserRoles,
+          attributes: ["RoleID"],
+          include: [
+            {
+              model: Roles,
+              attributes: ["RoleName"],
+            },
+          ],
+        },
+        {
+          model: CommonAttributes,
+          where: { isDeleted: false },
+          attributes: [],
         },
       ],
     });

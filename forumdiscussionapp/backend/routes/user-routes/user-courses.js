@@ -2,6 +2,7 @@ import express from "express";
 import {
   validateUserCoursesEnroll,
   validateCourseUsersEnroll,
+  validateRemoveUserFromCourse,
   validateRemoveUsersFromCourse,
 } from "../../body-validation/user-validation-functions/user-course-validation.js";
 
@@ -44,7 +45,7 @@ router.patch(
 // Patch (soft delete) removing a user from a course
 router.patch(
   "/:courseId/enrollments/:userId",
-  validateRemoveUsersFromCourse,
+  validateRemoveUserFromCourse,
   handleCIDEnrollmentsEID
 );
 

@@ -2,8 +2,8 @@ import { sequelize } from "../../../db.js";
 
 export const handleUsersGet = async (req, res) => {
   try {
-    // Dynamically access the Users and CommonAttributes models using sequelize.models
-    const { Users, CommonAttributes } = sequelize.models;
+    // Dynamically access the Users, CommonAttributes, and Gender models using sequelize.models
+    const { Users, CommonAttributes, Genders } = sequelize.models;
 
     const users = await Users.findAll({
       include: [
@@ -11,6 +11,10 @@ export const handleUsersGet = async (req, res) => {
           model: CommonAttributes,
           where: { IsDeleted: false },
           attributes: [],
+        },
+        {
+          model: Genders,
+          attributes: ["GenderName"],
         },
       ],
     });

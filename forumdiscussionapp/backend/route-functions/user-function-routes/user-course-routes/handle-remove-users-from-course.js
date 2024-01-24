@@ -2,8 +2,8 @@ import { sequelize } from "../../../db.js";
 import { Op } from "sequelize";
 
 export const handleRemoveUsersFromCourse = async (req, res) => {
-  const { courseId, userIds } = req.body;
-  const { deletedByUserID } = req.body;
+  const { courseId } = req.params;
+  const { userIds, deletedByUserID } = req.body;
 
   try {
     // Dynamically access the models using sequelize.models
@@ -19,8 +19,10 @@ export const handleRemoveUsersFromCourse = async (req, res) => {
       include: [
         {
           model: CommonAttributes,
-          IsDeleted: false,
           attributes: [],
+          where: {
+            IsDeleted: false,
+          },
         },
       ],
     });

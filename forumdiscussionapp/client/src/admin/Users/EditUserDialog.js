@@ -10,6 +10,7 @@ import {
   MenuItem,
   Stack,
 } from "@mui/material";
+import { useApi } from "../../home-page/Api";
 
 export function EditUserDialog({
   open,
@@ -18,6 +19,31 @@ export function EditUserDialog({
   updatedUserData,
   handleInputChange,
 }) {
+  const [genders, setGenders] = React.useState([]);
+  const { api } = useApi();
+
+  React.useEffect(() => {
+    const fetchGenders = async () => {
+      try {
+        const response = await api.get("/users/genders/get/all");
+        if (response.status === 200) {
+          const genderArray = response.data.data.map((gender) => ({
+            GenderID: gender.GenderID,
+            GenderName: gender.GenderName,
+          }));
+
+          setGenders(genderArray);
+        } else {
+          console.error("Failed to fetch genders. Status:", response.status);
+        }
+      } catch (error) {
+        console.error("Error fetching genders:", error);
+      }
+    };
+
+    fetchGenders();
+  }, [api]);
+
   return (
     <Dialog
       open={open}
@@ -73,13 +99,17 @@ export function EditUserDialog({
           />
           <Select
             label="Gender"
-            value={updatedUserData.Gender}
+            value={
+              updatedUserData.Gender ? updatedUserData.Gender.GenderName : ""
+            }
             onChange={(e) => handleInputChange("Gender", e.target.value)}
             fullWidth
           >
-            <MenuItem value="Male">Male</MenuItem>
-            <MenuItem value="Female">Female</MenuItem>
-            <MenuItem value="Other">Other</MenuItem>
+            {genders.map((gender) => (
+              <MenuItem key={gender.GenderID} value={gender.GenderName}>
+                {gender.GenderName}
+              </MenuItem>
+            ))}
           </Select>
           <TextField
             label="Avatar Path"

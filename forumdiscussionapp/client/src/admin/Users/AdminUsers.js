@@ -17,8 +17,14 @@ export function AdminUsers() {
     UserEmail: "",
     RoleID: "",
     UserPassword: "",
+    Address: "",
+    PhoneNumber: "",
+    DateOfBirth: "",
+    Gender: null,
+    AvatarPath: "",
   });
   const [roles, setRoles] = React.useState([]);
+  const [genders, setGenders] = React.useState([]);
   const [error, setError] = React.useState(null);
   const [editingUserId, setEditingUserId] = React.useState(null);
   const [updatedUserData, setUpdatedUserData] = React.useState({
@@ -26,6 +32,11 @@ export function AdminUsers() {
     UserEmail: "",
     RoleID: "",
     UserPassword: "",
+    Address: "",
+    PhoneNumber: "",
+    DateOfBirth: "",
+    Gender: null,
+    AvatarPath: "",
   });
   const [deleteConfirmation, setDeleteConfirmation] = React.useState({
     open: false,
@@ -61,8 +72,13 @@ export function AdminUsers() {
   }, [fetchUsers, fetchRoles]);
 
   const handleCreateUser = React.useCallback(async () => {
-    if (!newUser.UserName || !newUser.UserEmail || newUser.RoleID === "") {
-      console.error("Name, email, and roleId are required.");
+    if (
+      !newUser.UserName ||
+      !newUser.UserEmail ||
+      newUser.RoleID === "" ||
+      newUser.DateOfBirth === ""
+    ) {
+      console.error("Name, email, roleId, and date of birth are required.");
       return;
     }
 
@@ -72,6 +88,11 @@ export function AdminUsers() {
         email: newUser.UserEmail,
         password: newUser.UserPassword,
         roleId: newUser.RoleID,
+        address: newUser.Address,
+        phoneNumber: newUser.PhoneNumber,
+        dateOfBirth: newUser.DateOfBirth,
+        genderId: newUser.Gender ? newUser.Gender.GenderID : null,
+        avatarPath: newUser.AvatarPath,
       });
 
       if (
@@ -84,6 +105,11 @@ export function AdminUsers() {
           UserEmail: "",
           UserPassword: "",
           RoleID: "",
+          Address: "",
+          PhoneNumber: "",
+          DateOfBirth: "",
+          GenderID: "",
+          AvatarPath: "",
         });
 
         await fetchUsers();
@@ -265,6 +291,8 @@ export function AdminUsers() {
         newUser={newUser}
         setNewUser={setNewUser}
         roles={roles}
+        genders={genders}
+        setGenders={setGenders}
         TransitionComponent={Transition}
       />
       <DeleteConfirmationDialog

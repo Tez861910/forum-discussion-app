@@ -145,10 +145,12 @@ export function CourseUserModal({ onClose, selectedCourseId, open }) {
       return;
     }
     try {
+      const deletedByUserID = localStorage.getItem("userId");
       const response = await api.patch(
         `/users/usercourses/${selectedCourseId}/enrollments`,
         {
           userIds: selectedEnrolledUserIds,
+          deletedByUserID,
         }
       );
       console.log("API response:", response);
@@ -173,10 +175,21 @@ export function CourseUserModal({ onClose, selectedCourseId, open }) {
         );
         return;
       }
+
       const userId = removeConfirmation.user.UserID;
+
+      const deletedByUserID = localStorage.getItem("userId");
+
+      if (!deletedByUserID) {
+        console.error("User ID not found in local storage");
+        return;
+      }
+
       const response = await api.patch(
-        `/users/usercourses/${selectedCourseId}/enrollments/${userId}`
+        `/users/usercourses/${selectedCourseId}/enrollments/${userId}`,
+        { deletedByUserID }
       );
+
       console.log("API response:", response);
       fetchCourseEnrollments();
     } catch (error) {

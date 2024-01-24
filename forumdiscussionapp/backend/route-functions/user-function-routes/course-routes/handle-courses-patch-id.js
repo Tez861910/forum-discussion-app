@@ -32,7 +32,10 @@ export const handleCoursesPatchId = async (req, res) => {
 
     commonAttributes.IsDeleted = true;
     commonAttributes.DeletedAt = new Date();
-    commonAttributes.DeletedByUserID = deletedByUserID;
+    commonAttributes.DeletedByUserID = parseInt(
+      deletedByUserID.deletedByUserID,
+      10
+    );
 
     // Save the changes
     await commonAttributes.save();

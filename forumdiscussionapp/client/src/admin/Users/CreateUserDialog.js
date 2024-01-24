@@ -10,6 +10,7 @@ import {
   MenuItem,
   Stack,
 } from "@mui/material";
+import { useApi } from "../../home-page/Api";
 
 export function CreateUserDialog({
   open,
@@ -17,7 +18,34 @@ export function CreateUserDialog({
   handleCreateUser,
   newUser,
   setNewUser,
+  roles,
+  genders,
+  setGenders,
 }) {
+  const { api } = useApi();
+
+  React.useEffect(() => {
+    const fetchGenders = async () => {
+      try {
+        const response = await api.get("/users/genders/get/all");
+        if (response.status === 200) {
+          const genderArray = response.data.data.map((gender) => ({
+            GenderID: gender.GenderID,
+            GenderName: gender.GenderName,
+          }));
+
+          setGenders(genderArray);
+        } else {
+          console.error("Failed to fetch genders. Status:", response.status);
+        }
+      } catch (error) {
+        console.error("Error fetching genders:", error);
+      }
+    };
+
+    fetchGenders();
+  }, [api]);
+
   return (
     <Dialog
       open={open}
@@ -103,7 +131,7 @@ export function CreateUserDialog({
           />
           <Select
             label="Gender"
-            value={newUser.Gender}
+            value={newUser.Gender ? newUser.Gender.GenderName : ""}
             onChange={(e) =>
               setNewUser((prevData) => ({
                 ...prevData,
@@ -112,9 +140,11 @@ export function CreateUserDialog({
             }
             fullWidth
           >
-            <MenuItem value="Male">Male</MenuItem>
-            <MenuItem value="Female">Female</MenuItem>
-            <MenuItem value="Other">Other</MenuItem>
+            {genders.map((gender) => (
+              <MenuItem key={gender.GenderID} value={gender.GenderName}>
+                {gender.GenderName}
+              </MenuItem>
+            ))}
           </Select>
           <TextField
             label="Avatar Path"
